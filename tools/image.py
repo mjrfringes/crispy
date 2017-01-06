@@ -4,17 +4,12 @@ import numpy as np
 from datetime import date
 import logging as log
 
+''' most of this code is due to Tim Brandt '''
+
 class Image:
     
     """
-    Image is the basic class for raw and partially reduced CHARIS data.
-    It must have at least the following boolean attribute references:
-        self.destriped  (default False)
-        self.flatfielded (default False)
-    It must have at least the following other attribute references:
-        self.data (default None)
-        self.ivar (default None)
-        self.header (default None)
+    Image is the basic class for images
     
     self.data, self.ivar, and self.header should be numpy ndarrays, 
     which can be read from and written to a fits file with the load 

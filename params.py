@@ -20,8 +20,9 @@ class Params():
         # ******************************************************************
 
         self.n_pupil = 1024        # Number of pixels for pupil plane
-        self.pxprlens = 60        # Pixels (not detector pixels!) per lenslet
+        self.pxprlens = 60         # Pixels (not detector pixels!) per lenslet
         self.nlens = 108           # Number of lenslets across array
+        self.mmperpix = 58e-6      # Size of pixels in input image
 
         # ******************************************************************
         # Detector stuff

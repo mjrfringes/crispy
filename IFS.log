@@ -1,0 +1,60 @@
+2017-01-05 16:44:37,486 Starting computation.
+2017-01-05 16:44:37,488 Parameters initialized:
+Number of pixels for pupil plane: 1024
+Number of pixels per lenslet: 60
+Number of lenslets: 108
+Detector pixel size in meters: 1.3e-05
+Lenslet pitch in meters: 0.000174
+Interlacing: 2
+Angle of rotation of lenslet array (radians): -0.463647609001
+Use pinhole mask? True
+Pinhole mask diameter (meters): 2.5e-05
+Focal length of lenslet: 0.0009744
+Magnitude of distortion: 0
+Variable defocusing: False
+
+2017-01-05 16:44:37,488 Import all kernels and rescale them to same plate scale
+2017-01-05 16:44:37,488 Loading spot diagrams.
+2017-01-05 16:44:37,531 kernel scale average is 1.706000 micron per pixel at 890 nm
+2017-01-05 16:44:37,531 Resampling kernels to match input
+2017-01-05 16:44:37,532 Incoming plate scale is 2.900000 micron per pixel
+2017-01-05 16:44:37,553 Loading spot diagrams.
+2017-01-05 16:44:37,584 kernel scale average is 1.475333 micron per pixel at 770 nm
+2017-01-05 16:44:37,584 Resampling kernels to match input
+2017-01-05 16:44:37,584 Incoming plate scale is 2.900000 micron per pixel
+2017-01-05 16:44:37,601 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,601 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,602 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,603 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,603 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,604 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,604 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,605 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,606 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,606 Loading spot diagrams.
+2017-01-05 16:44:37,639 kernel scale average is 1.264222 micron per pixel at 660 nm
+2017-01-05 16:44:37,640 Resampling kernels to match input
+2017-01-05 16:44:37,640 Incoming plate scale is 2.900000 micron per pixel
+2017-01-05 16:44:37,651 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,652 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,652 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,653 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,653 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,654 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,655 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,655 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,656 Kernel too small to capture crosstalk
+2017-01-05 16:44:37,657 Processing wavelength 0.700000 (0 out of 1)
+2017-01-05 16:44:37,658 Rotate and scale slice 0
+2017-01-05 16:44:37,712 Input plane is 170x170
+2017-01-05 16:44:37,736 Writing data to imagePlaneRot_0.70um.fits
+2017-01-05 16:44:37,737 Calculating/loading weights for bilinear interpolation
+2017-01-05 16:44:37,737 Allweights array was never created. Creating now.
+2017-01-05 16:44:37,737 Constructing location array for the first time
+2017-01-05 16:44:37,767 Computing detector plane for wavelength 0.700 and bandwidth 0.100 (microns)
+2017-01-05 16:44:37,768 Propagate through lenslet array
+2017-01-05 16:44:42,788 Writing data to lensletplane_0.70um.fits
+2017-01-05 16:44:43,215 Number of detector pixels per lenslet: 13.384615
+2017-01-05 16:44:43,215 Rebinning final detector. Image has dimensions 1472x1472
+2017-01-05 16:44:43,759 Writing data to finalframe.fits
+2017-01-05 16:44:43,760 Done.

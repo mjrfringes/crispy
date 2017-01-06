@@ -6,7 +6,7 @@ import glob
 from astropy.io import fits as pyf
 import re
 from specutil import SpecWFE, Distortion, simpleDistortion
-import logging
+import logging as log
 import matplotlib.pyplot as plt
 
 def Spectrograph(par, image,  lam, simple=True):
@@ -39,11 +39,12 @@ def Spectrograph(par, image,  lam, simple=True):
     # left, [1, 1] is top right, etc.
     ###################################################################### 
 
-    logging.info('Loading spot diagrams.')
+    log.info('Loading spot diagrams.')
     # first, select which wavelength PSF to use
-    wavel = 
-    spotfields = glob.glob(par.prefix + '/SpotDiagrams/simpsf/%dPSF_*.fits' % wavel)
-    kernels = [pyf.open(ifile)[0].data for ifile in spotfields]
+    wavel = 660
+    kernelscale = 1.265e-6
+    spotfields = glob.glob(par.prefix + '/simpsf/%dPSF_*.fits' % wavel)
+    kernels = [pyf.open(ifile)[1].data for ifile in spotfields]
     locations = np.zeros((len(spotfields), 2))
     for i in range(len(spotfields)):
         name = re.sub('.fits', '', re.sub('.*PSF_', '', spotfields[i]))
@@ -57,14 +58,14 @@ def Spectrograph(par, image,  lam, simple=True):
     # Compute dispersion and distorsion from 2D polynomial fit
     ###################################################################### 
     
-    logging.info('Apply distortion and dispersion.')
+    #log.info('Apply distortion and dispersion.')
     
-    if simple:
-        image = simpleDistortion(par,image,lam)
-        logging.info('Applied simplified model of the distortion/dispersion polynomial.')
-    else:
-        image = Distortion(par, image, lam)
-        logging.info('Applied full model of the distortion/dispersion polynomial.')
+#     if simple:
+#         image = simpleDistortion(par,image,lam)
+#         log.info('Applied simplified model of the distortion/dispersion polynomial.')
+#     else:
+#         image = Distortion(par, image, lam)
+#         log.info('Applied full model of the distortion/dispersion polynomial.')
     
     ###################################################################### 
     # Several convolution kernels here: 
@@ -88,21 +89,34 @@ def Spectrograph(par, image,  lam, simple=True):
         ##################################################################
         
         
+        # the scale in the incoming plane is par.pitch/par.pxprlens
+        # the scale in the kernels is kernelscale
+        # remap kernel to match incoming plate scale
         
-        ### INVESTIGATE THIS?????
+        ratio = kernelscale/(par.pitch/par.pxprlens)
+        nx = kernels[i].shape[0] * ratio
+        ny = kernels[i].shape[1] * ratio
+        
         # the factor of 94 is believed to be related to the magnification of the relay
         # the spot diagrams
-        nx = par.pxprlens*kernels[i].shape[1]/94.
-        ny = par.pxprlens*kernels[i].shape[0]/94.
-        logging.debug('Individual kernel size after magnification: %fx%f' % (nx,ny))
+        #nx = par.pxprlens*kernels[i].shape[1]/94.
+        #ny = par.pxprlens*kernels[i].shape[0]/94.
 
-        x = np.arange(nx)*94./par.pxprlens
-        y = np.arange(ny)*94./par.pxprlens
+        #x = np.arange(nx)*94./par.pxprlens
+        #y = np.arange(ny)*94./par.pxprlens
+        x = (np.arange(nx)- nx//2)/ratio 
+        y = (np.arange(ny) - ny//2)/ratio
 
         x, y = np.meshgrid(x, y)
+        r = np.sqrt(x**2 + y**2)
+        theta = np.arctan2(y, x)
+        x = r*np.cos(theta + par.philens) + kernels[i].shape[0]//2
+        y = r*np.sin(theta + par.philens) + kernels[i].shape[1]//2
+
         kernels[i] = ndimage.map_coordinates(kernels[i], [y, x])
-        #plt.imshow(kernels[i],interpolation='nearest')
-        #plt.show()
+#         plt.imshow(kernels[i],interpolation='nearest')
+#         plt.show()
+    log.info('Remapped kernels')
 
 
     return image, kernels, locations

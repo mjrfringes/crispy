@@ -79,22 +79,22 @@ def Detector(par, image, kernels, locations, parallel=True,
         kernels[i] = signal.convolve2d(kernels[i], pixresponse)
         kernels[i] /= np.sum(kernels[i])
     
-    logging.info('Shrink kernels to keep 99.99% of flux.')
-    nx, ny = kernels[0].shape
-    bestarea = nx*ny + 1
-    for i in range(nx//3):
-        for j in range(ny//3):
-            area = (nx - 2*i)*(ny - 2*j)
-            ok = [np.sum(kernel[i:-i, j:-j]) > minfrac for kernel in kernels]
-            if np.all(np.asarray(ok), axis=0) and area < bestarea:
-                bestarea = area
-                ibest, jbest = [i, j]
-
+#     logging.info('Shrink kernels to keep 99.99% of flux.')
+#     nx, ny = kernels[0].shape
+#     bestarea = nx*ny + 1
+#     for i in range(nx//3):
+#         for j in range(ny//3):
+#             area = (nx - 2*i)*(ny - 2*j)
+#             ok = [np.sum(kernel[i:-i, j:-j]) > minfrac for kernel in kernels]
+#             if np.all(np.asarray(ok), axis=0) and area < bestarea:
+#                 bestarea = area
+#                 ibest, jbest = [i, j]
+# 
     for i in range(len(kernels)):
-        kernels[i] = kernels[i][ibest:-ibest, jbest:-jbest]
-        #plt.imshow(kernels[i],interpolation='nearest')
-        #print kernels[i]
-        #plt.show()
+#         kernels[i] = kernels[i][ibest:-ibest, jbest:-jbest]
+        plt.imshow(kernels[i],interpolation='nearest')
+        print np.sum(kernels[i])
+        plt.show()
 
     npix = int(image.shape[0]/(par.pxprlens/pixperlenslet))
     logging.info('Final detector size is %dx%d' % (npix,npix))
@@ -133,7 +133,8 @@ def Detector(par, image, kernels, locations, parallel=True,
                 allweights[:, j, k] *= loc[k, 1] + 0.5 - yfrac[:, j]
             else:
                 allweights[:, j, k] *= yfrac[:, j] - (loc[k, 1] - 0.5)
-    
+    #plt.imshow(allweights[:,:,0],interpolation='nearest')
+    #plt.show()
     logging.info('Compute detector pixel value row by row.')
     if not parallel:
         for i in range(imin, npix - imin):
