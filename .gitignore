@@ -6,3 +6,5 @@ unitTestsOutputs/*
 *.pyc
 
 ReferenceFiles/simpsf/allweights.dat
+
+*.log
