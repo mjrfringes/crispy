@@ -5,7 +5,6 @@ from astropy.io import fits as pyf
 from scipy import signal
 import multiprocessing
 from ft import FT
-from conv2d import Conv2d
 from rotate import Rotate
 from lensrow import LensRow
 from parallel_utils import Task, Consumer
@@ -19,7 +18,16 @@ import codecs
 import pickle
 
 
-def Lenslet(par, imageplane, lam, dlam,allweights,kernels,locations):
+def processImagePlane(par,imagePlane):
+    imagePlaneRot = Rotate(imagePlane,par.philens,clip=False)
+    n = par.pixperlenslet
+    newShape = (imagePlaneRot.shape[0]/n,imagePlaneRot.shape[1]/n)
+    imagePlaneRot = frebin(imagePlaneRot,newShape)
+    log.debug('Input plane is %dx%d' % imagePlaneRot.shape)
+    return imagePlaneRot
+
+
+def Lenslet(par, imageplane, lam, allweights,kernels,locations):
     """
     Function Lenslet
 
@@ -42,57 +50,10 @@ def Lenslet(par, imageplane, lam, dlam,allweights,kernels,locations):
     """
 
     n = par.pxprlens
-
+    
+    #TODO: reduce the lenslet plane only to what is needed, if there are zeros in most locations
+    # on the input
     lensletplane = np.zeros((n*(par.nlens + 2), n*(par.nlens + 2)))
-    
-    ###################################################################### 
-    # Perform the lenslet Fourier transforms.  Move this into another file
-    # row-by-row to allow for parallelization.
-    ###################################################################### 
-    
-    # list of row numbers:
-#     if not parallel:
-#         logging.info('No parallel processing! Processing each lenslet linearly...')
-#         for i in range(par.nlens):
-#             try:
-#                 dlenslet = LensRow(par, imageplane[rowList[i],min(rowList):],i, mask, lam)
-#             except:
-#                 logging.debug('LensRow error. i,n=%d,%d,index range:i*n=%d,(i+1)*n=%d' % (i,n,i*n,(i+1)*n))
-#             lensletplane[i*n:(i + 3)*n] += dlenslet
-#     else:
-#         logging.info('Starting parallel processing...')
-# 
-#         tasks = multiprocessing.Queue()
-#         results = multiprocessing.Queue()
-#         ncpus = min(multiprocessing.cpu_count(), maxcpus)
-#         consumers = [ Consumer(tasks, results)
-#                       for i in range(ncpus) ]
-#         for w in consumers:
-#             w.start()
-#         for i in rowList:
-#             #tasks.put(Task(i, LensRow,
-#             #               (par, imageplane[i*n:(i + 1)*n], i,
-#             #                mask, lam)))
-#             tasks.put(Task(i, LensRow,
-#                            (par, imageplane[i], i,
-#                             mask, lam)))
-#         for i in range(ncpus):
-#             tasks.put(None)
-#             
-#         for i in range(par.nlens):
-#             index, result = results.get()
-#             dlenslet = result
-#             lensletplane[index*n:(index + 3)*n] += dlenslet
-
-    
-
-
-
-        #plt.imshow(kernels[k],interpolation='nearest',origin='lower')
-        #plt.show()
-        
-    # apply pinhole
-    #xc,yc = (kernel.shape[0]//2,kernel.shape[1]//2)
     
     # select row values
     nx,ny = imageplane.shape
@@ -130,8 +91,8 @@ def Lenslet(par, imageplane, lam, dlam,allweights,kernels,locations):
             
             
             # apply polynomial transform
-            sx = np.sum(cx*np.array([X]))/factor+lensletplane.shape[0]//2
-            sy = np.sum(cy*np.array([1,Y,lam,lam**2]))/factor+lensletplane.shape[1]//2
+            sy = -np.sum(cx*np.array([Y]))/factor+lensletplane.shape[0]//2
+            sx = -np.sum(cy*np.array([1,X,lam,lam**2]))/factor+lensletplane.shape[1]//2
             #sy = np.sum(cy*np.array([1,Y]))/factor+lensletplane.shape[1]//2
             
             # according to the location x,y, select the correct PSF as a combination
@@ -154,7 +115,7 @@ def Lenslet(par, imageplane, lam, dlam,allweights,kernels,locations):
                     wy = int(isy/lensletplane.shape[1]*allweights[:,:,k].shape[1])
                     weight = allweights[wx,wy,k]
                     #checkWeight += weight
-                    lensletplane[isx-kx/2:isx+kx/2,isy-ky/2:isy+ky/2]+=val*weight*kernels[k]
+                    lensletplane[isy-ky/2:isy+ky/2,isx-kx/2:isx+kx/2]+=val*weight*kernels[k]
                 #print 'checkWeight=',checkWeight
 
 

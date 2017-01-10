@@ -11,20 +11,21 @@ from parallel_utils import Task, Consumer
 import logging
 import matplotlib.pyplot as plt
 from detutils import frebin
+import logging as log
 
-
-def simpleDetector(par,image):
-    '''
-    Apply a simple, flux-conservative detector binning function
-    '''
-    pixperlenslet = par.pitch/par.pixsize
-    logging.debug('pixperlenslet = %f' % pixperlenslet)
-    npix = int(image.shape[0]/(par.pxprlens/pixperlenslet))
-    logging.info('Final size of image = %dx%d' % (npix,npix))
-
-    imageout = frebin(image,(npix,npix))
+def rebinDetector(par,finalFrame,clip=False):
+    detpixprlenslet = par.pitch/par.pixsize 
+    log.info('Number of detector pixels per lenslet: %f' % detpixprlenslet)
+        
+    newShape = (finalFrame.shape[0]//(par.pxprlens/detpixprlenslet),finalFrame.shape[1]//(par.pxprlens/detpixprlenslet))
+    log.info('Rebinning final detector. Image has dimensions %dx%d' % newShape)
+    detectorFrame = frebin(finalFrame,newShape) 
     
-    return imageout
+    if clip:
+        i = int(detectorFrame.shape[0]*(1. - 1./np.sqrt(2.))/2.)
+        detectorFrame = detectorFrame[i:-i, i:-i]
+
+    return detectorFrame
 
 
 def Detector(par, image, kernels, locations, parallel=True,

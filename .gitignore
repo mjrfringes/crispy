@@ -1,4 +1,8 @@
 
-*.fits
+Simresults/*
+
+unitTestsOutputs/*
 
 *.pyc
+
+ReferenceFiles/simpsf/allweights.dat

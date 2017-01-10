@@ -11,24 +11,28 @@ class Params():
         
         """
 
+        self.saveRotatedInput = True
+        self.saveDetector = True
+        self.saveLensletPlane = True
+        
         # ******************************************************************
         # Basic resolution/configuration parameters
         # To make this run faster, decrease pxprlens and/or nlens.
         # Decreasing nlens reduces number of lenslets/FOV
-        # Reducing pxprlens below ~60 introduces aliasing (don't do this)
-        # Should generally leave n_pupil = 1000 (doesn't matter that much)
         # ******************************************************************
 
-        self.n_pupil = 1024        # Number of pixels for pupil plane
-        self.pxprlens = 60         # Pixels (not detector pixels!) per lenslet
-        self.nlens = 108           # Number of lenslets across array
-        self.mmperpix = 58e-6      # Size of pixels in input image
+        self.pxprlens = 60          # Pixels (not detector pixels!) per lenslet
+        self.nlens = 108            # Number of lenslets across array
+        self.dlam = 0.005           # less than the IFS resolution
 
         # ******************************************************************
         # Detector stuff
         # ******************************************************************
         
-        self.pixsize = 13e-6       # Pixel size (meters)
+        self.pixsize = 13e-6        # Pixel size (meters)
+        self.convolve = True        # whether to convolve the existing kernels with
+                                    # gaussian kernel (simulating defocus)
+        self.FWHM = 1.5             # FWHM of gaussian kernel
 
         # ******************************************************************
         # Spectrograph stuff
@@ -45,6 +49,8 @@ class Params():
         self.vardefoc = False      # Account for variable defocusing 
 
         self.prefix = os.path.abspath('./ReferenceFiles') 
+        self.exportDir = os.path.abspath('./SimResults')
+        self.unitTestsOutputs = os.path.abspath('./unitTestsOutputs')
 
 
     def output(self):

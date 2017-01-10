@@ -8,44 +8,101 @@ import re
 from specutil import SpecWFE, Distortion, simpleDistortion
 import logging as log
 import matplotlib.pyplot as plt
+import codecs
 
-def Spectrograph(par, image,  lam, simple=True):
-    """
-    Function Spectrograph
+def createAllWeightsArray(plane,locations):
 
-    Apply a translation for the dispersion, a distortion (if desired),
-    and compute convolution kernels to account for wavefront errors,
-    misalignments, and defocuses.  The function also computes some 
-    transmissions from the prism and spectrograph optics; these are 
-    appended to the list of transmissions.
+    # requires square array for now
+    npix = plane.shape[0]
+    xfrac = np.linspace(0, npix, npix)/npix
+    yfrac, xfrac = np.meshgrid(xfrac, xfrac)
 
-    Inputs: 
-    1. par:        parameters class
-    2. image:      image plane after lenslet (array of PSF-lets)
-    3. lam:        wavelength (microns)
-    4. simple:     whether to use only the most important distortion coefficients
+    allweights = np.ones((npix, npix, len(locations)))*1/0.25
+    for i in range(len(locations)):
+        allweights[:, :, i] *= (np.abs(xfrac - locations[i, 0]) < 0.5)
+        allweights[:, :, i] *= (np.abs(yfrac - locations[i, 1]) < 0.5)
 
-    Returns: 
-    1. image:      image plane after dispersion, distortion
-    2. kernels:    List of convolution kernels.  
-    3. loc:        Locations of convolution kernels.
+    for i in range(npix):
+        for k in range(len(locations)):
+            if xfrac[i, 0] > locations[k, 0]:
+                allweights[i, :, k] *= locations[k, 0] + 0.5 - xfrac[i, :]
+            else:
+                allweights[i, :, k] *= xfrac[i, :] - (locations[k, 0] - 0.5)
+
+    for j in range(npix):
+        for k in range(len(locations)):
+            if yfrac[0, j] > locations[k, 1]:
+                allweights[:, j, k] *= locations[k, 1] + 0.5 - yfrac[:, j]
+            else:
+                allweights[:, j, k] *= yfrac[:, j] - (locations[k, 1] - 0.5)
+    return allweights
+
+
+def selectKernel(par,lam,refWaveList,kernelList):
+    # find lowest index that is greater than lam
+    ind = 0
+    for nwave in range(len(refWaveList)):
+        if refWaveList[ind]>=lam*1000:
+            break
+        else:
+            ind+=1
     
-    """
+    if ind==0:
+        kernels = kernelList[0]
+        log.warning('Wavelength out of range of reference kernels')
+    elif ind==len(refWaveList):
+        kernels = kernelList[-1]
+        log.warning('Wavelength out of range of reference kernels')
+    else:
+        # ind is the index of the wavelength immediately greater than lam
+        wavelUp = refWaveList[ind]
+        wavelDown = refWaveList[ind-1]
+        kernels = (wavelUp - lam*1000)*kernelList[ind] + (lam*1000-wavelDown)*kernelList[ind-1]
+        kernels /= (wavelUp-wavelDown)
     
-   
-    ###################################################################### 
-    # Load the spot diagrams and their coordinates.  Scale the coordinates
-    # to [0, 1]; values will be [0, 0.5, 1]x[0, 0.5, 1].  [0, 0] is bottom
-    # left, [1, 1] is top right, etc.
-    ###################################################################### 
+    if par.convolve:
+        # convolve the clipped kernel by a Gaussian to simulate defocus
+        # this is inaccurate but is a placeholder for using the real defocussed kernels
+        # scale is par.pitch/par.pxprlens
+        # we want kernel to be ~2 detector pixel FWHM so par.pixsize/(par.pitch/par.pxprlens)
+        sigma = par.FWHM/2.35*par.pixsize/(par.pitch/par.pxprlens)
+        for k in range(kernels.shape[0]):
+            kernels[k] = ndimage.filters.gaussian_filter(kernels[k],sigma,order=0,mode='constant')
+    return kernels
 
+def loadKernels(par,wavel,numpix=None):
+    
     log.info('Loading spot diagrams.')
     # first, select which wavelength PSF to use
-    wavel = 660
-    kernelscale = 1.265e-6
     spotfields = glob.glob(par.prefix + '/simpsf/%dPSF_*.fits' % wavel)
+    spotsizefiles = glob.glob(par.prefix+'/simpsf/%d_*.txt' % wavel)
     kernels = [pyf.open(ifile)[1].data for ifile in spotfields]
     locations = np.zeros((len(spotfields), 2))
+
+    if len(spotfields) != len(spotsizefiles):
+        log.error('Number of kernels should match number of textfiles')
+    
+
+    ##################################################################
+    # Reading kernel scale from Zemax textfile
+    ##################################################################
+    kernelscale = 0.0
+    for spotsizefile in spotsizefiles:
+        readFile = codecs.open(spotsizefile,encoding='utf-16-le')
+        for i, line in enumerate(readFile):
+            # physical scale is located on line 9, element 4
+            if i==9:
+                kernelscale += float(line.split(' ')[3])
+            elif i>9:
+                break
+    kernelscale /= len(spotsizefiles)
+    log.info('kernel scale average is %f micron per pixel at %d nm' % (kernelscale,wavel))
+    kernelscale *= 1e-6
+
+
+    ##################################################################
+    # Reading locations
+    ##################################################################
     for i in range(len(spotfields)):
         name = re.sub('.fits', '', re.sub('.*PSF_', '', spotfields[i]))
         locations[i, 0] = float(name.split('_')[0])
@@ -54,57 +111,22 @@ def Spectrograph(par, image,  lam, simple=True):
     locations /= 2.
     locations += 0.5
 
-    ###################################################################### 
-    # Compute dispersion and distorsion from 2D polynomial fit
-    ###################################################################### 
-    
-    #log.info('Apply distortion and dispersion.')
-    
-#     if simple:
-#         image = simpleDistortion(par,image,lam)
-#         log.info('Applied simplified model of the distortion/dispersion polynomial.')
-#     else:
-#         image = Distortion(par, image, lam)
-#         log.info('Applied full model of the distortion/dispersion polynomial.')
-    
-    ###################################################################### 
-    # Several convolution kernels here: 
-    # Simulated misalignment (includes defocus, spherical and coma)
-    # Manufacturing WFEs
-    # We will apply all of these together in the detector plane.  The 
-    # rationale for this is that the detector will down-sample, so by 
-    # only convolving at these points, we save ourselves a computational
-    # factor roughly equivalent to the down-sampling.
-    # After this step, the kernels are convolved with everything: wavefront
-    # errors, spot diagrams of all types.  We only need to convolve them 
-    # with the pixel response function (which we will do later).
-    # Convolve with the lenslet defocus spot diagram now if we didn't do
-    # so in Lenslet()--set by par.vardefoc
-    ###################################################################### 
-
+    ##################################################################
+    # Resample the kernels to the appropriate resolution
+    ##################################################################
+    log.info('Resampling kernels to match input')
+    plateScale = par.pitch/par.pxprlens
+    log.debug('Incoming plate scale is %f micron per pixel' % (plateScale*1e6))
     for i in range(len(locations)):
-
-        ##################################################################
-        # Now resample the kernels to the appropriate resolution
-        ##################################################################
-        
-        
         # the scale in the incoming plane is par.pitch/par.pxprlens
         # the scale in the kernels is kernelscale
         # remap kernel to match incoming plate scale
         
-        ratio = kernelscale/(par.pitch/par.pxprlens)
+        ratio = kernelscale/plateScale
         nx = kernels[i].shape[0] * ratio
         ny = kernels[i].shape[1] * ratio
         
-        # the factor of 94 is believed to be related to the magnification of the relay
-        # the spot diagrams
-        #nx = par.pxprlens*kernels[i].shape[1]/94.
-        #ny = par.pxprlens*kernels[i].shape[0]/94.
-
-        #x = np.arange(nx)*94./par.pxprlens
-        #y = np.arange(ny)*94./par.pxprlens
-        x = (np.arange(nx)- nx//2)/ratio 
+        x = (np.arange(nx) - nx//2)/ratio 
         y = (np.arange(ny) - ny//2)/ratio
 
         x, y = np.meshgrid(x, y)
@@ -114,9 +136,42 @@ def Spectrograph(par, image,  lam, simple=True):
         y = r*np.sin(theta + par.philens) + kernels[i].shape[1]//2
 
         kernels[i] = ndimage.map_coordinates(kernels[i], [y, x])
-#         plt.imshow(kernels[i],interpolation='nearest')
-#         plt.show()
-    log.info('Remapped kernels')
+    
+    if numpix!=None:
+        log.info('Padding smaller kernels')
+        newkernels = np.zeros((len(kernels),numpix,numpix))
+        for k in range(len(locations)):
+            newkernels[k,numpix//2-kernels[k].shape[0]//2:numpix//2+kernels[k].shape[0]//2, \
+                numpix//2-kernels[k].shape[1]//2:numpix//2+kernels[k].shape[1]//2] += kernels[k]
+    else:
+        newkernels = kernels
+        
+        
+    for k in range(len(locations)):
+        newkernels[k] /= np.sum(newkernels[k])
+        
+        if par.pinhole:
+#             x = range(len(kernels[k]))
+#             x -= np.median(x)
+#             x, y = np.meshgrid(x, x)
+            if kernels[k].shape[0]<par.pxprlens+par.pin_dia/plateScale:
+                log.warning('Kernel too small to capture crosstalk')
+            x = np.linspace(-1.5, 1.5, 3*par.pxprlens)%1
+            x[np.where(x > 0.5)] -= 1
+            x, y = np.meshgrid(x, x)
+
+            mask = 1.*(np.sqrt(x**2 + y**2) <= 0.5*par.pin_dia/par.pitch)
+            xc=newkernels[k].shape[0]//2
+            yc=newkernels[k].shape[1]//2
+            mx = mask.shape[0]//2
+            my = mask.shape[1]//2
+            if xc<mx:
+                newkernels[k] *= mask[mx-xc:mx+xc,my-yc:my+yc]
+            else:
+                newkernels[k,xc-mc:mx+xc,yc-mc:my+yc] *= mask[mx-xc:mx+xc,my-yc:my+yc]
+
+    return newkernels,locations
 
 
-    return image, kernels, locations
+
+
