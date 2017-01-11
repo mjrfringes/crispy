@@ -8,3 +8,5 @@ unitTestsOutputs/*
 ReferenceFiles/simpsf/allweights.dat
 
 *.log
+
+*.log
