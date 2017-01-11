@@ -27,23 +27,26 @@ def processImagePlane(par,imagePlane):
     return imagePlaneRot
 
     
-def propagate(par, imageplane, lam, allweights,kernels,locations):
+def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
+#def propagate(par, imageplane, lam, allweights,kernels,locations):
     """
     Function propagate
 
-
+    
     Inputs:
-    1. par:           parameters class
-    2. image:         image plane incident on lenslets (complex E-field)
-    3. lam:           wavelength (microns)
-    4. dlam:          delta wavelength (microns)
+    1. par:             parameters class
+    2. image:           image plane incident on lenslets (complex E-field)
+    3. lam:             wavelength (microns)
+    4. allweights:      cube with weights for each kernel
+    5. kernels:         kernels at locations on the detector
+    6. locations:       locations where the kernels are sampled
     
     Outputs:
     1. lensletplane:  image plane after lenslet (array of PSF-lets)
 
     """
 
-    lensletplane = np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
+    #lensletplane = np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
     
     # select row values
     nx,ny = imageplane.shape
@@ -92,7 +95,7 @@ def propagate(par, imageplane, lam, allweights,kernels,locations):
             # of kernels
             # use bilinear interpolation of kernels
             
-             kx,ky = kernels[0].shape
+            kx,ky = kernels[0].shape
             if sx>kx//2 and sx<lensletplane.shape[0]-kx//2 \
                 and sy>ky//2 and sy<lensletplane.shape[1]-ky//2:
                 isx = int(sx)
@@ -113,7 +116,5 @@ def propagate(par, imageplane, lam, allweights,kernels,locations):
                     lensletplane[xlow:xhigh,ylow:yhigh]+=val*weight*kernels[k]
                 #print 'checkWeight=',checkWeight
 
-
-
-    return lensletplane
+    #return lensletplane
 

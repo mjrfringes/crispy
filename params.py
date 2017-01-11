@@ -14,7 +14,7 @@ class Params():
         self.saveRotatedInput = True
         self.saveDetector = True
         self.saveLensletPlane = True
-
+        self.parallel = True
         self.maxcpus=6        
         # ******************************************************************
         # Basic resolution/configuration parameters

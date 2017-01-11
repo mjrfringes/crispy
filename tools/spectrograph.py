@@ -10,10 +10,10 @@ import logging as log
 import matplotlib.pyplot as plt
 import codecs
 
-def createAllWeightsArray(plane,locations):
+def createAllWeightsArray(par,locations):
 
     # requires square array for now
-    npix = plane.shape[0]
+    npix = par.nlens
     xfrac = np.linspace(0, npix, npix)/npix
     yfrac, xfrac = np.meshgrid(xfrac, xfrac)
 

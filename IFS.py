@@ -29,7 +29,7 @@ def main():
     ###################################################################### 
     # Initialize logging function; both to console and to file
     ###################################################################### 
-    tools.initLogger(par.exportDir+'/IFS.log',levelConsole=log.DEBUG)
+    tools.initLogger(par.exportDir+'/IFS.log')
     
     ###################################################################### 
     # Load input
@@ -77,27 +77,25 @@ def main():
     kernels660,loc = tools.loadKernels(par,660)
     refWaveList = [660,770,890]
     kernelList = np.array([kernels660,kernels770,kernels890])
+
+    ###################################################################### 
+    # Creating kernel weight map (bilinear interpolation)
+    ###################################################################### 
+    allweights = tools.createAllWeightsArray(par,locations)
     
+    ###################################################################### 
+    # Allocate an array
+    ###################################################################### 
     finalFrame=np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
     
-    tasks = multiprocessing.Queue()
-    results = multiprocessing.Queue()
-    ncpus = min(multiprocessing.cpu_count(), par.maxcpus)
-    consumers = [ Consumer(tasks, results)
-                  for i in range(ncpus) ]
-    for w in consumers:
-        w.start()
     for i in range(len(waveList)):
-        
         lam = wavelist[i]
-        log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))
-        
+        log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
         ###################################################################### 
         # Interpolate kernel at wavelength lam
         ###################################################################### 
         kernel = tools.selectKernel(par,lam,refWaveList,kernelList)
-        #tools.plotKernels(par,kernel,locations)
-        
+    
         ###################################################################### 
         # Rotate and scale the image so that it is in the same 
         # orientation and scale as the lenslet array
@@ -108,29 +106,15 @@ def main():
         if par.saveRotatedInput: Image(data=imagePlaneRot).write(par.exportDir+'/imagePlaneRot_%.3fum.fits' % (lam))
 
         ###################################################################### 
-        # Creating kernel weight map (bilinear interpolation)
-        ###################################################################### 
-        if allweights is None:
-            log.info('Allweights array was never created. Creating now.')
-            allweights = tools.createAllWeightsArray(imagePlaneRot,locations)
-
-        ###################################################################### 
         # Generate high-resolution detector map for wavelength lam
         ###################################################################### 
         log.info('Propagate through lenslet array')
-        #lensletplane = tools.propagate(par, imagePlaneRot, lam, allweights,kernel,locations)
-        #if par.saveLensletPlane: Image(data=lensletplane).write(par.exportDir+'/lensletplane_%.2fum.fits' % (lam))
-        
-        tasks.put(Task(i, propagate,
-                       (par, imagePlaneRot, lam, allweights,kernel,locations)))
-                       
-    for i in range(ncpus):
-        tasks.put(None)
+        tools.propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
+#         lensletplane = tools.propagate(par, imagePlaneRot, lam, allweights,kernel,locations)
+#         if par.saveLensletPlane: Image(data=lensletplane).write(par.exportDir+'/lensletplane_%.2fum.fits' % (lam))        
     
-    for i in range(len(waveList)):
-        index, result = results.get()
-        finalFrame+= result
-    
+#         finalFrame += lensletplane
+            
     ###################################################################### 
     # Summing frames and rebinning to detector resolution
     ###################################################################### 
