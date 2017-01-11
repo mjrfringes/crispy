@@ -21,7 +21,6 @@ class Params():
         # Decreasing nlens reduces number of lenslets/FOV
         # ******************************************************************
 
-        self.pxprlens = 60          # Pixels (not detector pixels!) per lenslet
         self.nlens = 108            # Number of lenslets across array
         self.dlam = 0.005           # less than the IFS resolution
 
@@ -29,7 +28,9 @@ class Params():
         # Detector stuff
         # ******************************************************************
         
+        self.npix = 1024            # Number of pixels in final detector
         self.pixsize = 13e-6        # Pixel size (meters)
+        self.pxperdetpix = 5       # Oversampling of the final detector pixels
         self.convolve = True        # whether to convolve the existing kernels with
                                     # gaussian kernel (simulating defocus)
         self.FWHM = 1.5             # FWHM of gaussian kernel

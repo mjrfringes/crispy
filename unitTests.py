@@ -9,6 +9,9 @@ from params import Params
 
 
 def testLoadKernels():
+    '''
+    Make sure the kernel interpolation with wavelength makes sense
+    '''
     par = Params()
     tools.initLogger(par.exportDir+'/IFS.log',levelConsole=log.DEBUG)
     

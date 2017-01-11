@@ -17,7 +17,7 @@ def rebinDetector(par,finalFrame,clip=False):
     detpixprlenslet = par.pitch/par.pixsize 
     log.info('Number of detector pixels per lenslet: %f' % detpixprlenslet)
         
-    newShape = (finalFrame.shape[0]//(par.pxprlens/detpixprlenslet),finalFrame.shape[1]//(par.pxprlens/detpixprlenslet))
+    newShape = (finalFrame.shape[0]//(par.pxperdetpix),finalFrame.shape[1]//(par.pxperdetpix))
     log.info('Rebinning final detector. Image has dimensions %dx%d' % newShape)
     detectorFrame = frebin(finalFrame,newShape) 
     

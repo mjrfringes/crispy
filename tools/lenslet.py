@@ -49,11 +49,7 @@ def Lenslet(par, imageplane, lam, allweights,kernels,locations):
 
     """
 
-    n = par.pxprlens
-    
-    #TODO: reduce the lenslet plane only to what is needed, if there are zeros in most locations
-    # on the input
-    lensletplane = np.zeros((n*(par.nlens + 2), n*(par.nlens + 2)))
+    lensletplane = np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
     
     # select row values
     nx,ny = imageplane.shape
@@ -115,7 +111,11 @@ def Lenslet(par, imageplane, lam, allweights,kernels,locations):
                     wy = int(isy/lensletplane.shape[1]*allweights[:,:,k].shape[1])
                     weight = allweights[wx,wy,k]
                     #checkWeight += weight
-                    lensletplane[isy-ky/2:isy+ky/2,isx-kx/2:isx+kx/2]+=val*weight*kernels[k]
+                    xlow = isy-ky/2
+                    xhigh = xlow+ky
+                    ylow = isx-kx/2
+                    yhigh = ylow+kx
+                    lensletplane[xlow:xhigh,ylow:yhigh]+=val*weight*kernels[k]
                 #print 'checkWeight=',checkWeight
 
 

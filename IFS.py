@@ -19,20 +19,24 @@ from tools.image import Image
     
 def main():
 
+    ###################################################################### 
+    # Load parameters from params.py
+    ###################################################################### 
     par = Params()
 
-    tools.initLogger(par.exportDir+'/IFS.log')
+    ###################################################################### 
+    # Initialize logging function; both to console and to file
+    ###################################################################### 
+    tools.initLogger(par.exportDir+'/IFS.log',levelConsole=log.DEBUG)
     
-    log.info('Starting computation.')
-
     ###################################################################### 
     # Load input
     ###################################################################### 
+    log.info('Loading input')
 #     wavelist = np.arange(0.6,0.7,0.005) #[0.800,0.820,0.840]
 #     wavelist = [0.7] #[0.800,0.820,0.840]
 #     inputcube = np.ones((len(wavelist),512,512),dtype=float)/9.
-
-    
+#     mperpix = 58e-6
     BW = 0.18
     Nlam = 51
     clam = 0.77
@@ -40,7 +44,7 @@ def main():
     fname = './Inputs/PSF_SPLC_Nwvl51_BW18pct_star.fits'
     hdu = pyf.open(fname)
     inputcube = hdu[0].data    
-    mperpix = 3./5.*par.pitch
+    mperpix = 3./5.*par.pitch # 5 pixels per lambda/D
     par.pixperlenslet = par.pitch/mperpix
     par.mperpix = mperpix
     
@@ -67,9 +71,8 @@ def main():
     
     log.info('Import all kernels and rescale them to same plate scale')
     kernels890,locations = tools.loadKernels(par,890)
-    numpix = kernels890[0].shape[0]
-    kernels770,loc = tools.loadKernels(par,770,numpix)
-    kernels660,loc = tools.loadKernels(par,660,numpix)
+    kernels770,loc = tools.loadKernels(par,770)
+    kernels660,loc = tools.loadKernels(par,660)
     refWaveList = [660,770,890]
     kernelList = np.array([kernels660,kernels770,kernels890])
     

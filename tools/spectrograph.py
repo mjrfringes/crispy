@@ -63,14 +63,14 @@ def selectKernel(par,lam,refWaveList,kernelList):
     if par.convolve:
         # convolve the clipped kernel by a Gaussian to simulate defocus
         # this is inaccurate but is a placeholder for using the real defocussed kernels
-        # scale is par.pitch/par.pxprlens
-        # we want kernel to be ~2 detector pixel FWHM so par.pixsize/(par.pitch/par.pxprlens)
-        sigma = par.FWHM/2.35*par.pixsize/(par.pitch/par.pxprlens)
+        # scale is (par.pixsize/par.pxperdetpix)
+        # we want kernel to be ~2 detector pixel FWHM so par.pixsize/(par.pixsize/par.pxperdetpix)
+        sigma = par.FWHM/2.35*par.pixsize/(par.pixsize/par.pxperdetpix)
         for k in range(kernels.shape[0]):
             kernels[k] = ndimage.filters.gaussian_filter(kernels[k],sigma,order=0,mode='constant')
     return kernels
 
-def loadKernels(par,wavel,numpix=None):
+def loadKernels(par,wavel):
     
     log.info('Loading spot diagrams.')
     # first, select which wavelength PSF to use
@@ -96,7 +96,7 @@ def loadKernels(par,wavel,numpix=None):
             elif i>9:
                 break
     kernelscale /= len(spotsizefiles)
-    log.info('kernel scale average is %f micron per pixel at %d nm' % (kernelscale,wavel))
+    log.info('kernel scale average is %.3f micron per pixel at %d nm' % (kernelscale,wavel))
     kernelscale *= 1e-6
 
 
@@ -115,16 +115,16 @@ def loadKernels(par,wavel,numpix=None):
     # Resample the kernels to the appropriate resolution
     ##################################################################
     log.info('Resampling kernels to match input')
-    plateScale = par.pitch/par.pxprlens
-    log.debug('Incoming plate scale is %f micron per pixel' % (plateScale*1e6))
+    plateScale = par.pixsize/par.pxperdetpix
+    log.debug('Lenslet plane plate scale is %.3f micron per pixel' % (plateScale*1e6))
     for i in range(len(locations)):
         # the scale in the incoming plane is par.pitch/par.pxprlens
         # the scale in the kernels is kernelscale
         # remap kernel to match incoming plate scale
         
         ratio = kernelscale/plateScale
-        nx = kernels[i].shape[0] * ratio
-        ny = kernels[i].shape[1] * ratio
+        nx = int(kernels[i].shape[0] * ratio)
+        ny = int(kernels[i].shape[1] * ratio)
         
         x = (np.arange(nx) - nx//2)/ratio 
         y = (np.arange(ny) - ny//2)/ratio
@@ -137,24 +137,28 @@ def loadKernels(par,wavel,numpix=None):
 
         kernels[i] = ndimage.map_coordinates(kernels[i], [y, x])
     
-    if numpix!=None:
+    if hasattr(par,'pxprlens'):
         log.info('Padding smaller kernels')
-        newkernels = np.zeros((len(kernels),numpix,numpix))
+        newkernels = np.zeros((len(kernels),par.pxprlens,par.pxprlens))
         for k in range(len(locations)):
-            newkernels[k,numpix//2-kernels[k].shape[0]//2:numpix//2+kernels[k].shape[0]//2, \
-                numpix//2-kernels[k].shape[1]//2:numpix//2+kernels[k].shape[1]//2] += kernels[k]
+            kxm = par.pxprlens//2-kernels[k].shape[0]//2
+            kxp = kxm+kernels[k].shape[0]
+            #print kxm,kxp,kernels[k].shape
+            newkernels[k,kxm:kxp,kxm:kxp] += kernels[k]
     else:
+        par.pxprlens = kernels[0].shape[0]
+        log.info('pxprlens: %.3f' % par.pxprlens)
         newkernels = kernels
         
         
     for k in range(len(locations)):
         newkernels[k] /= np.sum(newkernels[k])
-        
+        #print newkernels[k].shape
         if par.pinhole:
 #             x = range(len(kernels[k]))
 #             x -= np.median(x)
 #             x, y = np.meshgrid(x, x)
-            if kernels[k].shape[0]<par.pxprlens+par.pin_dia/plateScale:
+            if kernels[k].shape[0]<2*par.pxprlens+par.pin_dia/plateScale:
                 log.warning('Kernel too small to capture crosstalk')
             x = np.linspace(-1.5, 1.5, 3*par.pxprlens)%1
             x[np.where(x > 0.5)] -= 1
@@ -165,10 +169,19 @@ def loadKernels(par,wavel,numpix=None):
             yc=newkernels[k].shape[1]//2
             mx = mask.shape[0]//2
             my = mask.shape[1]//2
+            
             if xc<mx:
-                newkernels[k] *= mask[mx-xc:mx+xc,my-yc:my+yc]
+                xlow = mx-xc
+                xhigh = xlow+newkernels[k].shape[0]
+                ylow = my-yc
+                yhigh = ylow+newkernels[k].shape[1]
+                newkernels[k] *= mask[xlow:xhigh,ylow:yhigh]
             else:
-                newkernels[k,xc-mc:mx+xc,yc-mc:my+yc] *= mask[mx-xc:mx+xc,my-yc:my+yc]
+                xlow = xc-mx
+                xhigh = xlow+mask.shape[0]
+                ylow = yc-my
+                yhigh = ylow+mask.shape[1]
+                newkernels[k,xlow:xhigh,ylow:yhigh] *= mask
 
     return newkernels,locations
 
