@@ -26,17 +26,11 @@ def processImagePlane(par,imagePlane):
     log.debug('Input plane is %dx%d' % imagePlaneRot.shape)
     return imagePlaneRot
 
-
-def Lenslet(par, imageplane, lam, allweights,kernels,locations):
+    
+def propagate(par, imageplane, lam, allweights,kernels,locations):
     """
-    Function Lenslet
+    Function propagate
 
-    Apply a Fourier transform to each lenslet's patch of the incident 
-    electric field.  If specified in input parameters, apply a convolution
-    to account for each lenslet's defocus.  Otherwise, account for this
-    later when taking care of the other convolutions in the detector and 
-    rebinning step.  Also, update the transmission and background lists
-    by appending values for new optics.
 
     Inputs:
     1. par:           parameters class
@@ -70,6 +64,9 @@ def Lenslet(par, imageplane, lam, allweights,kernels,locations):
         for j in range(ny):
             jcoord = colList[j]
             icoord = rowList[i]
+            val = imageplane[jcoord+imageplane.shape[0]//2,icoord+imageplane.shape[0]//2]
+            if val==0:
+                continue
             theta = np.arctan2(jcoord,icoord)
             r = np.sqrt(icoord**2 + jcoord**2)*par.pxprlens
             # determine the coordinate of that lenslet on the pinhole mask
@@ -95,9 +92,7 @@ def Lenslet(par, imageplane, lam, allweights,kernels,locations):
             # of kernels
             # use bilinear interpolation of kernels
             
-            #if sx>0 and sx<lensletplane.shape[0] and sy>0 and sy<lensletplane.shape[1]:
-                #lensletplane[int(sx),int(sy)]=imageplane[jcoord+imageplane.shape[0]//2,icoord+imageplane.shape[0]//2]
-            kx,ky = kernels[0].shape
+             kx,ky = kernels[0].shape
             if sx>kx//2 and sx<lensletplane.shape[0]-kx//2 \
                 and sy>ky//2 and sy<lensletplane.shape[1]-ky//2:
                 isx = int(sx)

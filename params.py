@@ -14,7 +14,8 @@ class Params():
         self.saveRotatedInput = True
         self.saveDetector = True
         self.saveLensletPlane = True
-        
+
+        self.maxcpus=6        
         # ******************************************************************
         # Basic resolution/configuration parameters
         # To make this run faster, decrease pxprlens and/or nlens.

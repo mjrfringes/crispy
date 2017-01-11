@@ -15,8 +15,10 @@ import time
 import logging as log
 import matplotlib.pyplot as plt
 from tools.image import Image
+from tools import propagate
+import multiprocessing
+from tools.parallel_utils import Task, Consumer
 
-    
 def main():
 
     ###################################################################### 
@@ -76,8 +78,16 @@ def main():
     refWaveList = [660,770,890]
     kernelList = np.array([kernels660,kernels770,kernels890])
     
-    frameList=None
-    for i in range(nframes):
+    finalFrame=np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
+    
+    tasks = multiprocessing.Queue()
+    results = multiprocessing.Queue()
+    ncpus = min(multiprocessing.cpu_count(), par.maxcpus)
+    consumers = [ Consumer(tasks, results)
+                  for i in range(ncpus) ]
+    for w in consumers:
+        w.start()
+    for i in range(len(waveList)):
         
         lam = wavelist[i]
         log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))
@@ -108,18 +118,22 @@ def main():
         # Generate high-resolution detector map for wavelength lam
         ###################################################################### 
         log.info('Propagate through lenslet array')
-        lensletplane = tools.Lenslet(par, imagePlaneRot, lam, allweights,kernel,locations)
-        if par.saveLensletPlane: Image(data=lensletplane).write(par.exportDir+'/lensletplane_%.2fum.fits' % (lam))
-
-        if frameList is None:
-            frameList = lensletplane
-        else:
-            frameList+=lensletplane
+        #lensletplane = tools.propagate(par, imagePlaneRot, lam, allweights,kernel,locations)
+        #if par.saveLensletPlane: Image(data=lensletplane).write(par.exportDir+'/lensletplane_%.2fum.fits' % (lam))
+        
+        tasks.put(Task(i, propagate,
+                       (par, imagePlaneRot, lam, allweights,kernel,locations)))
+                       
+    for i in range(ncpus):
+        tasks.put(None)
+    
+    for i in range(len(waveList)):
+        index, result = results.get()
+        finalFrame+= result
     
     ###################################################################### 
     # Summing frames and rebinning to detector resolution
     ###################################################################### 
-    finalFrame = frameList#np.sum(np.asarray(frameList),axis=0)
     
     detectorFrame = tools.rebinDetector(par,finalFrame,clip=True)
     if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/finalframe.fits') 
