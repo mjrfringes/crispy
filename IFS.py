@@ -100,7 +100,7 @@ def propagateIFS(par,wavelist,inputcube):
     # Rebinning to detector resolution
     ###################################################################### 
     detectorFrame = rebinDetector(par,finalFrame,clip=False)
-    if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/finalframe_nodistort_n25.fits') 
+    if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/detectorFrame.fits') 
     log.info('Done.')
     t['End'] = time.time()
     log.info("Performance: %d seconds total" % (t['End'] - t['Start']))
