@@ -75,9 +75,10 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
             r = np.sqrt(icoord**2 + jcoord**2)
             x = r*np.cos(theta+par.philens)
             y = r*np.sin(theta+par.philens)
-            #if i==I and j==J: print x,y
+            if i==I and j==J: print x,y
             
             # transform this coordinate including the distortion and dispersion
+#             factor = 1000*par.pitch/par.pxprlens
             factor = 1000*par.pitch
             X = x*factor # this is now in millimeters
             Y = y*factor # this is now in millimeters
@@ -85,12 +86,12 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
             # apply polynomial transform
             if par.distort:
                 ytmp,xtmp = distort(Y,X,lam)
-                sy = -ytmp/factor+lensletplane.shape[0]//2
-                sx = -xtmp/factor+lensletplane.shape[1]//2
+                sy = -ytmp/factor*par.pxprlens+lensletplane.shape[0]//2
+                sx = -xtmp/factor*par.pxprlens+lensletplane.shape[1]//2
             else:
                 sy = y+lensletplane.shape[0]//2
                 sx = x+lensletplane.shape[1]//2
-            #if i==I and j==J: print sx/par.pxperdetpix,sy/par.pxperdetpix
+            if i==I and j==J: print sx/par.pxperdetpix,sy/par.pxperdetpix
             
             # put the kernel in the correct spot with the correct weight
             kx,ky = kernels[0].shape

@@ -11,7 +11,7 @@ class Params():
         
         '''
 
-        self.saveRotatedInput = False
+        self.saveRotatedInput = True
         self.saveLensletPlane = False
         self.saveDetector = True
         self.prefix = os.path.abspath('./ReferenceFiles') 
@@ -31,7 +31,7 @@ class Params():
         
         self.npix = 1024            # Number of pixels in final detector
         self.pixsize = 13e-6        # Pixel size (meters)
-        self.pxperdetpix = 11       # Oversampling of the final detector pixels
+        self.pxperdetpix = 25       # Oversampling of the final detector pixels
         self.convolve = True        # whether to convolve the existing kernels with
                                     # gaussian kernel (simulating defocus)
         self.FWHM = 1.5             # FWHM of gaussian kernel

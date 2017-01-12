@@ -10,3 +10,5 @@ ReferenceFiles/simpsf/allweights.dat
 *.log
 
 *.log
+
+.ipynb_checkpoints/IFS-checkpoint.ipynb

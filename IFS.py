@@ -18,8 +18,13 @@ from tools import propagate
 
 
 def propagateIFS(par,wavelist,inputcube):
-
+    '''
+    takes in a parameter class, a list of wavelengths, and a cube for which each slice
+    represents the PSF at a different wavelength
+    '''
+    
     log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)    
+    log.info('The plate scale of the input cube is %f um/pixel' % (par.mperpix*1e6))    
     nframes = inputcube.shape[0]
     allweights = None
     
@@ -57,9 +62,9 @@ def propagateIFS(par,wavelist,inputcube):
     ###################################################################### 
     finalFrame=np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
     
-    log.info('%f' % (par.pxprlens/par.pxperdetpix))
+    log.info('Final detector pixel per lenslet: %f' % (par.pxprlens/par.pxperdetpix))
     
-    for i in range(len(waveList)):
+    for i in [0]:#range(len(waveList)):
         lam = wavelist[i]
         log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
         ###################################################################### 
@@ -87,7 +92,7 @@ def propagateIFS(par,wavelist,inputcube):
     ###################################################################### 
     # Rebinning to detector resolution
     ###################################################################### 
-    detectorFrame = tools.rebinDetector(par,finalFrame,clip=True)
+    detectorFrame = tools.rebinDetector(par,finalFrame,clip=False)
     if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/finalframe_nodistort_n25.fits') 
     log.info('Done.')
     t['End'] = time.time()
@@ -95,7 +100,7 @@ def propagateIFS(par,wavelist,inputcube):
 
     log.shutdown()
 
-    return finalFrame
+    return detectorFrame
 
 def main():
 
@@ -144,8 +149,8 @@ def prepareCube(par,wavelist,inputcube):
 
 
 
-if __name__ == '__main__':
-    main()
+#if __name__ == '__main__':
+#    main()
     
     
 
