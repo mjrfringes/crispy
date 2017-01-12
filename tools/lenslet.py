@@ -2,18 +2,11 @@
 
 import numpy as np
 from astropy.io import fits as pyf
-from scipy import signal
-import multiprocessing
-from ft import FT
 from rotate import Rotate
 import logging as log
 import matplotlib.pyplot as plt
 from detutils import frebin
-import glob
-import re
 from scipy import ndimage
-import codecs
-import pickle
 from spectrograph import distort
 
 

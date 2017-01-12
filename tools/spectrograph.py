@@ -5,7 +5,6 @@ from scipy import interpolate, ndimage, signal
 import glob
 from astropy.io import fits as pyf
 import re
-from specutil import SpecWFE, Distortion, simpleDistortion
 import logging as log
 import matplotlib.pyplot as plt
 import codecs
