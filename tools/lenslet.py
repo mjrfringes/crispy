@@ -6,8 +6,6 @@ from scipy import signal
 import multiprocessing
 from ft import FT
 from rotate import Rotate
-from lensrow import LensRow
-from parallel_utils import Task, Consumer
 import logging as log
 import matplotlib.pyplot as plt
 from detutils import frebin
@@ -16,6 +14,7 @@ import re
 from scipy import ndimage
 import codecs
 import pickle
+from spectrograph import distort
 
 
 def processImagePlane(par,imagePlane):
@@ -28,10 +27,8 @@ def processImagePlane(par,imagePlane):
 
     
 def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
-#def propagate(par, imageplane, lam, allweights,kernels,locations):
     """
     Function propagate
-
     
     Inputs:
     1. par:             parameters class
@@ -40,34 +37,23 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
     4. allweights:      cube with weights for each kernel
     5. kernels:         kernels at locations on the detector
     6. locations:       locations where the kernels are sampled
+    7. lensletplane:    densified detector plane
     
-    Outputs:
-    1. lensletplane:  image plane after lenslet (array of PSF-lets)
-
     """
 
-    #lensletplane = np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
-    
     # select row values
     nx,ny = imageplane.shape
-    rowList = np.arange(-nx//2,nx//2)
-    colList = np.arange(-ny//2,ny//2)
+    rowList = np.arange(-nx//2,-nx//2+nx)
+    colList = np.arange(-ny//2,-nx//2+nx)
 
-    # simplified distortion and dispersion
-    cx = np.zeros(1)
-    cy = np.zeros(4)
-    cx[0]=-0.96764187
-    #cx[1]=-0.063628939
-    cy[0]=-2.962499600000000E+00
-    cy[1]=-9.907069600000000E-01
-    cy[2]=6.343124200000000E+00
-    cy[3]=-2.979901200000000E+00
-
+    # loop on all lenslets; there's got to be a way to do this faster
     for i in range(nx):
         for j in range(ny):
             jcoord = colList[j]
             icoord = rowList[i]
             val = imageplane[jcoord+imageplane.shape[0]//2,icoord+imageplane.shape[0]//2]
+            
+            # exit early where there is no flux
             if val==0:
                 continue
             theta = np.arctan2(jcoord,icoord)
@@ -87,8 +73,11 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
             
             
             # apply polynomial transform
-            sy = -np.sum(cx*np.array([Y]))/factor+lensletplane.shape[0]//2
-            sx = -np.sum(cy*np.array([1,X,lam,lam**2]))/factor+lensletplane.shape[1]//2
+            ytmp,xtmp = distort(Y,X,lam)
+            sy = -ytmp/factor+lensletplane.shape[0]//2
+            sx = -xtmp/factor+lensletplane.shape[1]//2
+            #sy = -np.sum(cx*np.array([Y]))/factor+lensletplane.shape[0]//2
+            #sx = -np.sum(cy*np.array([1,X,lam,lam**2]))/factor+lensletplane.shape[1]//2
             #sy = np.sum(cy*np.array([1,Y]))/factor+lensletplane.shape[1]//2
             
             # according to the location x,y, select the correct PSF as a combination
@@ -100,21 +89,15 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
                 and sy>ky//2 and sy<lensletplane.shape[1]-ky//2:
                 isx = int(sx)
                 isy = int(sy)
-                # check i vs j
                 val = imageplane[jcoord+imageplane.shape[0]//2,icoord+imageplane.shape[0]//2]
                 
-                #checkWeight = 0.0
                 for k in range(len(locations)):
                     wx = int(isx/lensletplane.shape[0]*allweights[:,:,k].shape[0])
                     wy = int(isy/lensletplane.shape[1]*allweights[:,:,k].shape[1])
                     weight = allweights[wx,wy,k]
-                    #checkWeight += weight
                     xlow = isy-ky/2
                     xhigh = xlow+ky
                     ylow = isx-kx/2
                     yhigh = ylow+kx
                     lensletplane[xlow:xhigh,ylow:yhigh]+=val*weight*kernels[k]
-                #print 'checkWeight=',checkWeight
-
-    #return lensletplane
 

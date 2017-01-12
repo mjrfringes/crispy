@@ -47,7 +47,7 @@ def simpleDistortion(par,imageplane,lam):
     imageplane = ndimage.map_coordinates(imageplane,[Y,X],order=1, prefilter=False)
     return imageplane
 
-
+    
 def Distortion(par, imageplane, lam):
     
     """

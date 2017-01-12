@@ -11,11 +11,10 @@ class Params():
         
         """
 
-        self.saveRotatedInput = True
+        self.saveRotatedInput = False
         self.saveDetector = True
-        self.saveLensletPlane = True
-        self.parallel = True
-        self.maxcpus=6        
+        self.saveLensletPlane = False
+
         # ******************************************************************
         # Basic resolution/configuration parameters
         # To make this run faster, decrease pxprlens and/or nlens.
@@ -46,9 +45,6 @@ class Params():
 
         self.pinhole = True        # Use a pinhole grid?
         self.pin_dia = 25e-6       # Diameter of pinholes (m)
-        self.flens = 5.6*self.pitch   # Focal length of lenslet (meters)
-        self.distort = 0           # Magnitude of distortion (fiducial=1)
-        self.vardefoc = False      # Account for variable defocusing 
 
         self.prefix = os.path.abspath('./ReferenceFiles') 
         self.exportDir = os.path.abspath('./SimResults')

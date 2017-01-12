@@ -17,7 +17,6 @@ import matplotlib.pyplot as plt
 from tools.image import Image
 from tools import propagate
 import multiprocessing
-from tools.parallel_utils import Task, Consumer
 
 def main():
 
@@ -110,17 +109,13 @@ def main():
         ###################################################################### 
         log.info('Propagate through lenslet array')
         tools.propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
-#         lensletplane = tools.propagate(par, imagePlaneRot, lam, allweights,kernel,locations)
-#         if par.saveLensletPlane: Image(data=lensletplane).write(par.exportDir+'/lensletplane_%.2fum.fits' % (lam))        
-    
-#         finalFrame += lensletplane
             
     ###################################################################### 
     # Summing frames and rebinning to detector resolution
     ###################################################################### 
     
     detectorFrame = tools.rebinDetector(par,finalFrame,clip=True)
-    if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/finalframe.fits') 
+    if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/finalframe_distort.fits') 
     log.info('Done.')
     t['End'] = time.time()
     log.info("Performance: %d seconds total" % (t['End'] - t['Start']))
