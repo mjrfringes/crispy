@@ -4,6 +4,9 @@ import logging as log
 
 
 def plotKernels(par,kernels,locations, plot=False):
+    '''
+    Make plots of all the kernels
+    '''
     #fig,axarr = plt.subplots(3,3,sharex=True, sharey=True)
     nx,ny = kernels[0].shape
     output = np.zeros((3*nx,3*ny))

@@ -10,6 +10,12 @@ import matplotlib.pyplot as plt
 import codecs
 
 def distort(fx,fy,lam):
+
+    '''
+    Apply the distortion and dispersion from pre-determined polynomial
+    This was estimated from Zemax by Qian Gong and Jorge Llop and needs to be revisited
+    
+    '''
     cx = np.zeros(20)
     cy = np.zeros(20)
     cx[0]=-0.00000000036463819

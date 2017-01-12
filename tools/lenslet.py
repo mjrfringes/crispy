@@ -51,9 +51,9 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
     rowList = np.arange(-nx//2,-nx//2+nx)
     colList = np.arange(-ny//2,-nx//2+nx)
 
-    # loop on all lenslets; there's got to be a way to do this faster
     I = 64
     J = 35
+    # loop on all lenslets; there's got to be a way to do this faster
     for i in range(nx):
         for j in range(ny):
             jcoord = colList[j]
@@ -64,14 +64,12 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
             if val==0:
                 continue
             theta = np.arctan2(jcoord,icoord)
-#             r = np.sqrt(icoord**2 + jcoord**2)*par.pxprlens
             r = np.sqrt(icoord**2 + jcoord**2)
             x = r*np.cos(theta+par.philens)
             y = r*np.sin(theta+par.philens)
-            if i==I and j==J: print x,y
+            #if i==I and j==J: print x,y
             
             # transform this coordinate including the distortion and dispersion
-#             factor = 1000*par.pitch/par.pxprlens
             factor = 1000*par.pitch
             X = x*factor # this is now in millimeters
             Y = y*factor # this is now in millimeters
@@ -84,7 +82,7 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
             else:
                 sy = y+lensletplane.shape[0]//2
                 sx = x+lensletplane.shape[1]//2
-            if i==I and j==J: print sx/par.pxperdetpix,sy/par.pxperdetpix
+            #if i==I and j==J: print sx/par.pxperdetpix,sy/par.pxperdetpix
             
             # put the kernel in the correct spot with the correct weight
             kx,ky = kernels[0].shape

@@ -2,17 +2,16 @@
 
 import os
 from numpy import sqrt,arcsin
-import logging
 
 class Params():
 
     def __init__(self):
         '''
-        
+        Main class containing all the sim parameters
         '''
 
-        self.saveRotatedInput = True
-        self.saveLensletPlane = False
+        self.saveRotatedInput = False
+        self.saveLensletPlane = False   # not used
         self.saveDetector = True
         self.prefix = os.path.abspath('./ReferenceFiles') 
         self.exportDir = os.path.abspath('./SimResults')
@@ -23,7 +22,7 @@ class Params():
         ###################################################################### 
 
         self.nlens = 108            # Number of lenslets across array
-        self.dlam = 0.005           # less than the IFS resolution
+        self.dlam = 0.005           # less than the IFS resolution (not yet used
 
         ###################################################################### 
         # Detector stuff

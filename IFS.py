@@ -2,7 +2,9 @@
 
 '''
 Standalone IFS simulation code
+MJ Rizzo and the IFs team
 
+Originally inspired by T. Brandt;s code for CHARIS
 '''
 
 
