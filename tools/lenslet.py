@@ -2,12 +2,12 @@
 
 import numpy as np
 from astropy.io import fits as pyf
-from rotate import Rotate
+from tools.rotate import Rotate
 import logging as log
 import matplotlib.pyplot as plt
-from detutils import frebin
+from tools.detutils import frebin
 from scipy import ndimage
-from spectrograph import distort
+from tools.spectrograph import distort
 
 
 def processImagePlane(par,imagePlane):

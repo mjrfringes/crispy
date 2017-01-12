@@ -8,7 +8,7 @@ import numpy as np
 import multiprocessing
 import logging
 import matplotlib.pyplot as plt
-from detutils import frebin
+from tools.detutils import frebin
 import logging as log
 
 def rebinDetector(par,finalFrame,clip=False):

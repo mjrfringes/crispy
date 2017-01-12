@@ -11,13 +11,18 @@ Originally inspired by T. Brandt;s code for CHARIS
 import numpy as np
 from params import Params
 from astropy.io import fits as pyf
-import tools
+#import tools
 import time
 import logging as log
 import matplotlib.pyplot as plt
+import tools
 from tools.image import Image
-from tools import propagate
-
+from tools.lenslet import propagate,processImagePlane
+from tools.spectrograph import createAllWeightsArray,selectKernel,loadKernels
+from tools.detector import rebinDetector
+from tools.initLogger import initLogger
+from tools.image import Image
+from tools.plotting import plotKernels
 
 def propagateIFS(par,wavelist,inputcube):
     '''
@@ -48,16 +53,16 @@ def propagateIFS(par,wavelist,inputcube):
     ###################################################################### 
     
     log.info('Import all kernels and rescale them to same plate scale')
-    kernels890,locations = tools.loadKernels(par,890)
-    kernels770,loc = tools.loadKernels(par,770)
-    kernels660,loc = tools.loadKernels(par,660)
+    kernels890,locations = loadKernels(par,890)
+    kernels770,loc = loadKernels(par,770)
+    kernels660,loc = loadKernels(par,660)
     refWaveList = [660,770,890]
     kernelList = np.array([kernels660,kernels770,kernels890])
 
     ###################################################################### 
     # Creating kernel weight map (bilinear interpolation)
     ###################################################################### 
-    allweights = tools.createAllWeightsArray(par,locations)
+    allweights = createAllWeightsArray(par,locations)
     
     ###################################################################### 
     # Allocate an array
@@ -72,7 +77,7 @@ def propagateIFS(par,wavelist,inputcube):
         ###################################################################### 
         # Interpolate kernel at wavelength lam
         ###################################################################### 
-        kernel = tools.selectKernel(par,lam,refWaveList,kernelList)
+        kernel = selectKernel(par,lam,refWaveList,kernelList)
     
         ###################################################################### 
         # Rotate and scale the image so that it is in the same 
@@ -80,21 +85,21 @@ def propagateIFS(par,wavelist,inputcube):
         # After this step, the pixels in the array each represents a lenslet
         ###################################################################### 
         log.info('Rotate and scale slice %d' % i)
-        imagePlaneRot = tools.processImagePlane(par,interpolatedInputCube[i])
+        imagePlaneRot = processImagePlane(par,interpolatedInputCube[i])
         if par.saveRotatedInput: Image(data=imagePlaneRot).write(par.exportDir+'/imagePlaneRot_%.3fum.fits' % (lam))
 
         ###################################################################### 
         # Generate high-resolution detector map for wavelength lam
         ###################################################################### 
         log.info('Propagate through lenslet array')
-        tools.propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
+        propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
             
     if par.saveLensletPlane: Image(data=finalFrame).write(par.exportDir+'/lensletPlane_%.3fum.fits' % (lam))
 
     ###################################################################### 
     # Rebinning to detector resolution
     ###################################################################### 
-    detectorFrame = tools.rebinDetector(par,finalFrame,clip=False)
+    detectorFrame = rebinDetector(par,finalFrame,clip=False)
     if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/finalframe_nodistort_n25.fits') 
     log.info('Done.')
     t['End'] = time.time()
