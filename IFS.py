@@ -66,7 +66,7 @@ def propagateIFS(par,wavelist,inputcube):
     
     log.info('Final detector pixel per lenslet: %f' % (par.pxprlens/par.pxperdetpix))
     
-    for i in [0]:#range(len(waveList)):
+    for i in range(len(waveList)):
         lam = wavelist[i]
         log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
         ###################################################################### 

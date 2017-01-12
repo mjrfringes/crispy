@@ -23,6 +23,11 @@ class Params():
 
         self.nlens = 108            # Number of lenslets across array
         self.dlam = 0.005           # less than the IFS resolution (not yet used
+        self.pitch = 174e-6         # Lenslet pitch (meters)
+        self.interlace = 2          # Interlacing
+        self.philens = -arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
+        self.pinhole = True         # Use a pinhole grid?
+        self.pin_dia = 25e-6        # Diameter of pinholes (m)
 
         ###################################################################### 
         # Detector stuff
@@ -40,10 +45,19 @@ class Params():
         ###################################################################### 
         
         self.distort = True         # apply distortion or not
-        self.pitch = 174e-6         # Lenslet pitch (meters)
-        self.interlace = 2          # Interlacing
-        self.philens = -arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
 
-        self.pinhole = True         # Use a pinhole grid?
-        self.pin_dia = 25e-6        # Diameter of pinholes (m)
-
+    def output(self):
+        string = ""
+        string += "\nNumber of lenslets: "+str(self.nlens)
+        string += "\nLenslet pitch in meters: "+str(self.pitch)
+        string += "\nInterlacing: "+str(self.interlace)
+        string += "\nRotation angle: "+str(self.philens)
+        string += "\nPinhole? "+str(self.pinhole)
+        string += "\nPinhole diameter: "+str(self.pin_dia)
+        string += "\nNumber of pixels in final detector: "+str(self.npix)
+        string += "\nDetector pixel size in meters: "+str(self.pixsize)
+        string += "\nOversampling: "+str(self.pxperdetpix)
+        string += "\nConvolve with Gaussian as defocus? "+str(self.convolve)
+        string += "\nFWHM of Gaussian convolution "+str(self.FWHM)+' detector pixel'
+        return string+"\n"
+        
