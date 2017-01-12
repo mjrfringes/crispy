@@ -17,9 +17,8 @@ def testLoadKernels():
     
     log.info('Import all kernels and rescale them to same plate scale')
     kernels890,locations = tools.loadKernels(par,890)
-    numpix = kernels890[0].shape[0]
-    kernels770,loc = tools.loadKernels(par,770,numpix)
-    kernels660,loc = tools.loadKernels(par,660,numpix)
+    kernels770,loc = tools.loadKernels(par,770)
+    kernels660,loc = tools.loadKernels(par,660)
     refWaveList = [660,770,890]
     kernelList = np.array([kernels660,kernels770,kernels890])
 

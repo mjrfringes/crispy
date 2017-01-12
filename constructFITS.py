@@ -10,8 +10,6 @@ from tools.image import Image
 folder = 'ReferenceFiles/simpsf/'
 spotfields = glob.glob(folder+'*')
 
-#
-
 for wavel in [660,770,890]:
     f, axarr = plt.subplots(3,3)
     for field in spotfields:    

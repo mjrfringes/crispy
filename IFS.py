@@ -87,7 +87,9 @@ def main():
     ###################################################################### 
     finalFrame=np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
     
-    for i in range(len(waveList)):
+    log.info('%f' % (par.pxprlens/par.pxperdetpix))
+    
+    for i in [0]:#range(len(waveList)):
         lam = wavelist[i]
         log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
         ###################################################################### 
@@ -110,12 +112,13 @@ def main():
         log.info('Propagate through lenslet array')
         tools.propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
             
+    if par.saveLensletPlane: Image(data=finalFrame).write(par.exportDir+'/lensletPlane_%.3fum.fits' % (lam))
+
     ###################################################################### 
-    # Summing frames and rebinning to detector resolution
+    # Rebinning to detector resolution
     ###################################################################### 
-    
     detectorFrame = tools.rebinDetector(par,finalFrame,clip=True)
-    if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/finalframe_distort.fits') 
+    if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/finalframe_nodistort_n25.fits') 
     log.info('Done.')
     t['End'] = time.time()
     log.info("Performance: %d seconds total" % (t['End'] - t['Start']))

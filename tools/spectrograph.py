@@ -115,7 +115,7 @@ def selectKernel(par,lam,refWaveList,kernelList):
         # this is inaccurate but is a placeholder for using the real defocussed kernels
         # scale is (par.pixsize/par.pxperdetpix)
         # we want kernel to be ~2 detector pixel FWHM so par.pixsize/(par.pixsize/par.pxperdetpix)
-        sigma = par.FWHM/2.35*par.pixsize/(par.pixsize/par.pxperdetpix)
+        sigma = par.FWHM/2.35*par.pxperdetpix
         for k in range(kernels.shape[0]):
             kernels[k] = ndimage.filters.gaussian_filter(kernels[k],sigma,order=0,mode='constant')
     return kernels
@@ -203,11 +203,7 @@ def loadKernels(par,wavel):
         
     for k in range(len(locations)):
         newkernels[k] /= np.sum(newkernels[k])
-        #print newkernels[k].shape
         if par.pinhole:
-#             x = range(len(kernels[k]))
-#             x -= np.median(x)
-#             x, y = np.meshgrid(x, x)
             if kernels[k].shape[0]<2*par.pxprlens+par.pin_dia/plateScale:
                 log.warning('Kernel too small to capture crosstalk')
             x = np.linspace(-1.5, 1.5, 3*par.pxprlens)%1

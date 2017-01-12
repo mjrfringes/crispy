@@ -18,6 +18,18 @@ from spectrograph import distort
 
 
 def processImagePlane(par,imagePlane):
+    '''
+    Function processImagePlane
+    
+    Rotates an image or slice, and rebins in a flux-conservative way
+    on an array of lenslets, using the plate scale provided in par.pixperlenslet.
+    Each pixel represents the flux within a lenslet.
+    
+    Inputs:
+    1. par:             parameters class
+    2. imagePlane       2D array (image or slice)
+    
+    '''
     imagePlaneRot = Rotate(imagePlane,par.philens,clip=False)
     n = par.pixperlenslet
     newShape = (imagePlaneRot.shape[0]/n,imagePlaneRot.shape[1]/n)
@@ -47,6 +59,8 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
     colList = np.arange(-ny//2,-nx//2+nx)
 
     # loop on all lenslets; there's got to be a way to do this faster
+    I = 64
+    J = 35
     for i in range(nx):
         for j in range(ny):
             jcoord = colList[j]
@@ -57,44 +71,40 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
             if val==0:
                 continue
             theta = np.arctan2(jcoord,icoord)
-            r = np.sqrt(icoord**2 + jcoord**2)*par.pxprlens
-            # determine the coordinate of that lenslet on the pinhole mask
-            #x = int(r*np.cos(theta+par.philens)+n*par.nlens//2+n//2)
-            #y = int(r*np.sin(theta+par.philens)+n*par.nlens//2+n//2)
-            
-            # center is at zero
+#             r = np.sqrt(icoord**2 + jcoord**2)*par.pxprlens
+            r = np.sqrt(icoord**2 + jcoord**2)
             x = r*np.cos(theta+par.philens)
             y = r*np.sin(theta+par.philens)
+            #if i==I and j==J: print x,y
             
             # transform this coordinate including the distortion and dispersion
-            factor = 1000*par.pitch/par.pxprlens
+            factor = 1000*par.pitch
             X = x*factor # this is now in millimeters
             Y = y*factor # this is now in millimeters
             
-            
             # apply polynomial transform
-            ytmp,xtmp = distort(Y,X,lam)
-            sy = -ytmp/factor+lensletplane.shape[0]//2
-            sx = -xtmp/factor+lensletplane.shape[1]//2
-            #sy = -np.sum(cx*np.array([Y]))/factor+lensletplane.shape[0]//2
-            #sx = -np.sum(cy*np.array([1,X,lam,lam**2]))/factor+lensletplane.shape[1]//2
-            #sy = np.sum(cy*np.array([1,Y]))/factor+lensletplane.shape[1]//2
+            if par.distort:
+                ytmp,xtmp = distort(Y,X,lam)
+                sy = -ytmp/factor+lensletplane.shape[0]//2
+                sx = -xtmp/factor+lensletplane.shape[1]//2
+            else:
+                sy = y+lensletplane.shape[0]//2
+                sx = x+lensletplane.shape[1]//2
+            #if i==I and j==J: print sx/par.pxperdetpix,sy/par.pxperdetpix
             
-            # according to the location x,y, select the correct PSF as a combination
-            # of kernels
-            # use bilinear interpolation of kernels
-            
+            # put the kernel in the correct spot with the correct weight
             kx,ky = kernels[0].shape
             if sx>kx//2 and sx<lensletplane.shape[0]-kx//2 \
                 and sy>ky//2 and sy<lensletplane.shape[1]-ky//2:
                 isx = int(sx)
                 isy = int(sy)
-                val = imageplane[jcoord+imageplane.shape[0]//2,icoord+imageplane.shape[0]//2]
                 
                 for k in range(len(locations)):
                     wx = int(isx/lensletplane.shape[0]*allweights[:,:,k].shape[0])
                     wy = int(isy/lensletplane.shape[1]*allweights[:,:,k].shape[1])
                     weight = allweights[wx,wy,k]
+                    if weight ==0:
+                        continue
                     xlow = isy-ky/2
                     xhigh = xlow+ky
                     ylow = isx-kx/2
