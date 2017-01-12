@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 '''
-Heritage: CHARIS simulator by T. Brandt and his team
-Code was adapted to match PISCES/WFIRST IFS characteristics
+Standalone IFS simulation code
+
 '''
 
 
@@ -11,44 +11,14 @@ from params import Params
 from astropy.io import fits as pyf
 import tools
 import time
-#from makeheader import Makeheader
 import logging as log
 import matplotlib.pyplot as plt
 from tools.image import Image
 from tools import propagate
-import multiprocessing
 
-def main():
 
-    ###################################################################### 
-    # Load parameters from params.py
-    ###################################################################### 
-    par = Params()
+def propagateIFS(par,wavelist,inputcube):
 
-    ###################################################################### 
-    # Initialize logging function; both to console and to file
-    ###################################################################### 
-    tools.initLogger(par.exportDir+'/IFS.log')
-    
-    ###################################################################### 
-    # Load input
-    ###################################################################### 
-    log.info('Loading input')
-#     wavelist = np.arange(0.6,0.7,0.005) #[0.800,0.820,0.840]
-#     wavelist = [0.7] #[0.800,0.820,0.840]
-#     inputcube = np.ones((len(wavelist),512,512),dtype=float)/9.
-#     mperpix = 58e-6
-    BW = 0.18
-    Nlam = 51
-    clam = 0.77
-    wavelist= clam*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)
-    fname = './Inputs/PSF_SPLC_Nwvl51_BW18pct_star.fits'
-    hdu = pyf.open(fname)
-    inputcube = hdu[0].data    
-    mperpix = 3./5.*par.pitch # 5 pixels per lambda/D
-    par.pixperlenslet = par.pitch/mperpix
-    par.mperpix = mperpix
-    
     log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)    
     nframes = inputcube.shape[0]
     allweights = None
@@ -89,7 +59,7 @@ def main():
     
     log.info('%f' % (par.pxprlens/par.pxperdetpix))
     
-    for i in [0]:#range(len(waveList)):
+    for i in range(len(waveList)):
         lam = wavelist[i]
         log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
         ###################################################################### 
@@ -124,6 +94,42 @@ def main():
     log.info("Performance: %d seconds total" % (t['End'] - t['Start']))
 
     log.shutdown()
+
+    return finalFrame
+
+def main():
+
+    ###################################################################### 
+    # Load parameters from params.py
+    ###################################################################### 
+    par = Params()
+
+    ###################################################################### 
+    # Initialize logging function; both to console and to file
+    ###################################################################### 
+    tools.initLogger(par.exportDir+'/IFS.log')
+    
+    ###################################################################### 
+    # Load input
+    ###################################################################### 
+    log.info('Loading input')
+#     wavelist = np.arange(0.6,0.7,0.005) #[0.800,0.820,0.840]
+#     wavelist = [0.7] #[0.800,0.820,0.840]
+#     inputcube = np.ones((len(wavelist),512,512),dtype=float)/9.
+#     mperpix = 58e-6
+    BW = 0.18
+    Nlam = 51
+    clam = 0.77
+    wavelist= clam*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)
+    fname = './Inputs/PSF_SPLC_Nwvl51_BW18pct_star.fits'
+    hdu = pyf.open(fname)
+    inputcube = hdu[0].data    
+    mperpix = 3./5.*par.pitch # 5 pixels per lambda/D
+    par.pixperlenslet = par.pitch/mperpix
+    par.mperpix = mperpix
+    
+    propagateIFS(par,wavelist,inputcube)
+
 
 
 def prepareCube(par,wavelist,inputcube):

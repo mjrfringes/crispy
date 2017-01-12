@@ -1,4 +1,3 @@
-from ft import FT
 from lenslet import processImagePlane,propagate
 from spectrograph import createAllWeightsArray,selectKernel,loadKernels
 from detector import rebinDetector
