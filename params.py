@@ -16,6 +16,11 @@ class Params():
         self.prefix = os.path.abspath('./ReferenceFiles') 
         self.exportDir = os.path.abspath('./SimResults')
         self.unitTestsOutputs = os.path.abspath('./unitTestsOutputs')
+        self.wavecalDir = self.prefix+'/wavecal/'
+#         self.wavecalName = 'VARIAcalCube.fits'
+        self.wavecalName = 'simCalCube.fits'
+        self.filelist = []
+        self.lamlist = []
 
         ###################################################################### 
         # Basic resolution/configuration parameters
@@ -25,7 +30,7 @@ class Params():
         self.dlam = 0.005           # less than the IFS resolution (not yet used
         self.pitch = 174e-6         # Lenslet pitch (meters)
         self.interlace = 2          # Interlacing
-        self.philens = -arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
+        self.philens = arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
         self.pinhole = True         # Use a pinhole grid?
         self.pin_dia = 25e-6        # Diameter of pinholes (m)
 

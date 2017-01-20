@@ -70,15 +70,18 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
             #if i==I and j==J: print x,y
             
             # transform this coordinate including the distortion and dispersion
-            factor = 1000*par.pitch
+            factor = 1000.*par.pitch
             X = x*factor # this is now in millimeters
             Y = y*factor # this is now in millimeters
             
             # apply polynomial transform
             if par.distort:
                 ytmp,xtmp = distort(Y,X,lam)
-                sy = -ytmp/factor*par.pxprlens+lensletplane.shape[0]//2
-                sx = -xtmp/factor*par.pxprlens+lensletplane.shape[1]//2
+#                 sy = -ytmp/factor*par.pxprlens+lensletplane.shape[0]//2
+#                 sx = -xtmp/factor*par.pxprlens+lensletplane.shape[1]//2
+                sy = ytmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[0]//2
+                sx = xtmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[1]//2
+#                 if i==I and j==J:print sy,sx
             else:
                 sy = y+lensletplane.shape[0]//2
                 sx = x+lensletplane.shape[1]//2

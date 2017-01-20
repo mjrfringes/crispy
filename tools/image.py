@@ -41,7 +41,7 @@ class Image:
         """
         try:
             self.filename = filename
-            hdulist = fits.open(filename)
+            hdulist = fits.open(filename,ignore_missing_end=True)
             self.header = hdulist[0].header
             if hdulist[0].data is not None:
                 i_data = 0

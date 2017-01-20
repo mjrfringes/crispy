@@ -209,8 +209,8 @@ def loadKernels(par,wavel):
     for k in range(len(locations)):
         newkernels[k] /= np.sum(newkernels[k])
         if par.pinhole:
-            if kernels[k].shape[0]<2*par.pxprlens+par.pin_dia/plateScale:
-                log.warning('Kernel too small to capture crosstalk')
+#             if kernels[k].shape[0]<2*par.pxprlens+par.pin_dia/plateScale:
+#                 log.warning('Kernel too small to capture crosstalk')
             x = np.linspace(-1.5, 1.5, 3*par.pxprlens)%1
             x[np.where(x > 0.5)] -= 1
             x, y = np.meshgrid(x, x)

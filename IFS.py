@@ -2,9 +2,9 @@
 
 '''
 Standalone IFS simulation code
-MJ Rizzo and the IFs team
+MJ Rizzo and the IFS team
 
-Originally inspired by T. Brandt;s code for CHARIS
+Originally inspired by T. Brandt's code for CHARIS
 '''
 
 
@@ -21,13 +21,18 @@ from tools.lenslet import propagate,processImagePlane
 from tools.spectrograph import createAllWeightsArray,selectKernel,loadKernels
 from tools.detector import rebinDetector
 from tools.initLogger import initLogger
-from tools.image import Image
 from tools.plotting import plotKernels
+from tools.reduction import simpleReduction,apertureReduction,densifiedSimpleReduction
 
 def propagateIFS(par,wavelist,inputcube):
     '''
     takes in a parameter class, a list of wavelengths, and a cube for which each slice
     represents the PSF at a different wavelength
+    
+    Inputs:
+    1. par          Parameter instance with at least the key IFS parameters, interlacing and scale
+    2. lamlist      list of wavelengths in microns
+    
     '''
     
     log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)    
@@ -68,7 +73,8 @@ def propagateIFS(par,wavelist,inputcube):
     # Allocate an array
     ###################################################################### 
     finalFrame=np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
-    
+
+    log.info('Small pixels per lenslet: %f' % (par.pxprlens))    
     log.info('Final detector pixel per lenslet: %f' % (par.pxprlens/par.pxperdetpix))
     
     for i in range(len(waveList)):
@@ -104,8 +110,6 @@ def propagateIFS(par,wavelist,inputcube):
     log.info('Done.')
     t['End'] = time.time()
     log.info("Performance: %d seconds total" % (t['End'] - t['Start']))
-
-    log.shutdown()
 
     return detectorFrame
 
@@ -143,7 +147,27 @@ def main():
     propagateIFS(par,wavelist,inputcube)
 
 
+    
+def reduceIFSMap(par,IFSimageName,method='simple'):
 
+    hdulist = pyf.open(IFSimageName,ignore_missing_end=True)
+    if hdulist[0].header['NAXIS']!=2:
+        IFSimage = pyf.open(IFSimageName,ignore_missing_end=True)[1].data
+    else:
+        IFSimage = pyf.open(IFSimageName,ignore_missing_end=True)[0].data
+    IFSimage +=1.
+    reducedName = IFSimageName.split('/')[-1].split('.')[0]
+    if method == 'simple':
+        reducedName += '_red_simple'
+        simpleReduction(par,par.exportDir+'/'+reducedName,IFSimage)
+    elif method == 'dense':
+        reducedName += '_red_dense'
+        densifiedSimpleReduction(par,par.exportDir+'/'+reducedName,IFSimage)
+    elif method == 'apphot':
+        reducedName += '_red_apphot'
+        apertureReduction(par,par.exportDir+'/'+reducedName,IFSimage)
+
+    
 def prepareCube(par,wavelist,inputcube):
     '''
     Takes an input cube and interpolates it down to the required
@@ -154,10 +178,4 @@ def prepareCube(par,wavelist,inputcube):
     
     return wavelist,inputcube
 
-
-
-#if __name__ == '__main__':
-#    main()
-    
-    
 
