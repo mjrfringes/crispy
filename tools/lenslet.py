@@ -16,14 +16,30 @@ def processImagePlane(par,imagePlane):
     
     Rotates an image or slice, and rebins in a flux-conservative way
     on an array of lenslets, using the plate scale provided in par.pixperlenslet.
-    Each pixel represents the flux within a lenslet.
+    Each pixel represents the flux within a lenslet. Starts by padding the original
+    image to avoid cropping edges when rotating. This step necessarily involves an
+    interpolation, so one needs to be cautious.
     
-    Inputs:
-    1. par:             parameters class
-    2. imagePlane       2D array (image or slice)
-    
+    Parameters
+    ----------
+    par :   Parameters instance
+    imagePlane : 2D array
+            Image or slice of input cube.
+
+    Returns
+    -------
+    imagePlaneRot : 2D array
+            Rotated image plane on same sampling as original.
     '''
-    imagePlaneRot = Rotate(imagePlane,par.philens,clip=False)
+    
+    paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
+    xdim,ydim = paddedImagePlane.shape
+    xpad = xdim-imagePlane.shape[0]
+    ypad = ydim-imagePlane.shape[0]
+    xpad /=2.
+    ypad /=2.
+    paddedImagePlane[xpad:-xpad-1,ypad:-ypad-1] = imagePlane
+    imagePlaneRot = Rotate(paddedImagePlane,par.philens,clip=False)
     n = par.pixperlenslet
     newShape = (imagePlaneRot.shape[0]/n,imagePlaneRot.shape[1]/n)
     imagePlaneRot = frebin(imagePlaneRot,newShape)
@@ -35,14 +51,25 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
     """
     Function propagate
     
-    Inputs:
-    1. par:             parameters class
-    2. image:           image plane incident on lenslets (complex E-field)
-    3. lam:             wavelength (microns)
-    4. allweights:      cube with weights for each kernel
-    5. kernels:         kernels at locations on the detector
-    6. locations:       locations where the kernels are sampled
-    7. lensletplane:    densified detector plane
+    Creates the IFS map on a 'dense' detector array where each pixel is smaller than the
+    final detector pixels by a factor par.pxperdetpix. Adds to lensletplane array to save
+    memory.
+    
+    Parameters
+    ----------
+    par :   Parameters instance
+    image : 2D array
+            Image plane incident on lenslets.
+    lam : float
+            Wavelength (microns)
+    allweights : 3D array
+            Cube with weights for each kernel
+    kernels : 3D array
+            Kernels at locations on the detector
+    locations : 2D array
+            Locations where the kernels are sampled
+    lensletplane : 2D array
+            Densified detector plane; the function updates this variable
     
     """
 
@@ -105,4 +132,4 @@ def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
                     ylow = isx-kx/2
                     yhigh = ylow+kx
                     lensletplane[xlow:xhigh,ylow:yhigh]+=val*weight*kernels[k]
-
+    

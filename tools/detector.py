@@ -12,6 +12,22 @@ from tools.detutils import frebin
 import logging as log
 
 def rebinDetector(par,finalFrame,clip=False):
+    '''
+    Rebins the dense detector map with the correct scaling while conserving flux.
+    This also works with non-integer ratios.
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+    finalFrame : 2D ndarray
+            Dense detector map to be rebinned.
+    
+    Returns
+    -------
+    detectorFrame : 2D array
+            Return the detector frame with correct pixel scale.
+    
+    '''
     detpixprlenslet = par.pitch/par.pixsize 
     log.info('Number of detector pixels per lenslet: %f' % detpixprlenslet)
         

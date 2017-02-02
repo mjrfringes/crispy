@@ -11,13 +11,16 @@ class Params():
         '''
 
         self.saveRotatedInput = False
-        self.saveLensletPlane = False   # not used
+        self.saveLensletPlane = False 
         self.saveDetector = True
         self.prefix = os.path.abspath('./ReferenceFiles') 
         self.exportDir = os.path.abspath('./SimResults')
         self.unitTestsOutputs = os.path.abspath('./unitTestsOutputs')
         self.wavecalDir = self.prefix+'/wavecal/'
+#         self.wavecalDir = self.prefix+'/HighSNRWavecal/'
+#         self.wavecalDir = self.prefix+'/wavecal/polychrome/'
 #         self.wavecalName = 'VARIAcalCube.fits'
+#         self.wavecalName = 'LLTFcalCube.fits'
         self.wavecalName = 'simCalCube.fits'
         self.filelist = []
         self.lamlist = []
@@ -26,8 +29,9 @@ class Params():
         # Basic resolution/configuration parameters
         ###################################################################### 
 
-        self.nlens = 108            # Number of lenslets across array
-        self.dlam = 0.005           # less than the IFS resolution (not yet used
+        self.nlens = 108            # Number of lenslets across array (account for rotation)
+        self.dlam = 0.005           # Resolution of recovered cube (microns)
+        self.R = 110                # Determine the resolution of final cube
         self.pitch = 174e-6         # Lenslet pitch (meters)
         self.interlace = 2          # Interlacing
         self.philens = arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
@@ -43,7 +47,8 @@ class Params():
         self.pxperdetpix = 11       # Oversampling of the final detector pixels
         self.convolve = True        # whether to convolve the existing kernels with
                                     # gaussian kernel (simulating defocus)
-        self.FWHM = 1.5             # FWHM of gaussian kernel
+        self.FWHM = 2               # FWHM of gaussian kernel
+        self.gaussian = True        # Use standard Gaussian kernels instead of library
 
         ###################################################################### 
         # Spectrograph stuff

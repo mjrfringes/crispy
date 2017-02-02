@@ -15,6 +15,18 @@ def distort(fx,fy,lam):
     Apply the distortion and dispersion from pre-determined polynomial
     This was estimated from Zemax by Qian Gong and Jorge Llop and needs to be revisited
     
+    Parameters
+    ----------
+    fx,fy :   float
+            Distance between a lenslet and the center of the detector in millimeter.
+    lam : float
+            Wavelength in microns.
+    
+    Returns
+    -------
+    x,y : float
+            Distance from center of detector at which image from a lenslet falls in mm.
+    
     '''
     cx = np.zeros(20)
     cy = np.zeros(20)
@@ -66,7 +78,24 @@ def distort(fx,fy,lam):
     return x,y
 
 def createAllWeightsArray(par,locations):
-
+    '''
+    Creates weights for bilinear interpolation
+    
+    
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+    locations : 2D ndarray, Nx2
+            Array of normalized locations on the detector, .
+    
+    Returns
+    -------
+    detectorFrame : 2D array
+            Return the detector frame with correct pixel scale.
+            
+    '''
+    
     # requires square array for now
     npix = par.nlens
     xfrac = np.linspace(0, npix, npix)/npix
@@ -116,14 +145,21 @@ def selectKernel(par,lam,refWaveList,kernelList):
         kernels /= (wavelUp-wavelDown)
     
     if par.convolve:
+        newkernels = np.zeros(kernels.shape)
         # convolve the clipped kernel by a Gaussian to simulate defocus
         # this is inaccurate but is a placeholder for using the real defocussed kernels
-        # scale is (par.pixsize/par.pxperdetpix)
+        # scale in kernel is (par.pixsize/par.pxperdetpix)
         # we want kernel to be ~2 detector pixel FWHM so par.pixsize/(par.pixsize/par.pxperdetpix)
         sigma = par.FWHM/2.35*par.pxperdetpix
         for k in range(kernels.shape[0]):
-            kernels[k] = ndimage.filters.gaussian_filter(kernels[k],sigma,order=0,mode='constant')
-    return kernels
+            newkernels[k] = ndimage.filters.gaussian_filter(kernels[k],sigma,order=0,mode='constant')
+    if par.gaussian:
+        for k in range(kernels.shape[0]):
+            x = np.arange(kernels[0].shape[0])-kernels[0].shape[0]/2
+            _x, _y = np.meshgrid(x, x)
+            newkernels[k] = np.exp(-(_x**2+_y**2)/(2*sigma**2))
+            newkernels[k] /= np.sum(newkernels[k])
+    return newkernels
 
 def loadKernels(par,wavel):
     

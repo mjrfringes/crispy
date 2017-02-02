@@ -22,17 +22,56 @@ from tools.spectrograph import createAllWeightsArray,selectKernel,loadKernels
 from tools.detector import rebinDetector
 from tools.initLogger import initLogger
 from tools.plotting import plotKernels
-from tools.reduction import simpleReduction,apertureReduction,densifiedSimpleReduction
+from tools.reduction import simpleReduction,apertureReduction,densifiedSimpleReduction,testReduction,lstsqExtract,intOptimalExtract
+import multiprocessing
+from tools.par_utils import Task, Consumer
 
-def propagateIFS(par,wavelist,inputcube):
+
+def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolatedInputCube,allweights,locations,finalFrame):
+
+    lam = wavelist[i]
+    
+#     if ~par.parallel: log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
+    ###################################################################### 
+    # Interpolate kernel at wavelength lam
+    ###################################################################### 
+    kernel = selectKernel(par,lam,refWaveList,kernelList)
+
+    ###################################################################### 
+    # Rotate and scale the image so that it is in the same 
+    # orientation and scale as the lenslet array
+    # After this step, the pixels in the array each represents a lenslet
+    ###################################################################### 
+#     if ~par.parallel: log.info('Rotate and scale slice %d' % i)
+    imagePlaneRot = processImagePlane(par,interpolatedInputCube[i])
+    if par.saveRotatedInput: Image(data=imagePlaneRot).write(par.exportDir+'/imagePlaneRot_%3.1fnm.fits' % (lam*1000.))
+
+    ###################################################################### 
+    # Generate high-resolution detector map for wavelength lam
+    ###################################################################### 
+#     if ~par.parallel: log.info('Propagate through lenslet array')
+    propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
+    if par.saveLensletPlane: Image(data=finalFrame).write(par.exportDir+'/lensletPlane_%3.1fnm.fits' % (lam*1000.))
+    return True
+
+def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True,cpus=6):
     '''
     takes in a parameter class, a list of wavelengths, and a cube for which each slice
     represents the PSF at a different wavelength
     
-    Inputs:
-    1. par          Parameter instance with at least the key IFS parameters, interlacing and scale
-    2. lamlist      list of wavelengths in microns
-    
+    Parameters
+    ----------
+    par :   Parameter instance
+            with at least the key IFS parameters, interlacing and scale
+    lamlist : list of floats
+            List of wavelengths in microns
+    inputcube : 3D ndarray
+            First dimension needs to be the same length as lamlist
+                
+    Returns
+    -------
+    detectorFrame : 2D array
+            Return the detector frame
     '''
     
     log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)    
@@ -77,36 +116,63 @@ def propagateIFS(par,wavelist,inputcube):
     log.info('Small pixels per lenslet: %f' % (par.pxprlens))    
     log.info('Final detector pixel per lenslet: %f' % (par.pxprlens/par.pxperdetpix))
     
-    for i in range(len(waveList)):
-        lam = wavelist[i]
-        log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
-        ###################################################################### 
-        # Interpolate kernel at wavelength lam
-        ###################################################################### 
-        kernel = selectKernel(par,lam,refWaveList,kernelList)
+    if not parallel:
+        for i in range(len(waveList)):
+            log.info('Processing wavelength %f (%d out of %d)' % (waveList[i],i,nframes))
+            propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolatedInputCube,allweights,locations,finalFrame)
+#             lam = wavelist[i]
+#             
+#             log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
+#             ###################################################################### 
+#             # Interpolate kernel at wavelength lam
+#             ###################################################################### 
+#             kernel = selectKernel(par,lam,refWaveList,kernelList)
+#     
+#             ###################################################################### 
+#             # Rotate and scale the image so that it is in the same 
+#             # orientation and scale as the lenslet array
+#             # After this step, the pixels in the array each represents a lenslet
+#             ###################################################################### 
+#             log.info('Rotate and scale slice %d' % i)
+#             imagePlaneRot = processImagePlane(par,interpolatedInputCube[i])
+#             if par.saveRotatedInput: Image(data=imagePlaneRot).write(par.exportDir+'/imagePlaneRot_%.3fum.fits' % (lam))
+# 
+#             ###################################################################### 
+#             # Generate high-resolution detector map for wavelength lam
+#             ###################################################################### 
+#             log.info('Propagate through lenslet array')
+#             propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
     
-        ###################################################################### 
-        # Rotate and scale the image so that it is in the same 
-        # orientation and scale as the lenslet array
-        # After this step, the pixels in the array each represents a lenslet
-        ###################################################################### 
-        log.info('Rotate and scale slice %d' % i)
-        imagePlaneRot = processImagePlane(par,interpolatedInputCube[i])
-        if par.saveRotatedInput: Image(data=imagePlaneRot).write(par.exportDir+'/imagePlaneRot_%.3fum.fits' % (lam))
+    else:
+        log.info('Starting parallel IFS propagation! Watchout for memory...')
+        tasks = multiprocessing.Queue()
+        results = multiprocessing.Queue()
+        ncpus = min(multiprocessing.cpu_count(),cpus)
+        consumers = [ Consumer(tasks, results)
+                      for i in range(ncpus) ]
+        for w in consumers:
+            w.start()
+    
+        for i in range(len(waveList)):
+            tasks.put(Task(i, propagateSingleWavelength, (par,i,waveList,refWaveList,
+                            kernelList,interpolatedInputCube,allweights,locations,finalFrame)))
+    
+        for i in range(ncpus):
+            tasks.put(None)
+        for i in range(len(waveList)):
+            index,result = results.get()
+            log.info('Done with wavelength %.3f' % waveList[index])
+#             for i in range(len(lam)):
+#                 index, hiresarr = results.get()
+#                 hires_arrs += [hiresarr]
 
-        ###################################################################### 
-        # Generate high-resolution detector map for wavelength lam
-        ###################################################################### 
-        log.info('Propagate through lenslet array')
-        propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
-            
-    if par.saveLensletPlane: Image(data=finalFrame).write(par.exportDir+'/lensletPlane_%.3fum.fits' % (lam))
+           
 
     ###################################################################### 
     # Rebinning to detector resolution
     ###################################################################### 
     detectorFrame = rebinDetector(par,finalFrame,clip=False)
-    if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/detectorFrame.fits') 
+    if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/'+name+'.fits') 
     log.info('Done.')
     t['End'] = time.time()
     log.info("Performance: %d seconds total" % (t['End'] - t['Start']))
@@ -123,7 +189,7 @@ def main():
     ###################################################################### 
     # Initialize logging function; both to console and to file
     ###################################################################### 
-    tools.initLogger(par.exportDir+'/IFS.log')
+    initLogger(par.exportDir+'/IFS.log')
     
     ###################################################################### 
     # Load input
@@ -148,25 +214,65 @@ def main():
 
 
     
-def reduceIFSMap(par,IFSimageName,method='simple'):
-
-    hdulist = pyf.open(IFSimageName,ignore_missing_end=True)
-    if hdulist[0].header['NAXIS']!=2:
-        IFSimage = pyf.open(IFSimageName,ignore_missing_end=True)[1].data
-    else:
-        IFSimage = pyf.open(IFSimageName,ignore_missing_end=True)[0].data
-    IFSimage +=1.
+def reduceIFSMap(par,IFSimageName,method='apphot',ivar=False):
+    '''
+    Main reduction function
+    
+    Uses various routines to extract an IFS detector map into a spectral-spatial cube.
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+    IFSimageName : string
+            Path of image file
+    method : 'simple', 'dense', 'apphot', 'test', 'lstsq', 'opt'
+            Method used for reduction.
+            'simple': brute force photometry, adds up the fluxes in a line of pixels
+            centered where the centroid at that wavelength falls. Not very accurate.
+            'dense': does the same but after interpolating/densifying the image by a factor of 10,
+            which gives the previous method more accuracy (but depends on the interpolation scheme).
+            'apphot': use an aperture photometry routine from the photutils package, for better accuracy. Default setting.
+            'test': use the method defined in the testReduction function, for experimenting.
+            'lstsq': use the knowledge of the PSFs at each location and each wavelength and fits
+            the microspectrum as a weighted sum of these PSFs in the least-square sense. Can weigh the data by its variance.
+            'opt': use a matched filter to appropriately weigh each pixel and assign the fluxes, making use of the inverse
+            wavlength calibration map. Then remap each microspectrum onto the desired wavelengths 
+    ivar : Boolean
+            Uses the variance information. If the original image doesn't have a variance HDU, then
+            use the image itself as its own variance (Poisson noise). Default False.
+         
+    '''
+    
+#     hdulist = pyf.open(IFSimageName,ignore_missing_end=True)
+#     if hdulist[0].header['NAXIS']!=2:
+#         IFSimage = pyf.open(IFSimageName,ignore_missing_end=True)[1]
+#     else:
+#         IFSimage = pyf.open(IFSimageName,ignore_missing_end=True)[0]
+#     IFSimage.data +=1.
+    IFSimage = Image(filename = IFSimageName)
     reducedName = IFSimageName.split('/')[-1].split('.')[0]
     if method == 'simple':
         reducedName += '_red_simple'
-        simpleReduction(par,par.exportDir+'/'+reducedName,IFSimage)
+        cube = simpleReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
     elif method == 'dense':
         reducedName += '_red_dense'
-        densifiedSimpleReduction(par,par.exportDir+'/'+reducedName,IFSimage)
+        cube = densifiedSimpleReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
     elif method == 'apphot':
         reducedName += '_red_apphot'
-        apertureReduction(par,par.exportDir+'/'+reducedName,IFSimage)
-
+        cube = apertureReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
+    elif method == 'test':
+        reducedName += '_red_test'
+        cube = testReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
+    elif method == 'lstsq':
+        reducedName += '_red_lstsq'
+        cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,ivar)
+    elif method == 'intopt':
+        reducedName += '_red_intopt'
+        if ivar==False: IFSimage.ivar = np.ones(IFSimage.data.shape)
+        cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage)
+    else:
+        log.info("Method not found")
+    return cube
     
 def prepareCube(par,wavelist,inputcube):
     '''
@@ -178,4 +284,6 @@ def prepareCube(par,wavelist,inputcube):
     
     return wavelist,inputcube
 
+if __name__ == '__main__':
+    main()
 

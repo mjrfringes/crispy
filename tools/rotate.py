@@ -9,14 +9,21 @@ def Rotate(image, phi, clip=True,order=1):
     Rotate the input image by phi about its center.  Do not resize the 
     image, but pad with zeros.  Function originally from Tim Brandt
     
-    Inputs: 
-    1. image:   2D square array
-    2. phi:     rotation angle in radians
-    3. clip:    boolean (optional): clip array by sqrt(2) to remove
-                fill values?  Default True.
+    Parameters
+    ----------
+    image : 2D square array
+            Image to rotate
+    phi : float
+            Rotation angle in radians
+    clip :  boolean (optional)
+            Clip array by sqrt(2) to remove fill values?  Default True.
+    order : integer (optional)
+            Order of interpolation when rotating. Default is 1.
 
-    Outputs:
-    rotated image of the same shape as the input image, with zero-padding
+    Returns
+    -------
+    imageout: 2D array
+            Rotated image of the same shape as the input image, with zero-padding
 
     """
 

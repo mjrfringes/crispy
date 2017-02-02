@@ -36,9 +36,9 @@ class PSFLets:
         hdulist = fits.open(infile)
         
         try:
-            self.xindx = hdulist[0].data
-            self.yindx = hdulist[1].data
-            self.lam_indx = hdulist[2].data
+            self.lam_indx = hdulist[0].data
+            self.xindx = hdulist[1].data
+            self.yindx = hdulist[2].data
             self.nlam = hdulist[3].data.astype(int)
         except:
             raise RuntimeError("File " + infile + " does not appear to contain a CHARIS wavelength solution in the appropriate format.")
@@ -48,9 +48,9 @@ class PSFLets:
         if not os.path.isdir(outdir):
             raise IOError("Attempting to save pixel solution to directory " + outdir + ".  Directory does not exist.")
         outfile = re.sub('//', '/', outdir + '/PSFloc.fits')
-        out = fits.HDUList(fits.PrimaryHDU(self.xindx))
+        out = fits.HDUList(fits.PrimaryHDU(self.lam_indx))
+        out.append(fits.PrimaryHDU(self.xindx))
         out.append(fits.PrimaryHDU(self.yindx))
-        out.append(fits.PrimaryHDU(self.lam_indx))
         out.append(fits.PrimaryHDU(self.nlam.astype(int)))
         try:
             out.writeto(outfile, clobber=True)
@@ -145,7 +145,7 @@ class PSFLets:
 
         return interp_x, interp_y
 
-    def genpixsol(self, lam, allcoef, order=3, lam1=None, lam2=None):
+    def genpixsol(self, par, lam, allcoef, order=3, lam1=None, lam2=None):
         """
         """
 
@@ -157,9 +157,9 @@ class PSFLets:
         ###################################################################
 
         if lam1 is None:
-            lam1 = np.amin(lam)/1.04
+            lam1 = np.amin(lam)*0.98
         if lam2 is None:
-            lam2 = np.amax(lam)*1.03
+            lam2 = np.amax(lam)*1.02
         interporder = order
 
         if self.interp_arr is None:
@@ -169,7 +169,7 @@ class PSFLets:
         if not (coeforder + 1)*(coeforder + 2) == allcoef.shape[1]:
             raise ValueError("Number of coefficients incorrect for polynomial order.")
 
-        xindx = np.arange(-100, 101)
+        xindx = np.arange(-par.nlens/2, par.nlens/2)
         xindx, yindx = np.meshgrid(xindx, xindx)   
         
         n_spline = 100
@@ -192,8 +192,13 @@ class PSFLets:
 
         for ix in range(xindx.shape[0]):
             for iy in range(xindx.shape[1]):
-                pix_x = interp_x[:, ix, iy]
-                pix_y = interp_y[:, ix, iy]
+#                 pix_x = interp_x[:, ix, iy]
+#                 pix_y = interp_y[:, ix, iy]
+                # flipping x and y axes because code interpolates in the y direction
+                pix_y = interp_x[:, ix, iy]
+                pix_x = interp_y[:, ix, iy]
+#                 if ix==par.nlens/2 and iy==par.nlens/2:
+#                     print pix_y,pix_x
                 if np.all(pix_x < 0) or np.all(pix_x > 1024) or np.all(pix_y < 0) or np.all(pix_y > 1024):
                     continue
 
@@ -201,12 +206,11 @@ class PSFLets:
                     try:
                         tck_y = interpolate.splrep(pix_y[::-1], interp_lam[::-1], k=1, s=0)
                     except:
-                        print pix_x, pix_y
                         raise
                 else:
                     tck_y = interpolate.splrep(pix_y, interp_lam, k=1, s=0)
 
-                y1, y2 = [int(np.amin(pix_y)) + 1, int(np.amax(pix_y))]
+                y1, y2 = [int(np.amin(pix_y))+1, int(np.amax(pix_y))]
                 tck_x = interpolate.splrep(interp_lam, pix_x, k=1, s=0)
                 
                 nlam[ix, iy] = y2 - y1 + 1
@@ -215,11 +219,14 @@ class PSFLets:
                 x[ix, iy, :nlam[ix, iy]] = interpolate.splev(lam_out[ix, iy, :nlam[ix, iy]], tck_x)
 
         for nlam_max in range(x.shape[-1]):
+#             if np.all(y[:, :, nlam_max] == 0):
             if np.all(y[:, :, nlam_max] == 0):
                 break
         
-        self.xindx = x[:, :, :nlam_max]
-        self.yindx = y[:, :, :nlam_max]
+#         self.xindx = x[:, :, :nlam_max]
+#         self.yindx = y[:, :, :nlam_max]
+        self.xindx = y[:, :, :nlam_max]
+        self.yindx = x[:, :, :nlam_max]
         self.nlam = nlam
         self.lam_indx = lam_out[:, :, :nlam_max]
         self.nlam_max = np.amax(nlam)
@@ -368,7 +375,7 @@ def _corrval(coef, x, y, filtered, order, trimfrac=0.1):
 
 
 def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
-                  phi=np.arctan2(1.926,-1), scale=15.02):
+                  phi=np.arctan2(1.926,-1), scale=15.02,nlens=108):
     """
     function locatePSFlets takes an Image class, assumed to be a
     monochromatic grid of spots with read noise and shot noise, and
@@ -431,9 +438,10 @@ def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
     # x, y: Grid of lenslet IDs, Lenslet (0, 0) is the center.
     #############################################################
 
-    gridfrac = 10  
+    #gridfrac = 10  
     ydim, xdim = inImage.data.shape
-    x = np.arange(-(ydim//gridfrac), ydim//gridfrac + 1)
+    #x = np.arange(-(ydim//gridfrac), ydim//gridfrac + 1)
+    x = np.arange(-nlens/2,nlens/2+1)
     x, y = np.meshgrid(x, x)
     
     #############################################################
