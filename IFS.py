@@ -273,7 +273,10 @@ def reduceIFSMap(par,IFSimageName,method='apphot',ivar=False):
     else:
         log.info("Method not found")
     return cube
-    
+
+
+
+
 def prepareCube(par,wavelist,inputcube):
     '''
     Takes an input cube and interpolates it down to the required

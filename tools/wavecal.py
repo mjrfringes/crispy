@@ -14,7 +14,7 @@ import time
 import multiprocessing
 from scipy import ndimage
 import matplotlib.pyplot as plt
-
+from tools.reduction import calculateWaveList
 
 
 def createWavecalFiles(par,lamlist):
@@ -587,12 +587,14 @@ def buildcalibrations(par,filelist=None, lamlist=None,hires=True,
                     out = pyf.HDUList(pyf.PrimaryHDU(hiresarr.astype(np.float32)))
                     out.writeto(par.wavecalDir + 'hires_psflets_lam%d.fits' % (lam[i]), clobber=True)
 
-        Nspec = int(np.log(lam2*1./lam1)*R + 1.5)
-        log.info('Reduced cube will have %d wavelength bins' % Nspec)
-        loglam_endpts = np.linspace(np.log(lam1), np.log(lam2), Nspec)
-        loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
-        lam_endpts = np.exp(loglam_endpts)
-        lam_midpts = np.exp(loglam_midpts)
+        lam_midpts,lam_endpts=calculateWaveList(par,lam)
+#         Nspec = int(np.log(lam2*1./lam1)*R + 1.5)
+#         log.info('Reduced cube will have %d wavelength bins' % Nspec)
+#         loglam_endpts = np.linspace(np.log(lam1), np.log(lam2), Nspec)
+#         loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
+#         lam_endpts = np.exp(loglam_endpts)
+#         lam_midpts = np.exp(loglam_midpts)
+        Nspec = len(lam_endpts)
         polyimage = np.zeros((Nspec - 1, ysize, xsize))
         xpos = []
         ypos = []

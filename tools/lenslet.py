@@ -35,7 +35,7 @@ def processImagePlane(par,imagePlane):
     paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
     xdim,ydim = paddedImagePlane.shape
     xpad = xdim-imagePlane.shape[0]
-    ypad = ydim-imagePlane.shape[0]
+    ypad = ydim-imagePlane.shape[1]
     xpad /=2.
     ypad /=2.
     paddedImagePlane[xpad:-xpad-1,ypad:-ypad-1] = imagePlane

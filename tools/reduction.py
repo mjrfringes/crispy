@@ -304,6 +304,19 @@ def testReduction(par,name,ifsimage):
     pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
     return cube
 
+def calculateWaveList(par,lam_list=None):
+
+    if lam_list is None:
+        lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
+    else:
+        lamlist = lam_list
+    Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R + 1.5)
+    log.info('Reduced cube will have %d wavelength bins' % Nspec)
+    loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
+    loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
+    lam_endpts = np.exp(loglam_endpts)
+    lam_midpts = np.exp(loglam_midpts)
+    return lam_midpts,lam_endpts
 
 def lstsqExtract(par,name,ifsimage,ivar=False):
     '''
@@ -469,15 +482,8 @@ def fit_cutout(subim, psflets, mode='lstsq'):
 def intOptimalExtract(par,name,IFSimage):
 
     loc = PSFLets(load=True, infiledir=par.wavecalDir)
-    lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
+    lam_midpts,scratch = calculateWaveList(par)
     
-    Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R + 1.5)
-    log.info('Reduced cube will have %d wavelength bins' % Nspec)
-    loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
-    loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
-    lam_endpts = np.exp(loglam_endpts)
-    lam_midpts = np.exp(loglam_midpts)
-
     datacube = fitspec_intpix(par,IFSimage, loc, lam_midpts)
     datacube.write(name+'.fits',clobber=True)
     return datacube.data
@@ -537,17 +543,20 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
             if good:
                 ix = xindx[i, j, :PSFlet_tool.nlam[i, j]]
                 y = yindx[i, j, :PSFlet_tool.nlam[i, j]]
-                iy = np.mean(y)
-                lams = PSFlet_tool.lam_indx[i,j,:PSFlet_tool.nlam[i, j]]
-                i1 = int(iy) + 1 - delt_y/2.
-                arr = np.arange(i1,i1 + delt_y)
-                dy = arr-iy
-                gaussian = np.exp(-dy**2/sig**2/2.)
-                weights = np.sum(gaussian**2)
-#                 pix_center_vals = [np.sum(im.data[i1:i1 + delt_y, val],axis=0) for val in ix]
-                pix_center_vals = [np.sum(im.data[i1:i1 + delt_y, val]*gaussian) for val in ix]/weights
-                func = interp1d(lams,pix_center_vals,kind='linear')
-                cube[:,j,i] = func(lamlist)
+                iy = np.nanmean(y)
+                if ~np.isnan(iy):
+                    lams = PSFlet_tool.lam_indx[i,j,:PSFlet_tool.nlam[i, j]]
+                    i1 = int(iy) + 1 - delt_y/2.
+                    arr = np.arange(i1,i1 + delt_y)
+                    dy = arr-iy
+                    gaussian = np.exp(-dy**2/sig**2/2.)
+                    weights = np.sum(gaussian**2)
+    #                 pix_center_vals = [np.sum(im.data[i1:i1 + delt_y, val],axis=0) for val in ix]
+                    pix_center_vals = [np.sum(im.data[i1:i1 + delt_y, val]*gaussian) for val in ix]/weights
+                    func = interp1d(lams,pix_center_vals,kind='linear')
+                    cube[:,j,i] = func(lamlist)
+                else:
+                    cube[:,j,i] = np.NaN
             else:
                 cube[:,j,i] = np.NaN
 #     datacube = Image(data=coefs, ivar=tot_ivar, header=header)
