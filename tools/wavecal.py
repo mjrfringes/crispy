@@ -518,7 +518,9 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                         for all the wavelengths that we want in the output cube. Each PSFLet
                         in each wavelength slice is used for least-squares fitting.
     PSFLoc.fits:    nsubarr x nsubarr array of 2D high-resolution PSFLets at each location
-                    in the detector
+                    in the detector.
+    polychromeRXX.fits and PSFLoc.fits are only generated if makehiresPSFlets is True.
+    
     """
     outdir = par.wavecalDir
     R = par.R

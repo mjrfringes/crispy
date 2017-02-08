@@ -62,6 +62,20 @@ def simpleReduction(par,name,ifsimage):
     '''
     Basic cube reduction using an IFS image and a wavecal cube
     Equivalent to method 1 in the IDL primitive 'pisces_assemble_spectral_datacube'
+
+    Parameters
+    ----------
+    par:    Parameter instance
+    name: string
+            Name that will be given to final image, without fits extension
+    ifsimage: Image instance of IFS detector map, with optional inverse variance
+                    
+    Returns
+    -------
+    cube :  3D array
+            Return the reduced cube from the original IFS image
+
+
     '''
     log.info('Simple reduction')
     calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
@@ -107,10 +121,25 @@ def simpleReduction(par,name,ifsimage):
 
 def densifiedSimpleReduction(par,name,ifsimage,ratio=10.):
     '''
-    Basic cube reduction using an IFS image and a wavecal cube
-    Equivalent to method 1 in the IDL primitive 'pisces_assemble_spectral_datacube'
+    Use the same method as the 'simple' method but interpolate the original IFS map over
+    a grid with finer sampling
+    
+    Parameters
+    ----------
+    par:    Parameter instance
+    name: string
+            Name that will be given to final image, without fits extension
+    ifsimage: Image instance of IFS detector map, with optional inverse variance
+    ratio:  int
+            Ratio by which the original image is densified.
+                    
+    Returns
+    -------
+    cube :  3D array
+            Return the reduced cube from the original IFS image
+    
     '''
-    calCube = pyf.open(par.wavecalDir+par.wavecalName)
+    calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
     
     nx = int(ifsimage.shape[0] * ratio)
     ny = int(ifsimage.shape[1] * ratio)
@@ -171,10 +200,22 @@ def densifiedSimpleReduction(par,name,ifsimage,ratio=10.):
 
 def apertureReduction(par,name,ifsimage):
     '''
-    Basic cube reduction using an IFS image and a wavecal cube
-    Equivalent to method 1 in the IDL primitive 'pisces_assemble_spectral_datacube'
+    Reduction using aperture photometry package from photutils
+
+    Parameters
+    ----------
+    par:    Parameter instance
+    name: string
+            Name that will be given to final image, without fits extension
+    ifsimage: Image instance of IFS detector map, with optional inverse variance
+                    
+    Returns
+    -------
+    cube :  3D array
+            Return the reduced cube from the original IFS image
+    
     '''
-    calCube = pyf.open(par.wavecalDir+par.wavecalName)
+    calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
     
     waveCalArray = calCube[0].data#wavecal[0,:,:]
     waveCalArray = waveCalArray/1000.
@@ -218,6 +259,22 @@ def apertureReduction(par,name,ifsimage):
 
 
 def testReduction(par,name,ifsimage):
+    '''
+    Scratch routine to test various things.
+
+    Parameters
+    ----------
+    par:    Parameter instance
+    name: string
+            Name that will be given to final image, without fits extension
+    ifsimage: Image instance of IFS detector map, with optional inverse variance
+                    
+    Returns
+    -------
+    cube :  3D array
+            Return the reduced cube from the original IFS image
+    
+    '''
     calCube = pyf.open(par.wavecalDir+par.wavecalName)
     
     waveCalArray = calCube[0].data#wavecal[0,:,:]
@@ -267,6 +324,28 @@ def testReduction(par,name,ifsimage):
 
 def calculateWaveList(par,lam_list=None):
 
+    '''
+    Computes the wavelength lists corresponding to the center and endpoints of each
+    spectral bin. Wavelengths are separated by a constant value in log space. Number of
+    wavelengths depends on spectral resolution.
+    
+    Parameters
+    ----------
+    par:        Parameter instance
+    lam_list:   list of wavelengths
+            Usually this is left to None. If so, we use the wavelengths used for wavelength
+            calibration. Otherwise, we could decide to focus on a smaller/larger region of
+            the spectrum to retrieve. The final processed cubes will have bins centered
+            on lam_midpts
+            
+    Returns
+    -------
+    lam_midpts: list of floats
+            Wavelengths at the midpoint of each bin
+    lam_endpts: list of floats
+            Wavelengths at the edges of each bin
+            
+    '''
     if lam_list is None:
         lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
     else:
@@ -285,16 +364,15 @@ def lstsqExtract(par,name,ifsimage,ivar=False):
     
     Parameters
     ----------
-    par:   Parameter instance
+    par:    Parameter instance
     name: string
             Name that will be given to final image, without fits extension
     ifsimage: Image instance of IFS detector map, with optional inverse variance
-            First dimension needs to be the same length as lamlist
-                
+                    
     Returns
     -------
-    detectorFrame : 2D array
-            Return the detector frame
+    cube :  3D array
+            Return the reduced cube from the original IFS image
 
     '''
     polychromeR = pyf.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
@@ -349,22 +427,22 @@ def get_cutout(im, x, y, psflets, dy=3):
 
     Parameters
     ----------
-    im:      Image intance
+    im: Image intance
             Image containing data to be fit
-    x:       float
+    x: float
             List of x centroids for each microspectrum
-    y:       float
+    y: float
             List of y centroids for each microspectrum
     psflets: PSFLet instance
             Typically generated from polychrome step in wavelength calibration routine
-    dy:     int
+    dy: int
             vertical length to cut out, default 3.  This is the length to cut out in the
             +/-y direction; the lengths cut out in the +x direction (beyond the shortest 
             and longest wavelengths) are also dy.
 
     Returns
     -------
-    subim:   2D array
+    subim:  2D array
             A flattened subimage to be fit
     psflet_subarr: 2D ndarray
             first dimension is wavelength, second dimension is spatial, and is the same 
@@ -443,6 +521,28 @@ def fit_cutout(subim, psflets, mode='lstsq'):
 
 
 def intOptimalExtract(par,name,IFSimage):
+    """
+    Calls the optimal extraction routine
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+    name: string
+            Path & name of the output file
+    IFSimage: Image instance 
+            Image instance of input image. Can have a .ivar field for a variance map.
+
+    Return
+    ------
+    datacube.data:  3D ndarray
+            Datacube of reduced IFS image. The corresponding wavelengths can be found in
+            using calculateWaveList(par)
+            
+    Notes
+    -----
+    A cube is also written at par.SimResults/name.fits
+    
+    """
 
     loc = PSFLets(load=True, infiledir=par.wavecalDir)
     lam_midpts,scratch = calculateWaveList(par)
@@ -454,6 +554,30 @@ def intOptimalExtract(par,name,IFSimage):
 def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None, 
                    smoothandmask=False, header=pyf.PrimaryHDU().header):
     """
+    Optimal extraction routine
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+    im:     Image instance
+            IFS image to be processed.
+    PSFlet_tool: PSFLet instance
+            Inverse wavelength solution that is constructed during wavelength calibration
+    lamlist: list of floats
+            List of wavelengths to which each microspectrum is interpolated.    
+    delt_y: int
+            Width in pixels of each microspectrum in the cross-dispersion direction       
+    flat:
+            Whether a lenslet flatfield is used (not implemented yet)
+    smoothandmask: Boolean
+            Whether to smooth and mask bad pixels
+    header: PrimaryHDU() header instance
+            Header instance to carry all of the reduction information (not yet implemented)
+    
+    Returns
+    -------
+    image:  Image instance
+            Reduced cube in the image.data field
     """
 
     loglam = np.log(lamlist)
@@ -479,15 +603,6 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
     data[:] = im.data
     ivar = np.zeros(im.ivar.shape)
     ivar[:] = im.ivar
-    #print np.exp(loglam_indx)
-#     coefs, tot_ivar = optext(data, ivar, xindx, yindx, 
-#                                       loglam_indx, nlam, loglam, Nmax, 
-#                                       delt_y=6, sig=1.5)
-
-#     header['cubemode'] = ('Optimal Extraction', 'Method used to extract data cube')
-#     header['lam_min'] = (np.amin(lam), 'Minimum (central) wavelength of extracted cube')
-#     header['lam_max'] = (np.amax(lam), 'Maximum (central) wavelength of extracted cube')
-#     header['dloglam'] = (np.log(lam[1]/lam[0]), 'Log spacing of extracted wavelength bins')
     lamsol = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
     allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
 
@@ -528,19 +643,35 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
 #         datacube.data /= flat + 1e-10
 #         datacube.ivar *= flat**2
 # 
-#     if smoothandmask:
-#         good = np.any(datacube.data != 0, axis=0)
-#         datacube = _smoothandmask(datacube, good)
-# 
-#     return datacube
+    if smoothandmask:
+        good = np.any(datacube.data != 0, axis=0)
+        datacube = _smoothandmask(datacube, good)
+
     return Image(data=cube)
-    #pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
 
 
 
 
 def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
     """
+    Original optimal extraction routine form T. Brand
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+    im:     Image instance
+            IFS image to be processed.
+    PSFlet_tool: PSFLet instance
+            Inverse wavelength solution that is constructed during wavelength calibration
+    lamlist: list of floats
+            List of wavelengths to which each microspectrum is interpolated.    
+    delt_y: int
+            Width in pixels of each microspectrum in the cross-dispersion direction       
+    
+    Returns
+    -------
+    image:  Image instance
+            Reduced cube in the image.data field
     """
 
     xindx = PSFlet_tool.xindx
