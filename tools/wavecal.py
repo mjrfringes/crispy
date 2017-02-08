@@ -458,15 +458,72 @@ def gethires(x, y, image, upsample=5, nsubarr=5, npix=13, renorm=True):
     return hires_arr
 
 
-def buildcalibrations(par,filelist=None, lamlist=None,hires=True,
-                      order=3, lam1=605, lam2=725,inspect=True,
-                      genwavelengthsol=True, makehiresPSFlets=True,
-                      savehiresimages=True,borderpix = 4,
-                      upsample=3,nsubarr=3,parallel=True):
+def buildcalibrations(par,filelist=None, lamlist=None,order=3,
+                      inspect=True, genwavelengthsol=True, makehiresPSFlets=True,
+                      savehiresimages=True,borderpix = 4, upsample=3,nsubarr=3,
+                      parallel=True):
     """
+    Master wavelength calibration function
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+    filelist: list of strings
+            List of the fits files that contain the monochromatic calibration files
+    lamlist: list of floats
+            Wavelengths in nm at which the files are taken
+    order: int
+            Order of the polynomial used to fit the PSFLet positions across the detector
+    genwavelengthsol: Boolean
+            If True, generate the wavelength calibration. Creates a text file with all
+            polynomial coefficients that best fit the PSFLet positions at each wavelength.
+            If False, then load an already-generated file.
+    inspect: Boolean
+            Whether or not to create PNG files that overlay PSFLet fitted position on the
+            monochromatic pictures, to visually inspect the fitting results
+    makehiresPSFlets: Boolean
+            Whether or not to do a high-resolution fitting of the PSFs, using the sampling
+            diversity. This requires high-SNR monochromatic images.
+    savehiresimages: Boolean
+            Whether to save fits files with the high-res PSFLets
+    borderpix:  int
+            Number of pixels that are not taken into account towards the edges of the detector
+    upsample: int
+            Upsampling factor for each high-resolution PSFLet
+    nsubarr: int
+            Detector will be divided into nsubarr x nsubarr regions. A high-resolution PSFLet
+            will be determined in each region from the average of all PSFLets within that
+            region
+    parallel: Boolean
+            Whether or not to parallelize the computation for the high-resolution PSFLet and
+            polychrome computation. The wavelength calibration step cannot be parallelized since
+            each wavelength uses the previous wavelength solution as a guess input.
+    
+    
+    Notes
+    -------
+    This function generates all the files required to process IFS cubes:
+    lamsol.dat: contains a list of the wavelengths and the polynomial coefficients that
+                describe the X,Y positions of all lenslets on the detector as a function 
+                of lenslet position on the lenslet array.
+    polychromekeyRXX.fits:  where XX is replaced by the spectral resolution defined in the
+                            parameters file. This is a multi-extension fits file with: 
+                            - a list of the central wavelengths at which the final cube will be reduced to
+                            - an array of the X positions of all lenslets
+                            - an array of the Y positions of all lenslets
+                            - an array of booleans indicating whether that lenslet is good or not
+                            (e.g. when it is outside of the detector area)
+    polychromeRXX.fits: list of 2D arrays of size Npix x Npix which each contain a map with
+                        the high-resolution lenslet PSFLets put in their correct position
+                        for all the wavelengths that we want in the output cube. Each PSFLet
+                        in each wavelength slice is used for least-squares fitting.
+    PSFLoc.fits:    nsubarr x nsubarr array of 2D high-resolution PSFLets at each location
+                    in the detector
     """
     outdir = par.wavecalDir
     R = par.R
+    lam1 = min(lamlist)
+    lam2 = max(lamlist)
     
     if filelist is None:
         if par.filelist is None:
@@ -525,7 +582,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,hires=True,
     xindx = np.arange(-par.nlens/2, par.nlens/2)
     xindx, yindx = np.meshgrid(xindx, xindx)
 
-    if hires:
+    if makehiresPSFlets:
 
         hires_arrs = []
         allxpos = []
@@ -664,4 +721,4 @@ def buildcalibrations(par,filelist=None, lamlist=None,hires=True,
     outkey.append(pyf.PrimaryHDU(np.asarray(good).astype(np.uint8)))
     outkey.writeto(outdir + 'polychromekeyR%d.fits' % (R), clobber=True)
     
-    print ("Total time elapsed: %.0f s" % (time.time() - tstart))
+    log.info("Total time elapsed: %.0f s" % (time.time() - tstart))

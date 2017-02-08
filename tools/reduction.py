@@ -23,12 +23,16 @@ def _smoothandmask(datacube, good):
     step is purely cosmetic as the inverse variances are, in any case,
     zero.
 
-    Inputs:
-    1. datacube: image class containing 3D arrays data and ivar
-    2. good:     2D array, nonzero = good lenslet
+    Parameters
+    ----------
+    datacube: image instance
+            containing 3D arrays data and ivar
+    good:     2D array
+            nonzero = good lenslet
 
-    Output:
-    1. datacube: input datacube modified in place
+    Returns
+    -------
+    datacube: input datacube modified in place
 
     """
 
@@ -60,7 +64,7 @@ def simpleReduction(par,name,ifsimage):
     Equivalent to method 1 in the IDL primitive 'pisces_assemble_spectral_datacube'
     '''
     log.info('Simple reduction')
-    calCube = pyf.open(par.wavecalDir+par.wavecalName)
+    calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
     
     waveCalArray = calCube[0].data
     waveCalArray = waveCalArray/1000.
@@ -75,32 +79,22 @@ def simpleReduction(par,name,ifsimage):
     ycenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
 
     
-#     sdpx = 26 # length of longest spectra in pixels; need to link this to the filter setting
     lam_long = max(waveCalArray)
     lam_short = min(waveCalArray)
-#     
-#     wavelengths = np.arange(sdpx+1)*(lam_long-lam_short)/float(sdpx)+lam_short
     wavelengths = np.arange(lam_short,lam_long,par.dlam)
     cube = np.zeros((len(wavelengths),nlens,nlens))
 
     X = np.zeros((nlens,nlens),dtype='i4')
     Y = np.zeros((nlens,nlens),dtype='i4')
-    #X *= np.NaN
-    #Y *= np.NaN
     
     for wav in range(len(wavelengths)):
         lam = wavelengths[wav]
         log.info('Wavelength = %3.1f' % (lam*1000.))
-        #index = min(range(len(wavelengths)), key=lambda i: abs(wavelengths[i]-lam))
-        #print index
         for i in range(nlens):
             for j in range(nlens):
                 if not (np.isnan(xcenter[:,i,j]).any() and np.isnan(ycenter[:,i,j]).any()):
-                    #print xcenter[:,i,j],np.isnan(xcenter[:,i,j]).any()
-                    #print np.isnan(xcenter[0,i,j])
                     fx = interp1d(waveCalArray,xcenter[:,i,j])
                     fy = interp1d(waveCalArray,ycenter[:,i,j])
-                    #print (lam,fx(lam),xcenter[:,i,j])
                     Y[j,i] = np.int(fx(lam))
                     X[j,i] = np.int(fy(lam))            
         cube[wav,:,:] = ifsimage[X,Y]+ifsimage[X,Y+1]+ \
@@ -138,8 +132,6 @@ def densifiedSimpleReduction(par,name,ifsimage,ratio=10.):
     nlens = xcenter.shape[1]
     ycenter = calCube[2].data
     good = calCube[3].data
-    #xcenter[~good] = np.NaN
-    #ycenter[~good] = np.NaN
     ydim,xdim = ifsimageDense.shape
     xmargin = (ratio*5)//2
     ymargin = (ratio)//2
@@ -149,40 +141,28 @@ def densifiedSimpleReduction(par,name,ifsimage,ratio=10.):
     ycenter[~((xcenter*ratio<xdim)*(ycenter*ratio<ydim)*(xcenter*ratio>xmargin)*(ycenter*ratio>ymargin))] = np.nan
 
     
-#     sdpx = 26 # length of longest spectra in pixels; need to link this to the filter setting
     lam_long = max(waveCalArray)
     lam_short = min(waveCalArray)
-#     
-#     wavelengths = np.arange(sdpx+1)*(lam_long-lam_short)/float(sdpx)+lam_short
     wavelengths = np.arange(lam_short,lam_long,par.dlam)
     
     cube = np.zeros((len(wavelengths),nlens,nlens))
 
     X = np.zeros((nlens,nlens),dtype='i4')
     Y = np.zeros((nlens,nlens),dtype='i4')
-    #X *= np.NaN
-    #Y *= np.NaN
     ratio = int(ratio)
     for wav in range(len(wavelengths)):
         lam = wavelengths[wav]
         log.info('Wavelength = %3.1f' % (lam*1000.))
-        #index = min(range(len(wavelengths)), key=lambda i: abs(wavelengths[i]-lam))
-        #print index
         for i in range(nlens):
             for j in range(nlens):
                 if not (np.isnan(xcenter[:,i,j]).any() and np.isnan(ycenter[:,i,j]).any()):
-                    #print xcenter[:,i,j],np.isnan(xcenter[:,i,j]).any()
-                    #print np.isnan(xcenter[0,i,j])
                     fx = interp1d(waveCalArray,xcenter[:,i,j])
                     fy = interp1d(waveCalArray,ycenter[:,i,j])
-                    #print (lam,fx(lam),xcenter[:,i,j])
                     Y[j,i] = np.floor(fx(lam)*ratio)
                     X[j,i] = np.floor(fy(lam)*ratio)
         for xcount in range(-ratio//2,-ratio//2+ratio):
             for ycount in range(-(ratio*5)//2,-(ratio*5)//2+ratio*5):
                 cube[wav,:,:] += ifsimageDense[X+xcount,Y+ycount]
-            #cube[wav,:,:] = ifsimage[X,Y]+ifsimage[X,Y+1]+ \
-            #ifsimage[X,Y-1]+ifsimage[X,Y+2]+ifsimage[X,Y-2]
     
     cube[cube==0] = np.NaN
     pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
@@ -197,31 +177,20 @@ def apertureReduction(par,name,ifsimage):
     calCube = pyf.open(par.wavecalDir+par.wavecalName)
     
     waveCalArray = calCube[0].data#wavecal[0,:,:]
-#     waveCalArray = waveCalArray[waveCalArray>0]/1000.
     waveCalArray = waveCalArray/1000.
     
-#     xcenter = np.zeros((numWCal,nlens,nlens))
-#     ycenter = np.zeros((numWCal,nlens,nlens))
-#     for i in range(numWCal):
-#         xcenter[i,:,:] = wavecal[i*2+1,:,:]
-#         ycenter[i,:,:] = wavecal[i*2+2,:,:]
     xcenter = calCube[1].data
     nlens = xcenter.shape[1]
     ycenter = calCube[2].data
     good = calCube[3].data
-    #xcenter[~good] = np.NaN
-    #ycenter[~good] = np.NaN
     ydim,xdim = ifsimage.shape
     xdim-=2
     xcenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
     ycenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
 
     
-#     sdpx = 26 # length of longest spectra in pixels; need to link this to the filter setting
     lam_long = max(waveCalArray)
     lam_short = min(waveCalArray)
-#     
-#     wavelengths = np.arange(sdpx+1)*(lam_long-lam_short)/float(sdpx)+lam_short
     wavelengths = np.arange(lam_short,lam_long,par.dlam)
     cube = np.zeros((len(wavelengths),nlens,nlens))
 
@@ -235,17 +204,9 @@ def apertureReduction(par,name,ifsimage):
     for wav in range(len(wavelengths)):
         lam = wavelengths[wav]
         log.info('Wavelength = %3.1f' % (lam*1000.))
-        #index = min(range(len(wavelengths)), key=lambda i: abs(wavelengths[i]-lam))
-        #print index
         for i in range(nlens):
             for j in range(nlens):
                 if not (np.isnan(xcenter[:,i,j]).any() and np.isnan(ycenter[:,i,j]).any()):
-                    #print xcenter[:,i,j],np.isnan(xcenter[:,i,j]).any()
-                    #print np.isnan(xcenter[0,i,j])
-                    #fx = interp1d(waveCalArray,xcenter[:,i,j])
-                    #fy = interp1d(waveCalArray,ycenter[:,i,j])
-                    #print (lam,fx(lam),xcenter[:,i,j])
-                    #pos = (fx(lam),fy(lam))
                     _x,_y = psftool.return_locations(lam*1000., allcoef, j-nlens/2, i-nlens/2)
                     pos = (_x,_y)
                     ap = RectangularAperture(pos,1,5,0)
@@ -372,10 +333,6 @@ def lstsqExtract(par,name,ifsimage,ivar=False):
                  
             if good:
                 subim, psflet_subarr, [x0, x1, y0, y1] = get_cutout(ifsimage,xlist,ylist,psflets)
-#             if i==par.nlens/2 and j==par.nlens/2:
-#                 out = pyf.HDUList(pyf.PrimaryHDU(psflet_subarr.astype(np.float32)))
-#                 out.writeto(par.unitTestsOutputs + '/psflet_cutouti0j0.fits', clobber=True)
-
                 cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
             else:
                 cube[:,j,i] = np.NaN
@@ -390,26 +347,32 @@ def get_cutout(im, x, y, psflets, dy=3):
     linalg.lstsq or to whatever regularization scheme we adopt.
     Assumes that spectra are dispersed in the -y direction.
 
-    Inputs:
-    1. im:      Image object containing data to be fit
-    2. x:       float, list of x centroids
-    3. y:       float, list of y centroids of that microspectrum
-    4. psflets: list of 2D ndarrays, each of which should have the
-                same shape as image. Typically generated from polychrome
-         
-    Optional inputs:
-    1. dy:      vertical length to cut out, default 3.  This is
-                the length to cut out in the +/-y direction; the 
-                lengths cut out in the +x direction (beyond the 
-                shortest and longest wavelengths) are also dy.
+    Parameters
+    ----------
+    im:      Image intance
+            Image containing data to be fit
+    x:       float
+            List of x centroids for each microspectrum
+    y:       float
+            List of y centroids for each microspectrum
+    psflets: PSFLet instance
+            Typically generated from polychrome step in wavelength calibration routine
+    dy:     int
+            vertical length to cut out, default 3.  This is the length to cut out in the
+            +/-y direction; the lengths cut out in the +x direction (beyond the shortest 
+            and longest wavelengths) are also dy.
 
-    Returns: 
-    1. subim:   a flattened subimage to be fit
-    2. psflet_subarr: a 2D ndarray, first dimension is wavelength,
-                second dimension is spatial, and is the same shape
-                as the flattened subimage.
+    Returns
+    -------
+    subim:   2D array
+            A flattened subimage to be fit
+    psflet_subarr: 2D ndarray
+            first dimension is wavelength, second dimension is spatial, and is the same 
+            shape as the flattened subimage.
 
-    Note: both subim and psflet_subarr are scaled by the inverse
+    Notes
+    -----
+    Both subim and psflet_subarr are scaled by the inverse
     standard deviation if it is given for the input Image.  This 
     will make the fit chi2 and properly handle bad/masked pixels.
 

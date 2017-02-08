@@ -17,7 +17,7 @@ import logging as log
 import matplotlib.pyplot as plt
 import tools
 from tools.image import Image
-from tools.lenslet import propagate,processImagePlane
+from tools.lenslet import Lenslets,processImagePlane
 from tools.spectrograph import createAllWeightsArray,selectKernel,loadKernels
 from tools.detector import rebinDetector
 from tools.initLogger import initLogger
@@ -28,6 +28,40 @@ from tools.par_utils import Task, Consumer
 
 
 def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolatedInputCube,allweights,locations,finalFrame):
+    '''
+    Propagates a single wavelength through the Integral Field Spectrograph
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+            with at least the key IFS parameters, interlacing and scale
+    i : int
+            Slice number within the cube
+    wavlist : list of floats
+            List of wavelengths in microns
+    refWaveList : list of floats
+            List of wavelengths in microns that correspond to the loaded kernels
+            representing the PSF at each wavelength
+    kernelList : list of 3D arrays
+            List of kernels representing the wavelength for each reference wavelength and
+            each field location
+    wavlist : list of floats
+            List of wavelengths in microns
+    interpolatedInputCube : 3D ndarray
+            Represents the input cube already pre-processed to match the desired wavelist,
+            spatial sampling, orientation, etc.
+    allweights : 3D ndarray
+            Weights for bilinear interpolation between kernels in the final image. This is
+            passed as an argument to avoid having to recalculate them each time.
+    locations : 3D ndarray
+            Detector fractional locations corresponding to each kernel. Bottom left is (0,0)
+            while top right is (1,1). Same size as kernelList
+    finalFrame : 2D ndarray
+            Densified detector map of size par.npix*par.pxperdetpix square, which is passed
+            as argument to save memory space. This is in lieu of a shared memory array that
+            could be used for parallelization. The function modifies this array.
+                
+    '''
 
     lam = wavelist[i]
     
@@ -50,14 +84,13 @@ def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolated
     # Generate high-resolution detector map for wavelength lam
     ###################################################################### 
 #     if ~par.parallel: log.info('Propagate through lenslet array')
-    propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
+    Lenslets(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
     if par.saveLensletPlane: Image(data=finalFrame).write(par.exportDir+'/lensletPlane_%3.1fnm.fits' % (lam*1000.))
     return True
 
 def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True,cpus=6):
     '''
-    takes in a parameter class, a list of wavelengths, and a cube for which each slice
-    represents the PSF at a different wavelength
+    Propagates an input cube through the Integral Field Spectrograph
     
     Parameters
     ----------
@@ -120,30 +153,9 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True,cpus=
         for i in range(len(waveList)):
             log.info('Processing wavelength %f (%d out of %d)' % (waveList[i],i,nframes))
             propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolatedInputCube,allweights,locations,finalFrame)
-#             lam = wavelist[i]
-#             
-#             log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
-#             ###################################################################### 
-#             # Interpolate kernel at wavelength lam
-#             ###################################################################### 
-#             kernel = selectKernel(par,lam,refWaveList,kernelList)
-#     
-#             ###################################################################### 
-#             # Rotate and scale the image so that it is in the same 
-#             # orientation and scale as the lenslet array
-#             # After this step, the pixels in the array each represents a lenslet
-#             ###################################################################### 
-#             log.info('Rotate and scale slice %d' % i)
-#             imagePlaneRot = processImagePlane(par,interpolatedInputCube[i])
-#             if par.saveRotatedInput: Image(data=imagePlaneRot).write(par.exportDir+'/imagePlaneRot_%.3fum.fits' % (lam))
-# 
-#             ###################################################################### 
-#             # Generate high-resolution detector map for wavelength lam
-#             ###################################################################### 
-#             log.info('Propagate through lenslet array')
-#             propagate(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
-    
+                
     else:
+        # This is not yet working because of shared memory issues. Need to fix it...
         log.info('Starting parallel IFS propagation! Watchout for memory...')
         tasks = multiprocessing.Queue()
         results = multiprocessing.Queue()
@@ -162,9 +174,6 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True,cpus=
         for i in range(len(waveList)):
             index,result = results.get()
             log.info('Done with wavelength %.3f' % waveList[index])
-#             for i in range(len(lam)):
-#                 index, hiresarr = results.get()
-#                 hires_arrs += [hiresarr]
 
            
 
@@ -243,12 +252,6 @@ def reduceIFSMap(par,IFSimageName,method='apphot',ivar=False):
          
     '''
     
-#     hdulist = pyf.open(IFSimageName,ignore_missing_end=True)
-#     if hdulist[0].header['NAXIS']!=2:
-#         IFSimage = pyf.open(IFSimageName,ignore_missing_end=True)[1]
-#     else:
-#         IFSimage = pyf.open(IFSimageName,ignore_missing_end=True)[0]
-#     IFSimage.data +=1.
     IFSimage = Image(filename = IFSimageName)
     reducedName = IFSimageName.split('/')[-1].split('.')[0]
     if method == 'simple':

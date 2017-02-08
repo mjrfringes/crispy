@@ -47,9 +47,9 @@ def processImagePlane(par,imagePlane):
     return imagePlaneRot
 
     
-def propagate(par, imageplane, lam, allweights,kernels,locations,lensletplane):
+def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
     """
-    Function propagate
+    Function Lenslets
     
     Creates the IFS map on a 'dense' detector array where each pixel is smaller than the
     final detector pixels by a factor par.pxperdetpix. Adds to lensletplane array to save

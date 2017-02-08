@@ -1,22 +1,49 @@
 import scipy.interpolate
 import scipy.ndimage
-
 import numpy as np
 
+# found at https://github.com/benjaminpope/pysco/blob/master/frebin.py
+
+
 def rebin(a, shape):
+    """
+    Resizes a 2d array by averaging or repeating elements, 
+    new dimensions must be integral factors of original dimensions
+ 
+    Parameters
+    ----------
+    a : array_like
+        Input array.
+    new_shape : tuple of int
+        Shape of the output array (y, x)
+ 
+    Returns
+    -------
+    rebinned_array : ndarray
+        If the new shape is smaller of the input array, the data are averaged, 
+        if the new shape is bigger array elements are repeated
+    """
+        
     sh = shape[0],a.shape[0]//shape[0],shape[1],a.shape[1]//shape[1]
     return a.reshape(sh).mean(-1).mean(1)
 
 def frebin(array, shape, total=True):
-    '''Function that performs flux-conservative
-    rebinning of an array.
-    Inputs:
-        array: numpy array to be rebinned
-        shape: tuple (x,y) of new array size
-	total: Boolean, when True flux is conserved
-    Outputs:
+    """
+    Function that performs flux-conservative
+    rebinning of an array. 
+    
+    Parameters
+    ----------
+    array: ndarray
+        Numpy array to be rebinned
+    shape: tuple
+        (x,y) of new array size
+	total: Boolean
+	    when True flux is conserved
+    Returns
+    -------
 	new_array: new rebinned array with dimensions: shape
-    '''
+    """
 
     #Determine size of input image
     y, x = array.shape

@@ -81,8 +81,6 @@ def createAllWeightsArray(par,locations):
     '''
     Creates weights for bilinear interpolation
     
-    
-    
     Parameters
     ----------
     par :   Parameter instance
@@ -123,6 +121,28 @@ def createAllWeightsArray(par,locations):
 
 
 def selectKernel(par,lam,refWaveList,kernelList):
+    '''
+    Select the correct kernel for the current wavlength
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+    lam : float
+            Wavelength at which we want the get the kernel, in microns
+    refWaveList : list of floats
+            Wavelengths at which the kernels are defined
+    kernelList : list of 3D ndarrays
+            List of the kernels cubes at the wavelengths above
+    
+    Returns
+    -------
+    kernels: array of 2D arrays
+            Represents each 2D kernel at each location for that wavlength
+    locations: Nx2 ndarray
+            Location coordinates in detector position ratio (0,0) is bottom left, (1,1) is
+            top right
+    '''
+
     # find lowest index that is greater than lam
     ind = 0
     for nwave in range(len(refWaveList)):
@@ -162,6 +182,23 @@ def selectKernel(par,lam,refWaveList,kernelList):
     return newkernels
 
 def loadKernels(par,wavel):
+    '''
+    Loads the kernels that represent the PSFs at different locations on the detector
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+    wavel : float
+            Wavelength at which the kernels are needed
+    
+    Returns
+    -------
+    kernels: array of 2D arrays
+            Represents each 2D kernel at each location
+    locations: Nx2 ndarray
+            Location coordinates in detector position ratio (0,0) is bottom left, (1,1) is
+            top right
+    '''
     
     log.info('Loading spot diagrams.')
     # first, select which wavelength PSF to use
