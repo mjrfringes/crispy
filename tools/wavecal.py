@@ -51,12 +51,19 @@ def computeWavecal(par,lamlist=None,filelist=None,order = 3):
     the locatePSFlets function (could make this a parameter!)
     lamlist and filelist can be defined in the parameters in which case they don't need to be set
     
-    Inputs
-    1. par          Parameter instance with at least the key IFS parameters, interlacing and scale
-    2. lamlist      list of wavelengths in nm
-    3. filelist     list of fits files to open in corresponding order
-    4. order        order of 2d polynomial to be fitted to lenslets
+    Parameters
+    ----------
+    par:        Parameter instance
+    lamlist:    list of floats
+            Wavelengths in nm
+    filelist:   list of filenames
+            List of fits files to open in corresponding order
+    order:      int
+            Order of 2d polynomial to be fitted to lenslets
     
+    Notes
+    -----
+    Obsolete now
     '''
     # lamlist/filelist override
     if (filelist!=None) and (lamlist!=None):
