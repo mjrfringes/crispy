@@ -1,4 +1,4 @@
-# IFS-Simulator
+# Coronagraph Rapid Imaging Spectrograph in Python (CRISPY)
 Simulates the WFIRST IFS
 
 
