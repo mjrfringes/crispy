@@ -1,4 +1,5 @@
-# Coronagraph Rapid Imaging Spectrograph in Python (CRISPY)
+# CRISPY
+# The Coronagraph Rapid Imaging Spectrograph in Python
 Simulates the WFIRST IFS
 
 Maxime Rizzo, Tim Brandt, Tyler Groff, Prabal Saxena, Mike McElwain, Avi Mandell, Neil Zimmermann
