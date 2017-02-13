@@ -11,3 +11,9 @@ code/ReferenceFiles/simpsf/allweights.dat
 
 .ipynb_checkpoints/IFS-checkpoint.ipynb
 
+code/ReferenceFiles/wavecal/*
+
+code/ReferenceFiles/HighSNRWavecal/*
+
+
+
