@@ -1,14 +1,15 @@
 
-Simresults/*
+code/Simresults/*
 
-unitTestsOutputs/*
+code/unitTestsOutputs/*
 
 *.pyc
 
-ReferenceFiles/simpsf/allweights.dat
+code/ReferenceFiles/simpsf/allweights.dat
 
 *.log
 
 *.log
 
 .ipynb_checkpoints/IFS-checkpoint.ipynb
+
