@@ -17,3 +17,13 @@ code/ReferenceFiles/HighSNRWavecal/*
 
 
 
+
+*.png
+
+code/ReferenceFiles/LLTFcalCube.fits
+
+code/ReferenceFiles/lltf_655nm_2017-01-13-15-01-42_sub.fits
+
+code/ReferenceFiles/hires_psflets_lam655.fits
+
+*checkpoint.ipynb
