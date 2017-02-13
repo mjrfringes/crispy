@@ -1,13 +1,11 @@
 
-code/Simresults/*
+code/SimResults/*
 
 code/unitTestsOutputs/*
 
 *.pyc
 
 code/ReferenceFiles/simpsf/allweights.dat
-
-*.log
 
 *.log
 
