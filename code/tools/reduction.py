@@ -758,12 +758,18 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
                     i1 = int(iy) + 1 - delt_y/2.
                     arr = np.arange(i1,i1 + delt_y)
                     dy = arr-iy
-                    gaussian = np.exp(-dy**2/sig**2/2.)
-                    weights = np.sum(gaussian**2)
+#                     gaussian = np.exp(-dy**2/eff_sig**2/2.)
+#                     weights = np.sum(gaussian**2)
     #                 pix_center_vals = [np.sum(im.data[i1:i1 + delt_y, val],axis=0) for val in ix]
-                    pix_center_vals = [np.sum(im.data[i1:i1 + delt_y, val]*gaussian) for val in ix]/weights
-                    func = interp1d(lams,pix_center_vals,kind='linear')
-                    cube[:,j,i] = func(lamlist)
+                    weights = np.array([np.sum((np.exp(-dy**2/(sig*lam/par.FWHMlam)**2/2.))**2) for lam in lams])
+                    pix_center_vals = np.array([np.sum(im.data[i1:i1 + delt_y, ix[ii]]*np.exp(-dy**2/(sig*lams[ii]/par.FWHMlam)**2/2.)) for ii in range(PSFlet_tool.nlam[i, j])])/weights
+#                     weights = np.array([np.sum((np.exp(-dy**2/(sig)**2/2.))**2) for lam in lams])
+#                     pix_center_vals = np.array([np.sum(im.data[i1:i1 + delt_y, ix[ii]]*np.exp(-dy**2/(sig)**2/2.)) for ii in range(PSFlet_tool.nlam[i, j])])/weights
+                    tck = interpolate.splrep(np.log(lams), pix_center_vals, s=0, k=3)
+                    cube[:,j,i] = interpolate.splev(loglam, tck, ext=1)
+
+#                     func = interp1d(lams,pix_center_vals,kind='linear')
+#                     cube[:,j,i] = func(lamlist)
                 else:
                     cube[:,j,i] = np.NaN
             else:
@@ -785,7 +791,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
 
 def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
     """
-    Original optimal extraction routine form T. Brand
+    Original optimal extraction routine from T. Brand
     
     Parameters
     ----------
@@ -840,8 +846,6 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
 #                 _y = _y[_x>0]
                 _lam = PSFlet_tool.lam_indx[i, j, :PSFlet_tool.nlam[i, j]]
 #                 _lam = _lam[_x>0]
-                print (len(_x),len(_y),len(_lam))
-
                 if not (np.all(_x > x[0, 10]) and np.all(_x < x[0, -10]) and 
                         np.all(_y > y[10, 0]) and np.all(_y < y[-10, 0])):
                     continue
@@ -850,7 +854,9 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
                 i1 = int(np.mean(_y) - delt_y/2.)
                 dy = _y[yarr[:,:len(_lam)]] - y[i1:i1 + delt_y,_x[0]:_x[-1] + 1]
                 #var = _var[yarr[:len(_lam)]] - x[_y[0]:_y[-1] + 1, i1:i1 + delt_x]
-                sig = par.FWHM/2.35
+                lams,tmp = np.meshgrid(_lam,np.arange(delt_y))
+#                 if i==par.nlens/2 and j==par.nlens/2: print(tmp,lams)
+                sig = par.FWHM/2.35*lams/par.FWHMlam
                 weight = np.exp(-dy**2/2./sig**2)
                 data = im.data[i1:i1 + delt_y,_x[0]:_x[-1] + 1]
                 if im.ivar is not None:
@@ -858,10 +864,9 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
                 else:
                     ivar = np.ones(data.shape)
 
-                coefs[:len(_lam), i, j] = np.sum(weight*data*ivar, axis=0)[::-1]
-                coefs[:len(_lam), i, j] /= np.sum(weight**2*ivar, axis=0)[::-1]
-
-                tck = interpolate.splrep(np.log(_lam[::-1]), coefs[:len(_lam), i, j], s=0, k=3)
+                coefs[:len(_lam), i, j] = np.sum(weight*data*ivar, axis=0)
+                coefs[:len(_lam), i, j] /= np.sum(weight**2*ivar, axis=0)
+                tck = interpolate.splrep(np.log(_lam), coefs[:len(_lam), i, j], s=0, k=3)
                 coefs[:loglam.shape[0], i, j] = interpolate.splev(loglam, tck, ext=1)
 
 #     header['cubemode'] = ('Optimal Extraction', 'Method used to extract data cube')
