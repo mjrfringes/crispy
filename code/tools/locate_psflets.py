@@ -14,10 +14,23 @@ import logging as log
 
 class PSFLets:
     """
+    Helper class to deal with the PSFLets on the detector. Does most of the heavy lifting
+    during the wavelength calibration step.
     """
 
     def __init__(self, load=False, infile=None, infiledir='.'):
-
+        '''
+        Initialize the class
+        
+        Parameters
+        ----------
+        load: Boolean
+            Whether to load an already-existing wavelength calibration file
+        infile: String
+            If load is True, this is the name of the file
+        infiledir: String
+            If load is True, this is the directory in which the file resides
+        '''
         self.xindx = None
         self.yindx = None 
         self.lam_indx = None
@@ -31,6 +44,16 @@ class PSFLets:
 
 
     def loadpixsol(self, infile=None, infiledir='./calibrations'):
+        '''
+        Loads existing wavelength calibration file
+        
+        Parameters
+        ----------
+        infile: String
+            Name of the file
+        infiledir: String
+            Directory in which the file resides
+        '''
         if infile is None:
             infile = re.sub('//', '/', infiledir + '/PSFloc.fits')
         hdulist = fits.open(infile)
@@ -45,6 +68,20 @@ class PSFLets:
         self.nlam_max = np.amax(self.nlam)
        
     def savepixsol(self, outdir="calibrations/"):
+        '''
+        Saves wavelength calibration file
+        
+        Parameters
+        ----------
+        outdir: String
+            Directory in which to put the file. The file is name PSFloc.fits and is a
+            multi-extension FITS file, each extension corresponding to:
+            0. the list of wavelengths at which the calibration is done
+            1. a 2D ndarray with the X position of all lenslets
+            2. a 2D ndarray with the Y position of all lenslets
+            3. a 2D ndarray with the number of valid wavelengths for a given lenslet (some wavelengths fall outside of the detector area)
+            
+        '''
         if not os.path.isdir(outdir):
             raise IOError("Attempting to save pixel solution to directory " + outdir + ".  Directory does not exist.")
         outfile = re.sub('//', '/', outdir + '/PSFloc.fits')

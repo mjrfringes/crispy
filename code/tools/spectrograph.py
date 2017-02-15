@@ -174,10 +174,11 @@ def selectKernel(par,lam,refWaveList,kernelList):
         for k in range(kernels.shape[0]):
             newkernels[k] = ndimage.filters.gaussian_filter(kernels[k],sigma,order=0,mode='constant')
     if par.gaussian:
+        sigma = par.FWHM/2.35*par.pxperdetpix
         for k in range(kernels.shape[0]):
             x = np.arange(kernels[0].shape[0])-kernels[0].shape[0]/2
             _x, _y = np.meshgrid(x, x)
-            newkernels[k] = np.exp(-(_x**2+_y**2)/(2*sigma**2))
+            newkernels[k] = np.exp(-(_x**2+_y**2)/(2*(sigma*lam*1000/par.FWHMlam)**2))
             newkernels[k] /= np.sum(newkernels[k])
     return newkernels
 

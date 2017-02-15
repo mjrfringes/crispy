@@ -16,9 +16,9 @@ class Params():
         self.prefix = os.path.abspath('./ReferenceFiles') 
         self.exportDir = os.path.abspath('./SimResults')
         self.unitTestsOutputs = os.path.abspath('./unitTestsOutputs')
-        self.wavecalDir = self.prefix+'/VARIAwavecal/'
+#         self.wavecalDir = self.prefix+'/VARIAwavecal/'
 #         self.wavecalDir = self.prefix+'/HighSNRWavecal/'
-#         self.wavecalDir = self.prefix+'/wavecal/polychrome/'
+        self.wavecalDir = self.prefix+'/wavecal/'
 #         self.wavecalName = 'VARIAcalCube.fits'
 #         self.wavecalName = 'LLTFcalCube.fits'
 #         self.wavecalName = 'simCalCube.fits'
@@ -48,6 +48,7 @@ class Params():
         self.convolve = True        # whether to convolve the existing kernels with
                                     # gaussian kernel (simulating defocus)
         self.FWHM = 2               # FWHM of gaussian kernel
+        self.FWHMlam = 660.         # Lam at which FWHM is defined
         self.gaussian = True        # Use standard Gaussian kernels instead of library
 
         ###################################################################### 
