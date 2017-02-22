@@ -11,7 +11,6 @@ Originally inspired by T. Brandt's code for CHARIS
 import numpy as np
 from params import Params
 from astropy.io import fits as pyf
-#import tools
 import time
 import logging as log
 import matplotlib.pyplot as plt
@@ -223,7 +222,7 @@ def main():
 
 
     
-def reduceIFSMap(par,IFSimageName,method='apphot',ivar=False):
+def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
     '''
     Main reduction function
     
@@ -234,7 +233,7 @@ def reduceIFSMap(par,IFSimageName,method='apphot',ivar=False):
     par :   Parameter instance
     IFSimageName : string
             Path of image file
-    method : 'simple', 'dense', 'apphot', 'test', 'lstsq', 'opt'
+    method : 'simple', 'dense', 'apphot', 'test', 'lstsq', 'optext'
             Method used for reduction.
             'simple': brute force photometry, adds up the fluxes in a line of pixels
             centered where the centroid at that wavelength falls. Not very accurate.
@@ -244,7 +243,7 @@ def reduceIFSMap(par,IFSimageName,method='apphot',ivar=False):
             'test': use the method defined in the testReduction function, for experimenting.
             'lstsq': use the knowledge of the PSFs at each location and each wavelength and fits
             the microspectrum as a weighted sum of these PSFs in the least-square sense. Can weigh the data by its variance.
-            'opt': use a matched filter to appropriately weigh each pixel and assign the fluxes, making use of the inverse
+            'optext': use a matched filter to appropriately weigh each pixel and assign the fluxes, making use of the inverse
             wavlength calibration map. Then remap each microspectrum onto the desired wavelengths 
     ivar : Boolean
             Uses the variance information. If the original image doesn't have a variance HDU, then
@@ -271,15 +270,15 @@ def reduceIFSMap(par,IFSimageName,method='apphot',ivar=False):
         cube = GPImethod2(par,par.exportDir+'/'+reducedName,IFSimage.data)
     elif method == 'lstsq':
         reducedName += '_red_lstsq'
-        cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,ivar)
-    elif method == 'intopt':
-        reducedName += '_red_intopt'
+        cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage)
+    elif method == 'optext':
+        reducedName += '_red_optext'
+#         par.hdr['MODE'] = ('Gaussian','Method 1 of GPI reduction')
         if ivar==False: IFSimage.ivar = np.ones(IFSimage.data.shape)
         cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage)
     else:
         log.info("Method not found")
     return cube
-
 
 
 

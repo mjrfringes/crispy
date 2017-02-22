@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 import os
+import numpy as np
 from numpy import sqrt,arcsin
+from astropy.io import fits
+
 
 class Params():
 
@@ -30,7 +33,6 @@ class Params():
         ###################################################################### 
 
         self.nlens = 108            # Number of lenslets across array (account for rotation)
-        self.dlam = 0.005           # Resolution of recovered cube (microns)
         self.R = 110                # Determine the resolution of final cube
         self.pitch = 174e-6         # Lenslet pitch (meters)
         self.interlace = 2          # Interlacing
@@ -56,6 +58,7 @@ class Params():
         ###################################################################### 
         
         self.distort = True         # apply distortion or not
+        self.makeHeader()
 
     def output(self):
         string = ""
@@ -71,4 +74,19 @@ class Params():
         string += "\nConvolve with Gaussian as defocus? "+str(self.convolve)
         string += "\nFWHM of Gaussian convolution "+str(self.FWHM)+' detector pixel'
         return string+"\n"
+        
+    def makeHeader(self):
+        self.hdr = fits.PrimaryHDU().header
+        self.hdr.append(('comment', ''), end=True)
+        self.hdr.append(('comment', '*'*60), end=True)
+        self.hdr.append(('comment', '*'*22 + ' General parameters ' + '*'*18), end=True)
+        self.hdr.append(('comment', '*'*60), end=True)    
+        self.hdr.append(('comment', ''), end=True)
+        self.hdr.append(('NLENS',self.nlens,'Number of lenslets across array (account for rotation)'), end=True) 
+        self.hdr.append(('PITCH',self.pitch,'Lenslet pitch (meters)'), end=True) 
+        self.hdr.append(('INTERLAC',self.interlace,'Interlacing'), end=True) 
+        self.hdr.append(('PHILENS',self.philens*180./np.pi,'Rotation angle of the lenslets (degrees)'), end=True) 
+        self.hdr.append(('PIXSIZE',self.pixsize,'Pixel size (meters)'), end=True) 
+        self.hdr.append(('R',self.pixsize,'Spectral resolution of final cube'), end=True) 
+        self.hdr.append(('CALDIR',self.wavecalDir,'Directory in which the wavelength solution is kept'), end=True) 
         
