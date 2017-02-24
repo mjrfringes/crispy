@@ -783,20 +783,14 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
     if smoothandmask:
         good = np.any(cube.data != 0, axis=0)
         datacube = _smoothandmask(cube, good)
-
-    par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)
-    par.hdr.append(('comment', '*'*22 + ' Cube Extraction ' + '*'*21), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)    
-    par.hdr.append(('comment', ''), end=True)
-
+        
     par.hdr.append(('cubemode','Optimal Extraction', 'Method used to extract data cube'), end=True)
     par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum (central) wavelength of extracted cube'), end=True)
     par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum (central) wavelength of extracted cube'), end=True)
     par.hdr.append(('dloglam',loglam[1]-loglam[0], 'Log spacing of extracted wavelength bins'), end=True)
     par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
 
-    return Image(data=cube,header=par.hdr)
+    return Image(data=cube,header=par.hdr,extraheader=im.extraheader)
 
 
 

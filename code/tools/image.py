@@ -20,7 +20,7 @@ class Image:
     """
 
     def __init__(self, filename='', data=None, ivar=None,
-                 header=None,extrahead=None):       
+                 header=None,extraheader=None):       
         self.data = data
         self.ivar = ivar
         if header is None:
@@ -28,7 +28,7 @@ class Image:
         else:
             self.header = header
         self.filename = filename
-        self.extrahead = extrahead
+        self.extraheader = extraheader
 
         if data is None and filename != '':
             self.load(filename)
@@ -97,9 +97,9 @@ class Image:
         if self.ivar is not None:
             out.append(fits.PrimaryHDU(self.ivar.astype(np.float32)))
             
-        if self.extrahead is not None:
+        if self.extraheader is not None:
             try:
-                out.append(fits.PrimaryHDU(None, self.extrahead))
+                out.append(fits.PrimaryHDU(None, self.extraheader))
             except:
                 log.warn("Extra header in image class must be a FITS header.")
             

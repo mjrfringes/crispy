@@ -5,7 +5,7 @@ import logging as log
 import matplotlib.pyplot as plt
 from tools.image import Image
 from params import Params
-from astropy.io import fits as pyf
+from astropy.io import fits
 from tools.locate_psflets import PSFLets
 from tools.reduction import get_cutout,fit_cutout
 from IFS import propagateIFS
@@ -115,20 +115,19 @@ def testCreateFlatfield(par,lam1=605.,lam2=725.,nlam=26,parallel=False):
     loglam_endpts = np.linspace(np.log(lam1), np.log(lam2), nlam)
     loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
     loglam_width = (loglam_endpts[1:] - loglam_endpts[:-1])
-
-    photon_flux_density_pr_lenslet = 0.2 # flux (W.m-2) per lenslet per nm
+#     lam_endpts = np.linspace(lam1, lam2, nlam)
+    photon_count_rate_per_input_pixel = 1 # Photons per second per cube slice (in log space)
     lamlist=np.exp(loglam_midpts)
-    #lamlist = [0.660]
-    lamoD = 3. # number of lenslets per lamoD at 660nm
-    mperpix = par.pitch/lamoD
-    par.pixperlenslet = par.pitch/mperpix
-    par.mperpix = mperpix
-    inputCube = photon_flux_density_pr_lenslet*np.ones((len(lamlist),512,512),dtype=float)/lamoD**2
+    
+    inputCube = np.ones((len(lamlist),512,512),dtype=float)*photon_count_rate_per_input_pixel
     for i in range(len(lamlist)):
         inputCube[i,:,:] *= np.exp(loglam_width[i])
     par.saveDetector=False
-    detectorFrame = propagateIFS(par,lamlist/1000.,inputCube,parallel=parallel)
-    Image(data=detectorFrame).write(par.unitTestsOutputs+'/flatfield.fits',clobber=True)
+    inCube = fits.HDUList(fits.PrimaryHDU(inputCube))
+    inCube[0].header['LAM_C'] = 660.
+    inCube[0].header['PIXSIZE'] = 0.1
+    detectorFrame = propagateIFS(par,lamlist/1000.,inCube,parallel=parallel)
+    Image(data=detectorFrame,header=par.hdr).write(par.unitTestsOutputs+'/flatfield.fits',clobber=True)
     
     
 if __name__ == '__main__':

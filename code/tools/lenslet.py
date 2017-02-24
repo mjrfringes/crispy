@@ -23,8 +23,8 @@ def processImagePlane(par,imagePlane):
     Parameters
     ----------
     par :   Parameters instance
-    imagePlane : 2D array
-            Image or slice of input cube.
+    imagePlane : Image instance containing 3D input cube
+            Input cube to IFS sim, first dimension of data is wavelength
 
     Returns
     -------
@@ -33,17 +33,23 @@ def processImagePlane(par,imagePlane):
     '''
     
     paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
+    
     xdim,ydim = paddedImagePlane.shape
     xpad = xdim-imagePlane.shape[0]
     ypad = ydim-imagePlane.shape[1]
     xpad /=2.
     ypad /=2.
-    paddedImagePlane[xpad:-xpad-1,ypad:-ypad-1] = imagePlane
+    paddedImagePlane[xpad:-xpad,ypad:-ypad] = imagePlane
+    
     imagePlaneRot = Rotate(paddedImagePlane,par.philens,clip=False)
-    n = par.pixperlenslet
-    newShape = (imagePlaneRot.shape[0]/n,imagePlaneRot.shape[1]/n)
+    
+    ###################################################################### 
+    # Flux conservative rebinning
+    ###################################################################### 
+    newShape = (imagePlaneRot.shape[0]/par.pixperlenslet,imagePlaneRot.shape[1]/par.pixperlenslet)
     imagePlaneRot = frebin(imagePlaneRot,newShape)
     log.debug('Input plane is %dx%d' % imagePlaneRot.shape)
+    
     return imagePlaneRot
 
     
@@ -102,17 +108,9 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
             Y = y*factor # this is now in millimeters
             
             # apply polynomial transform
-            if par.distort:
-                ytmp,xtmp = distort(Y,X,lam)
-#                 sy = -ytmp/factor*par.pxprlens+lensletplane.shape[0]//2
-#                 sx = -xtmp/factor*par.pxprlens+lensletplane.shape[1]//2
-                sy = ytmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[0]//2
-                sx = xtmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[1]//2
-#                 if i==I and j==J:print sy,sx
-            else:
-                sy = y+lensletplane.shape[0]//2
-                sx = x+lensletplane.shape[1]//2
-            #if i==I and j==J: print sx/par.pxperdetpix,sy/par.pxperdetpix
+            ytmp,xtmp = distort(Y,X,lam)
+            sy = ytmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[0]//2
+            sx = xtmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[1]//2
             
             # put the kernel in the correct spot with the correct weight
             kx,ky = kernels[0].shape

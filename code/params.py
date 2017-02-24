@@ -33,12 +33,13 @@ class Params():
         ###################################################################### 
 
         self.nlens = 108            # Number of lenslets across array (account for rotation)
-        self.R = 110                # Determine the resolution of final cube
         self.pitch = 174e-6         # Lenslet pitch (meters)
         self.interlace = 2          # Interlacing
         self.philens = arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
         self.pinhole = True         # Use a pinhole grid?
         self.pin_dia = 25e-6        # Diameter of pinholes (m)
+        self.lenslet_sampling= 1./3.# lenslet size in lambda/D
+        self.lenslet_wav = 660.     # Wavelength at which this is defined (nm)
 
         ###################################################################### 
         # Detector stuff
@@ -53,11 +54,17 @@ class Params():
         self.FWHMlam = 660.         # Lam at which FWHM is defined
         self.gaussian = True        # Use standard Gaussian kernels instead of library
 
+        self.RN = 0.2               # FWHM of gaussian kernel
+        self.CIC = 1e-3             # Lam at which FWHM is defined
+        self.dark = 1e-5            # Use standard Gaussian kernels instead of library
+        self.Traps = False          # Use standard Gaussian kernels instead of library
+
         ###################################################################### 
         # Spectrograph stuff
         ###################################################################### 
         
-        self.distort = True         # apply distortion or not
+        self.R = 110                # Determine the resolution of final cube
+
         self.makeHeader()
 
     def output(self):
@@ -87,6 +94,4 @@ class Params():
         self.hdr.append(('INTERLAC',self.interlace,'Interlacing'), end=True) 
         self.hdr.append(('PHILENS',self.philens*180./np.pi,'Rotation angle of the lenslets (degrees)'), end=True) 
         self.hdr.append(('PIXSIZE',self.pixsize,'Pixel size (meters)'), end=True) 
-        self.hdr.append(('R',self.pixsize,'Spectral resolution of final cube'), end=True) 
-        self.hdr.append(('CALDIR',self.wavecalDir,'Directory in which the wavelength solution is kept'), end=True) 
         

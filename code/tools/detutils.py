@@ -2,7 +2,6 @@ import scipy.interpolate
 import scipy.ndimage
 import numpy as np
 
-# found at https://github.com/benjaminpope/pysco/blob/master/frebin.py
 
 
 def rebin(a, shape):
@@ -30,7 +29,8 @@ def rebin(a, shape):
 def frebin(array, shape, total=True):
     """
     Function that performs flux-conservative
-    rebinning of an array. 
+    rebinning of an array. Found at https://github.com/benjaminpope/pysco/blob/master/frebin.py
+
     
     Parameters
     ----------

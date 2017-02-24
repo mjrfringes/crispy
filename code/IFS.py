@@ -76,7 +76,7 @@ def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolated
     # After this step, the pixels in the array each represents a lenslet
     ###################################################################### 
 #     if ~par.parallel: log.info('Rotate and scale slice %d' % i)
-    imagePlaneRot = processImagePlane(par,interpolatedInputCube[i])
+    imagePlaneRot = processImagePlane(par,interpolatedInputCube.data[i])
     if par.saveRotatedInput: Image(data=imagePlaneRot).write(par.exportDir+'/imagePlaneRot_%3.1fnm.fits' % (lam*1000.))
 
     ###################################################################### 
@@ -105,13 +105,33 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True,cpus=
     detectorFrame : 2D array
             Return the detector frame
     '''
-    
-    log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)    
-    log.info('The plate scale of the input cube is %f um/pixel' % (par.mperpix*1e6))    
-    nframes = inputcube.shape[0]
+    par.makeHeader()
+    par.hdr.append(('comment', ''), end=True)
+    par.hdr.append(('comment', '*'*60), end=True)
+    par.hdr.append(('comment', '*'*22 + ' IFS Simulation ' + '*'*18), end=True)
+    par.hdr.append(('comment', '*'*60), end=True)    
+    par.hdr.append(('comment', ''), end=True)
+
+    try:
+        input_sampling = inputcube[0].header['PIXSIZE']
+        input_wav = inputcube[0].header['LAM_C']
+    except:
+        log.error('Missing header information in input file')
+        raise
+
+    ###################################################################### 
+    # Calculate sampling ratio to resample rotated image and match the lenslet sampling
+    ###################################################################### 
+
+    par.pixperlenslet = (par.lenslet_sampling/par.lenslet_wav)/(input_sampling/input_wav)
+    log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)
+    par.hdr.append(('SCALE',par.pixperlenslet,'Factor by which the input slice is rescaled'), end=True) 
+
+#    log.info('The plate scale of the input cube is %f um/pixel' % (par.mperpix*1e6))    
+    nframes = inputcube[0].data.shape[0]
     allweights = None
     
-    if inputcube.shape[0] != len(wavelist):
+    if inputcube[0].data.shape[0] != len(wavelist):
         log.error('Number of wavelengths does not match the number of slices')
 
     ###################################################################### 
@@ -180,7 +200,7 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True,cpus=
     # Rebinning to detector resolution
     ###################################################################### 
     detectorFrame = rebinDetector(par,finalFrame,clip=False)
-    if par.saveDetector: Image(data=detectorFrame).write(par.exportDir+'/'+name+'.fits') 
+    if par.saveDetector: Image(data=detectorFrame,header=par.hdr).write(par.exportDir+'/'+name+'.fits') 
     log.info('Done.')
     t['End'] = time.time()
     log.info("Performance: %d seconds total" % (t['End'] - t['Start']))
@@ -220,6 +240,7 @@ def main():
     
     propagateIFS(par,wavelist,inputcube)
 
+    log.shutdown()
 
     
 def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
@@ -250,7 +271,16 @@ def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
             use the image itself as its own variance (Poisson noise). Default False.
          
     '''
-    
+    # reset header (in the case where we do simulation followed by extraction)
+    #par.makeHeader()
+    par.hdr.append(('comment', ''), end=True)
+    par.hdr.append(('comment', '*'*60), end=True)
+    par.hdr.append(('comment', '*'*22 + ' Cube Extraction ' + '*'*21), end=True)
+    par.hdr.append(('comment', '*'*60), end=True)    
+    par.hdr.append(('comment', ''), end=True)
+    par.hdr.append(('R',par.R,'Spectral resolution of final cube'), end=True) 
+    par.hdr.append(('CALDIR',par.wavecalDir,'Directory in which the wavelength solution is kept'), end=True) 
+
     IFSimage = Image(filename = IFSimageName)
     reducedName = IFSimageName.split('/')[-1].split('.')[0]
     if method == 'simple':
@@ -273,7 +303,6 @@ def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
         cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage)
     elif method == 'optext':
         reducedName += '_red_optext'
-#         par.hdr['MODE'] = ('Gaussian','Method 1 of GPI reduction')
         if ivar==False: IFSimage.ivar = np.ones(IFSimage.data.shape)
         cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage)
     else:
@@ -290,7 +319,17 @@ def prepareCube(par,wavelist,inputcube):
     Watch out for energy conservation!!
     '''
     
-    return wavelist,inputcube
+    par.hdr.append(('comment', ''), end=True)
+    par.hdr.append(('comment', '*'*60), end=True)
+    par.hdr.append(('comment', '*'*22 + ' Innput info ' + '*'*25), end=True)
+    par.hdr.append(('comment', '*'*60), end=True)    
+    par.hdr.append(('comment', ''), end=True)
+    par.hdr.append(('INSLICES',len(wavelist),'Number of wavelengths in input cube'), end=True) 
+
+#    par.hdr.append(('INTERPSL',len(wavinterp),'Number of wavelengths in interpolated input cube'), end=True) 
+
+    outcube = Image(data=inputcube[0].data,header=inputcube[0].header)
+    return wavelist,outcube
 
 if __name__ == '__main__':
     main()

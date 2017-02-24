@@ -41,3 +41,35 @@ def rebinDetector(par,finalFrame,clip=False):
 
     return detectorFrame
 
+
+
+def readDetector(par,IFSimage,inttime=100,append_header=False):
+    '''
+    Read noise, CIC, dark current; NO TRAPS
+    Input is IFSimage in average photons per second
+    Quantum efficiency considerations are already taken care of when
+    generating IFSimage images
+    '''
+    if append_header:
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)
+        par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)    
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
+        par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
+        par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
+        par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
+        
+        
+    ### thoughts on implementing the EMGain:
+    # This requires an inverse cumulative probability density which depends
+    # on the number of incoming electrons in the well, with a max of 32.
+    # Suggestion is to pre-compute the 32 required functions, save them
+    # then apply them to the array, for example using np.vectorize
+    # Another way would be to make lists of coordinates for all pixels with the same
+    # values, and call this icdf a maximum of 32 times; after the random numbers
+    # are generated, put them back in their right place on the detector.
+    ###
+    
+    return np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)+np.random.poisson(par.RN,IFSimage.data.shape)
