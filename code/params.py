@@ -13,7 +13,7 @@ class Params():
         Main class containing all the sim parameters
         '''
 
-        self.saveRotatedInput = False
+        self.saveRotatedInput = True
         self.saveLensletPlane = False 
         self.saveDetector = True
         self.prefix = os.path.abspath('./ReferenceFiles') 

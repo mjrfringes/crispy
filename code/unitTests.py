@@ -7,11 +7,12 @@ from tools.image import Image
 from params import Params
 from astropy.io import fits
 from tools.locate_psflets import PSFLets
-from tools.reduction import get_cutout,fit_cutout
+from tools.reduction import get_cutout,fit_cutout,calculateWaveList
 from IFS import propagateIFS
 from tools.spectrograph import selectKernel,loadKernels
 from tools.plotting import plotKernels
 from scipy import ndimage
+
 
 def testLoadKernels(par):
     '''
@@ -111,17 +112,15 @@ def testCreateFlatfield(par,lam1=605.,lam2=725.,nlam=26,parallel=False):
 
     # generate new wavelength array, with resolution R
 #     lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]/1000.
+    lamlist,junk = calculateWaveList(par)
+#     loglam_endpts = np.linspace(np.log(lam1), np.log(lam2), nlam)
+#     loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
     
-    loglam_endpts = np.linspace(np.log(lam1), np.log(lam2), nlam)
-    loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
-    loglam_width = (loglam_endpts[1:] - loglam_endpts[:-1])
 #     lam_endpts = np.linspace(lam1, lam2, nlam)
-    photon_count_rate_per_input_pixel = 1 # Photons per second per cube slice (in log space)
-    lamlist=np.exp(loglam_midpts)
+    photon_count_rate_per_input_pixel = 2 # Photons per second per cube slice
+    #lamlist=np.exp(loglam_midpts)
     
     inputCube = np.ones((len(lamlist),512,512),dtype=float)*photon_count_rate_per_input_pixel
-    for i in range(len(lamlist)):
-        inputCube[i,:,:] *= np.exp(loglam_width[i])
     par.saveDetector=False
     inCube = fits.HDUList(fits.PrimaryHDU(inputCube))
     inCube[0].header['LAM_C'] = 660.

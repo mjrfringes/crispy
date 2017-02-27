@@ -678,12 +678,12 @@ def intOptimalExtract(par,name,IFSimage):
     loc = PSFLets(load=True, infiledir=par.wavecalDir)
     lam_midpts,scratch = calculateWaveList(par)
     
-    datacube = fitspec_intpix(par,IFSimage, loc, lam_midpts)
+    datacube = fitspec_intpix_np(par,IFSimage, loc, lam_midpts)
     datacube.write(name+'.fits',clobber=True)
     return datacube
 
 def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None, 
-                   smoothandmask=False,mode = 'gaussvar'):
+                   smoothandmask=False,mode = 'sum'):
     """
     Optimal extraction routine
     
@@ -761,7 +761,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
 #                     weights = np.sum(gaussian**2)
                         pix_center_vals = [np.sum(im.data[i1:i1 + delt_y, val],axis=0) for val in ix]
                     elif mode=='gaussvar':
-                        weights = np.array([np.sum((np.exp(-dy**2/(sig*lam/par.FWHMlam)**2/2.))**2) for lam in lams])
+                        weights = np.array([np.sum((np.exp(-dy**2/(sig*wav/par.FWHMlam)**2/2.))**2) for wav in lams])
                         pix_center_vals = np.array([np.sum(im.data[i1:i1 + delt_y, ix[ii]]*np.exp(-dy**2/(sig*lams[ii]/par.FWHMlam)**2/2.)) for ii in range(PSFlet_tool.nlam[i, j])])/weights
                     elif mode=='gaussnovar':
                         weights = np.array([np.sum((np.exp(-dy**2/(sig)**2/2.))**2) for lam in lams])
@@ -795,7 +795,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
 
 
 
-def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
+def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6):
     """
     Original optimal extraction routine in Numpy from T. Brand
     
@@ -820,7 +820,6 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
     xindx = PSFlet_tool.xindx
     yindx = PSFlet_tool.yindx
     Nmax = PSFlet_tool.nlam_max
-    print (Nmax)
 
     x = np.arange(im.data.shape[1])
     y = np.arange(im.data.shape[0])
@@ -828,9 +827,9 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
 
     ydim,xdim = im.data.shape
 
-
     coefs = np.zeros(tuple([max(Nmax, lamlist.shape[0])] + list(yindx.shape)[:-1]))
-    
+    cube = np.zeros((len(lamlist),par.nlens,par.nlens))    
+    ivarcube = np.zeros((len(lamlist),par.nlens,par.nlens))    
     xarr, yarr = np.meshgrid(np.arange(Nmax),np.arange(delt_y))
 
     loglam = np.log(lamlist)
@@ -847,21 +846,17 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
                  
             if good:
                 _x = xindx[i, j, :PSFlet_tool.nlam[i, j]]
-#                 _x = _x[_x>0]
                 _y = yindx[i, j, :PSFlet_tool.nlam[i, j]]
-#                 _y = _y[_x>0]
                 _lam = PSFlet_tool.lam_indx[i, j, :PSFlet_tool.nlam[i, j]]
-#                 _lam = _lam[_x>0]
                 if not (np.all(_x > x[0, 10]) and np.all(_x < x[0, -10]) and 
                         np.all(_y > y[10, 0]) and np.all(_y < y[-10, 0])):
                     continue
 
 
-                i1 = int(np.mean(_y) - delt_y/2.)
-                dy = _y[yarr[:,:len(_lam)]] - y[i1:i1 + delt_y,_x[0]:_x[-1] + 1]
+                i1 = int(np.nanmean(_y) - delt_y/2.)
+                dy = _y[xarr[:,:len(_lam)]] - y[i1:i1 + delt_y,_x[0]:_x[-1] + 1]
                 #var = _var[yarr[:len(_lam)]] - x[_y[0]:_y[-1] + 1, i1:i1 + delt_x]
                 lams,tmp = np.meshgrid(_lam,np.arange(delt_y))
-#                 if i==par.nlens/2 and j==par.nlens/2: print(tmp,lams)
                 sig = par.FWHM/2.35*lams/par.FWHMlam
                 weight = np.exp(-dy**2/2./sig**2)
                 data = im.data[i1:i1 + delt_y,_x[0]:_x[-1] + 1]
@@ -873,23 +868,26 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=7):
                 coefs[:len(_lam), i, j] = np.sum(weight*data*ivar, axis=0)
                 coefs[:len(_lam), i, j] /= np.sum(weight**2*ivar, axis=0)
                 tck = interpolate.splrep(np.log(_lam), coefs[:len(_lam), i, j], s=0, k=3)
-                coefs[:loglam.shape[0], i, j] = interpolate.splev(loglam, tck, ext=1)
+                cube[:,j,i] = interpolate.splev(loglam, tck, ext=1)
+                tck = interpolate.splrep(np.log(_lam), np.sum(weight**2*ivar, axis=0)/np.sum(weight**2, axis=0), s=0, k=3)
+                ivarcube[:,j,i] = interpolate.splev(loglam, tck, ext=1)
 
-    par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)
-    par.hdr.append(('comment', '*'*22 + ' Cube Extraction ' + '*'*21), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)    
-    par.hdr.append(('comment', ''), end=True)
+            else:
+                cube[:,j,i] = np.NaN
+                ivarcube[:,j,i] = 0.
+                
+    if smoothandmask:
+        good = np.any(cube.data != 0, axis=0)
+        cube = _smoothandmask(cube, good)
 
-    par.hdr['cubemode'] = ('Optimal Extraction', 'Method used to extract data cube')
-    par.hdr['lam_min'] = (np.amin(lam), 'Minimum (central) wavelength of extracted cube')
-    par.hdr['lam_max'] = (np.amax(lam), 'Maximum (central) wavelength of extracted cube')
-    par.hdr['dloglam'] = (np.log(lam[1]/lam[0]), 'Log spacing of extracted wavelength bins')
-    par.hdr['nlam'] = (lam.shape[0], 'Number of extracted wavelengths')
+    par.hdr.append(('cubemode','Optimal Extraction', 'Method used to extract data cube'), end=True)
+    par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum (central) wavelength of extracted cube'), end=True)
+    par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum (central) wavelength of extracted cube'), end=True)
+    par.hdr.append(('dloglam',loglam[1]-loglam[0], 'Log spacing of extracted wavelength bins'), end=True)
+    par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
 
 #     datacube = Image(data=coefs[:loglam.shape[0]], header=header)
-    datacube = Image(data=coefs[:loglam.shape[0]],header=par.hdr)
-    return datacube
+    return Image(data=cube,ivar=ivarcube,header=par.hdr,extraheader=im.extraheader)
 
 def fitspec_intpix_np_old(im, PSFlet_tool, lam, delt_x=7, header=pyf.PrimaryHDU().header):
     """
