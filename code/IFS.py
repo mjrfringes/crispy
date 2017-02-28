@@ -131,7 +131,7 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=False,cpus
     nframes = inputcube.data.shape[0]
     allweights = None
     
-    if inputcube[0].data.shape[0] != len(wavelist):
+    if inputcube.data.shape[0] != len(wavelist):
         log.error('Number of wavelengths does not match the number of slices')
 
     ###################################################################### 
