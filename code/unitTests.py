@@ -123,7 +123,7 @@ def testCreateFlatfield(par,lam1=605.,lam2=725.,nlam=26,parallel=False):
     inputCube = np.ones((len(lamlist),512,512),dtype=float)*photon_count_rate_per_input_pixel
     par.saveDetector=False
     inCube = fits.HDUList(fits.PrimaryHDU(inputCube))
-    inCube[0].header['LAM_C'] = 660.
+    inCube[0].header['LAM_C'] = 660./1000.
     inCube[0].header['PIXSIZE'] = 0.1
     detectorFrame = propagateIFS(par,lamlist/1000.,inCube,parallel=parallel)
     Image(data=detectorFrame,header=par.hdr).write(par.unitTestsOutputs+'/flatfield.fits',clobber=True)

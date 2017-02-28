@@ -114,8 +114,8 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=False,cpus
     par.hdr.append(('comment', ''), end=True)
 
     try:
-        input_sampling = inputcube.header['PIXSIZE']*1000.
-        input_wav = inputcube.header['LAM_C']
+        input_sampling = inputcube.header['PIXSIZE']
+        input_wav = inputcube.header['LAM_C']*1000.
     except:
         log.error('Missing header information in input file')
         raise
