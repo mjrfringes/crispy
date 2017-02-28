@@ -25,7 +25,7 @@ from tools.reduction import simpleReduction,densifiedSimpleReduction,testReducti
 import multiprocessing
 from tools.par_utils import Task, Consumer
 
-log = logging.getLogger('main')
+log = logging.getLogger('webbpsf')
 
 def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolatedInputCube,allweights,locations,finalFrame):
     '''
