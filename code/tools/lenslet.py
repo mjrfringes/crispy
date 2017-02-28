@@ -147,7 +147,7 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
                 dispersion = par.npixperdlam*par.R*(lam*1000.-par.FWHMlam)/par.FWHMlam
 #                 if i==nx//2 and j==nx//2: print(dispersion)
                 ### NOTE THE NEGATIVE SIGN TO PHILENS
-                coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=dispersion, y0=0)
+                coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=0, y0=dispersion)
 #                 theta = np.arctan2(jcoord,icoord)
 #                 r = np.sqrt(icoord**2 + jcoord**2)
 #                 ilensx = r*np.cos(theta-par.philens)
