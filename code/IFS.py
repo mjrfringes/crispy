@@ -12,7 +12,7 @@ import numpy as np
 from params import Params
 from astropy.io import fits as pyf
 import time
-import logging as log
+import logging
 import matplotlib.pyplot as plt
 import tools
 from tools.image import Image
@@ -25,6 +25,7 @@ from tools.reduction import simpleReduction,densifiedSimpleReduction,testReducti
 import multiprocessing
 from tools.par_utils import Task, Consumer
 
+log = logging.getLogger('main')
 
 def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolatedInputCube,allweights,locations,finalFrame):
     '''
