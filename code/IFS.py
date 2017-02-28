@@ -113,8 +113,8 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=False,cpus
     par.hdr.append(('comment', ''), end=True)
 
     try:
-        input_sampling = inputcube[0].header['PIXSIZE']
-        input_wav = inputcube[0].header['LAM_C']
+        input_sampling = inputcube.header['PIXSIZE']
+        input_wav = inputcube.header['LAM_C']
     except:
         log.error('Missing header information in input file')
         raise
@@ -128,7 +128,7 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=False,cpus
     par.hdr.append(('SCALE',par.pixperlenslet,'Factor by which the input slice is rescaled'), end=True) 
 
 #    log.info('The plate scale of the input cube is %f um/pixel' % (par.mperpix*1e6))    
-    nframes = inputcube[0].data.shape[0]
+    nframes = inputcube.data.shape[0]
     allweights = None
     
     if inputcube[0].data.shape[0] != len(wavelist):
@@ -327,7 +327,7 @@ def prepareCube(par,wavelist,inputcube):
 
 #    par.hdr.append(('INTERPSL',len(wavinterp),'Number of wavelengths in interpolated input cube'), end=True) 
 
-    outcube = Image(data=inputcube[0].data,header=inputcube[0].header)
+    outcube = Image(data=inputcube.data,header=inputcube.header)
     return wavelist,outcube
 
 if __name__ == '__main__':
