@@ -3,8 +3,8 @@ import numpy as np
 import logging as log
 from scipy import signal
 from scipy.interpolate import interp1d
-from photutils import RectangularAperture
-from photutils import aperture_photometry
+# from photutils import RectangularAperture
+# from photutils import aperture_photometry
 from scipy import ndimage
 from tools.locate_psflets import PSFLets
 from tools.image import Image
@@ -198,64 +198,64 @@ def densifiedSimpleReduction(par,name,ifsimage,ratio=10.):
     return cube
 
 
-def apertureReduction(par,name,ifsimage):
-    '''
-    Reduction using aperture photometry package from photutils
-
-    Parameters
-    ----------
-    par:    Parameter instance
-    name: string
-            Name that will be given to final image, without fits extension
-    ifsimage: Image instance of IFS detector map, with optional inverse variance
-                    
-    Returns
-    -------
-    cube :  3D array
-            Return the reduced cube from the original IFS image
-    
-    '''
-    calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
-    
-    waveCalArray = calCube[0].data#wavecal[0,:,:]
-    waveCalArray = waveCalArray/1000.
-    
-    xcenter = calCube[1].data
-    nlens = xcenter.shape[1]
-    ycenter = calCube[2].data
-    good = calCube[3].data
-    ydim,xdim = ifsimage.shape
-    xdim-=2
-    xcenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
-    ycenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
-
-    
-    lam_long = max(waveCalArray)
-    lam_short = min(waveCalArray)
-    wavelengths = np.arange(lam_short,lam_long,par.dlam)
-    cube = np.zeros((len(wavelengths),nlens,nlens))
-
-    psftool = PSFLets()
-    lam = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
-    allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
-
-    # lam in nm
-    psftool.geninterparray(lam, allcoef)
-    
-    for wav in range(len(wavelengths)):
-        lam = wavelengths[wav]
-        log.info('Wavelength = %3.1f' % (lam*1000.))
-        for i in range(nlens):
-            for j in range(nlens):
-                if not (np.isnan(xcenter[:,i,j]).any() and np.isnan(ycenter[:,i,j]).any()):
-                    _x,_y = psftool.return_locations(lam*1000., allcoef, j-nlens/2, i-nlens/2)
-                    pos = (_x,_y)
-                    ap = RectangularAperture(pos,1,5,0)
-                    cube[wav,j,i] = aperture_photometry(ifsimage,ap)['aperture_sum'][0]
-    
-    cube[cube==0] = np.NaN
-    pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
-    return cube
+# def apertureReduction(par,name,ifsimage):
+#     '''
+#     Reduction using aperture photometry package from photutils
+# 
+#     Parameters
+#     ----------
+#     par:    Parameter instance
+#     name: string
+#             Name that will be given to final image, without fits extension
+#     ifsimage: Image instance of IFS detector map, with optional inverse variance
+#                     
+#     Returns
+#     -------
+#     cube :  3D array
+#             Return the reduced cube from the original IFS image
+#     
+#     '''
+#     calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
+#     
+#     waveCalArray = calCube[0].data#wavecal[0,:,:]
+#     waveCalArray = waveCalArray/1000.
+#     
+#     xcenter = calCube[1].data
+#     nlens = xcenter.shape[1]
+#     ycenter = calCube[2].data
+#     good = calCube[3].data
+#     ydim,xdim = ifsimage.shape
+#     xdim-=2
+#     xcenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
+#     ycenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
+# 
+#     
+#     lam_long = max(waveCalArray)
+#     lam_short = min(waveCalArray)
+#     wavelengths = np.arange(lam_short,lam_long,par.dlam)
+#     cube = np.zeros((len(wavelengths),nlens,nlens))
+# 
+#     psftool = PSFLets()
+#     lam = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
+#     allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
+# 
+#     # lam in nm
+#     psftool.geninterparray(lam, allcoef)
+#     
+#     for wav in range(len(wavelengths)):
+#         lam = wavelengths[wav]
+#         log.info('Wavelength = %3.1f' % (lam*1000.))
+#         for i in range(nlens):
+#             for j in range(nlens):
+#                 if not (np.isnan(xcenter[:,i,j]).any() and np.isnan(ycenter[:,i,j]).any()):
+#                     _x,_y = psftool.return_locations(lam*1000., allcoef, j-nlens/2, i-nlens/2)
+#                     pos = (_x,_y)
+#                     ap = RectangularAperture(pos,1,5,0)
+#                     cube[wav,j,i] = aperture_photometry(ifsimage,ap)['aperture_sum'][0]
+#     
+#     cube[cube==0] = np.NaN
+#     pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
+#     return cube
 
 
 def GPImethod2(par,name,ifsimage):

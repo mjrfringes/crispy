@@ -2,7 +2,6 @@ from tools.locate_psflets import locatePSFlets,PSFLets
 from tools.image import Image
 from tools.par_utils import Task, Consumer
 from IFS import propagateIFS
-from photutils import CircularAperture
 import matplotlib as mpl
 import numpy as np
 from scipy import signal
@@ -154,19 +153,22 @@ def inspectWaveCal(par,slice=0,name='inspectWavecal'):
     aps.plot(ax=ax,color='blue', lw=1, alpha=0.5)
     fig.savefig(par.wavecalDir+name+'_%3d.png' % (waveCalArray[i]),dpi=300)
 
-
+#from photutils import CircularAperture
 def do_inspection(par,image,xpos,ypos,lam):
     
     xg,yg = xpos.shape
     vals = np.array([(xpos[m,n],ypos[m,n]) for m in range(xg) for n in range(yg)])
     pos = (vals[:,0],vals[:,1])
-    aps = CircularAperture(pos, r=3)
+    #aps = CircularAperture(pos, r=3)
     fig,ax = plt.subplots(figsize=(15,15))
     mean = np.mean(image)
     std = np.std(image)
     norm = mpl.colors.Normalize(vmin=mean,vmax=mean+5*std)
     ax.imshow(image, cmap='Greys',norm=norm,interpolation='nearest',origin='lower')
-    aps.plot(ax=ax,color='blue', lw=1, alpha=0.5)
+    for val in vals:
+        circle = plt.Circle(val,3,color=blue,lw=1,alpha=0.5)
+        ax.add_artist(circle)
+    #aps.plot(ax=ax,color='blue', lw=1, alpha=0.5)
     fig.savefig(par.wavecalDir+'inspection_%3d.png' % (lam),dpi=300)
     
 # def inspectAllWavecal(par,slice_list = None):
