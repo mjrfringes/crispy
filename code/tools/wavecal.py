@@ -24,20 +24,18 @@ def createWavecalFiles(par,lamlist):
     '''
     
     par.saveDetector=False
-    lamoD = 3. # number of lenslets per lamoD at 660nm
-    mperpix = par.pitch/lamoD
-    par.pixperlenslet = par.pitch/mperpix
-    par.mperpix = mperpix
-    inputCube = np.ones((1,512,512),dtype=float)/lamoD**2
+    inputCube = np.ones((1,512,512),dtype=float)
+    inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))
+    inCube[0].header['LAM_C'] = 660.
+    inCube[0].header['PIXSIZE'] = 0.1
     filelist = []
     for wav in lamlist:
-        detectorFrame = propagateIFS(par,[wav*1e-3],inputCube)
+        detectorFrame = propagateIFS(par,[wav*1e-3],inCube)
         filename = par.wavecalDir+'det_%3d.fits' % (wav)
         filelist.append(filename)
         Image(data=detectorFrame).write(filename)
     par.lamlist = lamlist
     par.filelist = filelist
-
 
 
 
@@ -530,9 +528,6 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     
     """
     outdir = par.wavecalDir
-    R = par.R
-    lam1 = min(lamlist)
-    lam2 = max(lamlist)
     
     if filelist is None:
         if par.filelist is None:
@@ -544,6 +539,9 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
             raise
         else:
             lamlist = par.lamlist
+            
+    lam1 = min(lamlist)
+    lam2 = max(lamlist)
     
     
     try: 
@@ -706,9 +704,9 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
         log.info('Saving polychrome cube')
 
         out = pyf.HDUList(pyf.PrimaryHDU(polyimage.astype(np.float32)))
-        out.writeto(outdir + 'polychromeR%d.fits' % (R), clobber=True)
+        out.writeto(outdir + 'polychromeR%d.fits' % (par.R), clobber=True)
         out = pyf.HDUList(pyf.PrimaryHDU(np.sum(polyimage,axis=0).astype(np.float32)))
-        out.writeto(outdir + 'polychromeR%dstack.fits' % (R), clobber=True)
+        out.writeto(outdir + 'polychromeR%dstack.fits' % (par.R), clobber=True)
     
     else:
         lam_midpts = lam
@@ -728,6 +726,6 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     outkey.append(pyf.PrimaryHDU(np.asarray(xpos)))
     outkey.append(pyf.PrimaryHDU(np.asarray(ypos)))
     outkey.append(pyf.PrimaryHDU(np.asarray(good).astype(np.uint8)))
-    outkey.writeto(outdir + 'polychromekeyR%d.fits' % (R), clobber=True)
+    outkey.writeto(outdir + 'polychromekeyR%d.fits' % (par.R), clobber=True)
     
     log.info("Total time elapsed: %.0f s" % (time.time() - tstart))

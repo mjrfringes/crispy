@@ -87,7 +87,7 @@ def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolated
     if par.saveLensletPlane: Image(data=finalFrame).write(par.exportDir+'/lensletPlane_%3.1fnm.fits' % (lam*1000.))
     return True
 
-def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True,cpus=6):
+def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=False,cpus=6):
     '''
     Propagates an input cube through the Integral Field Spectrograph
     
@@ -279,7 +279,7 @@ def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
     par.hdr.append(('comment', '*'*60), end=True)    
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('R',par.R,'Spectral resolution of final cube'), end=True) 
-    par.hdr.append(('CALDIR',par.wavecalDir,'Directory in which the wavelength solution is kept'), end=True) 
+    par.hdr.append(('CALDIR',par.wavecalDir.split('/')[-2],'Directory in which the wavelength solution is kept'), end=True) 
 
     IFSimage = Image(filename = IFSimageName)
     reducedName = IFSimageName.split('/')[-1].split('.')[0]

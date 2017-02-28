@@ -146,7 +146,7 @@ class PSFLets:
         interp_y: float
             Y coordinate on the detector
         '''
-        interp_x, interp_y = _transform(xindx, yindx, coeforder, coef)
+        interp_x, interp_y = transform(xindx, yindx, coeforder, coef)
         return interp_x, interp_y
 
     def return_res(self, lam, allcoef, xindx, yindx,
@@ -200,7 +200,7 @@ class PSFLets:
             coef = np.zeros((coeforder + 1)*(coeforder + 2))
             for k in range(1, interporder + 1):
                 coef += k*self.interp_arr[k]*np.log(interp_lam[i])**(k - 1)
-            _dx, _dy = _transform(xindx, yindx, coeforder, coef)
+            _dx, _dy = transform(xindx, yindx, coeforder, coef)
 
             dx += [_dx]
             dy += [_dy]
@@ -247,7 +247,7 @@ class PSFLets:
         '''
         if len(allcoef.shape) == 1:
             coeforder = int(np.sqrt(allcoef.shape[0])) - 1
-            interp_x, interp_y = _transform(xindx, yindx, coeforder, allcoef)
+            interp_x, interp_y = transform(xindx, yindx, coeforder, allcoef)
             return interp_x, interp_y
 
         if self.interp_arr is None:
@@ -260,7 +260,7 @@ class PSFLets:
         coef = np.zeros((coeforder + 1)*(coeforder + 2))
         for k in range(self.order + 1):
             coef += self.interp_arr[k]*np.log(lam)**k
-        interp_x, interp_y = _transform(xindx, yindx, coeforder, coef)
+        interp_x, interp_y = transform(xindx, yindx, coeforder, coef)
 
         return interp_x, interp_y
 
@@ -321,7 +321,7 @@ class PSFLets:
             coef = np.zeros((coeforder + 1)*(coeforder + 2))
             for k in range(interporder + 1):
                 coef += self.interp_arr[k]*np.log(interp_lam[i])**k
-            interp_x[i], interp_y[i] = _transform(xindx, yindx, coeforder, coef)
+            interp_x[i], interp_y[i] = transform(xindx, yindx, coeforder, coef)
 
         x = np.zeros(tuple(list(xindx.shape) + [1000]))
         y = np.zeros(x.shape)
@@ -338,7 +338,7 @@ class PSFLets:
                 pix_x = interp_y[:, ix, iy]
 #                 if ix==par.nlens/2 and iy==par.nlens/2:
 #                     print pix_y,pix_x
-                if np.all(pix_x < 0) or np.all(pix_x > 1024) or np.all(pix_y < 0) or np.all(pix_y > 1024):
+                if np.all(pix_x < 0) or np.all(pix_x > par.npix) or np.all(pix_y < 0) or np.all(pix_y > par.npix):
                     continue
 
                 if pix_y[-1] < pix_y[0]:
@@ -373,11 +373,9 @@ class PSFLets:
 
 
 
-def _initcoef(order, scale=15.02, phi=np.arctan2(1.926,-1), x0=0, y0=0):
+def initcoef(order, scale=15.02, phi=np.arctan2(1.926,-1), x0=0, y0=0):
 
     """
-    Private function _initcoef in locate_psflets
-
     Create a set of coefficients including a rotation matrix plus zeros.
 
     Parameters
@@ -428,10 +426,8 @@ def _initcoef(order, scale=15.02, phi=np.arctan2(1.926,-1), x0=0, y0=0):
     return list(coef)
 
 
-def _transform(x, y, order, coef):
+def transform(x, y, order, coef):
     """
-    Private function _transform in locate_psflets
-
     Apply the coefficients given to transform the coordinates using
     a polynomial.
 
@@ -487,11 +483,9 @@ def _transform(x, y, order, coef):
     return [_x, _y]
 
 
-def _corrval(coef, x, y, filtered, order, trimfrac=0.1):
+def corrval(coef, x, y, filtered, order, trimfrac=0.1):
 
     """
-    Private function _corrval in locate_psflets
-
     Return the negative of the sum of the middle XX% of the PSFlet
     spot fluxes (disregarding those with the most and the least flux
     to limit the impact of outliers).  Analogous to the trimmed mean.
@@ -523,7 +517,7 @@ def _corrval(coef, x, y, filtered, order, trimfrac=0.1):
     # discard these from the calculation before trimming.
     #################################################################
 
-    _x, _y = _transform(x, y, order, coef)
+    _x, _y = transform(x, y, order, coef)
     vals = ndimage.map_coordinates(filtered, [_y, _x], mode='constant', 
                                    cval=np.nan, prefilter=False)
     vals_ok = vals[np.where(np.isfinite(vals))]
@@ -632,9 +626,9 @@ def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
         subfiltered = ndimage.interpolation.spline_filter(unfiltered[subshape:-subshape, subshape:-subshape])
         for ix in np.arange(0, 14, 0.5):
             for iy in np.arange(0, 25, 0.5):
-                coef = _initcoef(polyorder, x0=ix+xdim/2.-subshape,
+                coef = initcoef(polyorder, x0=ix+xdim/2.-subshape,
                                  y0=iy+ydim/2.-subshape, scale=scale, phi=phi)
-                newval = _corrval(coef, x[_s:-_s, _s:-_s], y[_s:-_s, _s:-_s], 
+                newval = corrval(coef, x[_s:-_s, _s:-_s], y[_s:-_s, _s:-_s], 
                                   subfiltered, polyorder, trimfrac)
                 if newval < bestval:
                     bestval = newval
@@ -642,7 +636,7 @@ def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
         coef_opt = coefbest
 
         log.info("Performing initial optimization of PSFlet location transformation coefficients for frame " + inImage.filename)
-        res = optimize.minimize(_corrval, coef_opt, args=(x[_s:-_s, _s:-_s], y[_s:-_s, _s:-_s], subfiltered, polyorder, trimfrac), method='Powell')
+        res = optimize.minimize(corrval, coef_opt, args=(x[_s:-_s, _s:-_s], y[_s:-_s, _s:-_s], subfiltered, polyorder, trimfrac), method='Powell')
         coef_opt = res.x
 
         coef_opt[0] += subshape
@@ -665,7 +659,7 @@ def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
                 coef[0] += ix
                 coef[(polyorder + 1)*(polyorder + 2)/2] += iy
 
-                newval = _corrval(coef, x, y, filtered, polyorder, trimfrac)
+                newval = corrval(coef, x, y, filtered, polyorder, trimfrac)
                 if newval < bestval:
                     bestval = newval
                     coefbest = copy.deepcopy(coef)
@@ -673,13 +667,13 @@ def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
 
     log.info("Performing final optimization of PSFlet location transformation coefficients for frame " + inImage.filename)
                 
-    res = optimize.minimize(_corrval, coef_opt, args=(x, y, filtered, polyorder, trimfrac), method='Powell')
+    res = optimize.minimize(corrval, coef_opt, args=(x, y, filtered, polyorder, trimfrac), method='Powell')
 
     coef_opt = res.x
 
     if not res.success:
         log.info("Optimizing PSFlet location transformation coefficients may have failed for frame " + inImage.filename)
-    _x, _y = _transform(x, y, polyorder, coef_opt)
+    _x, _y = transform(x, y, polyorder, coef_opt)
 
     #############################################################
     # Boolean: do the lenslet PSFlets lie within the detector?

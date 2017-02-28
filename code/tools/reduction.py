@@ -481,7 +481,7 @@ def calculateWaveList(par,lam_list=None):
         lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
     else:
         lamlist = lam_list
-    Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R + 1.5)
+    Nspec = int(np.log(max(lamlist)/min(lamlist))*par.npixperdlam*par.R)
     log.info('Reduced cube will have %d wavelength bins' % Nspec)
     loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
     loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
@@ -795,7 +795,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
 
 
 
-def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6):
+def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=True):
     """
     Original optimal extraction routine in Numpy from T. Brand
     
@@ -848,46 +848,55 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6):
                 _x = xindx[i, j, :PSFlet_tool.nlam[i, j]]
                 _y = yindx[i, j, :PSFlet_tool.nlam[i, j]]
                 _lam = PSFlet_tool.lam_indx[i, j, :PSFlet_tool.nlam[i, j]]
-                if not (np.all(_x > x[0, 10]) and np.all(_x < x[0, -10]) and 
-                        np.all(_y > y[10, 0]) and np.all(_y < y[-10, 0])):
-                    continue
+#                 if not (np.all(_x > x[0, 10]) and np.all(_x < x[0, -10]) and 
+#                         np.all(_y > y[10, 0]) and np.all(_y < y[-10, 0])):
+#                     continue
 
+                iy = np.nanmean(_y)
+                if ~np.isnan(iy):
+                    i1 = int(iy - delt_y/2.)
+                    dy = _y[xarr[:,:len(_lam)]] - y[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
+                    #var = _var[yarr[:len(_lam)]] - x[_y[0]:_y[-1] + 1, i1:i1 + delt_x]
+                    lams,tmp = np.meshgrid(_lam,np.arange(delt_y))
+                    sig = par.FWHM/2.35*lams/par.FWHMlam
+                    weight = np.exp(-dy**2/2./sig**2)
+                    data = im.data[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
+                    if im.ivar is not None:
+                        ivar = im.ivar[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
+                    else:
+                        ivar = np.ones(data.shape)
 
-                i1 = int(np.nanmean(_y) - delt_y/2.)
-                dy = _y[xarr[:,:len(_lam)]] - y[i1:i1 + delt_y,_x[0]:_x[-1] + 1]
-                #var = _var[yarr[:len(_lam)]] - x[_y[0]:_y[-1] + 1, i1:i1 + delt_x]
-                lams,tmp = np.meshgrid(_lam,np.arange(delt_y))
-                sig = par.FWHM/2.35*lams/par.FWHMlam
-                weight = np.exp(-dy**2/2./sig**2)
-                data = im.data[i1:i1 + delt_y,_x[0]:_x[-1] + 1]
-                if im.ivar is not None:
-                    ivar = im.ivar[i1:i1 + delt_y,_x[0]:_x[-1] + 1]
+                    coefs[:len(_lam), i, j] = np.sum(weight*data*ivar, axis=0)
+                    coefs[:len(_lam), i, j] /= np.sum(weight**2*ivar, axis=0)
+                    tck = interpolate.splrep(np.log(_lam), coefs[:len(_lam), i, j], s=0, k=3)
+                    cube[:,j,i] = interpolate.splev(loglam, tck, ext=1)
+                    tck = interpolate.splrep(np.log(_lam), np.sum(weight**2*ivar, axis=0)/np.sum(weight**2, axis=0), s=0, k=3)
+                    ivarcube[:,j,i] = interpolate.splev(loglam, tck, ext=1)
                 else:
-                    ivar = np.ones(data.shape)
-
-                coefs[:len(_lam), i, j] = np.sum(weight*data*ivar, axis=0)
-                coefs[:len(_lam), i, j] /= np.sum(weight**2*ivar, axis=0)
-                tck = interpolate.splrep(np.log(_lam), coefs[:len(_lam), i, j], s=0, k=3)
-                cube[:,j,i] = interpolate.splev(loglam, tck, ext=1)
-                tck = interpolate.splrep(np.log(_lam), np.sum(weight**2*ivar, axis=0)/np.sum(weight**2, axis=0), s=0, k=3)
-                ivarcube[:,j,i] = interpolate.splev(loglam, tck, ext=1)
-
+                    cube[:,j,i] = np.NaN
+                    ivarcube[:,j,i] = 0.
             else:
                 cube[:,j,i] = np.NaN
                 ivarcube[:,j,i] = 0.
                 
-    if smoothandmask:
-        good = np.any(cube.data != 0, axis=0)
-        cube = _smoothandmask(cube, good)
 
     par.hdr.append(('cubemode','Optimal Extraction', 'Method used to extract data cube'), end=True)
     par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum (central) wavelength of extracted cube'), end=True)
     par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum (central) wavelength of extracted cube'), end=True)
     par.hdr.append(('dloglam',loglam[1]-loglam[0], 'Log spacing of extracted wavelength bins'), end=True)
     par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
+    
+    if smoothandmask:
+        par.hdr.append(('SMOOTHED',True, 'Cube has been smoothed over bad pixels/lenslets'), end=True)
+        cube = Image(data=cube,ivar=ivarcube)
+        good = np.any(cube.data != 0, axis=0)
+        cube = _smoothandmask(cube, good)
+    else:
+        par.hdr.append(('SMOOTHED',False, 'Cube has not been smoothed over bad pixels/lenslets'), end=True)
 
-#     datacube = Image(data=coefs[:loglam.shape[0]], header=header)
-    return Image(data=cube,ivar=ivarcube,header=par.hdr,extraheader=im.extraheader)
+    cube = Image(data=cube.data,ivar=cube.ivar,header=par.hdr,extraheader=im.extraheader)
+
+    return cube
 
 def fitspec_intpix_np_old(im, PSFlet_tool, lam, delt_x=7, header=pyf.PrimaryHDU().header):
     """

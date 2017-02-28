@@ -13,7 +13,7 @@ class Params():
         Main class containing all the sim parameters
         '''
 
-        self.saveRotatedInput = True
+        self.saveRotatedInput = False
         self.saveLensletPlane = False 
         self.saveDetector = True
         self.prefix = os.path.abspath('./ReferenceFiles') 
@@ -21,7 +21,8 @@ class Params():
         self.unitTestsOutputs = os.path.abspath('./unitTestsOutputs')
 #         self.wavecalDir = self.prefix+'/VARIAwavecal/'
 #         self.wavecalDir = self.prefix+'/HighSNRWavecal/'
-        self.wavecalDir = self.prefix+'/wavecal/'
+#         self.wavecalDir = self.prefix+'/wavecal/'
+        self.wavecalDir = self.prefix+'/wavecalR50/'
 #         self.wavecalName = 'VARIAcalCube.fits'
 #         self.wavecalName = 'LLTFcalCube.fits'
 #         self.wavecalName = 'simCalCube.fits'
@@ -37,8 +38,8 @@ class Params():
         self.interlace = 2          # Interlacing
         self.philens = arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
         self.pinhole = True         # Use a pinhole grid?
-        self.pin_dia = 25e-6        # Diameter of pinholes (m)
-        self.lenslet_sampling= 1./3.# lenslet size in lambda/D
+        self.pin_dia = 25e-6        # Diameter of pinholes (m) (not really used)
+        self.lenslet_sampling= 1./2.# lenslet size in lambda/D
         self.lenslet_wav = 660.     # Wavelength at which this is defined (nm)
 
         ###################################################################### 
@@ -47,7 +48,7 @@ class Params():
         
         self.npix = 1024            # Number of pixels in final detector
         self.pixsize = 13e-6        # Pixel size (meters)
-        self.pxperdetpix = 11       # Oversampling of the final detector pixels
+        self.pxperdetpix = 1       # Oversampling of the final detector pixels
         self.convolve = True        # whether to convolve the existing kernels with
                                     # gaussian kernel (simulating defocus)
         self.FWHM = 2               # FWHM of gaussian kernel
@@ -63,7 +64,10 @@ class Params():
         # Spectrograph stuff
         ###################################################################### 
         
-        self.R = 110                # Determine the resolution of final cube
+        self.distortPISCES=False    # If True, use measured PISCES distortion/dispersion
+        self.BW = 0.18              # Spectral bandwidth (if distortPISCES==False)
+        self.npixperdlam = 2        # Number of pixels per spectral resolution element
+        self.R = 50                 # Spectral resolving power (extracted cubes have twice)
 
         self.makeHeader()
 

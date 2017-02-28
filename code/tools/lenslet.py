@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from tools.detutils import frebin
 from scipy import ndimage
 from tools.spectrograph import distort
+from tools.locate_psflets import initcoef,transform
 
 
 def processImagePlane(par,imagePlane):
@@ -52,7 +53,15 @@ def processImagePlane(par,imagePlane):
     
     return imagePlaneRot
 
+
+def _psflet(par,size,y,x,lam):
+    '''
+    Function psflet
     
+    Computes a PSFLet template to put in the right place
+    
+    '''
+
 def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
     """
     Function Lenslets
@@ -96,38 +105,73 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
             # exit early where there is no flux
             if val==0:
                 continue
-            theta = np.arctan2(jcoord,icoord)
-            r = np.sqrt(icoord**2 + jcoord**2)
-            x = r*np.cos(theta+par.philens)
-            y = r*np.sin(theta+par.philens)
-            #if i==I and j==J: print x,y
             
-            # transform this coordinate including the distortion and dispersion
-            factor = 1000.*par.pitch
-            X = x*factor # this is now in millimeters
-            Y = y*factor # this is now in millimeters
+            if par.distortPISCES:
+                # in this case, the lensletplane array is oversampled by a factor par.pxperdetpix
+                theta = np.arctan2(jcoord,icoord)
+                r = np.sqrt(icoord**2 + jcoord**2)
+                x = r*np.cos(theta+par.philens)
+                y = r*np.sin(theta+par.philens)
+                #if i==I and j==J: print x,y
             
-            # apply polynomial transform
-            ytmp,xtmp = distort(Y,X,lam)
-            sy = ytmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[0]//2
-            sx = xtmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[1]//2
+                # transform this coordinate including the distortion and dispersion
+                factor = 1000.*par.pitch
+                X = x*factor # this is now in millimeters
+                Y = y*factor # this is now in millimeters
             
-            # put the kernel in the correct spot with the correct weight
-            kx,ky = kernels[0].shape
-            if sx>kx//2 and sx<lensletplane.shape[0]-kx//2 \
-                and sy>ky//2 and sy<lensletplane.shape[1]-ky//2:
-                isx = int(sx)
-                isy = int(sy)
+                # apply polynomial transform
+                ytmp,xtmp = distort(Y,X,lam)
+                sy = ytmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[0]//2
+                sx = xtmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[1]//2
                 
-                for k in range(len(locations)):
-                    wx = int(isx/lensletplane.shape[0]*allweights[:,:,k].shape[0])
-                    wy = int(isy/lensletplane.shape[1]*allweights[:,:,k].shape[1])
-                    weight = allweights[wx,wy,k]
-                    if weight ==0:
-                        continue
-                    xlow = isy-ky/2
-                    xhigh = xlow+ky
-                    ylow = isx-kx/2
-                    yhigh = ylow+kx
-                    lensletplane[xlow:xhigh,ylow:yhigh]+=val*weight*kernels[k]
+                # put the kernel in the correct spot with the correct weight
+                kx,ky = kernels[0].shape
+                if sx>kx//2 and sx<lensletplane.shape[0]-kx//2 \
+                    and sy>ky//2 and sy<lensletplane.shape[1]-ky//2:
+                    isx = int(sx)
+                    isy = int(sy)
+                
+                    for k in range(len(locations)):
+                        wx = int(isx/lensletplane.shape[0]*allweights[:,:,k].shape[0])
+                        wy = int(isy/lensletplane.shape[1]*allweights[:,:,k].shape[1])
+                        weight = allweights[wx,wy,k]
+                        if weight ==0:
+                            continue
+                        xlow = isy-ky//2
+                        xhigh = xlow+ky
+                        ylow = isx-kx//2
+                        yhigh = ylow+kx
+                        lensletplane[xlow:xhigh,ylow:yhigh]+=val*weight*kernels[k]
+            else:
+                order = 3
+                dispersion = par.npixperdlam*par.R*(lam*1000.-par.FWHMlam)/par.FWHMlam
+#                 if i==nx//2 and j==nx//2: print(dispersion)
+                coef = initcoef(order, scale=par.pitch/par.pixsize, phi=par.philens, x0=dispersion, y0=0)
+                sx, sy = transform(i-nx//2, j-nx//2, order, coef)
+                sx+=par.npix//2
+                sy+=par.npix//2
+#                 if i==nx//2+1 and j==nx//2+1: print( sx, sy)
+                size = int(3*par.pitch/par.pixsize)
+                #
+                if sx>size//2 and sx<lensletplane.shape[0]-size//2 \
+                    and sy>size//2 and sy<lensletplane.shape[1]-size//2:
+                    x = np.arange(size)-size//2 
+                    y = np.arange(size)-size//2 
+                    _x, _y = np.meshgrid(x, y)
+                    isx = int(sx)
+                    isy = int(sy)
+                    rsx = sx-isx
+                    rsy = sy-isy
+                    sig = par.FWHM/2.35
+                    psflet = np.exp(-((_x- rsx)**2+(_y- rsy)**2)/(2*(sig*lam*1000/par.FWHMlam)**2))
+                    psflet /= np.sum(psflet)
+#                     if i==nx//2 and j==nx//2: print( np.amax(psflet))
+                    isx = int(sx)
+                    isy = int(sy)
+                    xlow = isy-size//2
+                    xhigh = xlow+size
+                    ylow = isx-size//2
+                    yhigh = ylow+size
+                    lensletplane[xlow:xhigh,ylow:yhigh]+=val*psflet
+
     
