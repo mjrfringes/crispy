@@ -42,7 +42,7 @@ def processImagePlane(par,imagePlane):
     ypad /=2.
     paddedImagePlane[xpad:-xpad,ypad:-ypad] = imagePlane
     
-    imagePlaneRot = Rotate(paddedImagePlane,-par.philens,clip=False)
+    imagePlaneRot = Rotate(paddedImagePlane,par.philens,clip=False)
     
     ###################################################################### 
     # Flux conservative rebinning
@@ -146,7 +146,8 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
                 order = 3
                 dispersion = par.npixperdlam*par.R*(lam*1000.-par.FWHMlam)/par.FWHMlam
 #                 if i==nx//2 and j==nx//2: print(dispersion)
-                coef = initcoef(order, scale=par.pitch/par.pixsize, phi=par.philens, x0=dispersion, y0=0)
+                ### NOTE THE NEGATIVE SIGN TO PHILENS
+                coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=dispersion, y0=0)
                 theta = np.arctan2(jcoord,icoord)
 #                 theta = np.arctan2(jcoord,icoord)
 #                 r = np.sqrt(icoord**2 + jcoord**2)
