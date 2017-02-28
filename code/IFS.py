@@ -21,7 +21,7 @@ from tools.spectrograph import createAllWeightsArray,selectKernel,loadKernels
 from tools.detector import rebinDetector
 from tools.initLogger import initLogger
 from tools.plotting import plotKernels
-from tools.reduction import simpleReduction,apertureReduction,densifiedSimpleReduction,testReduction,lstsqExtract,intOptimalExtract,GPImethod2
+from tools.reduction import simpleReduction,densifiedSimpleReduction,testReduction,lstsqExtract,intOptimalExtract,GPImethod2
 import multiprocessing
 from tools.par_utils import Task, Consumer
 
@@ -260,7 +260,6 @@ def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
             centered where the centroid at that wavelength falls. Not very accurate.
             'dense': does the same but after interpolating/densifying the image by a factor of 10,
             which gives the previous method more accuracy (but depends on the interpolation scheme).
-            'apphot': use an aperture photometry routine from the photutils package, for better accuracy. Default setting.
             'test': use the method defined in the testReduction function, for experimenting.
             'lstsq': use the knowledge of the PSFs at each location and each wavelength and fits
             the microspectrum as a weighted sum of these PSFs in the least-square sense. Can weigh the data by its variance.
@@ -289,9 +288,9 @@ def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
     elif method == 'dense':
         reducedName += '_red_dense'
         cube = densifiedSimpleReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
-    elif method == 'apphot':
-        reducedName += '_red_apphot'
-        cube = apertureReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
+#     elif method == 'apphot':
+#         reducedName += '_red_apphot'
+#         cube = apertureReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
     elif method == 'test':
         reducedName += '_red_test'
         cube = testReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
