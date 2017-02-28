@@ -148,12 +148,11 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
 #                 if i==nx//2 and j==nx//2: print(dispersion)
                 ### NOTE THE NEGATIVE SIGN TO PHILENS
                 coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=dispersion, y0=0)
-                theta = np.arctan2(jcoord,icoord)
 #                 theta = np.arctan2(jcoord,icoord)
 #                 r = np.sqrt(icoord**2 + jcoord**2)
 #                 ilensx = r*np.cos(theta-par.philens)
 #                 ilensy = r*np.sin(theta-par.philens)
-                sx, sy = transform(i-nx//2, j-nx//2, order, coef)
+                sy, sx = transform(i-nx//2, j-nx//2, order, coef)
                 sx+=par.npix//2
                 sy+=par.npix//2
 #                 if i==nx//2+1 and j==nx//2+1: print( sx, sy)
@@ -172,8 +171,6 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
                     psflet = np.exp(-((_x- rsx)**2+(_y- rsy)**2)/(2*(sig*lam*1000/par.FWHMlam)**2))
                     psflet /= np.sum(psflet)
 #                     if i==nx//2 and j==nx//2: print( np.amax(psflet))
-                    isx = int(sx)
-                    isy = int(sy)
                     xlow = isy-size//2
                     xhigh = xlow+size
                     ylow = isx-size//2
