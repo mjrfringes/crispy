@@ -25,11 +25,11 @@ def createWavecalFiles(par,lamlist):
     par.saveDetector=False
     inputCube = np.ones((1,512,512),dtype=float)
     inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))
-    inCube[0].header['LAM_C'] = 660.
+    inCube[0].header['LAM_C'] = 0.770
     inCube[0].header['PIXSIZE'] = 0.1
     filelist = []
     for wav in lamlist:
-        detectorFrame = propagateIFS(par,[wav*1e-3],inCube)
+        detectorFrame = propagateIFS(par,[wav*1e-3],inCube[0])
         filename = par.wavecalDir+'det_%3d.fits' % (wav)
         filelist.append(filename)
         Image(data=detectorFrame).write(filename)
@@ -118,40 +118,40 @@ def createPolychrome(par):
     out = pyf.HDUList(pyf.PrimaryHDU(polyimage.astype(np.float32)))
     out.writeto(par.wavecalDir + 'polychromeR%d.fits' % (par.R), clobber=True)
 
-def inspectWaveCal(par,slice=0,name='inspectWavecal'):
-    '''
-    Inspects a wavecal solution by overplotting apertures on top of the image
-    
-    Inputs:
-    1. par          Parameter instance
-    2. slice        which slice of the wavelength calibration to look at
-    3. save         whether to save the figure or not
-    
-    '''
-    calCube = pyf.open(par.wavecalDir+'polychromekeyR%d.fits' % (par.R))
-    waveCalArray = calCube[0].data
-    i = slice
-    log.info('Displaying PSF centroid fits for wavelength %3d' % (waveCalArray[i]))
-    xorig = calCube[1].data[i,:,:]
-    yorig = calCube[2].data[i,:,:]
-    xdim,ydim = yorig.shape
-
-    xg,yg = xorig.shape
-    vals = np.array([(xorig[m,n],yorig[m,n]) for m in range(xg) for n in range(yg)])
-    pos = (vals[:,0],vals[:,1])
-    aps = CircularAperture(pos, r=3)
-    fig,ax = plt.subplots(figsize=(15,15))
-    hdulist = pyf.open(par.filelist[i],ignore_missing_end=True)
-    if hdulist[0].header['NAXIS']!=2:
-        image = pyf.open(par.filelist[i],ignore_missing_end=True)[1].data
-    else:
-        image = pyf.open(par.filelist[i],ignore_missing_end=True)[0].data
-    mean = np.mean(image)
-    std = np.std(image)
-    norm = mpl.colors.Normalize(vmin=mean,vmax=mean+5*std)
-    ax.imshow(image, cmap='Greys',norm=norm,interpolation='nearest',origin='lower')
-    aps.plot(ax=ax,color='blue', lw=1, alpha=0.5)
-    fig.savefig(par.wavecalDir+name+'_%3d.png' % (waveCalArray[i]),dpi=300)
+# def inspectWaveCal(par,slice=0,name='inspectWavecal'):
+#     '''
+#     Inspects a wavecal solution by overplotting apertures on top of the image
+#     
+#     Inputs:
+#     1. par          Parameter instance
+#     2. slice        which slice of the wavelength calibration to look at
+#     3. save         whether to save the figure or not
+#     
+#     '''
+#     calCube = pyf.open(par.wavecalDir+'polychromekeyR%d.fits' % (par.R))
+#     waveCalArray = calCube[0].data
+#     i = slice
+#     log.info('Displaying PSF centroid fits for wavelength %3d' % (waveCalArray[i]))
+#     xorig = calCube[1].data[i,:,:]
+#     yorig = calCube[2].data[i,:,:]
+#     xdim,ydim = yorig.shape
+# 
+#     xg,yg = xorig.shape
+#     vals = np.array([(xorig[m,n],yorig[m,n]) for m in range(xg) for n in range(yg)])
+#     pos = (vals[:,0],vals[:,1])
+#     #aps = CircularAperture(pos, r=3)
+#     fig,ax = plt.subplots(figsize=(15,15))
+#     hdulist = pyf.open(par.filelist[i],ignore_missing_end=True)
+#     if hdulist[0].header['NAXIS']!=2:
+#         image = pyf.open(par.filelist[i],ignore_missing_end=True)[1].data
+#     else:
+#         image = pyf.open(par.filelist[i],ignore_missing_end=True)[0].data
+#     mean = np.mean(image)
+#     std = np.std(image)
+#     norm = mpl.colors.Normalize(vmin=mean,vmax=mean+5*std)
+#     ax.imshow(image, cmap='Greys',norm=norm,interpolation='nearest',origin='lower')
+#     #aps.plot(ax=ax,color='blue', lw=1, alpha=0.5)
+#     fig.savefig(par.wavecalDir+name+'_%3d.png' % (waveCalArray[i]),dpi=300)
 
 #from photutils import CircularAperture
 def do_inspection(par,image,xpos,ypos,lam):
@@ -166,7 +166,7 @@ def do_inspection(par,image,xpos,ypos,lam):
     norm = mpl.colors.Normalize(vmin=mean,vmax=mean+5*std)
     ax.imshow(image, cmap='Greys',norm=norm,interpolation='nearest',origin='lower')
     for val in vals:
-        circle = plt.Circle(val,3,color=blue,lw=1,alpha=0.5)
+        circle = plt.Circle(val,3,color='blue',lw=1,alpha=0.5)
         ax.add_artist(circle)
     #aps.plot(ax=ax,color='blue', lw=1, alpha=0.5)
     fig.savefig(par.wavecalDir+'inspection_%3d.png' % (lam),dpi=300)

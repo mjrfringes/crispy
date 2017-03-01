@@ -12,7 +12,7 @@ import numpy as np
 from params import Params
 from astropy.io import fits as pyf
 import time
-import logging
+import logging #as log
 import matplotlib.pyplot as plt
 import tools
 from tools.image import Image

@@ -419,9 +419,9 @@ def initcoef(order, scale=15.02, phi=np.arctan2(1.926,-1), x0=0, y0=0):
     coef[0] = x0
     coef[1] = scale*np.cos(phi)
     coef[order + 1] = -scale*np.sin(phi)
-    coef[n/2] = y0
-    coef[n/2 + 1] = scale*np.sin(phi)
-    coef[n/2 + order + 1] = scale*np.cos(phi)
+    coef[n//2] = y0
+    coef[n//2 + 1] = scale*np.sin(phi)
+    coef[n//2 + order + 1] = scale*np.cos(phi)
      
     return list(coef)
 
