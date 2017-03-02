@@ -62,6 +62,7 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
         par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
         
         
+#     par.hdr.append(('INTTIME',inttime,'Integration time'), end=True)
     ### thoughts on implementing the EMGain:
     # This requires an inverse cumulative probability density which depends
     # on the number of incoming electrons in the well, with a max of 32.

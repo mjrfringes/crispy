@@ -125,7 +125,7 @@ def testCreateFlatfield(par,lam1=605.,lam2=725.,nlam=26,parallel=False):
     inCube = fits.HDUList(fits.PrimaryHDU(inputCube))
     inCube[0].header['LAM_C'] = 660./1000.
     inCube[0].header['PIXSIZE'] = 0.1
-    detectorFrame = propagateIFS(par,lamlist/1000.,inCube,parallel=parallel)
+    detectorFrame = propagateIFS(par,lamlist/1000.,inCube[0],parallel=parallel)
     Image(data=detectorFrame,header=par.hdr).write(par.unitTestsOutputs+'/flatfield.fits',clobber=True)
     
     
