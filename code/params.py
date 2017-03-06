@@ -41,7 +41,7 @@ class Params():
         self.pinhole = True         # Use a pinhole grid?
         self.pin_dia = 25e-6        # Diameter of pinholes (m) (not really used)
         self.lenslet_sampling= 1./2.# lenslet size in lambda/D
-        self.lenslet_wav = 660.     # Wavelength at which this is defined (nm)
+        self.lenslet_wav = 600.     # Wavelength at which this is defined (nm)
 
         ###################################################################### 
         # Detector stuff
@@ -60,6 +60,11 @@ class Params():
         self.CIC = 1e-3             # Lam at which FWHM is defined
         self.dark = 1e-5            # Use standard Gaussian kernels instead of library
         self.Traps = False          # Use standard Gaussian kernels instead of library
+
+        self.QE = 0.7				# detector QE; need to make this wavelength-dependent
+        self.losses = 0.34			# total losses for on-axis PSF (given by J. Krist)
+        self.Nreads = 10			# number of reads for a frame
+        self.timeframe = 1000		# time in second for a frame (from file)
 
         ###################################################################### 
         # Spectrograph stuff
@@ -86,7 +91,7 @@ class Params():
         string += "\nConvolve with Gaussian as defocus? "+str(self.convolve)
         string += "\nFWHM of Gaussian convolution "+str(self.FWHM)+' detector pixel'
         return string+"\n"
-        
+
     def makeHeader(self):
         self.hdr = fits.PrimaryHDU().header
         self.hdr.append(('comment', ''), end=True)

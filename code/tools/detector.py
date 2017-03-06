@@ -6,10 +6,10 @@ import scipy.ndimage
 
 import numpy as np
 import multiprocessing
-import logging
 import matplotlib.pyplot as plt
 from tools.detutils import frebin
 import logging as log
+from tools.image import Image
 
 def rebinDetector(par,finalFrame,clip=False):
     '''
@@ -74,3 +74,51 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     ###
     
     return np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)+np.random.poisson(par.RN,IFSimage.data.shape)
+
+def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,contrast=None):
+    '''	
+    Process a list of files and creates individual detector readouts
+    If we want only one file, we can just make a list of 1
+    '''
+    det_outlist = []
+    for reffile in filelist:
+        log.info('Apply detector readout on '+reffile.split('/')[-1])
+        img = Image(filename=reffile)
+        if offaxis is not None:
+            offaxis_psf = Image(filename='OS5/offaxis.fits')
+            img.data += contrast*offaxis_psf.data
+        inttime = par.timeframe/par.Nreads
+        img.data*=par.QE*par.losses
+        #refreshes parameter header
+        par.makeHeader()
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)
+        par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)    
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
+        par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
+        par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
+        par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
+        par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
+        par.hdr.append(('LOSS',par.losses,'Transmission factor for the IFS (J. Krist)'),end=True)
+        par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
+        par.hdr.append(('NREADS',par.Nreads,'Number of frames averaged'),end=True)
+        par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time'),end=True)
+
+        frame = np.zeros(img.data.shape)
+        varframe = np.zeros(img.data.shape)
+        # averaging reads
+        for i in range(Nreads):
+            newread = readDetector(par,img,inttime=inttime)
+            frame += newread
+            varframe += newread**2
+        frame /= Nreads
+        varframe /= Nreads
+        varframe -= frame**2
+        outimg = Image(data=frame,ivar=1./varframe,header=par.hdr)
+        # append '_suffix' to the file name
+        outimg.write(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits',clobber=True)
+        det_outlist.append(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits')
+    return det_outlist
+
