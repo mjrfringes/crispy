@@ -1,0 +1,452 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>IFS &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="top" title="crispy 0.1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">astro</span><span id="logotext2">py</span><span id="logotext3">:docs</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      <li><a href="index.html" accesskey="U">Module code</a> &#187;</li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for IFS</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Standalone IFS simulation code</span>
+<span class="sd">MJ Rizzo and the IFS team</span>
+
+<span class="sd">Originally inspired by T. Brandt&#39;s code for CHARIS</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="k">import</span> <span class="n">Params</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">tools</span>
+<span class="kn">from</span> <span class="nn">tools.image</span> <span class="k">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">tools.lenslet</span> <span class="k">import</span> <span class="n">Lenslets</span><span class="p">,</span><span class="n">processImagePlane</span>
+<span class="kn">from</span> <span class="nn">tools.spectrograph</span> <span class="k">import</span> <span class="n">createAllWeightsArray</span><span class="p">,</span><span class="n">selectKernel</span><span class="p">,</span><span class="n">loadKernels</span>
+<span class="kn">from</span> <span class="nn">tools.detector</span> <span class="k">import</span> <span class="n">rebinDetector</span>
+<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="k">import</span> <span class="n">initLogger</span>
+<span class="kn">from</span> <span class="nn">tools.plotting</span> <span class="k">import</span> <span class="n">plotKernels</span>
+<span class="kn">from</span> <span class="nn">tools.reduction</span> <span class="k">import</span> <span class="n">simpleReduction</span><span class="p">,</span><span class="n">densifiedSimpleReduction</span><span class="p">,</span><span class="n">testReduction</span><span class="p">,</span><span class="n">lstsqExtract</span><span class="p">,</span><span class="n">intOptimalExtract</span><span class="p">,</span><span class="n">GPImethod2</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">tools.par_utils</span> <span class="k">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">Consumer</span>
+
+<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="k">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="propagateSingleWavelength"><a class="viewcode-back" href="../IFS.html#IFS.propagateSingleWavelength">[docs]</a><span class="k">def</span> <span class="nf">propagateSingleWavelength</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">wavelist</span><span class="p">,</span><span class="n">interpolatedInputCube</span><span class="p">,</span><span class="n">finalFrame</span><span class="p">,</span>
+            <span class="n">refWaveList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">kernelList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">allweights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Propagates a single wavelength through the Integral Field Spectrograph</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    par :   Parameter instance</span>
+<span class="sd">            with at least the key IFS parameters, interlacing and scale</span>
+<span class="sd">    i : int</span>
+<span class="sd">            Slice number within the cube</span>
+<span class="sd">    wavlist : list of floats</span>
+<span class="sd">            List of wavelengths in microns</span>
+<span class="sd">    refWaveList : list of floats</span>
+<span class="sd">            List of wavelengths in microns that correspond to the loaded kernels</span>
+<span class="sd">            representing the PSF at each wavelength</span>
+<span class="sd">    kernelList : list of 3D arrays</span>
+<span class="sd">            List of kernels representing the wavelength for each reference wavelength and</span>
+<span class="sd">            each field location</span>
+<span class="sd">    wavlist : list of floats</span>
+<span class="sd">            List of wavelengths in microns</span>
+<span class="sd">    interpolatedInputCube : 3D ndarray</span>
+<span class="sd">            Represents the input cube already pre-processed to match the desired wavelist,</span>
+<span class="sd">            spatial sampling, orientation, etc.</span>
+<span class="sd">    allweights : 3D ndarray</span>
+<span class="sd">            Weights for bilinear interpolation between kernels in the final image. This is</span>
+<span class="sd">            passed as an argument to avoid having to recalculate them each time.</span>
+<span class="sd">    locations : 3D ndarray</span>
+<span class="sd">            Detector fractional locations corresponding to each kernel. Bottom left is (0,0)</span>
+<span class="sd">            while top right is (1,1). Same size as kernelList</span>
+<span class="sd">    finalFrame : 2D ndarray</span>
+<span class="sd">            Densified detector map of size par.npix*par.pxperdetpix square, which is passed</span>
+<span class="sd">            as argument to save memory space. This is in lieu of a shared memory array that</span>
+<span class="sd">            could be used for parallelization. The function modifies this array.</span>
+<span class="sd">                </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">wavelist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    
+<span class="c1">#     if ~par.parallel: log.info(&#39;Processing wavelength %f (%d out of %d)&#39; % (lam,i,nframes))        </span>
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Interpolate kernel at wavelength lam</span>
+    <span class="c1">###################################################################### </span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">par</span><span class="o">.</span><span class="n">gaussian</span><span class="p">:</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="n">selectKernel</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">lam</span><span class="p">,</span><span class="n">refWaveList</span><span class="p">,</span><span class="n">kernelList</span><span class="p">)</span>
+
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Rotate and scale the image so that it is in the same </span>
+    <span class="c1"># orientation and scale as the lenslet array</span>
+    <span class="c1"># After this step, the pixels in the array each represents a lenslet</span>
+    <span class="c1">###################################################################### </span>
+<span class="c1">#     if ~par.parallel: log.info(&#39;Rotate and scale slice %d&#39; % i)</span>
+    <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="n">processImagePlane</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">interpolatedInputCube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">saveRotatedInput</span><span class="p">:</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">imagePlaneRot</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/imagePlaneRot_</span><span class="si">%3.1f</span><span class="s1">nm.fits&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lam</span><span class="o">*</span><span class="mf">1000.</span><span class="p">))</span>
+
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Generate high-resolution detector map for wavelength lam</span>
+    <span class="c1">###################################################################### </span>
+<span class="c1">#     if ~par.parallel: log.info(&#39;Propagate through lenslet array&#39;)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">par</span><span class="o">.</span><span class="n">gaussian</span><span class="p">:</span>
+        <span class="n">Lenslets</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">imagePlaneRot</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span><span class="n">finalFrame</span><span class="p">,</span> <span class="n">allweights</span><span class="p">,</span><span class="n">kernel</span><span class="p">,</span><span class="n">locations</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Lenslets</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">imagePlaneRot</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span><span class="n">finalFrame</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">saveLensletPlane</span><span class="p">:</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">finalFrame</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/lensletPlane_</span><span class="si">%3.1f</span><span class="s1">nm.fits&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lam</span><span class="o">*</span><span class="mf">1000.</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="propagateIFS"><a class="viewcode-back" href="../IFS.html#IFS.propagateIFS">[docs]</a><span class="k">def</span> <span class="nf">propagateIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">wavelist</span><span class="p">,</span><span class="n">inputcube</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;detectorFrame&#39;</span><span class="p">,</span><span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">cpus</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Propagates an input cube through the Integral Field Spectrograph</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    par :   Parameter instance</span>
+<span class="sd">            with at least the key IFS parameters, interlacing and scale</span>
+<span class="sd">    lamlist : list of floats</span>
+<span class="sd">            List of wavelengths in microns</span>
+<span class="sd">    inputcube : 3D ndarray</span>
+<span class="sd">            First dimension needs to be the same length as lamlist</span>
+<span class="sd">                </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    detectorFrame : 2D array</span>
+<span class="sd">            Return the detector frame</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">makeHeader</span><span class="p">()</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">22</span> <span class="o">+</span> <span class="s1">&#39; IFS Simulation &#39;</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">18</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">input_sampling</span> <span class="o">=</span> <span class="n">inputcube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PIXSIZE&#39;</span><span class="p">]</span>
+        <span class="n">input_wav</span> <span class="o">=</span> <span class="n">inputcube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">1000.</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Missing header information in input file&#39;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Calculate sampling ratio to resample rotated image and match the lenslet sampling</span>
+    <span class="c1">###################################################################### </span>
+
+    <span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span> <span class="o">=</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">input_sampling</span><span class="o">/</span><span class="n">input_wav</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;The number of input pixels per lenslet is </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;SCALE&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span><span class="p">,</span><span class="s1">&#39;Factor by which the input slice is rescaled&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+
+<span class="c1">#    log.info(&#39;The plate scale of the input cube is %f um/pixel&#39; % (par.mperpix*1e6))    </span>
+    <span class="n">nframes</span> <span class="o">=</span> <span class="n">inputcube</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">allweights</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">if</span> <span class="n">inputcube</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wavelist</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Number of wavelengths does not match the number of slices&#39;</span><span class="p">)</span>
+
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Create cube that is interpolated to the correct level if necessary</span>
+    <span class="c1">###################################################################### </span>
+    <span class="n">waveList</span><span class="p">,</span><span class="n">interpolatedInputCube</span> <span class="o">=</span> <span class="n">prepareCube</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">wavelist</span><span class="p">,</span><span class="n">inputcube</span><span class="p">)</span>
+
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Defines an array of times for performance monitoring</span>
+    <span class="c1">###################################################################### </span>
+    <span class="n">t</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Start&#39;</span><span class="p">:</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()}</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">par</span><span class="o">.</span><span class="n">gaussian</span><span class="p">:</span>
+        <span class="c1">###################################################################### </span>
+        <span class="c1"># Load kernels from Zemax</span>
+        <span class="c1">###################################################################### </span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Import all kernels and rescale them to same plate scale&#39;</span><span class="p">)</span>
+        <span class="n">kernels890</span><span class="p">,</span><span class="n">locations</span> <span class="o">=</span> <span class="n">loadKernels</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="mi">890</span><span class="p">)</span>
+        <span class="n">kernels770</span><span class="p">,</span><span class="n">loc</span> <span class="o">=</span> <span class="n">loadKernels</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="mi">770</span><span class="p">)</span>
+        <span class="n">kernels660</span><span class="p">,</span><span class="n">loc</span> <span class="o">=</span> <span class="n">loadKernels</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="mi">660</span><span class="p">)</span>
+        <span class="n">refWaveList</span> <span class="o">=</span> <span class="p">[</span><span class="mi">660</span><span class="p">,</span><span class="mi">770</span><span class="p">,</span><span class="mi">890</span><span class="p">]</span>
+        <span class="n">kernelList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">kernels660</span><span class="p">,</span><span class="n">kernels770</span><span class="p">,</span><span class="n">kernels890</span><span class="p">])</span>
+
+        <span class="c1">###################################################################### </span>
+        <span class="c1"># Creating kernel weight map (bilinear interpolation)</span>
+        <span class="c1">###################################################################### </span>
+        <span class="n">allweights</span> <span class="o">=</span> <span class="n">createAllWeightsArray</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">locations</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using PSFlet gaussian approximation&#39;</span><span class="p">)</span>
+        
+    
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Allocate an array</span>
+    <span class="c1">###################################################################### </span>
+    <span class="n">finalFrame</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">par</span><span class="o">.</span><span class="n">gaussian</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Small pixels per lenslet: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">pxprlens</span><span class="p">))</span>    
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Final detector pixel per lenslet: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">pxprlens</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Final detector pixel per PSFLet: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pitch</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)))</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">parallel</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">waveList</span><span class="p">)):</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Processing wavelength </span><span class="si">%f</span><span class="s1"> (</span><span class="si">%d</span><span class="s1"> out of </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">waveList</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">i</span><span class="p">,</span><span class="n">nframes</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">par</span><span class="o">.</span><span class="n">gaussian</span><span class="p">:</span>
+                <span class="n">propagateSingleWavelength</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">wavelist</span><span class="p">,</span><span class="n">interpolatedInputCube</span><span class="p">,</span><span class="n">finalFrame</span><span class="p">,</span>
+                                            <span class="n">refWaveList</span><span class="p">,</span><span class="n">kernelList</span><span class="p">,</span><span class="n">allweights</span><span class="p">,</span><span class="n">locations</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">propagateSingleWavelength</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">wavelist</span><span class="p">,</span><span class="n">interpolatedInputCube</span><span class="p">,</span><span class="n">finalFrame</span><span class="p">)</span>
+                
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># This is not yet working because of shared memory issues. Need to fix it...</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting parallel IFS propagation! Watchout for memory...&#39;</span><span class="p">)</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="n">ncpus</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(),</span><span class="n">cpus</span><span class="p">)</span>
+        <span class="n">consumers</span> <span class="o">=</span> <span class="p">[</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncpus</span><span class="p">)</span> <span class="p">]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">consumers</span><span class="p">:</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">waveList</span><span class="p">)):</span>
+            <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">Task</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">propagateSingleWavelength</span><span class="p">,</span> <span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">waveList</span><span class="p">,</span><span class="n">refWaveList</span><span class="p">,</span>
+                            <span class="n">kernelList</span><span class="p">,</span><span class="n">interpolatedInputCube</span><span class="p">,</span><span class="n">allweights</span><span class="p">,</span><span class="n">locations</span><span class="p">,</span><span class="n">finalFrame</span><span class="p">)))</span>
+    
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncpus</span><span class="p">):</span>
+            <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">waveList</span><span class="p">)):</span>
+            <span class="n">index</span><span class="p">,</span><span class="n">result</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Done with wavelength </span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">waveList</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+
+           
+
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Rebinning to detector resolution</span>
+    <span class="c1">###################################################################### </span>
+    <span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">rebinDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">finalFrame</span><span class="p">,</span><span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">saveDetector</span><span class="p">:</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">detectorFrame</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span><span class="p">)</span> 
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Done.&#39;</span><span class="p">)</span>
+    <span class="n">t</span><span class="p">[</span><span class="s1">&#39;End&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Performance: </span><span class="si">%d</span><span class="s2"> seconds total&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;End&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;Start&#39;</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">detectorFrame</span></div>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../IFS.html#IFS.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Load parameters from params.py</span>
+    <span class="c1">###################################################################### </span>
+    <span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Initialize logging function; both to console and to file</span>
+    <span class="c1">###################################################################### </span>
+    <span class="n">initLogger</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/IFS.log&#39;</span><span class="p">)</span>
+    
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Load input</span>
+    <span class="c1">###################################################################### </span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading input&#39;</span><span class="p">)</span>
+<span class="c1">#     wavelist = np.arange(0.6,0.7,0.005) #[0.800,0.820,0.840]</span>
+<span class="c1">#     wavelist = [0.7] #[0.800,0.820,0.840]</span>
+<span class="c1">#     inputcube = np.ones((len(wavelist),512,512),dtype=float)/9.</span>
+<span class="c1">#     mperpix = 58e-6</span>
+    <span class="n">BW</span> <span class="o">=</span> <span class="mf">0.18</span>
+    <span class="n">Nlam</span> <span class="o">=</span> <span class="mi">51</span>
+    <span class="n">clam</span> <span class="o">=</span> <span class="mf">0.77</span>
+    <span class="n">wavelist</span><span class="o">=</span> <span class="n">clam</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="o">+</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">Nlam</span><span class="p">)</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;./Inputs/PSF_SPLC_Nwvl51_BW18pct_star.fits&#39;</span>
+    <span class="n">hdu</span> <span class="o">=</span> <span class="n">pyf</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">inputcube</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>    
+    <span class="n">mperpix</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">5.</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pitch</span> <span class="c1"># 5 pixels per lambda/D</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">pitch</span><span class="o">/</span><span class="n">mperpix</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">mperpix</span> <span class="o">=</span> <span class="n">mperpix</span>
+    
+    <span class="n">propagateIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">wavelist</span><span class="p">,</span><span class="n">inputcube</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="reduceIFSMap"><a class="viewcode-back" href="../IFS.html#IFS.reduceIFSMap">[docs]</a><span class="k">def</span> <span class="nf">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">IFSimageName</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">,</span><span class="n">ivar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Main reduction function</span>
+<span class="sd">    </span>
+<span class="sd">    Uses various routines to extract an IFS detector map into a spectral-spatial cube.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    par :   Parameter instance</span>
+<span class="sd">            Contains all IFS parameters</span>
+<span class="sd">    IFSimageName : string</span>
+<span class="sd">            Path of image file</span>
+<span class="sd">    method : &#39;simple&#39;, &#39;dense&#39;, &#39;apphot&#39;, &#39;test&#39;, &#39;lstsq&#39;, &#39;optext&#39;</span>
+<span class="sd">            Method used for reduction.</span>
+<span class="sd">            &#39;simple&#39;: brute force photometry, adds up the fluxes in a line of pixels</span>
+<span class="sd">            centered where the centroid at that wavelength falls. Not very accurate.</span>
+<span class="sd">            &#39;dense&#39;: does the same but after interpolating/densifying the image by a factor of 10,</span>
+<span class="sd">            which gives the previous method more accuracy (but depends on the interpolation scheme).</span>
+<span class="sd">            &#39;test&#39;: use the method defined in the testReduction function, for experimenting.</span>
+<span class="sd">            &#39;lstsq&#39;: use the knowledge of the PSFs at each location and each wavelength and fits</span>
+<span class="sd">            the microspectrum as a weighted sum of these PSFs in the least-square sense. Can weigh the data by its variance.</span>
+<span class="sd">            &#39;optext&#39;: use a matched filter to appropriately weigh each pixel and assign the fluxes, making use of the inverse</span>
+<span class="sd">            wavlength calibration map. Then remap each microspectrum onto the desired wavelengths </span>
+<span class="sd">    ivar : Boolean</span>
+<span class="sd">            Uses the variance information. If the original image doesn&#39;t have a variance HDU, then</span>
+<span class="sd">            use the image itself as its own variance (Poisson noise). Default False.</span>
+<span class="sd">         </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># reset header (in the case where we do simulation followed by extraction)</span>
+    <span class="c1">#par.makeHeader()</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">22</span> <span class="o">+</span> <span class="s1">&#39; Cube Extraction &#39;</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">21</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="p">,</span><span class="s1">&#39;Spectral resolution of final cube&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;CALDIR&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;Directory of wavelength solution&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+
+    <span class="n">IFSimage</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">IFSimageName</span><span class="p">)</span>
+    <span class="n">reducedName</span> <span class="o">=</span> <span class="n">IFSimageName</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;simple&#39;</span><span class="p">:</span>
+        <span class="n">reducedName</span> <span class="o">+=</span> <span class="s1">&#39;_red_simple&#39;</span>
+        <span class="n">cube</span> <span class="o">=</span> <span class="n">simpleReduction</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reducedName</span><span class="p">,</span><span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;dense&#39;</span><span class="p">:</span>
+        <span class="n">reducedName</span> <span class="o">+=</span> <span class="s1">&#39;_red_dense&#39;</span>
+        <span class="n">cube</span> <span class="o">=</span> <span class="n">densifiedSimpleReduction</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reducedName</span><span class="p">,</span><span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="c1">#     elif method == &#39;apphot&#39;:</span>
+<span class="c1">#         reducedName += &#39;_red_apphot&#39;</span>
+<span class="c1">#         cube = apertureReduction(par,par.exportDir+&#39;/&#39;+reducedName,IFSimage.data)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span>
+        <span class="n">reducedName</span> <span class="o">+=</span> <span class="s1">&#39;_red_test&#39;</span>
+        <span class="n">cube</span> <span class="o">=</span> <span class="n">testReduction</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reducedName</span><span class="p">,</span><span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;GPI2&#39;</span><span class="p">:</span>
+        <span class="n">reducedName</span> <span class="o">+=</span> <span class="s1">&#39;_red_gpi2&#39;</span>
+        <span class="n">cube</span> <span class="o">=</span> <span class="n">GPImethod2</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reducedName</span><span class="p">,</span><span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;lstsq&#39;</span><span class="p">:</span>
+        <span class="n">reducedName</span> <span class="o">+=</span> <span class="s1">&#39;_red_lstsq&#39;</span>
+        <span class="n">cube</span> <span class="o">=</span> <span class="n">lstsqExtract</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reducedName</span><span class="p">,</span><span class="n">IFSimage</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;optext&#39;</span><span class="p">:</span>
+        <span class="n">reducedName</span> <span class="o">+=</span> <span class="s1">&#39;_red_optext&#39;</span>
+        <span class="k">if</span> <span class="n">ivar</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span> <span class="n">IFSimage</span><span class="o">.</span><span class="n">ivar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">cube</span> <span class="o">=</span> <span class="n">intOptimalExtract</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reducedName</span><span class="p">,</span><span class="n">IFSimage</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Method not found&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cube</span></div>
+
+
+
+<div class="viewcode-block" id="prepareCube"><a class="viewcode-back" href="../IFS.html#IFS.prepareCube">[docs]</a><span class="k">def</span> <span class="nf">prepareCube</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">wavelist</span><span class="p">,</span><span class="n">inputcube</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Takes an input cube and interpolates it down to the required</span>
+<span class="sd">    spectral resolution</span>
+<span class="sd">    For now, just returns the inputs with no modification</span>
+<span class="sd">    Watch out for energy conservation!!</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">22</span> <span class="o">+</span> <span class="s1">&#39; Innput info &#39;</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">25</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;INSLICES&#39;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">wavelist</span><span class="p">),</span><span class="s1">&#39;Number of wavelengths in input cube&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+
+<span class="c1">#    par.hdr.append((&#39;INTERPSL&#39;,len(wavinterp),&#39;Number of wavelengths in interpolated input cube&#39;), end=True) </span>
+
+    <span class="n">outcube</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">inputcube</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">inputcube</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wavelist</span><span class="p">,</span><span class="n">outcube</span></div>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right"> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
+    Last built 08 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>

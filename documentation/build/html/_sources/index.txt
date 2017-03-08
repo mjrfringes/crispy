@@ -8,16 +8,22 @@ Welcome to crispy's documentation!
 
 This software is designed to simulate lenslet array-based Integral Field Spectrographs and their reduction process. This was developed within the context of NASA's WFIRST Coronagraph mission.
 
-Contents
-========
+IFS Simulator
+=============
 
 .. toctree::
    :maxdepth: 2
 
    Introduction
-   IFS
-   PISCES
-   TestCalibration
+
+PISCES
+======
+
+.. toctree::
+   :maxdepth: 2
+   
+   PISCES_wavecal
+   PISCES_Reduce
    
 API
 ===

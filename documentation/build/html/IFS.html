@@ -1,244 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>IFS module &mdash; crispy 0.1.0 documentation</title>
-  
-
-  
-  
-
-  
-
-  
-  
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="crispy 0.1.0 documentation" href="index.html"/>
-        <link rel="next" title="PISCES Wavelength calibration" href="PISCES.html"/>
-        <link rel="prev" title="Introduction to crispy" href="Introduction.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-  <div class="wy-grid-for-nav">
-
+    <title>IFS module &#8212; crispy 0.1.0 documentation</title>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="index.html" class="icon icon-home"> crispy
-          
-
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                0.1
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction to crispy</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">IFS module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PISCES.html">PISCES Wavelength calibration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PISCES.html#Reduce-PISCES-data">Reduce PISCES data</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">tools package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitTests.html">unitTests module</a></li>
-</ul>
-
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">crispy</a>
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
- 
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>IFS module</li>
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="_sources/IFS.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  
-<style>
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast + .nbinput {
-    margin-top: -19px;
-}
-
-/* nice headers on first paragraph of info/warning boxes */
-.admonition .first {
-    margin: -12px;
-    padding: 6px 12px;
-    margin-bottom: 12px;
-    color: #fff;
-    line-height: 1;
-    display: block;
-}
-.admonition.warning .first {
-    background: #f0b37e;
-}
-.admonition.note .first {
-    background: #6ab0de;
-}
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-</style>
-<div class="section" id="ifs-module">
-<h1>IFS module<a class="headerlink" href="#ifs-module" title="Permalink to this headline">¶</a></h1>
-</div>
-
-
-           </div>
-          </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="PISCES.html" class="btn btn-neutral float-right" title="PISCES Wavelength calibration" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="Introduction.html" class="btn btn-neutral" title="Introduction to crispy" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Maxime J. Rizzo.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
+    <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
     </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
+    <link rel="top" title="crispy 0.1.0 documentation" href="index.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="_static/copybutton.js"></script>
 
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="index.html"><span id="logotext1">astro</span><span id="logotext2">py</span><span id="logotext3">:docs</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="genindex.html">Index</a></li>
+    <li><a title="Module Index" href="py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-IFS">
+<span id="ifs-module"></span><h1>IFS module<a class="headerlink" href="#module-IFS" title="Permalink to this headline">¶</a></h1>
+<p>Standalone IFS simulation code
+MJ Rizzo and the IFS team</p>
+<p>Originally inspired by T. Brandt&#8217;s code for CHARIS</p>
+<dl class="function">
+<dt id="IFS.main">
+<code class="descclassname">IFS.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/IFS.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#IFS.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
+<dl class="function">
+<dt id="IFS.prepareCube">
+<code class="descclassname">IFS.</code><code class="descname">prepareCube</code><span class="sig-paren">(</span><em>par</em>, <em>wavelist</em>, <em>inputcube</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/IFS.html#prepareCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#IFS.prepareCube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an input cube and interpolates it down to the required
+spectral resolution
+For now, just returns the inputs with no modification
+Watch out for energy conservation!!</p>
+</dd></dl>
 
-</body>
+<dl class="function">
+<dt id="IFS.propagateIFS">
+<code class="descclassname">IFS.</code><code class="descname">propagateIFS</code><span class="sig-paren">(</span><em>par</em>, <em>wavelist</em>, <em>inputcube</em>, <em>name='detectorFrame'</em>, <em>parallel=False</em>, <em>cpus=6</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/IFS.html#propagateIFS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#IFS.propagateIFS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Propagates an input cube through the Integral Field Spectrograph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>with at least the key IFS parameters, interlacing and scale</p>
+</div></blockquote>
+<p><strong>lamlist</strong> : list of floats</p>
+<blockquote>
+<div><p>List of wavelengths in microns</p>
+</div></blockquote>
+<p><strong>inputcube</strong> : 3D ndarray</p>
+<blockquote>
+<div><p>First dimension needs to be the same length as lamlist</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>detectorFrame</strong> : 2D array</p>
+<blockquote class="last">
+<div><p>Return the detector frame</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="IFS.propagateSingleWavelength">
+<code class="descclassname">IFS.</code><code class="descname">propagateSingleWavelength</code><span class="sig-paren">(</span><em>par</em>, <em>i</em>, <em>wavelist</em>, <em>interpolatedInputCube</em>, <em>finalFrame</em>, <em>refWaveList=None</em>, <em>kernelList=None</em>, <em>allweights=None</em>, <em>locations=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/IFS.html#propagateSingleWavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#IFS.propagateSingleWavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Propagates a single wavelength through the Integral Field Spectrograph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>with at least the key IFS parameters, interlacing and scale</p>
+</div></blockquote>
+<p><strong>i</strong> : int</p>
+<blockquote>
+<div><p>Slice number within the cube</p>
+</div></blockquote>
+<p><strong>wavlist</strong> : list of floats</p>
+<blockquote>
+<div><p>List of wavelengths in microns</p>
+</div></blockquote>
+<p><strong>refWaveList</strong> : list of floats</p>
+<blockquote>
+<div><p>List of wavelengths in microns that correspond to the loaded kernels
+representing the PSF at each wavelength</p>
+</div></blockquote>
+<p><strong>kernelList</strong> : list of 3D arrays</p>
+<blockquote>
+<div><p>List of kernels representing the wavelength for each reference wavelength and
+each field location</p>
+</div></blockquote>
+<p><strong>wavlist</strong> : list of floats</p>
+<blockquote>
+<div><p>List of wavelengths in microns</p>
+</div></blockquote>
+<p><strong>interpolatedInputCube</strong> : 3D ndarray</p>
+<blockquote>
+<div><p>Represents the input cube already pre-processed to match the desired wavelist,
+spatial sampling, orientation, etc.</p>
+</div></blockquote>
+<p><strong>allweights</strong> : 3D ndarray</p>
+<blockquote>
+<div><p>Weights for bilinear interpolation between kernels in the final image. This is
+passed as an argument to avoid having to recalculate them each time.</p>
+</div></blockquote>
+<p><strong>locations</strong> : 3D ndarray</p>
+<blockquote>
+<div><p>Detector fractional locations corresponding to each kernel. Bottom left is (0,0)
+while top right is (1,1). Same size as kernelList</p>
+</div></blockquote>
+<p><strong>finalFrame</strong> : 2D ndarray</p>
+<blockquote class="last">
+<div><p>Densified detector map of size par.npix*par.pxperdetpix square, which is passed
+as argument to save memory space. This is in lieu of a shared memory array that
+could be used for parallelization. The function modifies this array.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="IFS.reduceIFSMap">
+<code class="descclassname">IFS.</code><code class="descname">reduceIFSMap</code><span class="sig-paren">(</span><em>par</em>, <em>IFSimageName</em>, <em>method='optext'</em>, <em>ivar=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/IFS.html#reduceIFSMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#IFS.reduceIFSMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main reduction function</p>
+<p>Uses various routines to extract an IFS detector map into a spectral-spatial cube.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>IFSimageName</strong> : string</p>
+<blockquote>
+<div><p>Path of image file</p>
+</div></blockquote>
+<p><strong>method</strong> : &#8216;simple&#8217;, &#8216;dense&#8217;, &#8216;apphot&#8217;, &#8216;test&#8217;, &#8216;lstsq&#8217;, &#8216;optext&#8217;</p>
+<blockquote>
+<div><p>Method used for reduction.
+&#8216;simple&#8217;: brute force photometry, adds up the fluxes in a line of pixels
+centered where the centroid at that wavelength falls. Not very accurate.
+&#8216;dense&#8217;: does the same but after interpolating/densifying the image by a factor of 10,
+which gives the previous method more accuracy (but depends on the interpolation scheme).
+&#8216;test&#8217;: use the method defined in the testReduction function, for experimenting.
+&#8216;lstsq&#8217;: use the knowledge of the PSFs at each location and each wavelength and fits
+the microspectrum as a weighted sum of these PSFs in the least-square sense. Can weigh the data by its variance.
+&#8216;optext&#8217;: use a matched filter to appropriately weigh each pixel and assign the fluxes, making use of the inverse
+wavlength calibration map. Then remap each microspectrum onto the desired wavelengths</p>
+</div></blockquote>
+<p><strong>ivar</strong> : Boolean</p>
+<blockquote class="last">
+<div><p>Uses the variance information. If the original image doesn&#8217;t have a variance HDU, then
+use the image itself as its own variance (Poisson noise). Default False.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">IFS module</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="_sources/IFS.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
+    Last built 08 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
 </html>

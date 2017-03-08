@@ -1,199 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>tools package &mdash; crispy 0.1.0 documentation</title>
-  
-
-  
-  
-
-  
-
-  
-  
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="crispy 0.1.0 documentation" href="index.html"/>
-        <link rel="next" title="unitTests module" href="unitTests.html"/>
-        <link rel="prev" title="PISCES Wavelength calibration" href="PISCES.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-  <div class="wy-grid-for-nav">
-
+    <title>tools package &#8212; crispy 0.1.0 documentation</title>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+    <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
+    <link rel="top" title="crispy 0.1.0 documentation" href="index.html" />
+    <link rel="next" title="unitTests module" href="unitTests.html" />
+    <link rel="prev" title="PISCES Data Reduction" href="PISCES_Reduce.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="_static/copybutton.js"></script>
 
-          
-            <a href="index.html" class="icon icon-home"> crispy
-          
 
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                0.1
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction to crispy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="IFS.html">IFS module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PISCES.html">PISCES Wavelength calibration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PISCES.html#Reduce-PISCES-data">Reduce PISCES data</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">tools package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-detector-module">tools.detector module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.detutils">tools.detutils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-image-module">tools.image module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.imgtools">tools.imgtools module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-initlogger-module">tools.initLogger module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.inputScene">tools.inputScene module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-lenslet-module">tools.lenslet module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-locate-psflets-module">tools.locate_psflets module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.par_utils">tools.par_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.plotting">tools.plotting module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-postprocessing-module">tools.postprocessing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-reduction-module">tools.reduction module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.rotate">tools.rotate module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-spectrograph-module">tools.spectrograph module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-wavecal-module">tools.wavecal module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="unitTests.html">unitTests module</a></li>
-</ul>
-
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="index.html"><span id="logotext1">astro</span><span id="logotext2">py</span><span id="logotext3">:docs</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="genindex.html">Index</a></li>
+    <li><a title="Module Index" href="py-modindex.html">Modules</a></li>
+    <li>
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">crispy</a>
-      </nav>
-
-
       
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
- 
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
+<form action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
       
-    <li>tools package</li>
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="_sources/tools.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
+    </li>
   </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li class="right">
+	<a href="unitTests.html" title="unitTests module">
+	  next &raquo;
+	</a>
+      </li>
+      <li class="right">
+	<a href="PISCES_Reduce.html" title="PISCES Data Reduction">
+	  &laquo; previous
+	</a>
+	 |
+      </li>
+      <li>
+	<a href="index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+      <li>tools package</li> 
+    </ul>
+</div>
   
-<style>
-/* CSS overrides for sphinx_rtd_theme */
 
-/* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast + .nbinput {
-    margin-top: -19px;
-}
-
-/* nice headers on first paragraph of info/warning boxes */
-.admonition .first {
-    margin: -12px;
-    padding: 6px 12px;
-    margin-bottom: 12px;
-    color: #fff;
-    line-height: 1;
-    display: block;
-}
-.admonition.warning .first {
-    background: #f0b37e;
-}
-.admonition.note .first {
-    background: #6ab0de;
-}
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-</style>
-<div class="section" id="tools-package">
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tools-package">
 <h1>tools package<a class="headerlink" href="#tools-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="tools-detector-module">
-<h2>tools.detector module<a class="headerlink" href="#tools-detector-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.detector">
+<span id="tools-detector-module"></span><h2>tools.detector module<a class="headerlink" href="#module-tools.detector" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.detector.averageDetectorReadout">
+<code class="descclassname">tools.detector.</code><code class="descname">averageDetectorReadout</code><span class="sig-paren">(</span><em>par</em>, <em>filelist</em>, <em>detectorFolderOut</em>, <em>suffix='detector'</em>, <em>offaxis=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detector.html#averageDetectorReadout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detector.averageDetectorReadout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process a list of files and creates individual detector readouts
+If we want only one file, we can just make a list of 1</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.detector.readDetector">
+<code class="descclassname">tools.detector.</code><code class="descname">readDetector</code><span class="sig-paren">(</span><em>par</em>, <em>IFSimage</em>, <em>inttime=100</em>, <em>append_header=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detector.html#readDetector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detector.readDetector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read noise, CIC, dark current; NO TRAPS
+Input is IFSimage in average photons per second
+Quantum efficiency considerations are already taken care of when
+generating IFSimage images</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.detector.rebinDetector">
+<code class="descclassname">tools.detector.</code><code class="descname">rebinDetector</code><span class="sig-paren">(</span><em>par</em>, <em>finalFrame</em>, <em>clip=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detector.html#rebinDetector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detector.rebinDetector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rebins the dense detector map with the correct scaling while conserving flux.
+This also works with non-integer ratios.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>finalFrame</strong> : 2D ndarray</p>
+<blockquote>
+<div><p>Dense detector map to be rebinned.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>detectorFrame</strong> : 2D array</p>
+<blockquote class="last">
+<div><p>Return the detector frame with correct pixel scale.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tools.detutils">
 <span id="tools-detutils-module"></span><h2>tools.detutils module<a class="headerlink" href="#module-tools.detutils" title="Permalink to this headline">¶</a></h2>
@@ -202,18 +143,31 @@
 <code class="descclassname">tools.detutils.</code><code class="descname">frebin</code><span class="sig-paren">(</span><em>array</em>, <em>shape</em>, <em>total=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detutils.html#frebin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detutils.frebin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function that performs flux-conservative
 rebinning of an array. Found at <a class="reference external" href="https://github.com/benjaminpope/pysco/blob/master/frebin.py">https://github.com/benjaminpope/pysco/blob/master/frebin.py</a></p>
-<dl class="docutils">
-<dt>array: ndarray</dt>
-<dd>Numpy array to be rebinned</dd>
-<dt>shape: tuple</dt>
-<dd><p class="first">(x,y) of new array size
-total: Boolean</p>
-<blockquote class="last">
-<div>when True flux is conserved</div></blockquote>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>array: ndarray</strong></p>
 <blockquote>
-<div>new_array: new rebinned array with dimensions: shape</div></blockquote>
+<div><p>Numpy array to be rebinned</p>
+</div></blockquote>
+<p><strong>shape: tuple</strong></p>
+<blockquote>
+<div><p>(x,y) of new array size
+total: Boolean</p>
+<blockquote>
+<div><p>when True flux is conserved</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;-</strong></p>
+<blockquote class="last">
+<div><p>new_array: new rebinned array with dimensions: shape</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -221,22 +175,70 @@ total: Boolean</p>
 <code class="descclassname">tools.detutils.</code><code class="descname">rebin</code><span class="sig-paren">(</span><em>a</em>, <em>shape</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detutils.html#rebin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detutils.rebin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resizes a 2d array by averaging or repeating elements, 
 new dimensions must be integral factors of original dimensions</p>
-<dl class="docutils">
-<dt>a</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span><dd>Input array.</dd>
-<dt>new_shape</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">tuple of int</span><dd>Shape of the output array (y, x)</dd>
-</dl>
-<dl class="docutils">
-<dt>rebinned_array</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span><dd>If the new shape is smaller of the input array, the data are averaged, 
-if the new shape is bigger array elements are repeated</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>a</strong> : array_like</p>
+<blockquote>
+<div><p>Input array.</p>
+</div></blockquote>
+<p><strong>new_shape</strong> : tuple of int</p>
+<blockquote>
+<div><p>Shape of the output array (y, x)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>rebinned_array</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>If the new shape is smaller of the input array, the data are averaged, 
+if the new shape is bigger array elements are repeated</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-image-module">
-<h2>tools.image module<a class="headerlink" href="#tools-image-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.image">
+<span id="tools-image-module"></span><h2>tools.image module<a class="headerlink" href="#module-tools.image" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tools.image.Image">
+<em class="property">class </em><code class="descclassname">tools.image.</code><code class="descname">Image</code><span class="sig-paren">(</span><em>filename=''</em>, <em>data=None</em>, <em>ivar=None</em>, <em>header=None</em>, <em>extraheader=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/image.html#Image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.image.Image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Image is the basic class for images</p>
+<p>self.data, self.ivar, and self.header should be numpy ndarrays, 
+which can be read from and written to a fits file with the load 
+and write methods.  If not ndarrays, they should be None.</p>
+<p>Image may be initialized with the name of the raw file to read,
+through a call to Image.load().</p>
+<dl class="method">
+<dt id="tools.image.Image.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>outfilename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/image.html#Image.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.image.Image.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the first HDU with data from filename into self.data, and
+HDU[0].header into self.header.  If there is more than one HDU
+with data, attempt to read the second HDU with data into
+self.ivar.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.image.Image.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>outfilename</em>, <em>clobber=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/image.html#Image.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.image.Image.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a primary HDU using self.data and self.header, and
+attempts to write to outfilename.  If self.ivar is not None,
+append self.ivar as a second HDU before writing to a file.       
+clobber is provided as a keyword to fits.HDUList.writeto.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="tools.image.log">
+<code class="descclassname">tools.image.</code><code class="descname">log</code><em class="property"> = &lt;tools.initLogger.CharisLogger object&gt;</em><a class="headerlink" href="#tools.image.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>most of this code is due to Tim Brandt</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tools.imgtools">
 <span id="tools-imgtools-module"></span><h2>tools.imgtools module<a class="headerlink" href="#module-tools.imgtools" title="Permalink to this headline">¶</a></h2>
@@ -244,58 +246,525 @@ if the new shape is bigger array elements are repeated</dd>
 <dt id="tools.imgtools.bowtie">
 <code class="descclassname">tools.imgtools.</code><code class="descname">bowtie</code><span class="sig-paren">(</span><em>image</em>, <em>xc</em>, <em>yc</em>, <em>openingAngle</em>, <em>clocking</em>, <em>IWApix</em>, <em>OWApix</em>, <em>export='bowtie'</em>, <em>twomasks=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/imgtools.html#bowtie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.imgtools.bowtie" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates one or two binary mask for a shaped pupil bowtie mask</p>
-<dl class="docutils">
-<dt>image: 2D ndarray</dt>
-<dd>Image to which the mask needs to be applied</dd>
-<dt>xc: int</dt>
-<dd>X coordinate of center of bowtie</dd>
-<dt>yc: int</dt>
-<dd>Y coordinate of center of bowtie</dd>
-<dt>openingAngle: float</dt>
-<dd>Angle in degrees representing the opening angle of the bowtie mask</dd>
-<dt>clocking: float</dt>
-<dd>Angle of rotation of the mask in degrees</dd>
-<dt>IWApix: float</dt>
-<dd>Radius in pixels corresponding to the inner working angle of the mask</dd>
-<dt>OWApix: float</dt>
-<dd>Radius in pixels corresponding to the outer working angle of the mask</dd>
-<dt>export: boolean</dt>
-<dd>Whether to export the bowtie or not</dd>
-<dt>twomasks: boolean</dt>
-<dd>If True, returns two masks, one for each side of the bowtie
-If False, returns one single mask</dd>
-</dl>
-<dl class="docutils">
-<dt>mask: 2D ndarrays of int</dt>
-<dd>Bowtie mask with 1 inside the mask, zero everywhere else.</dd>
-<dt>mask2: 2D ndarrays of int</dt>
-<dd>If twomasks is True, mask and mask2 are the two sides of the bowtie.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>image: 2D ndarray</strong></p>
+<blockquote>
+<div><p>Image to which the mask needs to be applied</p>
+</div></blockquote>
+<p><strong>xc: int</strong></p>
+<blockquote>
+<div><p>X coordinate of center of bowtie</p>
+</div></blockquote>
+<p><strong>yc: int</strong></p>
+<blockquote>
+<div><p>Y coordinate of center of bowtie</p>
+</div></blockquote>
+<p><strong>openingAngle: float</strong></p>
+<blockquote>
+<div><p>Angle in degrees representing the opening angle of the bowtie mask</p>
+</div></blockquote>
+<p><strong>clocking: float</strong></p>
+<blockquote>
+<div><p>Angle of rotation of the mask in degrees</p>
+</div></blockquote>
+<p><strong>IWApix: float</strong></p>
+<blockquote>
+<div><p>Radius in pixels corresponding to the inner working angle of the mask</p>
+</div></blockquote>
+<p><strong>OWApix: float</strong></p>
+<blockquote>
+<div><p>Radius in pixels corresponding to the outer working angle of the mask</p>
+</div></blockquote>
+<p><strong>export: boolean</strong></p>
+<blockquote>
+<div><p>Whether to export the bowtie or not</p>
+</div></blockquote>
+<p><strong>twomasks: boolean</strong></p>
+<blockquote>
+<div><p>If True, returns two masks, one for each side of the bowtie
+If False, returns one single mask</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">mask: 2D ndarrays of int</p>
+<blockquote>
+<div><p>Bowtie mask with 1 inside the mask, zero everywhere else.</p>
+</div></blockquote>
+<p>mask2: 2D ndarrays of int</p>
+<blockquote class="last">
+<div><p>If twomasks is True, mask and mask2 are the two sides of the bowtie.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="tools.imgtools.gen_bad_pix_mask">
 <code class="descclassname">tools.imgtools.</code><code class="descname">gen_bad_pix_mask</code><span class="sig-paren">(</span><em>image</em>, <em>filsize=3</em>, <em>threshold=5.0</em>, <em>return_smoothed_image=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/imgtools.html#gen_bad_pix_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.imgtools.gen_bad_pix_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Identify and mask bad pixels using median filter</p>
-<dl class="docutils">
-<dt>image: 2D ndarray</dt>
-<dd>Image to clean</dd>
-<dt>filsize: int</dt>
-<dd>Size of median filter in pixels</dd>
-<dt>threshold: float</dt>
-<dd>Threshold in terms of standard deviations</dd>
-</dl>
-<p>return_smoothed_image: boolean</p>
-<dl class="docutils">
-<dt>goodpix: 2D int ndarray</dt>
-<dd>Good pixel mask. 1 where pixel is good</dd>
-</dl>
-<p>image_sm: 2D ndarray, if return_smoothed_image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>image: 2D ndarray</strong></p>
+<blockquote>
+<div><p>Image to clean</p>
+</div></blockquote>
+<p><strong>filsize: int</strong></p>
+<blockquote>
+<div><p>Size of median filter in pixels</p>
+</div></blockquote>
+<p><strong>threshold: float</strong></p>
+<blockquote>
+<div><p>Threshold in terms of standard deviations</p>
+</div></blockquote>
+<p><strong>return_smoothed_image: boolean</strong></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">goodpix: 2D int ndarray</p>
+<blockquote>
+<div><p>Good pixel mask. 1 where pixel is good</p>
+</div></blockquote>
+<p class="last">image_sm: 2D ndarray, if return_smoothed_image</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-initlogger-module">
-<h2>tools.initLogger module<a class="headerlink" href="#tools-initlogger-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.initLogger">
+<span id="tools-initlogger-module"></span><h2>tools.initLogger module<a class="headerlink" href="#module-tools.initLogger" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tools.initLogger.CharisLogger">
+<em class="property">class </em><code class="descclassname">tools.initLogger.</code><code class="descname">CharisLogger</code><span class="sig-paren">(</span><em>name</em>, <em>level=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/logging.html#logging.Logger" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">logging.Logger</span></code></a></p>
+<p>This is the advanced logging object used throughout the CHARIS
+Data Extraction Pipeline.  It inherits from the standard 
+Python library &#8216;logging&#8217; and provides added features.
+The default log level for the output file will be 1, ie ALL messages;
+while the default for the screen will be INFO, and can be changed easily 
+using the setStreamLevel(lvl) member function.</p>
+<p>Initialize the logger with a name and an optional level.</p>
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.MAINCRITICAL">
+<code class="descname">MAINCRITICAL</code><em class="property"> = 80</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAINCRITICAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.MAINDEBUG">
+<code class="descname">MAINDEBUG</code><em class="property"> = 60</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAINDEBUG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.MAINERROR">
+<code class="descname">MAINERROR</code><em class="property"> = 75</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAINERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.MAININFO">
+<code class="descname">MAININFO</code><em class="property"> = 65</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAININFO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.MAINWARNING">
+<code class="descname">MAINWARNING</code><em class="property"> = 70</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAINWARNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.PRIMCRITICAL">
+<code class="descname">PRIMCRITICAL</code><em class="property"> = 55</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMCRITICAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.PRIMDEBUG">
+<code class="descname">PRIMDEBUG</code><em class="property"> = 35</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMDEBUG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.PRIMERROR">
+<code class="descname">PRIMERROR</code><em class="property"> = 49</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.PRIMINFO">
+<code class="descname">PRIMINFO</code><em class="property"> = 39</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMINFO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.PRIMWARNING">
+<code class="descname">PRIMWARNING</code><em class="property"> = 45</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMWARNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.SUMMARY">
+<code class="descname">SUMMARY</code><em class="property"> = 5</em><a class="headerlink" href="#tools.initLogger.CharisLogger.SUMMARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.TOOLCRITICAL">
+<code class="descname">TOOLCRITICAL</code><em class="property"> = 29</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLCRITICAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.TOOLDEBUG">
+<code class="descname">TOOLDEBUG</code><em class="property"> = 9</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLDEBUG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.TOOLERROR">
+<code class="descname">TOOLERROR</code><em class="property"> = 25</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.TOOLINFO">
+<code class="descname">TOOLINFO</code><em class="property"> = 15</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLINFO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.initLogger.CharisLogger.TOOLWARNING">
+<code class="descname">TOOLWARNING</code><em class="property"> = 19</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLWARNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.maincritical">
+<code class="descname">maincritical</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=80</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.maincritical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.maincritical" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.maindebug">
+<code class="descname">maindebug</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=60</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.maindebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.maindebug" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.mainerror">
+<code class="descname">mainerror</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=75</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.mainerror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.mainerror" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.maininfo">
+<code class="descname">maininfo</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=65</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.maininfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.maininfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.mainwarning">
+<code class="descname">mainwarning</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=70</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.mainwarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.mainwarning" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.primcritical">
+<code class="descname">primcritical</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=55</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.primcritical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.primcritical" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.primdebug">
+<code class="descname">primdebug</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=35</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.primdebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.primdebug" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.primerror">
+<code class="descname">primerror</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=49</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.primerror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.primerror" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.priminfo">
+<code class="descname">priminfo</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=39</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.priminfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.priminfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.primwarning">
+<code class="descname">primwarning</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=45</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.primwarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.primwarning" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.setStreamLevel">
+<code class="descname">setStreamLevel</code><span class="sig-paren">(</span><em>lvl=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.setStreamLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.setStreamLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set/change the level for the stream handler for a logging object.
+Any file handlers will be left alone.
+All messages of a higher severity level than &#8216;lvl&#8217; will be printed 
+to the screen.</p>
+<dl class="docutils">
+<dt>Args:    </dt>
+<dd><dl class="first last docutils">
+<dt>lvl (int): The severity level of messages printed to the screen with </dt>
+<dd>the stream handler, default = 20.</dd>
+</dl>
+</dd>
+</dl>
+<table border="1" class="docutils">
+<colgroup>
+<col width="37%" />
+<col width="12%" />
+<col width="39%" />
+<col width="12%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="2">Standard Levels</th>
+<th class="head" colspan="2">New Levels</th>
+</tr>
+<tr class="row-even"><th class="head">Name</th>
+<th class="head">Level</th>
+<th class="head">Name</th>
+<th class="head">Level</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>CRITICAL</td>
+<td>50</td>
+<td>MAINCRITICAL</td>
+<td>80</td>
+</tr>
+<tr class="row-even"><td>ERROR</td>
+<td>40</td>
+<td>MAINERROR</td>
+<td>75</td>
+</tr>
+<tr class="row-odd"><td>WARNING</td>
+<td>30</td>
+<td>MAINWARNING</td>
+<td>70</td>
+</tr>
+<tr class="row-even"><td>INFO</td>
+<td>20</td>
+<td>MAININFO</td>
+<td>65</td>
+</tr>
+<tr class="row-odd"><td>DEBUG</td>
+<td>10</td>
+<td>MAINDEBUG</td>
+<td>60</td>
+</tr>
+<tr class="row-even"><td>NOTSET</td>
+<td>0</td>
+<td>PRIMCRITICAL</td>
+<td>55</td>
+</tr>
+<tr class="row-odd"><td rowspan="10">&nbsp;</td>
+<td rowspan="10">&nbsp;</td>
+<td>PRIMERROR</td>
+<td>49</td>
+</tr>
+<tr class="row-even"><td>PRIMWARNING</td>
+<td>45</td>
+</tr>
+<tr class="row-odd"><td>PRIMINFO</td>
+<td>39</td>
+</tr>
+<tr class="row-even"><td>PRIMDEBUG</td>
+<td>35</td>
+</tr>
+<tr class="row-odd"><td>TOOLCRITICAL</td>
+<td>29</td>
+</tr>
+<tr class="row-even"><td>TOOLERROR</td>
+<td>25</td>
+</tr>
+<tr class="row-odd"><td>TOOLWARNING</td>
+<td>19</td>
+</tr>
+<tr class="row-even"><td>TOOLINFO</td>
+<td>15</td>
+</tr>
+<tr class="row-odd"><td>TOOLDEBUG</td>
+<td>9</td>
+</tr>
+<tr class="row-even"><td>SUMMARY</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.summary">
+<code class="descname">summary</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=5</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.summary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.toolcritical">
+<code class="descname">toolcritical</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=29</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.toolcritical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.toolcritical" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.tooldebug">
+<code class="descname">tooldebug</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=9</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.tooldebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.tooldebug" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.toolerror">
+<code class="descname">toolerror</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=25</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.toolerror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.toolerror" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.toolinfo">
+<code class="descname">toolinfo</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=15</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.toolinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.toolinfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.initLogger.CharisLogger.toolwarning">
+<code class="descname">toolwarning</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=19</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.toolwarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.toolwarning" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.addFileHandler">
+<code class="descclassname">tools.initLogger.</code><code class="descname">addFileHandler</code><span class="sig-paren">(</span><em>log</em>, <em>lvl=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addFileHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addFileHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will add a file handler to a log with the provided level.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>log (CharisLogger object): A CharisLogger object that was freshly </dt>
+<dd>instantiated.</dd>
+<dt>lvl (int): The severity level of messages printed to the file with </dt>
+<dd>the file handler, default = 1.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.addFitsStyleHandler">
+<code class="descclassname">tools.initLogger.</code><code class="descname">addFitsStyleHandler</code><span class="sig-paren">(</span><em>log</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addFitsStyleHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addFitsStyleHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will add a file handler with a string format ideal for 
+directly loading into a FITS header.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>log (CharisLogger object): A CharisLogger object that was freshly </dt>
+<dd>instantiated.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.addStreamHandler">
+<code class="descclassname">tools.initLogger.</code><code class="descname">addStreamHandler</code><span class="sig-paren">(</span><em>log</em>, <em>lvl=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addStreamHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addStreamHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will add a stream handler to a log with the provided level.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>log (CharisLogger object): A CharisLogger object that was freshly </dt>
+<dd>instantiated.</dd>
+<dt>lvl (int): The severity level of messages printed to the screen with </dt>
+<dd>the stream handler, default = 20.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.getLogger">
+<code class="descclassname">tools.initLogger.</code><code class="descname">getLogger</code><span class="sig-paren">(</span><em>name='generalLoggerName'</em>, <em>lvl=20</em>, <em>addFH=True</em>, <em>addSH=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#getLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.getLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will either return the logging object already
+instantiated, or instantiate a new one and return it.  
+<strong>Use this function to both create and return any logger</strong> to avoid 
+accidentally adding additional handlers by using the setUpLogger function 
+instead.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>name (str): The name for the logging object and </dt>
+<dd>name.log will be the output file written to disk.</dd>
+<dt>lvl (int): The severity level of messages printed to the screen with </dt>
+<dd>the stream handler, default = 20.</dd>
+<dt>addFH (boolean): Add a file handler to this logger?  Default severity </dt>
+<dd>level for it will be 1, and it will be named following
+name+&#8217;.log&#8217;.  Default = True.</dd>
+<dt>addSH (boolean): Add a stream handler to this logger? Severity set with </dt>
+<dd>the lvl argument.  Default = True.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>log (CharisLogger object): A CharisLogger object that was either </dt>
+<dd>freshly instantiated or determined to 
+already exist, then returned.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.initLogger">
+<code class="descclassname">tools.initLogger.</code><code class="descname">initLogger</code><span class="sig-paren">(</span><em>logfile</em>, <em>levelConsole=20</em>, <em>levelLogFile=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#initLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.initLogger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.logFileProcessInfo">
+<code class="descclassname">tools.initLogger.</code><code class="descname">logFileProcessInfo</code><span class="sig-paren">(</span><em>log</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#logFileProcessInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.logFileProcessInfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.logSystemInfo">
+<code class="descclassname">tools.initLogger.</code><code class="descname">logSystemInfo</code><span class="sig-paren">(</span><em>log</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#logSystemInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.logSystemInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function to be called just after a logging object is instantiated 
+for the DEP to load the log up with info about the computer it is 
+being ran on and the software version.  This function utilizes the 
+psutil and platform libraries, so they must be install for it to work.  
+For clarity of the log, it is suggested to perform immediately after 
+instantiation to put it at the top of the log file.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>log (Python logging object): logging object to have the system&#8217;s </dt>
+<dd>info summarized in.</dd>
+</dl>
+</dd>
+</dl>
+<p>The messages this prints to the log will look like:</p>
+<div class="line-block">
+<div class="line">System Information Summary:</div>
+<div class="line">OS type = Linux</div>
+<div class="line">OS Version = 3.9.10-100.fc17.x86_64</div>
+<div class="line">Machine UserName = xxxxxx.astron.s.u-tokyo.ac.jp</div>
+<div class="line">Machine Processor Type = x86_64</div>
+<div class="line">Number of cores = 8</div>
+<div class="line">Total RAM [GB] = 23.5403785706, % used = 15.9</div>
+<div class="line">Python Version = &#8216;2.7.3&#8217;</div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.setUpLogger">
+<code class="descclassname">tools.initLogger.</code><code class="descname">setUpLogger</code><span class="sig-paren">(</span><em>name='generalLoggerName'</em>, <em>lvl=20</em>, <em>addFH=True</em>, <em>addSH=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#setUpLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.setUpLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is utilized by getLogger to set up a new logging object.
+It will have the default name &#8216;generalLoggerName&#8217; and stream handler level
+of 20 unless redefined in the function call.  
+NOTE:
+If a file handler is added, it will have the lowest severity level by 
+default (Currently no need for changing this setting, so it will stay 
+this way for now).  Remember that any messages will be passed up to any 
+parent loggers, so children do not always need their own file handler.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>name (str): The name for the logging object and </dt>
+<dd>name.log will be the output file written to disk.</dd>
+<dt>lvl (int): The severity level of messages printed to the screen with </dt>
+<dd>the stream handler, default = 20.</dd>
+<dt>addFH (boolean): Add a file handler to this logger?  Default severity </dt>
+<dd>level for it will be 1, and it will be named following
+name+&#8217;.log&#8217;.  Default = True.</dd>
+<dt>addSH (boolean): Add a stream handler to this logger? Severity set with </dt>
+<dd>the lvl argument.  Default = True.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>log (CharisLogger object): A CharisLogger object that was freshly </dt>
+<dd>instantiated.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tools.inputScene">
 <span id="tools-inputscene-module"></span><h2>tools.inputScene module<a class="headerlink" href="#module-tools.inputScene" title="Permalink to this headline">¶</a></h2>
@@ -316,11 +785,576 @@ This only works with John Krist&#8217;s cubes,</div></blockquote>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-lenslet-module">
-<h2>tools.lenslet module<a class="headerlink" href="#tools-lenslet-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.lenslet">
+<span id="tools-lenslet-module"></span><h2>tools.lenslet module<a class="headerlink" href="#module-tools.lenslet" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.lenslet.Lenslets">
+<code class="descclassname">tools.lenslet.</code><code class="descname">Lenslets</code><span class="sig-paren">(</span><em>par</em>, <em>imageplane</em>, <em>lam</em>, <em>lensletplane</em>, <em>allweights=None</em>, <em>kernels=None</em>, <em>locations=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/lenslet.html#Lenslets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.lenslet.Lenslets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function Lenslets</p>
+<p>Creates the IFS map on a &#8216;dense&#8217; detector array where each pixel is smaller than the
+final detector pixels by a factor par.pxperdetpix. Adds to lensletplane array to save
+memory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameters instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>image</strong> : 2D array</p>
+<blockquote>
+<div><p>Image plane incident on lenslets.</p>
+</div></blockquote>
+<p><strong>lam</strong> : float</p>
+<blockquote>
+<div><p>Wavelength (microns)</p>
+</div></blockquote>
+<p><strong>lensletplane</strong> : 2D array</p>
+<blockquote>
+<div><p>Densified detector plane; the function updates this variable</p>
+</div></blockquote>
+<p><strong>allweights</strong> : 3D array</p>
+<blockquote>
+<div><p>Cube with weights for each kernel</p>
+</div></blockquote>
+<p><strong>kernels</strong> : 3D array</p>
+<blockquote>
+<div><p>Kernels at locations on the detector</p>
+</div></blockquote>
+<p><strong>locations</strong> : 2D array</p>
+<blockquote class="last">
+<div><p>Locations where the kernels are sampled</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.lenslet.processImagePlane">
+<code class="descclassname">tools.lenslet.</code><code class="descname">processImagePlane</code><span class="sig-paren">(</span><em>par</em>, <em>imagePlane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/lenslet.html#processImagePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.lenslet.processImagePlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function processImagePlane</p>
+<p>Rotates an image or slice, and rebins in a flux-conservative way
+on an array of lenslets, using the plate scale provided in par.pixperlenslet.
+Each pixel represents the flux within a lenslet. Starts by padding the original
+image to avoid cropping edges when rotating. This step necessarily involves an
+interpolation, so one needs to be cautious.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameters instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>imagePlane</strong> : Image instance containing 3D input cube</p>
+<blockquote>
+<div><p>Input cube to IFS sim, first dimension of data is wavelength</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>imagePlaneRot</strong> : 2D array</p>
+<blockquote class="last">
+<div><p>Rotated image plane on same sampling as original.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
-<div class="section" id="tools-locate-psflets-module">
-<h2>tools.locate_psflets module<a class="headerlink" href="#tools-locate-psflets-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.locate_psflets">
+<span id="tools-locate-psflets-module"></span><h2>tools.locate_psflets module<a class="headerlink" href="#module-tools.locate_psflets" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tools.locate_psflets.PSFLets">
+<em class="property">class </em><code class="descclassname">tools.locate_psflets.</code><code class="descname">PSFLets</code><span class="sig-paren">(</span><em>load=False</em>, <em>infile=None</em>, <em>infiledir='.'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#PSFLets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.PSFLets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Helper class to deal with the PSFLets on the detector. Does most of the heavy lifting
+during the wavelength calibration step.</p>
+<p>Initialize the class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>load: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to load an already-existing wavelength calibration file</p>
+</div></blockquote>
+<p><strong>infile: String</strong></p>
+<blockquote>
+<div><p>If load is True, this is the name of the file</p>
+</div></blockquote>
+<p><strong>infiledir: String</strong></p>
+<blockquote class="last">
+<div><p>If load is True, this is the directory in which the file resides</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.locate_psflets.PSFLets.geninterparray">
+<code class="descname">geninterparray</code><span class="sig-paren">(</span><em>lam</em>, <em>allcoef</em>, <em>order=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#PSFLets.geninterparray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.PSFLets.geninterparray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up array to solve for best-fit polynomial fits to the
+coefficients of the wavelength solution.  These will be used
+to smooth/interpolate the wavelength solution, and
+ultimately to compute its inverse.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lam: float</strong></p>
+<blockquote>
+<div><p>Wavelength in nm</p>
+</div></blockquote>
+<p><strong>allcoef: list of lists floats</strong></p>
+<blockquote>
+<div><p>Polynomial coefficients of wavelength solution</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote class="last">
+<div><p>Order of polynomial wavelength solution</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Populates the attribute interp_arr in PSFLet class</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.locate_psflets.PSFLets.genpixsol">
+<code class="descname">genpixsol</code><span class="sig-paren">(</span><em>par</em>, <em>lam</em>, <em>allcoef</em>, <em>order=3</em>, <em>lam1=None</em>, <em>lam2=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#PSFLets.genpixsol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.PSFLets.genpixsol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the wavelength at the center of each pixel within a microspectrum</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lam: float</strong></p>
+<blockquote>
+<div><p>Wavelength in nm</p>
+</div></blockquote>
+<p><strong>allcoef: list of floats</strong></p>
+<blockquote>
+<div><p>List describing the polynomial coefficients that best fit the lenslets,
+for all wavelengths</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote>
+<div><p>Order of the polynomical fit</p>
+</div></blockquote>
+<p><strong>lam1: float</strong></p>
+<blockquote>
+<div><p>Lowest wavelength in nm</p>
+</div></blockquote>
+<p><strong>lam2: float</strong></p>
+<blockquote class="last">
+<div><p>Highest wavelength in nm</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This functions fills in most of the fields of the PSFLet class: the array
+of xindx, yindx, nlam, lam_indx and nlam_max</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.locate_psflets.PSFLets.loadpixsol">
+<code class="descname">loadpixsol</code><span class="sig-paren">(</span><em>infile=None</em>, <em>infiledir='./calibrations'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#PSFLets.loadpixsol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.PSFLets.loadpixsol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads existing wavelength calibration file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>infile: String</strong></p>
+<blockquote>
+<div><p>Name of the file</p>
+</div></blockquote>
+<p><strong>infiledir: String</strong></p>
+<blockquote class="last">
+<div><p>Directory in which the file resides</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.locate_psflets.PSFLets.monochrome_coef">
+<code class="descname">monochrome_coef</code><span class="sig-paren">(</span><em>lam</em>, <em>alllam=None</em>, <em>allcoef=None</em>, <em>order=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#PSFLets.monochrome_coef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.PSFLets.monochrome_coef" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.locate_psflets.PSFLets.return_locations">
+<code class="descname">return_locations</code><span class="sig-paren">(</span><em>lam</em>, <em>allcoef</em>, <em>xindx</em>, <em>yindx</em>, <em>order=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#PSFLets.return_locations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.PSFLets.return_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the detector coordinates of lenslet located at <code class="xref py py-obj docutils literal"><span class="pre">xindx</span></code>, <code class="xref py py-obj docutils literal"><span class="pre">yindx</span></code>
+for desired wavelength <code class="xref py py-obj docutils literal"><span class="pre">lam</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lam: float</strong></p>
+<blockquote>
+<div><p>Wavelength in nm</p>
+</div></blockquote>
+<p><strong>allcoef: list of lists floats</strong></p>
+<blockquote>
+<div><p>Polynomial coefficients of wavelength solution</p>
+</div></blockquote>
+<p><strong>xindx: int</strong></p>
+<blockquote>
+<div><p>X index of lenslet in lenslet array</p>
+</div></blockquote>
+<p><strong>yindx: int</strong></p>
+<blockquote>
+<div><p>Y index of lenslet in lenslet array</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote>
+<div><p>Order of polynomial wavelength solution</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">interp_x: float</p>
+<blockquote>
+<div><p>X coordinate on the detector</p>
+</div></blockquote>
+<p>interp_y: float</p>
+<blockquote class="last">
+<div><p>Y coordinate on the detector</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.locate_psflets.PSFLets.return_locations_short">
+<code class="descname">return_locations_short</code><span class="sig-paren">(</span><em>coef</em>, <em>xindx</em>, <em>yindx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#PSFLets.return_locations_short"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.PSFLets.return_locations_short" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the x,y detector location of a given lenslet for a given polynomial fit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>coef: lists floats</strong></p>
+<blockquote>
+<div><p>Polynomial coefficients of fit for a single wavelength</p>
+</div></blockquote>
+<p><strong>xindx: int</strong></p>
+<blockquote>
+<div><p>X index of lenslet in lenslet array</p>
+</div></blockquote>
+<p><strong>yindx: int</strong></p>
+<blockquote>
+<div><p>Y index of lenslet in lenslet array</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">interp_x: float</p>
+<blockquote>
+<div><p>X coordinate on the detector</p>
+</div></blockquote>
+<p>interp_y: float</p>
+<blockquote class="last">
+<div><p>Y coordinate on the detector</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.locate_psflets.PSFLets.return_res">
+<code class="descname">return_res</code><span class="sig-paren">(</span><em>lam</em>, <em>allcoef</em>, <em>xindx</em>, <em>yindx</em>, <em>order=3</em>, <em>lam1=None</em>, <em>lam2=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#PSFLets.return_res"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.PSFLets.return_res" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the spectral resolution and interpolated wavelength array</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lam: float</strong></p>
+<blockquote>
+<div><p>Wavelength in nm</p>
+</div></blockquote>
+<p><strong>allcoef: list of lists floats</strong></p>
+<blockquote>
+<div><p>Polynomial coefficients of wavelength solution</p>
+</div></blockquote>
+<p><strong>xindx: int</strong></p>
+<blockquote>
+<div><p>X index of lenslet in lenslet array</p>
+</div></blockquote>
+<p><strong>yindx: int</strong></p>
+<blockquote>
+<div><p>Y index of lenslet in lenslet array</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote>
+<div><p>Order of polynomial wavelength solution</p>
+</div></blockquote>
+<p><strong>lam1: float</strong></p>
+<blockquote>
+<div><p>Shortest wavelength in nm</p>
+</div></blockquote>
+<p><strong>lam2: float</strong></p>
+<blockquote>
+<div><p>Longest wavelength in nm</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">interp_lam: array</p>
+<blockquote>
+<div><p>Array of wavelengths</p>
+</div></blockquote>
+<p>R: float</p>
+<blockquote class="last">
+<div><p>Effective spectral resolution</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.locate_psflets.PSFLets.savepixsol">
+<code class="descname">savepixsol</code><span class="sig-paren">(</span><em>outdir='calibrations/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#PSFLets.savepixsol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.PSFLets.savepixsol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves wavelength calibration file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outdir: String</strong></p>
+<blockquote class="last">
+<div><p>Directory in which to put the file. The file is name PSFloc.fits and is a
+multi-extension FITS file, each extension corresponding to:
+0. the list of wavelengths at which the calibration is done
+1. a 2D ndarray with the X position of all lenslets
+2. a 2D ndarray with the Y position of all lenslets
+3. a 2D ndarray with the number of valid wavelengths for a given lenslet (some wavelengths fall outside of the detector area)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.locate_psflets.corrval">
+<code class="descclassname">tools.locate_psflets.</code><code class="descname">corrval</code><span class="sig-paren">(</span><em>coef</em>, <em>x</em>, <em>y</em>, <em>filtered</em>, <em>order</em>, <em>trimfrac=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#corrval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.corrval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the negative of the sum of the middle XX% of the PSFlet
+spot fluxes (disregarding those with the most and the least flux
+to limit the impact of outliers).  Analogous to the trimmed mean.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>coef:     list of floats</strong></p>
+<blockquote>
+<div><p>coefficients for polynomial transformation</p>
+</div></blockquote>
+<p><strong>x: ndarray</strong></p>
+<blockquote>
+<div><p>coordinates of lenslets</p>
+</div></blockquote>
+<p><strong>y: ndarray</strong></p>
+<blockquote>
+<div><p>coordinates of lenslets</p>
+</div></blockquote>
+<p><strong>filtered: ndarray</strong></p>
+<blockquote>
+<div><p>image convolved with gaussian PSFlet</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote>
+<div><p>order of the polynomial fit</p>
+</div></blockquote>
+<p><strong>trimfrac: float</strong></p>
+<blockquote>
+<div><p>fraction of outliers (high &amp; low combined) to trim 
+Default 0.1 (5% trimmed on the high end, 5% on the low end)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">score:    float</p>
+<blockquote class="last">
+<div><p>Negative sum of PSFlet fluxes, to be minimized</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.locate_psflets.initcoef">
+<code class="descclassname">tools.locate_psflets.</code><code class="descname">initcoef</code><span class="sig-paren">(</span><em>order</em>, <em>scale=15.02</em>, <em>phi=2.0496941961364943</em>, <em>x0=0</em>, <em>y0=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#initcoef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.initcoef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a set of coefficients including a rotation matrix plus zeros.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>order: int</strong></p>
+<blockquote>
+<div><p>The polynomial order of the grid distortion</p>
+</div></blockquote>
+<p><strong>scale: float</strong></p>
+<blockquote>
+<div><p>The linear separation in pixels of the PSFlets. Default 13.88.</p>
+</div></blockquote>
+<p><strong>phi:   float</strong></p>
+<blockquote>
+<div><p>The pitch angle of the lenslets.  Default atan(2)</p>
+</div></blockquote>
+<p><strong>x0:    float</strong></p>
+<blockquote>
+<div><p>x offset to apply to the central pixel. Default 0</p>
+</div></blockquote>
+<p><strong>y0:    float</strong></p>
+<blockquote>
+<div><p>y offset to apply to the central pixel. Default 0</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">coef: list of floats</p>
+<blockquote class="last">
+<div><p>A list of length (order+1)*(order+2) to be optimized.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The list of coefficients has space for a polynomial fit of the
+input order (i.e., for order 3, up to terms like x**3 and x**2*y,
+but not x**3*y).  It is all zeros in the output apart from the 
+rotation matrix given by scale and phi.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.locate_psflets.locatePSFlets">
+<code class="descclassname">tools.locate_psflets.</code><code class="descname">locatePSFlets</code><span class="sig-paren">(</span><em>inImage</em>, <em>polyorder=2</em>, <em>sig=0.7</em>, <em>coef=None</em>, <em>trimfrac=0.1</em>, <em>phi=2.0496941961364943</em>, <em>scale=15.02</em>, <em>nlens=108</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#locatePSFlets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.locatePSFlets" title="Permalink to this definition">¶</a></dt>
+<dd><p>function locatePSFlets takes an Image class, assumed to be a
+monochromatic grid of spots with read noise and shot noise, and
+returns the esimated positions of the spot centroids.  This is
+designed to constrain the domain of the PSF-let fitting later in
+the pipeline.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>imImage: Image class</strong></p>
+<blockquote>
+<div><p>Assumed to be a monochromatic grid of spots</p>
+</div></blockquote>
+<p><strong>polyorder: float</strong></p>
+<blockquote>
+<div><p>order of the polynomial coordinate transformation. Default 2.</p>
+</div></blockquote>
+<p><strong>sig: float</strong></p>
+<blockquote>
+<div><p>standard deviation of convolving Gaussian used
+for estimating the grid of centroids.  Should be close
+to the true value for the PSF-let spots.  Default 0.7.</p>
+</div></blockquote>
+<p><strong>coef: list</strong></p>
+<blockquote>
+<div><p>initial guess of the coefficients of polynomial
+coordinate transformation</p>
+</div></blockquote>
+<p><strong>trimfrac: float</strong></p>
+<blockquote>
+<div><p>fraction of lenslet outliers (high &amp; low
+combined) to trim in the minimization.  Default 0.1
+(5% trimmed on the high end, 5% on the low end)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">x: 2D ndarray</p>
+<blockquote>
+<div><p>Estimated spot centroids in x.</p>
+</div></blockquote>
+<p>y: 2D ndarray</p>
+<blockquote>
+<div><p>Estimated spot centroids in y.</p>
+</div></blockquote>
+<p>good:2D boolean ndarray</p>
+<blockquote>
+<div><p>True for lenslets with spots inside the detector footprint</p>
+</div></blockquote>
+<p>coef: list of floats</p>
+<blockquote class="last">
+<div><p>List of best-fit polynomial coefficients</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>the coefficients, if not supplied, are initially set to the 
+known pitch angle and scale.  A loop then does a quick check to find
+reasonable offsets in x and y.  With all of the first-order polynomial
+coefficients set, the optimizer refines these and the higher-order
+coefficients.  This routine seems to be relatively robust down to
+per-lenslet signal-to-noise ratios of order unity (or even a little 
+less).</p>
+<p>Important note: as of now (09/2015), the number of lenslets to grid
+is hard-coded as 1/10 the dimensionality of the final array.  This is
+sufficient to cover the detector for the fiducial lenslet spacing.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.locate_psflets.transform">
+<code class="descclassname">tools.locate_psflets.</code><code class="descname">transform</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>order</em>, <em>coef</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/locate_psflets.html#transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.locate_psflets.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the coefficients given to transform the coordinates using
+a polynomial.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x:     ndarray</strong></p>
+<blockquote>
+<div><p>Rectilinear grid</p>
+</div></blockquote>
+<p><strong>y:     ndarray of floats</strong></p>
+<blockquote>
+<div><p>Rectilinear grid</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote>
+<div><p>Order of the polynomial fit</p>
+</div></blockquote>
+<p><strong>coef:  list of floats</strong></p>
+<blockquote>
+<div><p>List of the coefficients.  Must match the length required by
+order = (order+1)*(order+2)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">_x:    ndarray</p>
+<blockquote>
+<div><p>Transformed coordinates</p>
+</div></blockquote>
+<p>_y:    ndarray</p>
+<blockquote class="last">
+<div><p>Transformed coordinates</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tools.par_utils">
 <span id="tools-par-utils-module"></span><h2>tools.par_utils module<a class="headerlink" href="#module-tools.par_utils" title="Permalink to this headline">¶</a></h2>
@@ -351,11 +1385,408 @@ This only works with John Krist&#8217;s cubes,</div></blockquote>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-postprocessing-module">
-<h2>tools.postprocessing module<a class="headerlink" href="#tools-postprocessing-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.postprocessing">
+<span id="tools-postprocessing-module"></span><h2>tools.postprocessing module<a class="headerlink" href="#module-tools.postprocessing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.postprocessing.process_SPC_IFS">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">process_SPC_IFS</code><span class="sig-paren">(</span><em>par</em>, <em>psf_time_series_folder</em>, <em>offaxis_psf_filename</em>, <em>planet_radius=&lt;Quantity 71492000.0 m&gt;</em>, <em>mean_contrast=1e-08</em>, <em>ref_star_T=&lt;Quantity 9377.0 K&gt;</em>, <em>ref_star_Vmag=2.37</em>, <em>target_star_T=&lt;Quantity 5887.0 K&gt;</em>, <em>target_star_Vmag=5.03</em>, <em>lamc=770.0</em>, <em>BW=0.18</em>, <em>Nlam=45</em>, <em>n_ref_star_imgs=30</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em>, <em>outdir_time_series='OS5'</em>, <em>outdir_detector='OS5/OS5_detector'</em>, <em>outdir_average='OS5/OS5_average'</em>, <em>process_cubes=True</em>, <em>process_offaxis=True</em>, <em>process_detector=True</em>, <em>take_averages=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#process_SPC_IFS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.process_SPC_IFS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process SPC PSF cubes from J. Krist through the IFS</p>
+</dd></dl>
+
 </div>
-<div class="section" id="tools-reduction-module">
-<h2>tools.reduction module<a class="headerlink" href="#tools-reduction-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.reduction">
+<span id="tools-reduction-module"></span><h2>tools.reduction module<a class="headerlink" href="#module-tools.reduction" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.reduction.GPImethod2">
+<code class="descclassname">tools.reduction.</code><code class="descname">GPImethod2</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>ifsimage</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#GPImethod2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.GPImethod2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic cube reduction using an IFS image and a wavecal cube
+Equivalent to method 2 in the IDL primitive &#8216;pisces_assemble_spectral_datacube&#8217;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par:    Parameter instance</strong></p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>name: string</strong></p>
+<blockquote>
+<div><p>Name that will be given to final image, without fits extension</p>
+</div></blockquote>
+<p><strong>ifsimage: Image instance of IFS detector map, with optional inverse variance</strong></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cube</strong> :  3D array</p>
+<blockquote class="last">
+<div><p>Return the reduced cube from the original IFS image</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.calculateWaveList">
+<code class="descclassname">tools.reduction.</code><code class="descname">calculateWaveList</code><span class="sig-paren">(</span><em>par</em>, <em>lam_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#calculateWaveList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.calculateWaveList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the wavelength lists corresponding to the center and endpoints of each
+spectral bin. Wavelengths are separated by a constant value in log space. Number of
+wavelengths depends on spectral resolution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par:        Parameter instance</strong></p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>lam_list:   list of wavelengths</strong></p>
+<blockquote>
+<div><p>Usually this is left to None. If so, we use the wavelengths used for wavelength
+calibration. Otherwise, we could decide to focus on a smaller/larger region of
+the spectrum to retrieve. The final processed cubes will have bins centered
+on lam_midpts</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">lam_midpts: list of floats</p>
+<blockquote>
+<div><p>Wavelengths at the midpoint of each bin</p>
+</div></blockquote>
+<p>lam_endpts: list of floats</p>
+<blockquote class="last">
+<div><p>Wavelengths at the edges of each bin</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.densifiedSimpleReduction">
+<code class="descclassname">tools.reduction.</code><code class="descname">densifiedSimpleReduction</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>ifsimage</em>, <em>ratio=10.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#densifiedSimpleReduction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.densifiedSimpleReduction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the same method as the &#8216;simple&#8217; method but interpolate the original IFS map over
+a grid with finer sampling</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par:    Parameter instance</strong></p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>name: string</strong></p>
+<blockquote>
+<div><p>Name that will be given to final image, without fits extension</p>
+</div></blockquote>
+<p><strong>ifsimage: Image instance of IFS detector map, with optional inverse variance</strong></p>
+<p><strong>ratio:  int</strong></p>
+<blockquote>
+<div><p>Ratio by which the original image is densified.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cube</strong> :  3D array</p>
+<blockquote class="last">
+<div><p>Return the reduced cube from the original IFS image</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.fit_cutout">
+<code class="descclassname">tools.reduction.</code><code class="descname">fit_cutout</code><span class="sig-paren">(</span><em>subim</em>, <em>psflets</em>, <em>mode='lstsq'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#fit_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.fit_cutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a series of PSFlets to an image, recover the best-fit coefficients.
+This is currently little more than a wrapper for np.linalg.lstsq, but 
+could be more complex if/when we regularize the problem or adopt some
+other approach.</p>
+<p>Inputs:
+1. subim:   2D nadarray, microspectrum to fit
+2. psflets: 3D ndarray, first dimension is wavelength.  psflets[0]</p>
+<blockquote>
+<div>must match the shape of subim.</div></blockquote>
+<ol class="arabic" start="3">
+<li><dl class="first docutils">
+<dt>mode:    string, method to use.  Currently limited to lstsq (a </dt>
+<dd><p class="first last">simple least-squares fit using linalg.lstsq), this can
+be expanded to include an arbitrary approach.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>Returns:
+1. coef:    the best-fit coefficients (i.e. the microspectrum).</p>
+<p>Note: this routine may also return the covariance matrix in the future.
+It will depend on the performance of the algorithms and whether/how we
+implement regularization.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.fitspec_intpix">
+<code class="descclassname">tools.reduction.</code><code class="descname">fitspec_intpix</code><span class="sig-paren">(</span><em>par</em>, <em>im</em>, <em>PSFlet_tool</em>, <em>lamlist</em>, <em>delt_y=6</em>, <em>flat=None</em>, <em>smoothandmask=False</em>, <em>mode='gaussvar'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#fitspec_intpix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.fitspec_intpix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimal extraction routine</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>im:     Image instance</strong></p>
+<blockquote>
+<div><p>IFS image to be processed.</p>
+</div></blockquote>
+<p><strong>PSFlet_tool: PSFLet instance</strong></p>
+<blockquote>
+<div><p>Inverse wavelength solution that is constructed during wavelength calibration</p>
+</div></blockquote>
+<p><strong>lamlist: list of floats</strong></p>
+<blockquote>
+<div><p>List of wavelengths to which each microspectrum is interpolated.</p>
+</div></blockquote>
+<p><strong>delt_y: int</strong></p>
+<blockquote>
+<div><p>Width in pixels of each microspectrum in the cross-dispersion direction</p>
+</div></blockquote>
+<p><strong>flat:</strong></p>
+<blockquote>
+<div><p>Whether a lenslet flatfield is used (not implemented yet)</p>
+</div></blockquote>
+<p><strong>smoothandmask: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to smooth and mask bad pixels</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">image:  Image instance</p>
+<blockquote class="last">
+<div><p>Reduced cube in the image.data field</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.fitspec_intpix_np">
+<code class="descclassname">tools.reduction.</code><code class="descname">fitspec_intpix_np</code><span class="sig-paren">(</span><em>par</em>, <em>im</em>, <em>PSFlet_tool</em>, <em>lamlist</em>, <em>delt_y=6</em>, <em>smoothandmask=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#fitspec_intpix_np"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.fitspec_intpix_np" title="Permalink to this definition">¶</a></dt>
+<dd><p>Original optimal extraction routine in Numpy from T. Brand</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>im:     Image instance</strong></p>
+<blockquote>
+<div><p>IFS image to be processed.</p>
+</div></blockquote>
+<p><strong>PSFlet_tool: PSFLet instance</strong></p>
+<blockquote>
+<div><p>Inverse wavelength solution that is constructed during wavelength calibration</p>
+</div></blockquote>
+<p><strong>lamlist: list of floats</strong></p>
+<blockquote>
+<div><p>List of wavelengths to which each microspectrum is interpolated.</p>
+</div></blockquote>
+<p><strong>delt_y: int</strong></p>
+<blockquote>
+<div><p>Width in pixels of each microspectrum in the cross-dispersion direction</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">image:  Image instance</p>
+<blockquote class="last">
+<div><p>Reduced cube in the image.data field</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.fitspec_intpix_np_old">
+<code class="descclassname">tools.reduction.</code><code class="descname">fitspec_intpix_np_old</code><span class="sig-paren">(</span><em>im</em>, <em>PSFlet_tool</em>, <em>lam</em>, <em>delt_x=7</em>, <em>header=SIMPLE  =                    T / conforms to FITS standard                       BITPIX  =                    8 / array data type                                 NAXIS   =                    0 / number of array dimensions                      EXTEND  =                    T</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#fitspec_intpix_np_old"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.fitspec_intpix_np_old" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.get_cutout">
+<code class="descclassname">tools.reduction.</code><code class="descname">get_cutout</code><span class="sig-paren">(</span><em>im</em>, <em>x</em>, <em>y</em>, <em>psflets</em>, <em>dy=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#get_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.get_cutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cut out a microspectrum for fitting.  Return the inputs to 
+linalg.lstsq or to whatever regularization scheme we adopt.
+Assumes that spectra are dispersed in the -y direction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>im: Image intance</strong></p>
+<blockquote>
+<div><p>Image containing data to be fit</p>
+</div></blockquote>
+<p><strong>x: float</strong></p>
+<blockquote>
+<div><p>List of x centroids for each microspectrum</p>
+</div></blockquote>
+<p><strong>y: float</strong></p>
+<blockquote>
+<div><p>List of y centroids for each microspectrum</p>
+</div></blockquote>
+<p><strong>psflets: PSFLet instance</strong></p>
+<blockquote>
+<div><p>Typically generated from polychrome step in wavelength calibration routine</p>
+</div></blockquote>
+<p><strong>dy: int</strong></p>
+<blockquote>
+<div><p>vertical length to cut out, default 3.  This is the length to cut out in the
++/-y direction; the lengths cut out in the +x direction (beyond the shortest 
+and longest wavelengths) are also dy.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">subim:  2D array</p>
+<blockquote>
+<div><p>A flattened subimage to be fit</p>
+</div></blockquote>
+<p>psflet_subarr: 2D ndarray</p>
+<blockquote class="last">
+<div><p>first dimension is wavelength, second dimension is spatial, and is the same 
+shape as the flattened subimage.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Both subim and psflet_subarr are scaled by the inverse
+standard deviation if it is given for the input Image.  This 
+will make the fit chi2 and properly handle bad/masked pixels.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.intOptimalExtract">
+<code class="descclassname">tools.reduction.</code><code class="descname">intOptimalExtract</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>IFSimage</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#intOptimalExtract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.intOptimalExtract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls the optimal extraction routine</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>name: string</strong></p>
+<blockquote>
+<div><p>Path &amp; name of the output file</p>
+</div></blockquote>
+<p><strong>IFSimage: Image instance</strong></p>
+<blockquote class="last">
+<div><p>Image instance of input image. Can have a .ivar field for a variance map.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>A cube is also written at par.SimResults/name.fits</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.lstsqExtract">
+<code class="descclassname">tools.reduction.</code><code class="descname">lstsqExtract</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>ifsimage</em>, <em>ivar=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#lstsqExtract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.lstsqExtract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Least squares extraction, inspired by T. Brandt and making use of some of his code.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par:    Parameter instance</strong></p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>name: string</strong></p>
+<blockquote>
+<div><p>Name that will be given to final image, without fits extension</p>
+</div></blockquote>
+<p><strong>ifsimage: Image instance of IFS detector map, with optional inverse variance</strong></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cube</strong> :  3D array</p>
+<blockquote class="last">
+<div><p>Return the reduced cube from the original IFS image</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.simpleReduction">
+<code class="descclassname">tools.reduction.</code><code class="descname">simpleReduction</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>ifsimage</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#simpleReduction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.simpleReduction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic cube reduction using an IFS image and a wavecal cube
+Equivalent to method 1 in the IDL primitive &#8216;pisces_assemble_spectral_datacube&#8217;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par:    Parameter instance</strong></p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>name: string</strong></p>
+<blockquote>
+<div><p>Name that will be given to final image, without fits extension</p>
+</div></blockquote>
+<p><strong>ifsimage: Image instance of IFS detector map, with optional inverse variance</strong></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cube</strong> :  3D array</p>
+<blockquote class="last">
+<div><p>Return the reduced cube from the original IFS image</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.reduction.testReduction">
+<code class="descclassname">tools.reduction.</code><code class="descname">testReduction</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>ifsimage</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#testReduction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.testReduction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scratch routine to test various things.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par:    Parameter instance</strong></p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>name: string</strong></p>
+<blockquote>
+<div><p>Name that will be given to final image, without fits extension</p>
+</div></blockquote>
+<p><strong>ifsimage: Image instance of IFS detector map, with optional inverse variance</strong></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>cube</strong> :  3D array</p>
+<blockquote class="last">
+<div><p>Return the reduced cube from the original IFS image</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tools.rotate">
 <span id="tools-rotate-module"></span><h2>tools.rotate module<a class="headerlink" href="#module-tools.rotate" title="Permalink to this headline">¶</a></h2>
@@ -364,28 +1795,342 @@ This only works with John Krist&#8217;s cubes,</div></blockquote>
 <code class="descclassname">tools.rotate.</code><code class="descname">Rotate</code><span class="sig-paren">(</span><em>image</em>, <em>phi</em>, <em>clip=True</em>, <em>order=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/rotate.html#Rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.rotate.Rotate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rotate the input image by phi about its center.  Do not resize the 
 image, but pad with zeros.  Function originally from Tim Brandt</p>
-<dl class="docutils">
-<dt>image</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">2D square array</span><dd>Image to rotate</dd>
-<dt>phi</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float</span><dd>Rotation angle in radians</dd>
-<dt>clip</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span><dd>Clip array by sqrt(2) to remove fill values?  Default True.</dd>
-<dt>order</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">integer (optional)</span><dd>Order of interpolation when rotating. Default is 1.</dd>
-</dl>
-<dl class="docutils">
-<dt>imageout: 2D array</dt>
-<dd>Rotated image of the same shape as the input image, with zero-padding</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>image</strong> : 2D square array</p>
+<blockquote>
+<div><p>Image to rotate</p>
+</div></blockquote>
+<p><strong>phi</strong> : float</p>
+<blockquote>
+<div><p>Rotation angle in radians</p>
+</div></blockquote>
+<p><strong>clip</strong> :  boolean (optional)</p>
+<blockquote>
+<div><p>Clip array by sqrt(2) to remove fill values?  Default True.</p>
+</div></blockquote>
+<p><strong>order</strong> : integer (optional)</p>
+<blockquote>
+<div><p>Order of interpolation when rotating. Default is 1.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">imageout: 2D array</p>
+<blockquote class="last">
+<div><p>Rotated image of the same shape as the input image, with zero-padding</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-spectrograph-module">
-<h2>tools.spectrograph module<a class="headerlink" href="#tools-spectrograph-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.spectrograph">
+<span id="tools-spectrograph-module"></span><h2>tools.spectrograph module<a class="headerlink" href="#module-tools.spectrograph" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.spectrograph.createAllWeightsArray">
+<code class="descclassname">tools.spectrograph.</code><code class="descname">createAllWeightsArray</code><span class="sig-paren">(</span><em>par</em>, <em>locations</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/spectrograph.html#createAllWeightsArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.spectrograph.createAllWeightsArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates weights for bilinear interpolation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>locations</strong> : 2D ndarray, Nx2</p>
+<blockquote>
+<div><p>Array of normalized locations on the detector, .</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>detectorFrame</strong> : 2D array</p>
+<blockquote class="last">
+<div><p>Return the detector frame with correct pixel scale.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.spectrograph.distort">
+<code class="descclassname">tools.spectrograph.</code><code class="descname">distort</code><span class="sig-paren">(</span><em>fx</em>, <em>fy</em>, <em>lam</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/spectrograph.html#distort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.spectrograph.distort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the distortion and dispersion from pre-determined polynomial
+This was estimated from Zemax by Qian Gong and Jorge Llop and needs to be revisited</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fx,fy</strong> :   float</p>
+<blockquote>
+<div><p>Distance between a lenslet and the center of the detector in millimeter.</p>
+</div></blockquote>
+<p><strong>lam</strong> : float</p>
+<blockquote>
+<div><p>Wavelength in microns.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>x,y</strong> : float</p>
+<blockquote class="last">
+<div><p>Distance from center of detector at which image from a lenslet falls in mm.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.spectrograph.loadKernels">
+<code class="descclassname">tools.spectrograph.</code><code class="descname">loadKernels</code><span class="sig-paren">(</span><em>par</em>, <em>wavel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/spectrograph.html#loadKernels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.spectrograph.loadKernels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the kernels that represent the PSFs at different locations on the detector</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>wavel</strong> : float</p>
+<blockquote>
+<div><p>Wavelength at which the kernels are needed</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">kernels: array of 2D arrays</p>
+<blockquote>
+<div><p>Represents each 2D kernel at each location</p>
+</div></blockquote>
+<p>locations: Nx2 ndarray</p>
+<blockquote class="last">
+<div><p>Location coordinates in detector position ratio (0,0) is bottom left, (1,1) is
+top right</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.spectrograph.selectKernel">
+<code class="descclassname">tools.spectrograph.</code><code class="descname">selectKernel</code><span class="sig-paren">(</span><em>par</em>, <em>lam</em>, <em>refWaveList</em>, <em>kernelList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/spectrograph.html#selectKernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.spectrograph.selectKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the correct kernel for the current wavlength</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>lam</strong> : float</p>
+<blockquote>
+<div><p>Wavelength at which we want the get the kernel, in microns</p>
+</div></blockquote>
+<p><strong>refWaveList</strong> : list of floats</p>
+<blockquote>
+<div><p>Wavelengths at which the kernels are defined</p>
+</div></blockquote>
+<p><strong>kernelList</strong> : list of 3D ndarrays</p>
+<blockquote>
+<div><p>List of the kernels cubes at the wavelengths above</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">kernels: array of 2D arrays</p>
+<blockquote>
+<div><p>Represents each 2D kernel at each location for that wavlength</p>
+</div></blockquote>
+<p>locations: Nx2 ndarray</p>
+<blockquote class="last">
+<div><p>Location coordinates in detector position ratio (0,0) is bottom left, (1,1) is
+top right</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
-<div class="section" id="tools-wavecal-module">
-<h2>tools.wavecal module<a class="headerlink" href="#tools-wavecal-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.wavecal">
+<span id="tools-wavecal-module"></span><h2>tools.wavecal module<a class="headerlink" href="#module-tools.wavecal" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.wavecal.buildcalibrations">
+<code class="descclassname">tools.wavecal.</code><code class="descname">buildcalibrations</code><span class="sig-paren">(</span><em>par</em>, <em>filelist=None</em>, <em>lamlist=None</em>, <em>order=3</em>, <em>inspect=True</em>, <em>genwavelengthsol=True</em>, <em>makehiresPSFlets=True</em>, <em>savehiresimages=True</em>, <em>borderpix=4</em>, <em>upsample=3</em>, <em>nsubarr=3</em>, <em>parallel=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#buildcalibrations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.buildcalibrations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Master wavelength calibration function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>filelist: list of strings</strong></p>
+<blockquote>
+<div><p>List of the fits files that contain the monochromatic calibration files</p>
+</div></blockquote>
+<p><strong>lamlist: list of floats</strong></p>
+<blockquote>
+<div><p>Wavelengths in nm at which the files are taken</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote>
+<div><p>Order of the polynomial used to fit the PSFLet positions across the detector</p>
+</div></blockquote>
+<p><strong>genwavelengthsol: Boolean</strong></p>
+<blockquote>
+<div><p>If True, generate the wavelength calibration. Creates a text file with all
+polynomial coefficients that best fit the PSFLet positions at each wavelength.
+If False, then load an already-generated file.</p>
+</div></blockquote>
+<p><strong>inspect: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to create PNG files that overlay PSFLet fitted position on the
+monochromatic pictures, to visually inspect the fitting results</p>
+</div></blockquote>
+<p><strong>makehiresPSFlets: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to do a high-resolution fitting of the PSFs, using the sampling
+diversity. This requires high-SNR monochromatic images.</p>
+</div></blockquote>
+<p><strong>savehiresimages: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to save fits files with the high-res PSFLets</p>
+</div></blockquote>
+<p><strong>borderpix:  int</strong></p>
+<blockquote>
+<div><p>Number of pixels that are not taken into account towards the edges of the detector</p>
+</div></blockquote>
+<p><strong>upsample: int</strong></p>
+<blockquote>
+<div><p>Upsampling factor for each high-resolution PSFLet</p>
+</div></blockquote>
+<p><strong>nsubarr: int</strong></p>
+<blockquote>
+<div><p>Detector will be divided into nsubarr x nsubarr regions. A high-resolution PSFLet
+will be determined in each region from the average of all PSFLets within that
+region</p>
+</div></blockquote>
+<p><strong>parallel: Boolean</strong></p>
+<blockquote class="last">
+<div><p>Whether or not to parallelize the computation for the high-resolution PSFLet and
+polychrome computation. The wavelength calibration step cannot be parallelized since
+each wavelength uses the previous wavelength solution as a guess input.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This function generates all the files required to process IFS cubes:
+lamsol.dat: contains a list of the wavelengths and the polynomial coefficients that</p>
+<blockquote>
+<div>describe the X,Y positions of all lenslets on the detector as a function 
+of lenslet position on the lenslet array.</div></blockquote>
+<dl class="docutils">
+<dt>polychromekeyRXX.fits:  where XX is replaced by the spectral resolution defined in the</dt>
+<dd>parameters file. This is a multi-extension fits file with: 
+- a list of the central wavelengths at which the final cube will be reduced to
+- an array of the X positions of all lenslets
+- an array of the Y positions of all lenslets
+- an array of booleans indicating whether that lenslet is good or not
+(e.g. when it is outside of the detector area)</dd>
+<dt>polychromeRXX.fits: list of 2D arrays of size Npix x Npix which each contain a map with</dt>
+<dd>the high-resolution lenslet PSFLets put in their correct position
+for all the wavelengths that we want in the output cube. Each PSFLet
+in each wavelength slice is used for least-squares fitting.</dd>
+<dt>PSFLoc.fits:    nsubarr x nsubarr array of 2D high-resolution PSFLets at each location</dt>
+<dd>in the detector.</dd>
+</dl>
+<p>polychromeRXX.fits and PSFLoc.fits are only generated if makehiresPSFlets is True.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.computeWavecal">
+<code class="descclassname">tools.wavecal.</code><code class="descname">computeWavecal</code><span class="sig-paren">(</span><em>par</em>, <em>lamlist=None</em>, <em>filelist=None</em>, <em>order=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#computeWavecal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.computeWavecal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a wavelength calibration from a set of fits files
+Uses Tim Brandt&#8217;s locate_PSFlets routine with an initial guess.
+The consecutive solutions use information from previous solutions to improve the
+initial guess.
+The process can be optimized somewhat by reducing the number of lenslets within
+the locatePSFlets function (could make this a parameter!)
+lamlist and filelist can be defined in the parameters in which case they don&#8217;t need to be set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par:        Parameter instance</strong></p>
+<p><strong>lamlist:    list of floats</strong></p>
+<blockquote>
+<div><p>Wavelengths in nm</p>
+</div></blockquote>
+<p><strong>filelist:   list of filenames</strong></p>
+<blockquote>
+<div><p>List of fits files to open in corresponding order</p>
+</div></blockquote>
+<p><strong>order:      int</strong></p>
+<blockquote class="last">
+<div><p>Order of 2d polynomial to be fitted to lenslets</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Obsolete now</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.createPolychrome">
+<code class="descclassname">tools.wavecal.</code><code class="descname">createPolychrome</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#createPolychrome"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.createPolychrome" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be run after generating a wavelength calibration set.
+This function constructs a cube of (lam_max-lam_min)/par.dlam depth,
+in which each slice is a monochromatic map at that wavelength.
+If the wavelength calibration doesn&#8217;t contain all the required wavelengths,
+interpolate between wavelengths using map_coordinates.
+In the end, one should be able to make a cutout at a given location and get a cube
+with all the psflets for that lenslet.</p>
+<p>For now, this only works with simulated, noiseless data in order to get
+almost perfect PSFs. In practice, we will have to create this cube from data.
+For now, already assumes that all wavelengths are available (need to compute these)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.createWavecalFiles">
+<code class="descclassname">tools.wavecal.</code><code class="descname">createWavecalFiles</code><span class="sig-paren">(</span><em>par</em>, <em>lamlist</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#createWavecalFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.createWavecalFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a set of monochromatic IFS images to be used in wavelength calibration step</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.do_inspection">
+<code class="descclassname">tools.wavecal.</code><code class="descname">do_inspection</code><span class="sig-paren">(</span><em>par</em>, <em>image</em>, <em>xpos</em>, <em>ypos</em>, <em>lam</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#do_inspection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.do_inspection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.gethires">
+<code class="descclassname">tools.wavecal.</code><code class="descname">gethires</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>image</em>, <em>upsample=5</em>, <em>nsubarr=5</em>, <em>npix=13</em>, <em>renorm=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#gethires"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.gethires" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build high resolution images of the undersampled PSF using the
+monochromatic frames.</p>
+<p>Inputs:
+1.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.make_polychrome">
+<code class="descclassname">tools.wavecal.</code><code class="descname">make_polychrome</code><span class="sig-paren">(</span><em>lam1</em>, <em>lam2</em>, <em>hires_arrs</em>, <em>lam_arr</em>, <em>psftool</em>, <em>allcoef</em>, <em>xindx</em>, <em>yindx</em>, <em>ydim</em>, <em>xdim</em>, <em>upsample=5</em>, <em>nlam=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#make_polychrome"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.make_polychrome" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tools" title="Permalink to this headline">¶</a></h2>
@@ -393,72 +2138,49 @@ image, but pad with zeros.  Function originally from Tim Brandt</p>
 </div>
 
 
-           </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="unitTests.html" class="btn btn-neutral float-right" title="unitTests module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="PISCES.html" class="btn btn-neutral" title="PISCES Wavelength calibration" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">tools package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-tools.detector">tools.detector module</a></li>
+<li><a class="reference internal" href="#module-tools.detutils">tools.detutils module</a></li>
+<li><a class="reference internal" href="#module-tools.image">tools.image module</a></li>
+<li><a class="reference internal" href="#module-tools.imgtools">tools.imgtools module</a></li>
+<li><a class="reference internal" href="#module-tools.initLogger">tools.initLogger module</a></li>
+<li><a class="reference internal" href="#module-tools.inputScene">tools.inputScene module</a></li>
+<li><a class="reference internal" href="#module-tools.lenslet">tools.lenslet module</a></li>
+<li><a class="reference internal" href="#module-tools.locate_psflets">tools.locate_psflets module</a></li>
+<li><a class="reference internal" href="#module-tools.par_utils">tools.par_utils module</a></li>
+<li><a class="reference internal" href="#module-tools.plotting">tools.plotting module</a></li>
+<li><a class="reference internal" href="#module-tools.postprocessing">tools.postprocessing module</a></li>
+<li><a class="reference internal" href="#module-tools.reduction">tools.reduction module</a></li>
+<li><a class="reference internal" href="#module-tools.rotate">tools.rotate module</a></li>
+<li><a class="reference internal" href="#module-tools.spectrograph">tools.spectrograph module</a></li>
+<li><a class="reference internal" href="#module-tools.wavecal">tools.wavecal module</a></li>
+<li><a class="reference internal" href="#module-tools">Module contents</a></li>
+</ul>
+</li>
+</ul>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Maxime J. Rizzo.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
 
         </div>
       </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="_sources/tools.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
+    Last built 08 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
 </html>

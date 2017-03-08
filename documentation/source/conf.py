@@ -22,6 +22,8 @@ import sys
 sys.path.insert(0, os.path.abspath('../../code/'))
 sys.path.insert(1, os.path.abspath('../../notebooks/'))
 
+from astropy_helpers.sphinx.conf import *
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -40,6 +42,12 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
+    'sphinx.ext.inheritance_diagram',
+    'sphinx.ext.viewcode',
+    'astropy_helpers.sphinx.ext.numpydoc',
+    'astropy_helpers.sphinx.ext.tocdepthfix',
+    'astropy_helpers.sphinx.ext.doctest',
+    'astropy_helpers.sphinx.ext.changelog_links',
     'nbsphinx',
     'IPython.sphinxext.ipython_console_highlighting',
 ]
@@ -132,7 +140,7 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'bootstrap-astropy' #sphinx_rtd_theme
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

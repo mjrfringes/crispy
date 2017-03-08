@@ -1,148 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Introduction to crispy &mdash; crispy 0.1.0 documentation</title>
-  
-
-  
-  
-
-  
-
-  
-  
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="crispy 0.1.0 documentation" href="index.html"/>
-        <link rel="next" title="IFS module" href="IFS.html"/>
-        <link rel="prev" title="Welcome to crispy’s documentation!" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-  <div class="wy-grid-for-nav">
-
+    <title>Introduction to crispy &#8212; crispy 0.1.0 documentation</title>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+    <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
+    <link rel="top" title="crispy 0.1.0 documentation" href="index.html" />
+    <link rel="next" title="PISCES wavelength calibration" href="PISCES_wavecal.html" />
+    <link rel="prev" title="Welcome to crispy’s documentation!" href="index.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="_static/copybutton.js"></script>
 
-          
-            <a href="index.html" class="icon icon-home"> crispy
-          
 
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                0.1
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction to crispy</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Create-a-polychromatic-flatfield">Create a polychromatic flatfield</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Initialization">Initialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Create-the-flatfield">Create the flatfield</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Display-results">Display results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#Simulate-detector-readout">Simulate detector readout</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Reduction-step">Reduction step</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="IFS.html">IFS module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PISCES.html">PISCES Wavelength calibration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PISCES.html#Reduce-PISCES-data">Reduce PISCES data</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">tools package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unitTests.html">unitTests module</a></li>
-</ul>
-
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="index.html"><span id="logotext1">astro</span><span id="logotext2">py</span><span id="logotext3">:docs</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="genindex.html">Index</a></li>
+    <li><a title="Module Index" href="py-modindex.html">Modules</a></li>
+    <li>
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">crispy</a>
-      </nav>
-
-
       
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
- 
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
+<form action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
       
-    <li>Introduction to crispy</li>
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="_sources/Introduction.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
+    </li>
   </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li class="right">
+	<a href="PISCES_wavecal.html" title="PISCES wavelength calibration">
+	  next &raquo;
+	</a>
+      </li>
+      <li class="right">
+	<a href="index.html" title="Welcome to crispy’s documentation!">
+	  &laquo; previous
+	</a>
+	 |
+      </li>
+      <li>
+	<a href="index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+      <li>Introduction to crispy</li> 
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
             
   
 <style>
@@ -210,7 +149,7 @@ div.nboutput div.prompt pre {
 /* all prompts */
 div.nbinput div.prompt,
 div.nboutput div.prompt {
-    min-width: 8ex;
+    min-width: 9ex;
     padding-top: 0.4em;
     padding-right: 0.4em;
     text-align: right;
@@ -305,38 +244,6 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
 .ansi-bold { font-weight: bold; }
-
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast + .nbinput {
-    margin-top: -19px;
-}
-
-/* nice headers on first paragraph of info/warning boxes */
-.admonition .first {
-    margin: -12px;
-    padding: 6px 12px;
-    margin-bottom: 12px;
-    color: #fff;
-    line-height: 1;
-    display: block;
-}
-.admonition.warning .first {
-    background: #f0b37e;
-}
-.admonition.note .first {
-    background: #6ab0de;
-}
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
 </style>
 <div class="section" id="Introduction-to-crispy">
 <h1>Introduction to crispy<a class="headerlink" href="#Introduction-to-crispy" title="Permalink to this headline">¶</a></h1>
@@ -360,14 +267,13 @@ Python code to the path first.</p>
 </div>
 <div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../code&#39;</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../code&#39;</span>
 <span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">tools</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">logging</span> <span class="kn">as</span> <span class="nn">log</span>
-<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="kn">import</span> <span class="n">initLogger</span>
-
+<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -423,17 +329,7 @@ LSAMPWAV=                600.0 / Lenslet sampling wavelength (nm)
 FWHM    =                    2 / FHWM of PSFLet at detector (pixels)
 FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
 NPIX    =                 1024 / Number of detector pixels
-</pre></div>
-</div>
-</div>
-<p>A logging system is used to log messages both on console and to a file.</p>
-<div class="nbinput nblast container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [4]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
-<span></span><span class="n">initLogger</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/IFS.log&#39;</span><span class="p">)</span>
+DISPDIST=                    F / Use PISCES distortion/dispersion?
 </pre></div>
 </div>
 </div>
@@ -467,6 +363,7 @@ testCreateFlatfield(par, pixsize=0.1, npix=512, pixval=1.0, outname=&#39;flatfie
     Parameters
     ----------
     par :   Parameter instance
+        Contains all IFS parameters
     pixsize:   float
        Pixel scale (lam/D)
     npix: int
@@ -492,14 +389,6 @@ wavelengths can be retrieved as follows.</p>
 </pre></div>
 </div>
 </div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="stderr output_area container">
-<div class="highlight"><pre>
-2017-03-08 00:04:31,504: INFO     Reduced cube will have 17 wavelength bins
-</pre></div></div>
-</div>
 <div class="nboutput nblast container">
 <div class="prompt empty container">
 </div>
@@ -515,6 +404,7 @@ calculateWaveList(par, lam_list=None)
     Parameters
     ----------
     par:        Parameter instance
+            Contains all IFS parameters
     lam_list:   list of wavelengths
             Usually this is left to None. If so, we use the wavelengths used for wavelength
             calibration. Otherwise, we could decide to focus on a smaller/larger region of
@@ -528,6 +418,7 @@ calculateWaveList(par, lam_list=None)
     lam_endpts: list of floats
             Wavelengths at the edges of each bin
 
+crispy - INFO - Reduced cube will have 17 wavelength bins
 [ 704.42954343  711.94828852  719.54728511  727.22738976  734.9894682
   742.83439535  750.76305552  758.77634242  766.87515933  775.06041915
   783.33304453  791.69396797  800.14413192  808.68448889  817.31600156
@@ -549,55 +440,34 @@ par.unitTestsOutput/flatfield.fits</p>
 <div class="nboutput nblast container">
 <div class="prompt empty container">
 </div>
-<div class="stderr output_area container">
+<div class="output_area container">
 <div class="highlight"><pre>
-2017-03-08 00:04:31,510: INFO     Reduced cube will have 17 wavelength bins
-2017-03-08 00:04:31,558: INFO     The number of input pixels per lenslet is 6.390626
-2017-03-08 00:04:31,559: INFO     Import all kernels and rescale them to same plate scale
-2017-03-08 00:04:31,560: INFO     Loading spot diagrams.
-2017-03-08 00:04:31,670: INFO     kernel scale average is 1.706 micron per pixel at 890 nm
-2017-03-08 00:04:31,671: INFO     Resampling kernels to match input
-2017-03-08 00:04:31,688: INFO     pxprlens: 16.000
-2017-03-08 00:04:31,691: INFO     Loading spot diagrams.
-2017-03-08 00:04:31,767: INFO     kernel scale average is 1.475 micron per pixel at 770 nm
-2017-03-08 00:04:31,768: INFO     Resampling kernels to match input
-2017-03-08 00:04:31,785: INFO     Padding smaller kernels
-2017-03-08 00:04:31,788: INFO     Loading spot diagrams.
-2017-03-08 00:04:31,866: INFO     kernel scale average is 1.264 micron per pixel at 660 nm
-2017-03-08 00:04:31,867: INFO     Resampling kernels to match input
-2017-03-08 00:04:31,884: INFO     Padding smaller kernels
-2017-03-08 00:04:31,901: INFO     Small pixels per lenslet: 16.000000
-2017-03-08 00:04:31,901: INFO     Final detector pixel per lenslet: 16.000000
-2017-03-08 00:04:31,902: INFO     Processing wavelength 0.704430 (0 out of 17)
-../../../code/tools/lenslet.py:36: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
-  paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
-../../../code/tools/lenslet.py:43: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
-  paddedImagePlane[xpad:-xpad,ypad:-ypad] = imagePlane
-../../../code/tools/detutils.py:64: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
-  temp = np.zeros((shape[1], x),dtype=float)
-../../../code/tools/detutils.py:89: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
-  result = np.zeros((shape[0], shape[1]), dtype=float)
-2017-03-08 00:04:33,385: INFO     Processing wavelength 0.711948 (1 out of 17)
-2017-03-08 00:04:34,847: INFO     Processing wavelength 0.719547 (2 out of 17)
-2017-03-08 00:04:36,380: INFO     Processing wavelength 0.727227 (3 out of 17)
-2017-03-08 00:04:37,923: INFO     Processing wavelength 0.734989 (4 out of 17)
-2017-03-08 00:04:39,414: INFO     Processing wavelength 0.742834 (5 out of 17)
-2017-03-08 00:04:40,903: INFO     Processing wavelength 0.750763 (6 out of 17)
-2017-03-08 00:04:42,396: INFO     Processing wavelength 0.758776 (7 out of 17)
-2017-03-08 00:04:43,847: INFO     Processing wavelength 0.766875 (8 out of 17)
-2017-03-08 00:04:45,300: INFO     Processing wavelength 0.775060 (9 out of 17)
-2017-03-08 00:04:46,776: INFO     Processing wavelength 0.783333 (10 out of 17)
-2017-03-08 00:04:48,300: INFO     Processing wavelength 0.791694 (11 out of 17)
-2017-03-08 00:04:49,763: INFO     Processing wavelength 0.800144 (12 out of 17)
-2017-03-08 00:04:51,303: INFO     Processing wavelength 0.808684 (13 out of 17)
-2017-03-08 00:04:52,766: INFO     Processing wavelength 0.817316 (14 out of 17)
-2017-03-08 00:04:54,274: INFO     Processing wavelength 0.826040 (15 out of 17)
-2017-03-08 00:04:55,773: INFO     Processing wavelength 0.834856 (16 out of 17)
-2017-03-08 00:04:57,316: INFO     Number of detector pixels per lenslet: 13.384615
-2017-03-08 00:04:57,317: INFO     Rebinning final detector. Image has dimensions 1024x1024
-2017-03-08 00:04:57,331: INFO     Done.
-2017-03-08 00:04:57,332: INFO     Performance: 25 seconds total
-2017-03-08 00:04:57,386: INFO     Writing data to ../../../code/unitTestsOutputs/flatfield.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - The number of input pixels per lenslet is 6.390626
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Final detector pixel per PSFLet: 40.000000
+crispy - INFO - Processing wavelength 0.704430 (0 out of 17)
+crispy - INFO - Processing wavelength 0.711948 (1 out of 17)
+crispy - INFO - Processing wavelength 0.719547 (2 out of 17)
+crispy - INFO - Processing wavelength 0.727227 (3 out of 17)
+crispy - INFO - Processing wavelength 0.734989 (4 out of 17)
+crispy - INFO - Processing wavelength 0.742834 (5 out of 17)
+crispy - INFO - Processing wavelength 0.750763 (6 out of 17)
+crispy - INFO - Processing wavelength 0.758776 (7 out of 17)
+crispy - INFO - Processing wavelength 0.766875 (8 out of 17)
+crispy - INFO - Processing wavelength 0.775060 (9 out of 17)
+crispy - INFO - Processing wavelength 0.783333 (10 out of 17)
+crispy - INFO - Processing wavelength 0.791694 (11 out of 17)
+crispy - INFO - Processing wavelength 0.800144 (12 out of 17)
+crispy - INFO - Processing wavelength 0.808684 (13 out of 17)
+crispy - INFO - Processing wavelength 0.817316 (14 out of 17)
+crispy - INFO - Processing wavelength 0.826040 (15 out of 17)
+crispy - INFO - Processing wavelength 0.834856 (16 out of 17)
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 25 seconds total
+main - INFO - Writing data to ../../code/unitTestsOutputs/flatfield.fits
 </pre></div></div>
 </div>
 </div>
@@ -642,9 +512,9 @@ Populating the interactive namespace from numpy and matplotlib
 <div class="nboutput container">
 <div class="prompt empty container">
 </div>
-<div class="stderr output_area container">
+<div class="output_area container">
 <div class="highlight"><pre>
-2017-03-08 00:04:57,455: INFO     Read data from HDU 1 of ../../../code/unitTestsOutputs/flatfield.fits
+main - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fits
 </pre></div></div>
 </div>
 <div class="nboutput container">
@@ -653,7 +523,7 @@ Populating the interactive namespace from numpy and matplotlib
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.colorbar.Colorbar at 0x110dac9b0&gt;
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x105f1ab38&gt;
 </pre></div>
 </div>
 </div>
@@ -661,7 +531,7 @@ Populating the interactive namespace from numpy and matplotlib
 <div class="prompt empty container">
 </div>
 <div class="output_area container">
-<img alt="_images/Introduction_23_2.png" src="_images/Introduction_23_2.png" />
+<img alt="_images/Introduction_21_2.png" src="_images/Introduction_21_2.png" />
 </div>
 </div>
 <p>A zoom-in version is visible here:</p>
@@ -682,9 +552,9 @@ Populating the interactive namespace from numpy and matplotlib
 <div class="nboutput container">
 <div class="prompt empty container">
 </div>
-<div class="stderr output_area container">
+<div class="output_area container">
 <div class="highlight"><pre>
-2017-03-08 00:04:58,151: INFO     Read data from HDU 1 of ../../../code/unitTestsOutputs/flatfield.fits
+main - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fits
 </pre></div></div>
 </div>
 <div class="nboutput container">
@@ -693,7 +563,7 @@ Populating the interactive namespace from numpy and matplotlib
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.colorbar.Colorbar at 0x11113c278&gt;
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x11ac2b198&gt;
 </pre></div>
 </div>
 </div>
@@ -701,7 +571,7 @@ Populating the interactive namespace from numpy and matplotlib
 <div class="prompt empty container">
 </div>
 <div class="output_area container">
-<img alt="_images/Introduction_25_2.png" src="_images/Introduction_25_2.png" />
+<img alt="_images/Introduction_23_2.png" src="_images/Introduction_23_2.png" />
 </div>
 </div>
 </div>
@@ -730,9 +600,9 @@ Electron-multiplying noise and Traps.</p>
 <div class="nboutput nblast container">
 <div class="prompt empty container">
 </div>
-<div class="stderr output_area container">
+<div class="output_area container">
 <div class="highlight"><pre>
-2017-03-08 00:04:58,482: INFO     Read data from HDU 1 of ../../../code/unitTestsOutputs/flatfield.fits
+main - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fits
 </pre></div></div>
 </div>
 <div class="nbinput container">
@@ -754,7 +624,7 @@ Electron-multiplying noise and Traps.</p>
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.colorbar.Colorbar at 0x11131ae10&gt;
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x11b0dfdd8&gt;
 </pre></div>
 </div>
 </div>
@@ -762,7 +632,7 @@ Electron-multiplying noise and Traps.</p>
 <div class="prompt empty container">
 </div>
 <div class="output_area container">
-<img alt="_images/Introduction_29_1.png" src="_images/Introduction_29_1.png" />
+<img alt="_images/Introduction_27_1.png" src="_images/Introduction_27_1.png" />
 </div>
 </div>
 <p>Let&#8217;s save the noisified frame to a new name. This is useful to show
@@ -782,9 +652,9 @@ since writing to FITS is a very common task.</p>
 <div class="nboutput nblast container">
 <div class="prompt empty container">
 </div>
-<div class="stderr output_area container">
+<div class="output_area container">
 <div class="highlight"><pre>
-2017-03-08 00:04:59,074: INFO     Writing data to ../../../code/unitTestsOutputs/flatfield_noise.fits
+main - INFO - Writing data to ../../code/unitTestsOutputs/flatfield_noise.fits
 </pre></div></div>
 </div>
 </div>
@@ -807,13 +677,11 @@ calibration is good.</p>
 <div class="nboutput nblast container">
 <div class="prompt empty container">
 </div>
-<div class="stderr output_area container">
+<div class="output_area container">
 <div class="highlight"><pre>
-2017-03-08 00:04:59,102: INFO     Read data from HDU 1 of ../../../code/unitTestsOutputs/flatfield_noise.fits
-2017-03-08 00:04:59,121: INFO     Reduced cube will have 17 wavelength bins
-WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
-2017-03-08 00:05:20,139: WARNING  VerifyWarning: Card is too long, comment will be truncated.
-2017-03-08 00:05:20,157: INFO     Writing data to ../../../code/SimResults/flatfield_noise_red_optext.fits
+main - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield_noise.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+main - INFO - Writing data to ../../code/SimResults/flatfield_noise_red_optext.fits
 </pre></div></div>
 </div>
 <p>Now we can display the cube interactively, or look it up with DS9 (it is
@@ -838,7 +706,7 @@ located in par.exportDir)</p>
 <div class="prompt empty container">
 </div>
 <div class="output_area container">
-<img alt="_images/Introduction_36_0.png" src="_images/Introduction_36_0.png" />
+<img alt="_images/Introduction_34_0.png" src="_images/Introduction_34_0.png" />
 </div>
 </div>
 <p>Let&#8217;s look now at the header of the created file</p>
@@ -851,15 +719,6 @@ located in par.exportDir)</p>
 <span></span><span class="n">cube</span><span class="o">.</span><span class="n">header</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="stderr output_area container">
-<div class="highlight"><pre>
-WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
-2017-03-08 00:05:20,550: WARNING  VerifyWarning: Card is too long, comment will be truncated.
-</pre></div></div>
 </div>
 <div class="nboutput nblast container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
@@ -886,6 +745,7 @@ LSAMPWAV=                600.0 / Lenslet sampling wavelength (nm)
 FWHM    =                    2 / FHWM of PSFLet at detector (pixels)
 FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
 NPIX    =                 1024 / Number of detector pixels
+DISPDIST=                    F / Use PISCES distortion/dispersion?
 COMMENT
 COMMENT ************************************************************
 COMMENT ********************** IFS Simulation ******************
@@ -907,6 +767,7 @@ RN      =                  0.2 / Read noise (electrons/read)
 CIC     =                0.001 / Clock-induced charge
 DARK    =                1E-05 / Dark current
 TRAPS   =                    F / Use traps? T/F
+INTTIME =                  100 / Integration time (s)
 COMMENT
 COMMENT ************************************************************
 COMMENT ********************** Cube Extraction *********************
@@ -915,11 +776,11 @@ COMMENT
 R       =                   50 / Spectral resolution of final cube
 CALDIR  = &#39;wavecalR50_770&#39;     / Directory of wavelength solution
 CUBEMODE= &#39;Optimal Extraction&#39; / Method used to extract data cube
-LAM_MIN =    704.4295434323802 / Minimum (central) wavelength of extracted cube
-LAM_MAX =    834.8563961903914 / Maximum (central) wavelength of extracted cube
+LAM_MIN =    704.4295434323802 / Minimum mid wavelength of extracted cube
+LAM_MAX =    834.8563961903914 / Maximum mid wavelength of extracted cube
 DLOGLAM =  0.01061696327719375 / Log spacing of extracted wavelength bins
 NLAM    =                   17 / Number of extracted wavelengths
-SMOOTHED=                    F / Cube has not been smoothed over bad pixels/lens
+SMOOTHED=                    F / Cube NOT smoothed over bad lenslets
 </pre></div>
 </div>
 </div>
@@ -973,7 +834,7 @@ SMOOTHED=                    F / Cube has not been smoothed over bad pixels/lens
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast container">
+<div class="nbinput container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [17]:
 </pre></div>
@@ -983,76 +844,57 @@ SMOOTHED=                    F / Cube has not been smoothed over bad pixels/lens
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast container">
+<div class="prompt empty container">
+</div>
+<div class="output_area container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-17-87f260106d49&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>log<span class="ansi-blue-fg">.</span>shutdown<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">AttributeError</span>: &#39;CharisLogger&#39; object has no attribute &#39;shutdown&#39;
+</pre></div></div>
+</div>
 </div>
 </div>
 
 
-           </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="IFS.html" class="btn btn-neutral float-right" title="IFS module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral" title="Welcome to crispy’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Introduction to crispy</a><ul>
+<li><a class="reference internal" href="#Create-a-polychromatic-flatfield">Create a polychromatic flatfield</a><ul>
+<li><a class="reference internal" href="#Initialization">Initialization</a></li>
+<li><a class="reference internal" href="#Create-the-flatfield">Create the flatfield</a></li>
+<li><a class="reference internal" href="#Display-results">Display results</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Simulate-detector-readout">Simulate detector readout</a></li>
+<li><a class="reference internal" href="#Reduction-step">Reduction step</a></li>
+</ul>
+</li>
+</ul>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Maxime J. Rizzo.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
 
         </div>
       </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="_sources/Introduction.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
+    Last built 08 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
 </html>
