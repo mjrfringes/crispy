@@ -3,7 +3,8 @@
 import numpy as np
 from astropy.io import fits as pyf
 from tools.rotate import Rotate
-import logging as log
+from tools.initLogger import getLogger
+log = getLogger('crispy')
 import matplotlib.pyplot as plt
 from tools.detutils import frebin
 from scipy import ndimage
@@ -24,6 +25,7 @@ def processImagePlane(par,imagePlane):
     Parameters
     ----------
     par :   Parameters instance
+            Contains all IFS parameters
     imagePlane : Image instance containing 3D input cube
             Input cube to IFS sim, first dimension of data is wavelength
 
@@ -33,13 +35,13 @@ def processImagePlane(par,imagePlane):
             Rotated image plane on same sampling as original.
     '''
     
-    paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
+    paddedImagePlane = np.zeros((int(imagePlane.shape[0]*np.sqrt(2)),int(imagePlane.shape[1]*np.sqrt(2))))
     
     xdim,ydim = paddedImagePlane.shape
     xpad = xdim-imagePlane.shape[0]
     ypad = ydim-imagePlane.shape[1]
-    xpad /=2.
-    ypad /=2.
+    xpad //=2
+    ypad //=2
     paddedImagePlane[xpad:-xpad,ypad:-ypad] = imagePlane
     
     imagePlaneRot = Rotate(paddedImagePlane,par.philens,clip=False)
@@ -47,7 +49,7 @@ def processImagePlane(par,imagePlane):
     ###################################################################### 
     # Flux conservative rebinning
     ###################################################################### 
-    newShape = (imagePlaneRot.shape[0]/par.pixperlenslet,imagePlaneRot.shape[1]/par.pixperlenslet)
+    newShape = (int(imagePlaneRot.shape[0]/par.pixperlenslet),int(imagePlaneRot.shape[1]/par.pixperlenslet))
     imagePlaneRot = frebin(imagePlaneRot,newShape)
     log.debug('Input plane is %dx%d' % imagePlaneRot.shape)
     
@@ -61,8 +63,8 @@ def _psflet(par,size,y,x,lam):
     Computes a PSFLet template to put in the right place
     
     '''
-
-def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
+    
+def Lenslets(par, imageplane, lam,lensletplane, allweights=None,kernels=None,locations=None):
     """
     Function Lenslets
     
@@ -73,18 +75,19 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
     Parameters
     ----------
     par :   Parameters instance
+            Contains all IFS parameters
     image : 2D array
             Image plane incident on lenslets.
     lam : float
             Wavelength (microns)
+    lensletplane : 2D array
+            Densified detector plane; the function updates this variable
     allweights : 3D array
             Cube with weights for each kernel
     kernels : 3D array
             Kernels at locations on the detector
     locations : 2D array
             Locations where the kernels are sampled
-    lensletplane : 2D array
-            Densified detector plane; the function updates this variable
     
     """
 
@@ -123,7 +126,17 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
                 ytmp,xtmp = distort(Y,X,lam)
                 sy = ytmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[0]//2
                 sx = xtmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[1]//2
+            else:
+                order = 3
+                dispersion = par.npixperdlam*par.R*(lam*1000.-par.FWHMlam)/par.FWHMlam
+                ### NOTE THE NEGATIVE SIGN TO PHILENS
+                coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=0, y0=dispersion)
+                sy, sx = transform(i-nx//2, j-nx//2, order, coef)
+                sx+=par.npix//2
+                sy+=par.npix//2
                 
+            
+            if not par.gaussian:
                 # put the kernel in the correct spot with the correct weight
                 kx,ky = kernels[0].shape
                 if sx>kx//2 and sx<lensletplane.shape[0]-kx//2 \
@@ -143,21 +156,7 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
                         yhigh = ylow+kx
                         lensletplane[xlow:xhigh,ylow:yhigh]+=val*weight*kernels[k]
             else:
-                order = 3
-                dispersion = par.npixperdlam*par.R*(lam*1000.-par.FWHMlam)/par.FWHMlam
-#                 if i==nx//2 and j==nx//2: print(dispersion)
-                ### NOTE THE NEGATIVE SIGN TO PHILENS
-                coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=0, y0=dispersion)
-#                 theta = np.arctan2(jcoord,icoord)
-#                 r = np.sqrt(icoord**2 + jcoord**2)
-#                 ilensx = r*np.cos(theta-par.philens)
-#                 ilensy = r*np.sin(theta-par.philens)
-                sy, sx = transform(i-nx//2, j-nx//2, order, coef)
-                sx+=par.npix//2
-                sy+=par.npix//2
-#                 if i==nx//2+1 and j==nx//2+1: print( sx, sy)
                 size = int(3*par.pitch/par.pixsize)
-                #
                 if sx>size//2 and sx<lensletplane.shape[0]-size//2 \
                     and sy>size//2 and sy<lensletplane.shape[1]-size//2:
                     x = np.arange(size)-size//2 
@@ -170,7 +169,6 @@ def Lenslets(par, imageplane, lam, allweights,kernels,locations,lensletplane):
                     sig = par.FWHM/2.35
                     psflet = np.exp(-((_x- rsx)**2+(_y- rsy)**2)/(2*(sig*lam*1000/par.FWHMlam)**2))
                     psflet /= np.sum(psflet)
-#                     if i==nx//2 and j==nx//2: print( np.amax(psflet))
                     xlow = isy-size//2
                     xhigh = xlow+size
                     ylow = isx-size//2

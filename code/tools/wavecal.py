@@ -7,7 +7,8 @@ import numpy as np
 from scipy import signal
 import logging as log
 from astropy.io import fits as pyf
-import logging as log
+from tools.initLogger import getLogger
+log = getLogger('crispy')
 import os
 import time
 import multiprocessing
@@ -475,6 +476,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     Parameters
     ----------
     par :   Parameter instance
+            Contains all IFS parameters
     filelist: list of strings
             List of the fits files that contain the monochromatic calibration files
     lamlist: list of floats
@@ -508,7 +510,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     
     
     Notes
-    -------
+    -----
     This function generates all the files required to process IFS cubes:
     lamsol.dat: contains a list of the wavelengths and the polynomial coefficients that
                 describe the X,Y positions of all lenslets on the detector as a function 

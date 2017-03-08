@@ -2,7 +2,9 @@ from astropy.io import fits
 
 import numpy as np
 from datetime import date
-import logging as log
+import logging
+from tools.initLogger import getLogger
+log = getLogger('main')
 
 ''' most of this code is due to Tim Brandt '''
 

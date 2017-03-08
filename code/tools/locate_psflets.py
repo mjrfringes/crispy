@@ -10,7 +10,8 @@ import glob
 import re
 import os
 
-import logging as log
+from tools.initLogger import getLogger
+log = getLogger('crispy')
 
 class PSFLets:
     """

@@ -8,7 +8,7 @@ from astropy.io import fits
 
 class Params():
 
-    def __init__(self):
+    def __init__(self,codeRoot='.'):
         '''
         Main class containing all the sim parameters
         '''
@@ -16,9 +16,10 @@ class Params():
         self.saveRotatedInput = False
         self.saveLensletPlane = False 
         self.saveDetector = True
-        self.prefix = os.path.abspath('./ReferenceFiles') 
-        self.exportDir = os.path.abspath('./SimResults')
-        self.unitTestsOutputs = os.path.abspath('./unitTestsOutputs')
+        self.codeRoot = codeRoot
+        self.prefix = self.codeRoot+'/ReferenceFiles'
+        self.exportDir = self.codeRoot+'/SimResults'
+        self.unitTestsOutputs = self.codeRoot+'/unitTestsOutputs'
 #         self.wavecalDir = self.prefix+'/VARIAwavecal/'
 #         self.wavecalDir = self.prefix+'/HighSNRWavecal/'
 #         self.wavecalDir = self.prefix+'/wavecal/'
@@ -77,21 +78,6 @@ class Params():
 
         self.makeHeader()
 
-    def output(self):
-        string = ""
-        string += "\nNumber of lenslets: "+str(self.nlens)
-        string += "\nLenslet pitch in meters: "+str(self.pitch)
-        string += "\nInterlacing: "+str(self.interlace)
-        string += "\nRotation angle: "+str(self.philens)
-        string += "\nPinhole? "+str(self.pinhole)
-        string += "\nPinhole diameter: "+str(self.pin_dia)
-        string += "\nNumber of pixels in final detector: "+str(self.npix)
-        string += "\nDetector pixel size in meters: "+str(self.pixsize)
-        string += "\nOversampling: "+str(self.pxperdetpix)
-        string += "\nConvolve with Gaussian as defocus? "+str(self.convolve)
-        string += "\nFWHM of Gaussian convolution "+str(self.FWHM)+' detector pixel'
-        return string+"\n"
-
     def makeHeader(self):
         self.hdr = fits.PrimaryHDU().header
         self.hdr.append(('comment', ''), end=True)
@@ -99,9 +85,19 @@ class Params():
         self.hdr.append(('comment', '*'*22 + ' General parameters ' + '*'*18), end=True)
         self.hdr.append(('comment', '*'*60), end=True)    
         self.hdr.append(('comment', ''), end=True)
-        self.hdr.append(('NLENS',self.nlens,'Number of lenslets across array (account for rotation)'), end=True) 
+        self.hdr.append(('NLENS',self.nlens,'# lenslets across array'), end=True) 
         self.hdr.append(('PITCH',self.pitch,'Lenslet pitch (meters)'), end=True) 
         self.hdr.append(('INTERLAC',self.interlace,'Interlacing'), end=True) 
-        self.hdr.append(('PHILENS',self.philens*180./np.pi,'Rotation angle of the lenslets (degrees)'), end=True) 
+        self.hdr.append(('PHILENS',self.philens*180./np.pi,'Rotation angle of the lenslets (deg)'), end=True) 
         self.hdr.append(('PIXSIZE',self.pixsize,'Pixel size (meters)'), end=True) 
+        self.hdr.append(('LENSAMP',self.lenslet_sampling,'Lenslet sampling (lam/D)'), end=True) 
+        self.hdr.append(('LSAMPWAV',self.lenslet_wav,'Lenslet sampling wavelength (nm)'), end=True) 
+        self.hdr.append(('FWHM',self.FWHM,'FHWM of PSFLet at detector (pixels)'), end=True) 
+        self.hdr.append(('FWHMLAM',self.FWHMlam,'Wavelength at which FWHM is defined (nm)'), end=True) 
+        self.hdr.append(('NPIX',self.npix,'Number of detector pixels'), end=True) 
+        self.hdr.append(('DISPDIST',self.distortPISCES,'Use PISCES distortion/dispersion?'), end=True) 
+        if self.distortPISCES:
+            self.hdr.append(('BW',self.BW,'Bandwidth'), end=True) 
+            self.hdr.append(('PIXPRLAM',self.npixperdlam,'Pixels per resolution element'), end=True) 
+            self.hdr.append(('R',self.R,'Spectral resolution'), end=True) 
         

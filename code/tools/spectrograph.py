@@ -5,7 +5,8 @@ from scipy import interpolate, ndimage, signal
 import glob
 from astropy.io import fits as pyf
 import re
-import logging as log
+from tools.initLogger import getLogger
+log = getLogger('crispy')
 import matplotlib.pyplot as plt
 import codecs
 
@@ -84,6 +85,7 @@ def createAllWeightsArray(par,locations):
     Parameters
     ----------
     par :   Parameter instance
+            Contains all IFS parameters
     locations : 2D ndarray, Nx2
             Array of normalized locations on the detector, .
     
@@ -127,6 +129,7 @@ def selectKernel(par,lam,refWaveList,kernelList):
     Parameters
     ----------
     par :   Parameter instance
+            Contains all IFS parameters
     lam : float
             Wavelength at which we want the get the kernel, in microns
     refWaveList : list of floats
@@ -189,6 +192,7 @@ def loadKernels(par,wavel):
     Parameters
     ----------
     par :   Parameter instance
+            Contains all IFS parameters
     wavel : float
             Wavelength at which the kernels are needed
     

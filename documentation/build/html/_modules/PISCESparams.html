@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>PISCESparams &mdash; crispy 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="crispy 0.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> crispy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../Introduction.html">Introduction to crispy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../IFS.html">IFS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PISCES.html">PISCES Wavelength calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PISCES.html#Reduce-PISCES-data">Reduce PISCES data</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tools.html">tools package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unitTests.html">unitTests module</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">crispy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      
+    <li>PISCESparams</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for PISCESparams</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">sqrt</span><span class="p">,</span><span class="n">arcsin</span>
+
+<div class="viewcode-block" id="Params"><a class="viewcode-back" href="../PISCESparams.html#PISCESparams.Params">[docs]</a><span class="k">class</span> <span class="nc">Params</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Main class containing all the sim parameters</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveRotatedInput</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveLensletPlane</span> <span class="o">=</span> <span class="kc">False</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveDetector</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;./ReferenceFiles&#39;</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">exportDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;./SimResults&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unitTestsOutputs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;./unitTestsOutputs&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;/VARIAwavecal/&#39;</span>
+<span class="c1">#         self.wavecalDir = self.prefix+&#39;/HighSNRWavecal/&#39;</span>
+<span class="c1">#         self.wavecalDir = self.prefix+&#39;/wavecal/polychrome/&#39;</span>
+<span class="c1">#         self.wavecalName = &#39;VARIAcalCube.fits&#39;</span>
+<span class="c1">#         self.wavecalName = &#39;LLTFcalCube.fits&#39;</span>
+<span class="c1">#         self.wavecalName = &#39;simCalCube.fits&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filelist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lamlist</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1">###################################################################### </span>
+        <span class="c1"># Basic resolution/configuration parameters</span>
+        <span class="c1">###################################################################### </span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nlens</span> <span class="o">=</span> <span class="mi">108</span>            <span class="c1"># Number of lenslets across array (account for rotation)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dlam</span> <span class="o">=</span> <span class="mf">0.005</span>           <span class="c1"># Resolution of recovered cube (microns)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="mi">110</span>                <span class="c1"># Determine the resolution of final cube</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span> <span class="o">=</span> <span class="mi">174</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span>         <span class="c1"># Lenslet pitch (meters)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interlace</span> <span class="o">=</span> <span class="mi">2</span>          <span class="c1"># Interlacing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">philens</span> <span class="o">=</span> <span class="n">arcsin</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interlace</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># Rotation angle of the lenslets (radians)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pinhole</span> <span class="o">=</span> <span class="kc">True</span>         <span class="c1"># Use a pinhole grid?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pin_dia</span> <span class="o">=</span> <span class="mi">25</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span>        <span class="c1"># Diameter of pinholes (m)</span>
+
+        <span class="c1">###################################################################### </span>
+        <span class="c1"># Detector stuff</span>
+        <span class="c1">###################################################################### </span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">npix</span> <span class="o">=</span> <span class="mi">1024</span>            <span class="c1"># Number of pixels in final detector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">=</span> <span class="mi">13</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span>        <span class="c1"># Pixel size (meters)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pxperdetpix</span> <span class="o">=</span> <span class="mi">11</span>       <span class="c1"># Oversampling of the final detector pixels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">convolve</span> <span class="o">=</span> <span class="kc">True</span>        <span class="c1"># whether to convolve the existing kernels with</span>
+                                    <span class="c1"># gaussian kernel (simulating defocus)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span> <span class="o">=</span> <span class="mi">2</span>               <span class="c1"># FWHM of gaussian kernel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaussian</span> <span class="o">=</span> <span class="kc">True</span>        <span class="c1"># Use standard Gaussian kernels instead of library</span>
+
+        <span class="c1">###################################################################### </span>
+        <span class="c1"># Spectrograph stuff</span>
+        <span class="c1">###################################################################### </span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">distort</span> <span class="o">=</span> <span class="kc">True</span>         <span class="c1"># apply distortion or not</span>
+
+<div class="viewcode-block" id="Params.output"><a class="viewcode-back" href="../PISCESparams.html#PISCESparams.Params.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Number of lenslets: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlens</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Lenslet pitch in meters: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pitch</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Interlacing: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interlace</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Rotation angle: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">philens</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Pinhole? &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pinhole</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Pinhole diameter: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_dia</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Number of pixels in final detector: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npix</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Detector pixel size in meters: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Oversampling: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Convolve with Gaussian as defocus? &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convolve</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FWHM of Gaussian convolution &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; detector pixel&#39;</span>
+        <span class="k">return</span> <span class="n">string</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div></div>
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Maxime J. Rizzo.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

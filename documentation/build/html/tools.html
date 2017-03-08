@@ -1,0 +1,464 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tools package &mdash; crispy 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="crispy 0.1.0 documentation" href="index.html"/>
+        <link rel="next" title="unitTests module" href="unitTests.html"/>
+        <link rel="prev" title="PISCES Wavelength calibration" href="PISCES.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> crispy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction to crispy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IFS.html">IFS module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PISCES.html">PISCES Wavelength calibration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PISCES.html#Reduce-PISCES-data">Reduce PISCES data</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tools package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-detector-module">tools.detector module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.detutils">tools.detutils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-image-module">tools.image module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.imgtools">tools.imgtools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-initlogger-module">tools.initLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.inputScene">tools.inputScene module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-lenslet-module">tools.lenslet module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-locate-psflets-module">tools.locate_psflets module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.par_utils">tools.par_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.plotting">tools.plotting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-postprocessing-module">tools.postprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-reduction-module">tools.reduction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.rotate">tools.rotate module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-spectrograph-module">tools.spectrograph module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-wavecal-module">tools.wavecal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="unitTests.html">unitTests module</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">crispy</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>tools package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/tools.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="tools-package">
+<h1>tools package<a class="headerlink" href="#tools-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="tools-detector-module">
+<h2>tools.detector module<a class="headerlink" href="#tools-detector-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tools.detutils">
+<span id="tools-detutils-module"></span><h2>tools.detutils module<a class="headerlink" href="#module-tools.detutils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.detutils.frebin">
+<code class="descclassname">tools.detutils.</code><code class="descname">frebin</code><span class="sig-paren">(</span><em>array</em>, <em>shape</em>, <em>total=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detutils.html#frebin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detutils.frebin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that performs flux-conservative
+rebinning of an array. Found at <a class="reference external" href="https://github.com/benjaminpope/pysco/blob/master/frebin.py">https://github.com/benjaminpope/pysco/blob/master/frebin.py</a></p>
+<dl class="docutils">
+<dt>array: ndarray</dt>
+<dd>Numpy array to be rebinned</dd>
+<dt>shape: tuple</dt>
+<dd><p class="first">(x,y) of new array size
+total: Boolean</p>
+<blockquote class="last">
+<div>when True flux is conserved</div></blockquote>
+</dd>
+</dl>
+<blockquote>
+<div>new_array: new rebinned array with dimensions: shape</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.detutils.rebin">
+<code class="descclassname">tools.detutils.</code><code class="descname">rebin</code><span class="sig-paren">(</span><em>a</em>, <em>shape</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detutils.html#rebin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detutils.rebin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resizes a 2d array by averaging or repeating elements, 
+new dimensions must be integral factors of original dimensions</p>
+<dl class="docutils">
+<dt>a</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span><dd>Input array.</dd>
+<dt>new_shape</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">tuple of int</span><dd>Shape of the output array (y, x)</dd>
+</dl>
+<dl class="docutils">
+<dt>rebinned_array</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span><dd>If the new shape is smaller of the input array, the data are averaged, 
+if the new shape is bigger array elements are repeated</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="tools-image-module">
+<h2>tools.image module<a class="headerlink" href="#tools-image-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tools.imgtools">
+<span id="tools-imgtools-module"></span><h2>tools.imgtools module<a class="headerlink" href="#module-tools.imgtools" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.imgtools.bowtie">
+<code class="descclassname">tools.imgtools.</code><code class="descname">bowtie</code><span class="sig-paren">(</span><em>image</em>, <em>xc</em>, <em>yc</em>, <em>openingAngle</em>, <em>clocking</em>, <em>IWApix</em>, <em>OWApix</em>, <em>export='bowtie'</em>, <em>twomasks=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/imgtools.html#bowtie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.imgtools.bowtie" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates one or two binary mask for a shaped pupil bowtie mask</p>
+<dl class="docutils">
+<dt>image: 2D ndarray</dt>
+<dd>Image to which the mask needs to be applied</dd>
+<dt>xc: int</dt>
+<dd>X coordinate of center of bowtie</dd>
+<dt>yc: int</dt>
+<dd>Y coordinate of center of bowtie</dd>
+<dt>openingAngle: float</dt>
+<dd>Angle in degrees representing the opening angle of the bowtie mask</dd>
+<dt>clocking: float</dt>
+<dd>Angle of rotation of the mask in degrees</dd>
+<dt>IWApix: float</dt>
+<dd>Radius in pixels corresponding to the inner working angle of the mask</dd>
+<dt>OWApix: float</dt>
+<dd>Radius in pixels corresponding to the outer working angle of the mask</dd>
+<dt>export: boolean</dt>
+<dd>Whether to export the bowtie or not</dd>
+<dt>twomasks: boolean</dt>
+<dd>If True, returns two masks, one for each side of the bowtie
+If False, returns one single mask</dd>
+</dl>
+<dl class="docutils">
+<dt>mask: 2D ndarrays of int</dt>
+<dd>Bowtie mask with 1 inside the mask, zero everywhere else.</dd>
+<dt>mask2: 2D ndarrays of int</dt>
+<dd>If twomasks is True, mask and mask2 are the two sides of the bowtie.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.imgtools.gen_bad_pix_mask">
+<code class="descclassname">tools.imgtools.</code><code class="descname">gen_bad_pix_mask</code><span class="sig-paren">(</span><em>image</em>, <em>filsize=3</em>, <em>threshold=5.0</em>, <em>return_smoothed_image=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/imgtools.html#gen_bad_pix_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.imgtools.gen_bad_pix_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify and mask bad pixels using median filter</p>
+<dl class="docutils">
+<dt>image: 2D ndarray</dt>
+<dd>Image to clean</dd>
+<dt>filsize: int</dt>
+<dd>Size of median filter in pixels</dd>
+<dt>threshold: float</dt>
+<dd>Threshold in terms of standard deviations</dd>
+</dl>
+<p>return_smoothed_image: boolean</p>
+<dl class="docutils">
+<dt>goodpix: 2D int ndarray</dt>
+<dd>Good pixel mask. 1 where pixel is good</dd>
+</dl>
+<p>image_sm: 2D ndarray, if return_smoothed_image</p>
+</dd></dl>
+
+</div>
+<div class="section" id="tools-initlogger-module">
+<h2>tools.initLogger module<a class="headerlink" href="#tools-initlogger-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tools.inputScene">
+<span id="tools-inputscene-module"></span><h2>tools.inputScene module<a class="headerlink" href="#module-tools.inputScene" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.inputScene.calc_contrast">
+<code class="descclassname">tools.inputScene.</code><code class="descname">calc_contrast</code><span class="sig-paren">(</span><em>wavelist</em>, <em>star_T=&lt;Quantity 6000.0 K&gt;</em>, <em>planet_type='Jupiter'</em>, <em>abundance=1</em>, <em>distance=5</em>, <em>phase=90</em>, <em>mean_contrast=1e-08</em>, <em>folder='/local/data/nicolaus2/mrizzo/haystacks/Cahoy_et_al_2010_Albedo_Spectra/albedo_spectra/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#calc_contrast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.calc_contrast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the contrast curve for a list of wavelengths</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.inputScene.convert_krist_cube">
+<code class="descclassname">tools.inputScene.</code><code class="descname">convert_krist_cube</code><span class="sig-paren">(</span><em>cubeshape</em>, <em>lamlist</em>, <em>star_T</em>, <em>star_Vmag</em>, <em>tel_area</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#convert_krist_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.convert_krist_cube" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the number of photons per second
+entering the WFIRST obscured aperture, given the star Vmag and its temperature</p>
+<blockquote>
+<div>for each slice of the input cube
+This only works with John Krist&#8217;s cubes,</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="tools-lenslet-module">
+<h2>tools.lenslet module<a class="headerlink" href="#tools-lenslet-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="tools-locate-psflets-module">
+<h2>tools.locate_psflets module<a class="headerlink" href="#tools-locate-psflets-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tools.par_utils">
+<span id="tools-par-utils-module"></span><h2>tools.par_utils module<a class="headerlink" href="#module-tools.par_utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tools.par_utils.Consumer">
+<em class="property">class </em><code class="descclassname">tools.par_utils.</code><code class="descname">Consumer</code><span class="sig-paren">(</span><em>task_queue</em>, <em>result_queue</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/par_utils.html#Consumer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.par_utils.Consumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">multiprocessing.context.Process</span></code></p>
+<dl class="method">
+<dt id="tools.par_utils.Consumer.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/par_utils.html#Consumer.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.par_utils.Consumer.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.par_utils.Task">
+<em class="property">class </em><code class="descclassname">tools.par_utils.</code><code class="descname">Task</code><span class="sig-paren">(</span><em>index</em>, <em>func</em>, <em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/par_utils.html#Task"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.par_utils.Task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tools.plotting">
+<span id="tools-plotting-module"></span><h2>tools.plotting module<a class="headerlink" href="#module-tools.plotting" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.plotting.plotKernels">
+<code class="descclassname">tools.plotting.</code><code class="descname">plotKernels</code><span class="sig-paren">(</span><em>par</em>, <em>kernels</em>, <em>locations</em>, <em>plot=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/plotting.html#plotKernels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.plotting.plotKernels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make plots of all the kernels</p>
+</dd></dl>
+
+</div>
+<div class="section" id="tools-postprocessing-module">
+<h2>tools.postprocessing module<a class="headerlink" href="#tools-postprocessing-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="tools-reduction-module">
+<h2>tools.reduction module<a class="headerlink" href="#tools-reduction-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tools.rotate">
+<span id="tools-rotate-module"></span><h2>tools.rotate module<a class="headerlink" href="#module-tools.rotate" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.rotate.Rotate">
+<code class="descclassname">tools.rotate.</code><code class="descname">Rotate</code><span class="sig-paren">(</span><em>image</em>, <em>phi</em>, <em>clip=True</em>, <em>order=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/rotate.html#Rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.rotate.Rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotate the input image by phi about its center.  Do not resize the 
+image, but pad with zeros.  Function originally from Tim Brandt</p>
+<dl class="docutils">
+<dt>image</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">2D square array</span><dd>Image to rotate</dd>
+<dt>phi</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float</span><dd>Rotation angle in radians</dd>
+<dt>clip</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span><dd>Clip array by sqrt(2) to remove fill values?  Default True.</dd>
+<dt>order</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">integer (optional)</span><dd>Order of interpolation when rotating. Default is 1.</dd>
+</dl>
+<dl class="docutils">
+<dt>imageout: 2D array</dt>
+<dd>Rotated image of the same shape as the input image, with zero-padding</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="tools-spectrograph-module">
+<h2>tools.spectrograph module<a class="headerlink" href="#tools-spectrograph-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="tools-wavecal-module">
+<h2>tools.wavecal module<a class="headerlink" href="#tools-wavecal-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tools">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tools" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="unitTests.html" class="btn btn-neutral float-right" title="unitTests module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="PISCES.html" class="btn btn-neutral" title="PISCES Wavelength calibration" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Maxime J. Rizzo.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

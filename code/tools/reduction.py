@@ -1,6 +1,7 @@
 from astropy.io import fits as pyf
 import numpy as np
-import logging as log
+from tools.initLogger import getLogger
+log = getLogger('crispy')
 from scipy import signal
 from scipy.interpolate import interp1d
 # from photutils import RectangularAperture
@@ -66,6 +67,7 @@ def simpleReduction(par,name,ifsimage):
     Parameters
     ----------
     par:    Parameter instance
+            Contains all IFS parameters
     name: string
             Name that will be given to final image, without fits extension
     ifsimage: Image instance of IFS detector map, with optional inverse variance
@@ -127,6 +129,7 @@ def densifiedSimpleReduction(par,name,ifsimage,ratio=10.):
     Parameters
     ----------
     par:    Parameter instance
+            Contains all IFS parameters
     name: string
             Name that will be given to final image, without fits extension
     ifsimage: Image instance of IFS detector map, with optional inverse variance
@@ -266,6 +269,7 @@ def GPImethod2(par,name,ifsimage):
     Parameters
     ----------
     par:    Parameter instance
+            Contains all IFS parameters
     name: string
             Name that will be given to final image, without fits extension
     ifsimage: Image instance of IFS detector map, with optional inverse variance
@@ -396,6 +400,7 @@ def testReduction(par,name,ifsimage):
     Parameters
     ----------
     par:    Parameter instance
+            Contains all IFS parameters
     name: string
             Name that will be given to final image, without fits extension
     ifsimage: Image instance of IFS detector map, with optional inverse variance
@@ -463,6 +468,7 @@ def calculateWaveList(par,lam_list=None):
     Parameters
     ----------
     par:        Parameter instance
+            Contains all IFS parameters
     lam_list:   list of wavelengths
             Usually this is left to None. If so, we use the wavelengths used for wavelength
             calibration. Otherwise, we could decide to focus on a smaller/larger region of
@@ -482,7 +488,7 @@ def calculateWaveList(par,lam_list=None):
     else:
         lamlist = lam_list
     Nspec = int(np.log(max(lamlist)/min(lamlist))*par.npixperdlam*par.R)
-    log.info('Reduced cube will have %d wavelength bins' % Nspec)
+    log.info('Reduced cube will have %d wavelength bins' % (Nspec-1))
     loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
     loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
     lam_endpts = np.exp(loglam_endpts)
@@ -496,6 +502,7 @@ def lstsqExtract(par,name,ifsimage,ivar=False):
     Parameters
     ----------
     par:    Parameter instance
+            Contains all IFS parameters
     name: string
             Name that will be given to final image, without fits extension
     ifsimage: Image instance of IFS detector map, with optional inverse variance
@@ -658,6 +665,7 @@ def intOptimalExtract(par,name,IFSimage):
     Parameters
     ----------
     par :   Parameter instance
+            Contains all IFS parameters
     name: string
             Path & name of the output file
     IFSimage: Image instance 
@@ -690,6 +698,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
     Parameters
     ----------
     par :   Parameter instance
+            Contains all IFS parameters
     im:     Image instance
             IFS image to be processed.
     PSFlet_tool: PSFLet instance
@@ -802,6 +811,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
     Parameters
     ----------
     par :   Parameter instance
+            Contains all IFS parameters
     im:     Image instance
             IFS image to be processed.
     PSFlet_tool: PSFLet instance
@@ -881,18 +891,18 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
                 
 
     par.hdr.append(('cubemode','Optimal Extraction', 'Method used to extract data cube'), end=True)
-    par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum (central) wavelength of extracted cube'), end=True)
-    par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum (central) wavelength of extracted cube'), end=True)
+    par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum mid wavelength of extracted cube'), end=True)
+    par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum mid wavelength of extracted cube'), end=True)
     par.hdr.append(('dloglam',loglam[1]-loglam[0], 'Log spacing of extracted wavelength bins'), end=True)
     par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
     
     if smoothandmask:
-        par.hdr.append(('SMOOTHED',True, 'Cube has been smoothed over bad pixels/lenslets'), end=True)
+        par.hdr.append(('SMOOTHED',True, 'Cube smoothed over bad lenslets'), end=True)
         cube = Image(data=cube,ivar=ivarcube)
         good = np.any(cube.data != 0, axis=0)
         cube = _smoothandmask(cube, good)
     else:
-        par.hdr.append(('SMOOTHED',False, 'Cube has not been smoothed over bad pixels/lenslets'), end=True)
+        par.hdr.append(('SMOOTHED',False, 'Cube NOT smoothed over bad lenslets'), end=True)
         cube = Image(data=cube,ivar=ivarcube)
 
     cube = Image(data=cube.data,ivar=cube.ivar,header=par.hdr,extraheader=im.extraheader)

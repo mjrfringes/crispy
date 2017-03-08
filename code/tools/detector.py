@@ -8,7 +8,8 @@ import numpy as np
 import multiprocessing
 import matplotlib.pyplot as plt
 from tools.detutils import frebin
-import logging as log
+from tools.initLogger import getLogger
+log = getLogger('crispy')
 from tools.image import Image
 
 def rebinDetector(par,finalFrame,clip=False):
@@ -19,6 +20,7 @@ def rebinDetector(par,finalFrame,clip=False):
     Parameters
     ----------
     par :   Parameter instance
+            Contains all IFS parameters
     finalFrame : 2D ndarray
             Dense detector map to be rebinned.
     
@@ -50,7 +52,7 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     Quantum efficiency considerations are already taken care of when
     generating IFSimage images
     '''
-    if append_header:
+    if append_header and not 'RN' in par.hdr:
         par.hdr.append(('comment', ''), end=True)
         par.hdr.append(('comment', '*'*60), end=True)
         par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
@@ -60,6 +62,7 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
         par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
         par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
         par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
+        par.hdr.append(('INTTIME',inttime,'Integration time (s)'), end=True) 
         
         
 #     par.hdr.append(('INTTIME',inttime,'Integration time'), end=True)
@@ -102,7 +105,7 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
         par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
         par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
-        par.hdr.append(('LOSS',par.losses,'Transmission factor for the IFS (J. Krist)'),end=True)
+        par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
         par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
         par.hdr.append(('NREADS',par.Nreads,'Number of frames averaged'),end=True)
         par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time'),end=True)

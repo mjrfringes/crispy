@@ -1,7 +1,8 @@
 
 import numpy as np
 import tools
-import logging as log
+from tools.initLogger import getLogger
+log = getLogger('crispy')
 import matplotlib.pyplot as plt
 from tools.image import Image
 from params import Params
@@ -108,25 +109,33 @@ def testGenPixSol(par):
     psftool.genpixsol(lamlist,allcoef)
     psftool.savepixsol(outdir = par.exportDir)
 
-def testCreateFlatfield(par,lam1=605.,lam2=725.,nlam=26,parallel=False):
-
-    # generate new wavelength array, with resolution R
-#     lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]/1000.
+def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,outname='flatfield.fits'):
+    '''
+    Creates a polychromatic flatfield
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+        Contains all IFS parameters
+    pixsize:   float
+       Pixel scale (lam/D)
+    npix: int
+        Each input frame has a pixel size npix x npix
+    pixval: float
+        Each input frame has a unform value pixval
+    
+    '''
+    
     lamlist,junk = calculateWaveList(par)
-#     loglam_endpts = np.linspace(np.log(lam1), np.log(lam2), nlam)
-#     loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
+    photon_count_rate_per_input_pixel = pixval # Photons per second per cube slice
     
-#     lam_endpts = np.linspace(lam1, lam2, nlam)
-    photon_count_rate_per_input_pixel = 2 # Photons per second per cube slice
-    #lamlist=np.exp(loglam_midpts)
-    
-    inputCube = np.ones((len(lamlist),512,512),dtype=float)*photon_count_rate_per_input_pixel
+    inputCube = np.ones((len(lamlist),npix,npix),dtype=float)*photon_count_rate_per_input_pixel
     par.saveDetector=False
     inCube = fits.HDUList(fits.PrimaryHDU(inputCube))
-    inCube[0].header['LAM_C'] = 660./1000.
-    inCube[0].header['PIXSIZE'] = 0.1
-    detectorFrame = propagateIFS(par,lamlist/1000.,inCube[0],parallel=parallel)
-    Image(data=detectorFrame,header=par.hdr).write(par.unitTestsOutputs+'/flatfield.fits',clobber=True)
+    inCube[0].header['LAM_C'] = np.median(lamlist)/1000.
+    inCube[0].header['PIXSIZE'] = pixsize
+    detectorFrame = propagateIFS(par,lamlist/1000.,inCube[0])
+    Image(data=detectorFrame,header=par.hdr).write(par.unitTestsOutputs+'/'+outname,clobber=True)
     
     
 if __name__ == '__main__':

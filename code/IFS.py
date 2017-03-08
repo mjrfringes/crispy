@@ -12,7 +12,6 @@ import numpy as np
 from params import Params
 from astropy.io import fits as pyf
 import time
-import logging #as log
 import matplotlib.pyplot as plt
 import tools
 from tools.image import Image
@@ -25,9 +24,11 @@ from tools.reduction import simpleReduction,densifiedSimpleReduction,testReducti
 import multiprocessing
 from tools.par_utils import Task, Consumer
 
-log = logging.getLogger('webbpsf')
+from tools.initLogger import getLogger
+log = getLogger('crispy')
 
-def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolatedInputCube,allweights,locations,finalFrame):
+def propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame,
+            refWaveList=None,kernelList=None,allweights=None,locations=None):
     '''
     Propagates a single wavelength through the Integral Field Spectrograph
     
@@ -69,7 +70,8 @@ def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolated
     ###################################################################### 
     # Interpolate kernel at wavelength lam
     ###################################################################### 
-    kernel = selectKernel(par,lam,refWaveList,kernelList)
+    if not par.gaussian:
+        kernel = selectKernel(par,lam,refWaveList,kernelList)
 
     ###################################################################### 
     # Rotate and scale the image so that it is in the same 
@@ -84,9 +86,13 @@ def propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolated
     # Generate high-resolution detector map for wavelength lam
     ###################################################################### 
 #     if ~par.parallel: log.info('Propagate through lenslet array')
-    Lenslets(par, imagePlaneRot, lam, allweights,kernel,locations,finalFrame)
+    if not par.gaussian:
+        Lenslets(par, imagePlaneRot, lam,finalFrame, allweights,kernel,locations)
+    else:
+        Lenslets(par, imagePlaneRot, lam,finalFrame)
     if par.saveLensletPlane: Image(data=finalFrame).write(par.exportDir+'/lensletPlane_%3.1fnm.fits' % (lam*1000.))
     return True
+
 
 def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=False,cpus=6):
     '''
@@ -145,34 +151,44 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=False,cpus
     ###################################################################### 
     t = {'Start':time.time()}
 
-    ###################################################################### 
-    # Load kernels from Zemax
-    ###################################################################### 
-    
-    log.info('Import all kernels and rescale them to same plate scale')
-    kernels890,locations = loadKernels(par,890)
-    kernels770,loc = loadKernels(par,770)
-    kernels660,loc = loadKernels(par,660)
-    refWaveList = [660,770,890]
-    kernelList = np.array([kernels660,kernels770,kernels890])
+    if not par.gaussian:
+        ###################################################################### 
+        # Load kernels from Zemax
+        ###################################################################### 
+        log.info('Import all kernels and rescale them to same plate scale')
+        kernels890,locations = loadKernels(par,890)
+        kernels770,loc = loadKernels(par,770)
+        kernels660,loc = loadKernels(par,660)
+        refWaveList = [660,770,890]
+        kernelList = np.array([kernels660,kernels770,kernels890])
 
-    ###################################################################### 
-    # Creating kernel weight map (bilinear interpolation)
-    ###################################################################### 
-    allweights = createAllWeightsArray(par,locations)
+        ###################################################################### 
+        # Creating kernel weight map (bilinear interpolation)
+        ###################################################################### 
+        allweights = createAllWeightsArray(par,locations)
+    else:
+        log.info('Using PSFlet gaussian approximation')
+        
     
     ###################################################################### 
     # Allocate an array
     ###################################################################### 
     finalFrame=np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
 
-    log.info('Small pixels per lenslet: %f' % (par.pxprlens))    
-    log.info('Final detector pixel per lenslet: %f' % (par.pxprlens/par.pxperdetpix))
+    if not par.gaussian:
+        log.info('Small pixels per lenslet: %f' % (par.pxprlens))    
+        log.info('Final detector pixel per lenslet: %f' % (par.pxprlens/par.pxperdetpix))
+    else:
+        log.info('Final detector pixel per PSFLet: %f' % (int(3*par.pitch/par.pixsize)))
     
     if not parallel:
         for i in range(len(waveList)):
             log.info('Processing wavelength %f (%d out of %d)' % (waveList[i],i,nframes))
-            propagateSingleWavelength(par,i,wavelist,refWaveList,kernelList,interpolatedInputCube,allweights,locations,finalFrame)
+            if not par.gaussian:
+                propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame,
+                                            refWaveList,kernelList,allweights,locations)
+            else:
+                propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame)
                 
     else:
         # This is not yet working because of shared memory issues. Need to fix it...
@@ -253,6 +269,7 @@ def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
     Parameters
     ----------
     par :   Parameter instance
+            Contains all IFS parameters
     IFSimageName : string
             Path of image file
     method : 'simple', 'dense', 'apphot', 'test', 'lstsq', 'optext'
@@ -279,7 +296,7 @@ def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
     par.hdr.append(('comment', '*'*60), end=True)    
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('R',par.R,'Spectral resolution of final cube'), end=True) 
-    par.hdr.append(('CALDIR',par.wavecalDir.split('/')[-2],'Directory in which the wavelength solution is kept'), end=True) 
+    par.hdr.append(('CALDIR',par.wavecalDir.split('/')[-2],'Directory of wavelength solution'), end=True) 
 
     IFSimage = Image(filename = IFSimageName)
     reducedName = IFSimageName.split('/')[-1].split('.')[0]
