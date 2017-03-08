@@ -3,7 +3,7 @@ import astropy.units as u
 import astropy.constants as c
 import astropy.analytic_functions as af
 from astropy.io import fits
-
+from scipy.interpolate import interp1d
 
 
 
@@ -54,4 +54,19 @@ def convert_krist_cube(cubeshape,lamlist,star_T,star_Vmag,tel_area):
     newcube *= len(lamlist)*tel_area
     return newcube
 
-
+def calc_contrast(wavelist,star_T=6000*u.K,planet_type='Jupiter',abundance=1,distance = 5,phase=90,mean_contrast = 1e-8,
+					folder= '/local/data/nicolaus2/mrizzo/haystacks/Cahoy_et_al_2010_Albedo_Spectra/albedo_spectra/'):
+	'''
+	Calculates the contrast curve for a list of wavelengths
+	'''
+	# load corresponding file
+	
+	filename = folder+planet_type+'_'+str(abundance)+'x_'+str(distance)+'AU_'+str(phase)+'deg.dat'
+	spectrum = np.loadtxt(filename)
+	spec_func = interp1d(spectrum[:,0]*1000.,spectrum[:,1])
+	vals = spec_func(wavelist)
+	vals /= np.mean(vals)
+	vals *= mean_contrast
+	return vals	
+	
+		

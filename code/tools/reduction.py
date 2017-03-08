@@ -683,7 +683,7 @@ def intOptimalExtract(par,name,IFSimage):
     return datacube
 
 def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None, 
-                   smoothandmask=False,mode = 'sum'):
+                   smoothandmask=False,mode = 'gaussvar'):
     """
     Optimal extraction routine
     
@@ -795,7 +795,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
 
 
 
-def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=True):
+def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False):
     """
     Original optimal extraction routine in Numpy from T. Brand
     
@@ -842,7 +842,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=True)
             good = True
             for lam in lamlist:
                 _x,_y = PSFlet_tool.return_locations(lam, allcoef, j-par.nlens/2, i-par.nlens/2)
-                good *= (_x > 2)*(_x < xdim-2)*(_y > 3)*(_y < ydim-3)
+                good *= (_x > delt_y)*(_x < xdim-delt_y)*(_y > delt_y)*(_y < ydim-delt_y)
                  
             if good:
                 _x = xindx[i, j, :PSFlet_tool.nlam[i, j]]
@@ -859,7 +859,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=True)
                     #var = _var[yarr[:len(_lam)]] - x[_y[0]:_y[-1] + 1, i1:i1 + delt_x]
                     lams,tmp = np.meshgrid(_lam,np.arange(delt_y))
                     sig = par.FWHM/2.35*lams/par.FWHMlam
-                    weight = np.exp(-dy**2/2./sig**2)
+                    weight = np.exp(-dy**2/2./sig**2)/sig/np.sqrt(2.*np.pi)
                     data = im.data[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
                     if im.ivar is not None:
                         ivar = im.ivar[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
@@ -893,6 +893,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=True)
         cube = _smoothandmask(cube, good)
     else:
         par.hdr.append(('SMOOTHED',False, 'Cube has not been smoothed over bad pixels/lenslets'), end=True)
+        cube = Image(data=cube,ivar=ivarcube)
 
     cube = Image(data=cube.data,ivar=cube.ivar,header=par.hdr,extraheader=im.extraheader)
 

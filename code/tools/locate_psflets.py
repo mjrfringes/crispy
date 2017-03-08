@@ -640,7 +640,7 @@ def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
         coef_opt = res.x
 
         coef_opt[0] += subshape
-        coef_opt[(polyorder + 1)*(polyorder + 2)/2] += subshape
+        coef_opt[(polyorder + 1)*(polyorder + 2)//2] += subshape
 
     #############################################################
     # If we have coefficients from last time, we assume that we
@@ -657,7 +657,7 @@ def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
             for iy in np.arange(-3, 3.1, 0.2):
                 coef = coefsave[:]
                 coef[0] += ix
-                coef[(polyorder + 1)*(polyorder + 2)/2] += iy
+                coef[(polyorder + 1)*(polyorder + 2)//2] += iy
 
                 newval = corrval(coef, x, y, filtered, polyorder, trimfrac)
                 if newval < bestval:

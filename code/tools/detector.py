@@ -75,18 +75,19 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     
     return np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)+np.random.poisson(par.RN,IFSimage.data.shape)
 
-def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,contrast=None):
+def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None):
     '''	
     Process a list of files and creates individual detector readouts
     If we want only one file, we can just make a list of 1
     '''
     det_outlist = []
+	
     for reffile in filelist:
         log.info('Apply detector readout on '+reffile.split('/')[-1])
         img = Image(filename=reffile)
         if offaxis is not None:
-            offaxis_psf = Image(filename='OS5/offaxis.fits')
-            img.data += contrast*offaxis_psf.data
+            off = Image(offaxis)
+            img.data+=off.data
         inttime = par.timeframe/par.Nreads
         img.data*=par.QE*par.losses
         #refreshes parameter header
@@ -109,12 +110,12 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         frame = np.zeros(img.data.shape)
         varframe = np.zeros(img.data.shape)
         # averaging reads
-        for i in range(Nreads):
+        for i in range(par.Nreads):
             newread = readDetector(par,img,inttime=inttime)
             frame += newread
             varframe += newread**2
-        frame /= Nreads
-        varframe /= Nreads
+        frame /= par.Nreads
+        varframe /= par.Nreads
         varframe -= frame**2
         outimg = Image(data=frame,ivar=1./varframe,header=par.hdr)
         # append '_suffix' to the file name
