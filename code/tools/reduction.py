@@ -854,7 +854,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
 
                 iy = np.nanmean(_y)
                 if ~np.isnan(iy):
-                    i1 = int(iy - delt_y/2.)
+                    i1 = int(iy - delt_y/2.)+1
                     dy = _y[xarr[:,:len(_lam)]] - y[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
                     #var = _var[yarr[:len(_lam)]] - x[_y[0]:_y[-1] + 1, i1:i1 + delt_x]
                     lams,tmp = np.meshgrid(_lam,np.arange(delt_y))
