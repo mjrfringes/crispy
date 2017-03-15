@@ -605,7 +605,7 @@ def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
     #gridfrac = 10  
     ydim, xdim = inImage.data.shape
     #x = np.arange(-(ydim//gridfrac), ydim//gridfrac + 1)
-    x = np.arange(-nlens/2,nlens/2+1)
+    x = np.arange(-nlens//2,nlens//2+1)
     x, y = np.meshgrid(x, x)
     
     #############################################################

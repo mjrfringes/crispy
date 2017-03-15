@@ -146,7 +146,11 @@ html_theme = 'bootstrap-astropy' #sphinx_rtd_theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'logotext1': 'CRIS',   # white, semi-bold
+    'logotext2': 'PY',  # orange, light
+    'logotext3': ' - IFS Simulator'        # white, light
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []

@@ -1,0 +1,121 @@
+\indexentry{tools.detector (module)|hyperpage}{37}
+\indexentry{averageDetectorReadout() (in module tools.detector)|hyperpage}{37}
+\indexentry{readDetector() (in module tools.detector)|hyperpage}{37}
+\indexentry{rebinDetector() (in module tools.detector)|hyperpage}{37}
+\indexentry{tools.detutils (module)|hyperpage}{37}
+\indexentry{frebin() (in module tools.detutils)|hyperpage}{37}
+\indexentry{rebin() (in module tools.detutils)|hyperpage}{38}
+\indexentry{tools.image (module)|hyperpage}{38}
+\indexentry{Image (class in tools.image)|hyperpage}{38}
+\indexentry{load() (tools.image.Image method)|hyperpage}{38}
+\indexentry{write() (tools.image.Image method)|hyperpage}{38}
+\indexentry{log (in module tools.image)|hyperpage}{38}
+\indexentry{tools.imgtools (module)|hyperpage}{38}
+\indexentry{bowtie() (in module tools.imgtools)|hyperpage}{38}
+\indexentry{gen\_bad\_pix\_mask() (in module tools.imgtools)|hyperpage}{39}
+\indexentry{tools.initLogger (module)|hyperpage}{39}
+\indexentry{CharisLogger (class in tools.initLogger)|hyperpage}{39}
+\indexentry{MAINCRITICAL (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{MAINDEBUG (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{MAINERROR (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{MAININFO (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{MAINWARNING (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{PRIMCRITICAL (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{PRIMDEBUG (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{PRIMERROR (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{PRIMINFO (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{PRIMWARNING (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{SUMMARY (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{TOOLCRITICAL (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{TOOLDEBUG (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{TOOLERROR (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{TOOLINFO (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{TOOLWARNING (tools.initLogger.CharisLogger attribute)|hyperpage}{40}
+\indexentry{maincritical() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{maindebug() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{mainerror() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{maininfo() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{mainwarning() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{primcritical() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{primdebug() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{primerror() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{priminfo() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{primwarning() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{setStreamLevel() (tools.initLogger.CharisLogger method)|hyperpage}{40}
+\indexentry{summary() (tools.initLogger.CharisLogger method)|hyperpage}{41}
+\indexentry{toolcritical() (tools.initLogger.CharisLogger method)|hyperpage}{41}
+\indexentry{tooldebug() (tools.initLogger.CharisLogger method)|hyperpage}{41}
+\indexentry{toolerror() (tools.initLogger.CharisLogger method)|hyperpage}{41}
+\indexentry{toolinfo() (tools.initLogger.CharisLogger method)|hyperpage}{41}
+\indexentry{toolwarning() (tools.initLogger.CharisLogger method)|hyperpage}{41}
+\indexentry{addFileHandler() (in module tools.initLogger)|hyperpage}{41}
+\indexentry{addFitsStyleHandler() (in module tools.initLogger)|hyperpage}{41}
+\indexentry{addStreamHandler() (in module tools.initLogger)|hyperpage}{41}
+\indexentry{getLogger() (in module tools.initLogger)|hyperpage}{41}
+\indexentry{initLogger() (in module tools.initLogger)|hyperpage}{42}
+\indexentry{logFileProcessInfo() (in module tools.initLogger)|hyperpage}{42}
+\indexentry{logSystemInfo() (in module tools.initLogger)|hyperpage}{42}
+\indexentry{setUpLogger() (in module tools.initLogger)|hyperpage}{42}
+\indexentry{tools.inputScene (module)|hyperpage}{43}
+\indexentry{calc\_contrast() (in module tools.inputScene)|hyperpage}{43}
+\indexentry{convert\_krist\_cube() (in module tools.inputScene)|hyperpage}{43}
+\indexentry{tools.lenslet (module)|hyperpage}{43}
+\indexentry{Lenslets() (in module tools.lenslet)|hyperpage}{43}
+\indexentry{processImagePlane() (in module tools.lenslet)|hyperpage}{43}
+\indexentry{tools.locate\_psflets (module)|hyperpage}{44}
+\indexentry{PSFLets (class in tools.locate\_psflets)|hyperpage}{44}
+\indexentry{geninterparray() (tools.locate\_psflets.PSFLets method)|hyperpage}{44}
+\indexentry{genpixsol() (tools.locate\_psflets.PSFLets method)|hyperpage}{44}
+\indexentry{loadpixsol() (tools.locate\_psflets.PSFLets method)|hyperpage}{45}
+\indexentry{monochrome\_coef() (tools.locate\_psflets.PSFLets method)|hyperpage}{45}
+\indexentry{return\_locations() (tools.locate\_psflets.PSFLets method)|hyperpage}{45}
+\indexentry{return\_locations\_short() (tools.locate\_psflets.PSFLets method)|hyperpage}{45}
+\indexentry{return\_res() (tools.locate\_psflets.PSFLets method)|hyperpage}{46}
+\indexentry{savepixsol() (tools.locate\_psflets.PSFLets method)|hyperpage}{46}
+\indexentry{corrval() (in module tools.locate\_psflets)|hyperpage}{46}
+\indexentry{initcoef() (in module tools.locate\_psflets)|hyperpage}{47}
+\indexentry{locatePSFlets() (in module tools.locate\_psflets)|hyperpage}{47}
+\indexentry{transform() (in module tools.locate\_psflets)|hyperpage}{48}
+\indexentry{tools.par\_utils (module)|hyperpage}{49}
+\indexentry{Consumer (class in tools.par\_utils)|hyperpage}{49}
+\indexentry{run() (tools.par\_utils.Consumer method)|hyperpage}{49}
+\indexentry{Task (class in tools.par\_utils)|hyperpage}{49}
+\indexentry{tools.plotting (module)|hyperpage}{49}
+\indexentry{plotKernels() (in module tools.plotting)|hyperpage}{49}
+\indexentry{tools.postprocessing (module)|hyperpage}{49}
+\indexentry{process\_SPC\_IFS() (in module tools.postprocessing)|hyperpage}{49}
+\indexentry{tools.reduction (module)|hyperpage}{49}
+\indexentry{GPImethod2() (in module tools.reduction)|hyperpage}{49}
+\indexentry{calculateWaveList() (in module tools.reduction)|hyperpage}{50}
+\indexentry{densifiedSimpleReduction() (in module tools.reduction)|hyperpage}{50}
+\indexentry{fit\_cutout() (in module tools.reduction)|hyperpage}{50}
+\indexentry{fitspec\_intpix() (in module tools.reduction)|hyperpage}{50}
+\indexentry{fitspec\_intpix\_np() (in module tools.reduction)|hyperpage}{51}
+\indexentry{fitspec\_intpix\_np\_old() (in module tools.reduction)|hyperpage}{51}
+\indexentry{get\_cutout() (in module tools.reduction)|hyperpage}{51}
+\indexentry{intOptimalExtract() (in module tools.reduction)|hyperpage}{52}
+\indexentry{lstsqExtract() (in module tools.reduction)|hyperpage}{52}
+\indexentry{simpleReduction() (in module tools.reduction)|hyperpage}{53}
+\indexentry{testReduction() (in module tools.reduction)|hyperpage}{53}
+\indexentry{tools.rotate (module)|hyperpage}{53}
+\indexentry{Rotate() (in module tools.rotate)|hyperpage}{53}
+\indexentry{tools.spectrograph (module)|hyperpage}{54}
+\indexentry{createAllWeightsArray() (in module tools.spectrograph)|hyperpage}{54}
+\indexentry{distort() (in module tools.spectrograph)|hyperpage}{54}
+\indexentry{loadKernels() (in module tools.spectrograph)|hyperpage}{54}
+\indexentry{selectKernel() (in module tools.spectrograph)|hyperpage}{54}
+\indexentry{tools.wavecal (module)|hyperpage}{55}
+\indexentry{buildcalibrations() (in module tools.wavecal)|hyperpage}{55}
+\indexentry{computeWavecal() (in module tools.wavecal)|hyperpage}{56}
+\indexentry{createPolychrome() (in module tools.wavecal)|hyperpage}{56}
+\indexentry{createWavecalFiles() (in module tools.wavecal)|hyperpage}{57}
+\indexentry{do\_inspection() (in module tools.wavecal)|hyperpage}{57}
+\indexentry{gethires() (in module tools.wavecal)|hyperpage}{57}
+\indexentry{make\_polychrome() (in module tools.wavecal)|hyperpage}{57}
+\indexentry{tools (module)|hyperpage}{57}
+\indexentry{unitTests (module)|hyperpage}{59}
+\indexentry{testCreateFlatfield() (in module unitTests)|hyperpage}{59}
+\indexentry{testCutout() (in module unitTests)|hyperpage}{59}
+\indexentry{testFitCutout() (in module unitTests)|hyperpage}{59}
+\indexentry{testGenPixSol() (in module unitTests)|hyperpage}{59}
+\indexentry{testLoadKernels() (in module unitTests)|hyperpage}{59}

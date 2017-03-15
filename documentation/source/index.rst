@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to crispy's documentation!
-==================================
+The Coronagraph and Rapid Imaging Spectrograph in Python
+========================================================
 
 This software is designed to simulate lenslet array-based Integral Field Spectrographs and their reduction process. This was developed within the context of NASA's WFIRST Coronagraph mission.
 

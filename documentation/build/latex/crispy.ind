@@ -1,0 +1,169 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter A
+  \item addFileHandler() (in module tools.initLogger), \hyperpage{41}
+  \item addFitsStyleHandler() (in module tools.initLogger), \hyperpage{41}
+  \item addStreamHandler() (in module tools.initLogger), \hyperpage{41}
+  \item averageDetectorReadout() (in module tools.detector), \hyperpage{37}
+
+  \indexspace
+  \bigletter B
+  \item bowtie() (in module tools.imgtools), \hyperpage{38}
+  \item buildcalibrations() (in module tools.wavecal), \hyperpage{55}
+
+  \indexspace
+  \bigletter C
+  \item calc\_contrast() (in module tools.inputScene), \hyperpage{43}
+  \item calculateWaveList() (in module tools.reduction), \hyperpage{50}
+  \item CharisLogger (class in tools.initLogger), \hyperpage{39}
+  \item computeWavecal() (in module tools.wavecal), \hyperpage{56}
+  \item Consumer (class in tools.par\_utils), \hyperpage{49}
+  \item convert\_krist\_cube() (in module tools.inputScene), \hyperpage{43}
+  \item corrval() (in module tools.locate\_psflets), \hyperpage{46}
+  \item createAllWeightsArray() (in module tools.spectrograph), \hyperpage{54}
+  \item createPolychrome() (in module tools.wavecal), \hyperpage{56}
+  \item createWavecalFiles() (in module tools.wavecal), \hyperpage{57}
+
+  \indexspace
+  \bigletter D
+  \item densifiedSimpleReduction() (in module tools.reduction), \hyperpage{50}
+  \item distort() (in module tools.spectrograph), \hyperpage{54}
+  \item do\_inspection() (in module tools.wavecal), \hyperpage{57}
+
+  \indexspace
+  \bigletter F
+  \item fit\_cutout() (in module tools.reduction), \hyperpage{50}
+  \item fitspec\_intpix() (in module tools.reduction), \hyperpage{50}
+  \item fitspec\_intpix\_np() (in module tools.reduction), \hyperpage{51}
+  \item fitspec\_intpix\_np\_old() (in module tools.reduction), \hyperpage{51}
+  \item frebin() (in module tools.detutils), \hyperpage{37}
+
+  \indexspace
+  \bigletter G
+  \item gen\_bad\_pix\_mask() (in module tools.imgtools), \hyperpage{39}
+  \item geninterparray() (tools.locate\_psflets.PSFLets method), \hyperpage{44}
+  \item genpixsol() (tools.locate\_psflets.PSFLets method), \hyperpage{44}
+  \item get\_cutout() (in module tools.reduction), \hyperpage{51}
+  \item gethires() (in module tools.wavecal), \hyperpage{57}
+  \item getLogger() (in module tools.initLogger), \hyperpage{41}
+  \item GPImethod2() (in module tools.reduction), \hyperpage{49}
+
+  \indexspace
+  \bigletter I
+  \item Image (class in tools.image), \hyperpage{38}
+  \item initcoef() (in module tools.locate\_psflets), \hyperpage{47}
+  \item initLogger() (in module tools.initLogger), \hyperpage{42}
+  \item intOptimalExtract() (in module tools.reduction), \hyperpage{52}
+
+  \indexspace
+  \bigletter L
+  \item Lenslets() (in module tools.lenslet), \hyperpage{43}
+  \item load() (tools.image.Image method), \hyperpage{38}
+  \item loadKernels() (in module tools.spectrograph), \hyperpage{54}
+  \item loadpixsol() (tools.locate\_psflets.PSFLets method), \hyperpage{45}
+  \item locatePSFlets() (in module tools.locate\_psflets), \hyperpage{47}
+  \item log (in module tools.image), \hyperpage{38}
+  \item logFileProcessInfo() (in module tools.initLogger), \hyperpage{42}
+  \item logSystemInfo() (in module tools.initLogger), \hyperpage{42}
+  \item lstsqExtract() (in module tools.reduction), \hyperpage{52}
+
+  \indexspace
+  \bigletter M
+  \item MAINCRITICAL (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item maincritical() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item MAINDEBUG (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item maindebug() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item MAINERROR (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item mainerror() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item MAININFO (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item maininfo() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item MAINWARNING (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item mainwarning() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item make\_polychrome() (in module tools.wavecal), \hyperpage{57}
+  \item monochrome\_coef() (tools.locate\_psflets.PSFLets method), \hyperpage{45}
+
+  \indexspace
+  \bigletter P
+  \item plotKernels() (in module tools.plotting), \hyperpage{49}
+  \item PRIMCRITICAL (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item primcritical() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item PRIMDEBUG (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item primdebug() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item PRIMERROR (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item primerror() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item PRIMINFO (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item priminfo() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item PRIMWARNING (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item primwarning() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item process\_SPC\_IFS() (in module tools.postprocessing), \hyperpage{49}
+  \item processImagePlane() (in module tools.lenslet), \hyperpage{43}
+  \item PSFLets (class in tools.locate\_psflets), \hyperpage{44}
+
+  \indexspace
+  \bigletter R
+  \item readDetector() (in module tools.detector), \hyperpage{37}
+  \item rebin() (in module tools.detutils), \hyperpage{38}
+  \item rebinDetector() (in module tools.detector), \hyperpage{37}
+  \item return\_locations() (tools.locate\_psflets.PSFLets method), \hyperpage{45}
+  \item return\_locations\_short() (tools.locate\_psflets.PSFLets method), \hyperpage{45}
+  \item return\_res() (tools.locate\_psflets.PSFLets method), \hyperpage{46}
+  \item Rotate() (in module tools.rotate), \hyperpage{53}
+  \item run() (tools.par\_utils.Consumer method), \hyperpage{49}
+
+  \indexspace
+  \bigletter S
+  \item savepixsol() (tools.locate\_psflets.PSFLets method), \hyperpage{46}
+  \item selectKernel() (in module tools.spectrograph), \hyperpage{54}
+  \item setStreamLevel() (tools.initLogger.CharisLogger method), \hyperpage{40}
+  \item setUpLogger() (in module tools.initLogger), \hyperpage{42}
+  \item simpleReduction() (in module tools.reduction), \hyperpage{53}
+  \item SUMMARY (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item summary() (tools.initLogger.CharisLogger method), \hyperpage{41}
+
+  \indexspace
+  \bigletter T
+  \item Task (class in tools.par\_utils), \hyperpage{49}
+  \item testCreateFlatfield() (in module unitTests), \hyperpage{59}
+  \item testCutout() (in module unitTests), \hyperpage{59}
+  \item testFitCutout() (in module unitTests), \hyperpage{59}
+  \item testGenPixSol() (in module unitTests), \hyperpage{59}
+  \item testLoadKernels() (in module unitTests), \hyperpage{59}
+  \item testReduction() (in module tools.reduction), \hyperpage{53}
+  \item TOOLCRITICAL (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item toolcritical() (tools.initLogger.CharisLogger method), \hyperpage{41}
+  \item TOOLDEBUG (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item tooldebug() (tools.initLogger.CharisLogger method), \hyperpage{41}
+  \item TOOLERROR (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item toolerror() (tools.initLogger.CharisLogger method), \hyperpage{41}
+  \item TOOLINFO (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item toolinfo() (tools.initLogger.CharisLogger method), \hyperpage{41}
+  \item tools (module), \hyperpage{57}
+  \item tools.detector (module), \hyperpage{37}
+  \item tools.detutils (module), \hyperpage{37}
+  \item tools.image (module), \hyperpage{38}
+  \item tools.imgtools (module), \hyperpage{38}
+  \item tools.initLogger (module), \hyperpage{39}
+  \item tools.inputScene (module), \hyperpage{43}
+  \item tools.lenslet (module), \hyperpage{43}
+  \item tools.locate\_psflets (module), \hyperpage{44}
+  \item tools.par\_utils (module), \hyperpage{49}
+  \item tools.plotting (module), \hyperpage{49}
+  \item tools.postprocessing (module), \hyperpage{49}
+  \item tools.reduction (module), \hyperpage{49}
+  \item tools.rotate (module), \hyperpage{53}
+  \item tools.spectrograph (module), \hyperpage{54}
+  \item tools.wavecal (module), \hyperpage{55}
+  \item TOOLWARNING (tools.initLogger.CharisLogger attribute), \hyperpage{40}
+  \item toolwarning() (tools.initLogger.CharisLogger method), \hyperpage{41}
+  \item transform() (in module tools.locate\_psflets), \hyperpage{48}
+
+  \indexspace
+  \bigletter U
+  \item unitTests (module), \hyperpage{59}
+
+  \indexspace
+  \bigletter W
+  \item write() (tools.image.Image method), \hyperpage{38}
+
+\end{theindex}
