@@ -6,7 +6,11 @@ import matplotlib as mpl
 import numpy as np
 from scipy import signal
 import logging as log
-from astropy.io import fits as pyf
+try:
+    from astropy.io import fits as pyf
+except:
+    import pyfits as fits as pyf
+
 from tools.initLogger import getLogger
 log = getLogger('crispy')
 import os

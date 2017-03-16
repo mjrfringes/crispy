@@ -1,4 +1,8 @@
-from astropy.io import fits as pyf
+try:
+    from astropy.io import fits as pyf
+except:
+    import pyfits as fits as pyf
+
 import numpy as np
 from tools.initLogger import getLogger
 log = getLogger('crispy')

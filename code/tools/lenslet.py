@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 import numpy as np
-from astropy.io import fits as pyf
+try:
+    from astropy.io import fits as pyf
+except:
+    import pyfits as fits as pyf
 from tools.rotate import Rotate
 from tools.initLogger import getLogger
 log = getLogger('crispy')

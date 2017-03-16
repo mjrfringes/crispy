@@ -10,7 +10,10 @@ Originally inspired by T. Brandt's code for CHARIS
 
 import numpy as np
 from params import Params
-from astropy.io import fits as pyf
+try:
+    from astropy.io import fits as pyf
+except:
+    import pyfits as fits as pyf
 import time
 import matplotlib.pyplot as plt
 import tools

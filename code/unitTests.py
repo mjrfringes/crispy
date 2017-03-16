@@ -6,7 +6,10 @@ log = getLogger('crispy')
 import matplotlib.pyplot as plt
 from tools.image import Image
 from params import Params
-from astropy.io import fits
+try:
+    from astropy.io import fits
+except:
+    import pyfits as fits
 from tools.locate_psflets import PSFLets
 from tools.reduction import get_cutout,fit_cutout,calculateWaveList
 from IFS import propagateIFS

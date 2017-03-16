@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 import numpy as np
-from astropy.io import fits
+try:
+    from astropy.io import fits
+except:
+    import pyfits as fits
 import copy
 from scipy import signal, ndimage, optimize, interpolate
 import tools

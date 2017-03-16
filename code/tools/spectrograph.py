@@ -3,7 +3,11 @@
 import numpy as np
 from scipy import interpolate, ndimage, signal
 import glob
-from astropy.io import fits as pyf
+try:
+    from astropy.io import fits as pyf
+except:
+    import pyfits as fits as pyf
+
 import re
 from tools.initLogger import getLogger
 log = getLogger('crispy')
