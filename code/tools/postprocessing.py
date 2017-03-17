@@ -4,7 +4,7 @@ import astropy.constants as c
 from tools.inputScene import convert_krist_cube,calc_contrast
 import glob
 from IFS import propagateIFS,reduceIFSMap
-import logging
+from tools.initLogger import getLogger
 from tools.image import Image
 try:
     from astropy.io import fits
@@ -14,7 +14,7 @@ from time import time
 import os
 from tools.detector import averageDetectorReadout
 
-log = logging.getLogger('crispy')
+log = getLogger('crispy')
 
 
 def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
