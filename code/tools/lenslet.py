@@ -59,14 +59,7 @@ def processImagePlane(par,imagePlane):
     return imagePlaneRot
 
 
-def _psflet(par,size,y,x,lam):
-    '''
-    Function psflet
-    
-    Computes a PSFLet template to put in the right place
-    
-    '''
-    
+
 def Lenslets(par, imageplane, lam,lensletplane, allweights=None,kernels=None,locations=None):
     """
     Function Lenslets

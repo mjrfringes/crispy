@@ -133,7 +133,7 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=False,cpus
     # Calculate sampling ratio to resample rotated image and match the lenslet sampling
     ###################################################################### 
 
-    par.pixperlenslet = (par.lenslet_sampling/par.lenslet_wav)/(input_sampling/input_wav)
+    par.pixperlenslet = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)
     log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)
     par.hdr.append(('SCALE',par.pixperlenslet,'Factor by which the input slice is rescaled'), end=True) 
 
