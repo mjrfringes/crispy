@@ -21,7 +21,6 @@ from tools.image import Image
 from tools.lenslet import Lenslets,processImagePlane
 from tools.spectrograph import createAllWeightsArray,selectKernel,loadKernels
 from tools.detector import rebinDetector
-from tools.initLogger import initLogger
 from tools.plotting import plotKernels
 from tools.reduction import simpleReduction,densifiedSimpleReduction,testReduction,lstsqExtract,intOptimalExtract,GPImethod2
 import multiprocessing
