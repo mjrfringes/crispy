@@ -1,9 +1,9 @@
 import numpy as np
 from scipy.signal import medfilt
 try:
-    from astropy.io import fits as pyf
+    from astropy.io import fits
 except:
-    import pyfits as fits as pyf
+    import pyfits as fits
 
 
 def gen_bad_pix_mask(image, filsize=3, threshold=5.0, return_smoothed_image=False):

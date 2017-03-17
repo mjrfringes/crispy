@@ -13,7 +13,7 @@ from params import Params
 try:
     from astropy.io import fits as pyf
 except:
-    import pyfits as fits as pyf
+    import pyfits as pyf
 import time
 import matplotlib.pyplot as plt
 import tools

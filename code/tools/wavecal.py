@@ -9,7 +9,7 @@ import logging as log
 try:
     from astropy.io import fits as pyf
 except:
-    import pyfits as fits as pyf
+    import pyfits as pyf
 
 from tools.initLogger import getLogger
 log = getLogger('crispy')

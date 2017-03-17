@@ -6,7 +6,7 @@ import glob
 try:
     from astropy.io import fits as pyf
 except:
-    import pyfits as fits as pyf
+    import pyfits as pyf
 
 import re
 from tools.initLogger import getLogger
