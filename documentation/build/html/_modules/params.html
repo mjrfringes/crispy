@@ -78,7 +78,10 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">sqrt</span><span class="p">,</span><span class="n">arcsin</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pyfits</span> <span class="k">as</span> <span class="nn">fits</span>
 
 
 <div class="viewcode-block" id="Params"><a class="viewcode-back" href="../params.html#params.Params">[docs]</a><span class="k">class</span> <span class="nc">Params</span><span class="p">():</span>
@@ -195,7 +198,7 @@
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
-    Last built 15 Mar 2017. <br/>
+    Last built 17 Mar 2017. <br/>
   </p>
 </footer>
   </body>
