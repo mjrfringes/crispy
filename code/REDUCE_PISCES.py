@@ -23,7 +23,7 @@ initLogger(par.exportDir+'/IFS.log')
 
 from IFS import reduceIFSMap
 fname=''    #INSERT YOUR PISCES FILENAME HERE
-cube = reduceIFSMap(par,fname,method='intopt')
+cube = reduceIFSMap(par,fname)
 
 # the wavelength of each slice is retrieved by this:
 from tools.reduction import calculateWaveList
