@@ -1,18 +1,6 @@
-import tools
-import glob
 from PISCESparams import Params
-import numpy as np
-import logging as log
-from tools.initLogger import initLogger
-
 
 par = Params()
-
-# This is the logger system to print to file and to print to console
-initLogger(par.exportDir+'/IFS.log')
-
-
-
 
 # the following is to do the wavelength calibration. You don't need this now.
 
@@ -26,6 +14,7 @@ fname=''    #INSERT YOUR PISCES FILENAME HERE
 cube = reduceIFSMap(par,fname)
 
 # the wavelength of each slice is retrieved by this:
+import tools
 from tools.reduction import calculateWaveList
 lam_midpts,lam_endpts = calculateWaveList(par)
 print lam_midpts
