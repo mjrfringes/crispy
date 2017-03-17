@@ -216,12 +216,19 @@ def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
 	###################################################################################
 	# Step 8: Construct an off-axis PSF matched filter and propagate it through the IFS
 	###################################################################################
+
+    # First off, normalize the residual cube by a flatfield
+    flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
+    residual.data /= flatfield.data
+    residual.write(outdir_average+'/residual_flatfielded.fits',clobber=True)
 	
 	# loop over all the slices in the cube:
 	matched_filter = np.zeros(residual.shape)
 	matched_filter_flipped = np.zeros(residual.shape)
-	signal = np.zeros(residual.shape[0])
-	noise = np.zeros(residual.shape[0])
+	signal = np.zeros(residual.shape[0]) # on source
+	off = np.zeros(residual.shape[0])   # off source
+	mf_npix = np.zeros(residual.shape[0]) # effective background area of matched filter
+	noise = np.zeros(residual.shape[0]) # noise
 	for slicenum in range(residual.shape[0]):
 		
 		offaxis_ideal_norm = offaxis_ideal.data[slicenum]/np.nansum(offaxis_ideal.data[slicenum])
@@ -229,7 +236,19 @@ def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
 		signal[slicenum] = np.nansum(matched_filter[slicenum,:,:]*residual[slicenum,:,:])
 		offaxis_ideal_flipped_norm = offaxis_ideal_flipped.data[slicenum]/np.nansum(offaxis_ideal_flipped.data[slicenum])
 		matched_filter_flipped[slicenum,:,:] = offaxis_ideal_flipped_norm/np.nansum((offaxis_ideal_flipped_norm)**2)
-		noise[slicenum] = np.nansum(matched_filter_flipped[slicenum,:,:]*residual[slicenum,:,:])
+		off[slicenum] = np.nansum(matched_filter_flipped[slicenum,:,:]*residual[slicenum,:,:])
+	mf_npix = np.nansum(np.nansum(matched_filter,axis=2),axis=1)
+	
+	###################################################################################
+	# Step 9: Determine the pixel noise in the dark hole
+	###################################################################################
+	from tools.imgtools import bowtie
+    ydim,xdim = residual.data[0].shape
+    maskleft,maskright = bowtie(cube.data[0],ydim//2,xdim//2,openingAngle=65,
+                clocking=-par.philens*180/np.pi,IWApix=6*0.77/0.6,OWApix=18*0.77/0.6,
+                export='bowtie',twomasks=True)
+    pixstd = [np.nanvar(residual.data[i,:,:]*maskright) for i in range(residual.data.shape[0])]
+    noise = np.sqrt(2*mf_npix)*pixstd # twice since we subtract the off field
 	
 	Image(data=matched_filter).write(outdir_average+'/matched_filter.fits',clobber=True)
 	Image(data=matched_filter_flipped).write(outdir_average+'/matched_filter_flipped.fits',clobber=True)
@@ -246,7 +265,7 @@ def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
 	log.info('Computed signal and noise arrays: %.3f' % (times['Computed signal and noise arrays']-times['Normalize and subtract reference PSF']))
 	log.info('Total time: %.3f' % (times['Computed signal and noise arrays']-times['Start']))
 
-	return signal,noise
+	return signal-off,noise
 	
 
 
