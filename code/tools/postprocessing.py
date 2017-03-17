@@ -6,12 +6,15 @@ import glob
 from IFS import propagateIFS,reduceIFSMap
 import logging
 from tools.image import Image
-from astropy.io import fits
+try:
+    from astropy.io import fits
+except:
+    import pyfits as fits
 from time import time
 import os
 from tools.detector import averageDetectorReadout
 
-log = logging.getLogger('main')
+log = logging.getLogger('crispy')
 
 
 def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
