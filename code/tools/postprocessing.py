@@ -219,8 +219,8 @@ def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
 
 	# First off, normalize the residual cube by a flatfield
 	flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
-	residual.data /= flatfield.data
-	residual.write(outdir_average+'/residual_flatfielded.fits',clobber=True)
+	residual /= flatfield.data
+	Image(data=residual).write(outdir_average+'/residual_flatfielded.fits',clobber=True)
 	
 	# loop over all the slices in the cube:
 	matched_filter = np.zeros(residual.shape)
@@ -243,11 +243,11 @@ def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
 	# Step 9: Determine the pixel noise in the dark hole
 	###################################################################################
 	from tools.imgtools import bowtie
-	ydim,xdim = residual.data[0].shape
-	maskleft,maskright = bowtie(cube.data[0],ydim//2,xdim//2,openingAngle=65,
+	ydim,xdim = residual[0].shape
+	maskleft,maskright = bowtie(residual[0],ydim//2,xdim//2,openingAngle=65,
 				clocking=-par.philens*180/np.pi,IWApix=6*0.77/0.6,OWApix=18*0.77/0.6,
 				export='bowtie',twomasks=True)
-	pixstd = [np.nanvar(residual.data[i,:,:]*maskright) for i in range(residual.data.shape[0])]
+	pixstd = [np.nanvar(residual[i,:,:]*maskright) for i in range(residual.shape[0])]
 	noise = np.sqrt(2*mf_npix)*pixstd # twice since we subtract the off field
 	
 	Image(data=matched_filter).write(outdir_average+'/matched_filter.fits',clobber=True)
