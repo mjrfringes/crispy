@@ -247,7 +247,7 @@ def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
 	maskleft,maskright = bowtie(residual[0],ydim//2,xdim//2,openingAngle=65,
 				clocking=-par.philens*180/np.pi,IWApix=6*0.77/0.6,OWApix=18*0.77/0.6,
 				export='bowtie',twomasks=True)
-	pixstd = [np.nanvar(residual[i,:,:]*maskright) for i in range(residual.shape[0])]
+	pixstd = [np.nanstd(residual[i,:,:]*maskright) for i in range(residual.shape[0])]
 	noise = np.sqrt(2*mf_npix)*pixstd # twice since we subtract the off field
 	
 	Image(data=matched_filter).write(outdir_average+'/matched_filter.fits',clobber=True)
