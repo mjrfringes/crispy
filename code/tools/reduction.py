@@ -8,8 +8,6 @@ from tools.initLogger import getLogger
 log = getLogger('crispy')
 from scipy import signal
 from scipy.interpolate import interp1d
-# from photutils import RectangularAperture
-# from photutils import aperture_photometry
 from scipy import ndimage
 from tools.locate_psflets import PSFLets
 from tools.image import Image

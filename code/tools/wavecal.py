@@ -5,7 +5,6 @@ from IFS import propagateIFS
 import matplotlib as mpl
 import numpy as np
 from scipy import signal
-import logging as log
 try:
     from astropy.io import fits as pyf
 except:
