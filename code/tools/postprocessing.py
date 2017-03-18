@@ -430,7 +430,7 @@ def SPC_IFS_systematics(par,psf_time_series_folder,offaxis_psf_filename,
 #   offaxis_ideal = reduceIFSMap(par,os.path.abspath(outdir_average+'/offaxis.fits'))
 #   offaxis_ideal_flipped = reduceIFSMap(par,os.path.abspath(outdir_average+'/offaxis_flipped.fits'))
 
-    residual = reduceIFSMap(par,outdir_average+'/offaxis_at_detector.fits')
+    residualImg = reduceIFSMap(par,outdir_average+'/offaxis_at_detector.fits')
     
     times['Process average cubes'] = time()
     ###################################################################################
@@ -449,6 +449,7 @@ def SPC_IFS_systematics(par,psf_time_series_folder,offaxis_psf_filename,
 
     # First off, normalize the residual cube by a flatfield
     flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
+    residual = residualImg.data
     residual /= flatfield.data
     residual[np.isnan(flatfield.data)]=np.nan
     Image(data=residual).write(outdir_average+'/residual_flatfielded.fits',clobber=True)
