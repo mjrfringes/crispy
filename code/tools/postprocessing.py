@@ -353,7 +353,7 @@ def SPC_IFS_systematics(par,psf_time_series_folder,offaxis_psf_filename,
             offaxiscube.header['LAM_C']=lamc/1000.
             offaxiscube.header['PIXSIZE']*=lamc/0.77
         par.saveDetector=False
-        Image(data = offaxiscube.data, header=offaxiscube.header).write(outdir_average+'/offaxiscube_processed.fits',clobber=True)
+        offaxiscube.write(outdir_average+'/offaxiscubePhPerSec.fits',clobber=True)
 
         detectorFrame = propagateIFS(par,lamlist.value/1000.,offaxiscube)
         Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/offaxis.fits',clobber=True)
@@ -499,6 +499,6 @@ def SPC_IFS_systematics(par,psf_time_series_folder,offaxis_psf_filename,
     log.info('Computed signal and noise arrays: %.3f' % (times['Computed signal and noise arrays']-times['Normalize and subtract reference PSF']))
     log.info('Total time: %.3f' % (times['Computed signal and noise arrays']-times['Start']))
 
-    return signal-off,noise
+    return signal,noise,off
 
 
