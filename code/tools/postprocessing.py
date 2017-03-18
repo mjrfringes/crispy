@@ -427,8 +427,8 @@ def SPC_IFS_systematics(par,psf_time_series_folder,offaxis_psf_filename,
 #   print(img.data.shape)
 #   ref_cube = reduceIFSMap(par,os.path.abspath(outdir_average+'/average_ref_star_detector.fits'))
 #   target_cube = reduceIFSMap(par,os.path.abspath(outdir_average+'/average_target_star_detector.fits'))
-#   offaxis_ideal = reduceIFSMap(par,os.path.abspath(outdir_average+'/offaxis.fits'))
-#   offaxis_ideal_flipped = reduceIFSMap(par,os.path.abspath(outdir_average+'/offaxis_flipped.fits'))
+    offaxis_ideal = reduceIFSMap(par,os.path.abspath(outdir_average+'/offaxis.fits'))
+    offaxis_ideal_flipped = reduceIFSMap(par,os.path.abspath(outdir_average+'/offaxis_flipped.fits'))
 
     residualImg = reduceIFSMap(par,outdir_average+'/offaxis_at_detector.fits')
     
