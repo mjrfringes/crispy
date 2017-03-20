@@ -126,3 +126,44 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         det_outlist.append(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits')
     return det_outlist
 
+
+def noiselessDetector(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None):
+    '''	
+    Process a list of files and creates individual detector readouts
+    If we want only one file, we can just make a list of 1
+    '''
+    det_outlist = []
+	
+    for reffile in filelist:
+        log.info('Apply noiseless detector readout on '+reffile.split('/')[-1])
+        img = Image(filename=reffile)
+        if offaxis is not None:
+            off = Image(offaxis)
+            img.data+=off.data
+        inttime = par.timeframe/1
+        img.data*=par.QE*par.losses
+        #refreshes parameter header
+        par.makeHeader()
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)
+        par.hdr.append(('comment', '*'*22 + ' Noiseless detector readout ' + '*'*20), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)    
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('RN',0,'Read noise (electrons/read)'), end=True) 
+        par.hdr.append(('CIC',0,'Clock-induced charge'), end=True) 
+        par.hdr.append(('DARK',0,'Dark current'), end=True) 
+        par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
+        par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
+        par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
+        par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
+        par.hdr.append(('NREADS',1,'Number of frames averaged'),end=True)
+        par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time'),end=True)
+
+        frame = np.zeros(img.data.shape)
+        # averaging reads
+        frame = img.data*par.timeframe
+        outimg = Image(data=frame,header=par.hdr)
+        # append '_suffix' to the file name
+        outimg.write(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits',clobber=True)
+        det_outlist.append(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits')
+    return det_outlist

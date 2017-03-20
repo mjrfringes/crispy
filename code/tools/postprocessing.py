@@ -13,15 +13,26 @@ except:
     import pyfits as fits
 from time import time
 import os
-from tools.detector import averageDetectorReadout
+from tools.detector import averageDetectorReadout,noiselessDetector
 
 
-def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
-                    planet_radius = 1*c.R_jup,mean_contrast=1e-8,
-                    ref_star_T=9377*u.K, ref_star_Vmag=2.37, target_star_T=5887*u.K, target_star_Vmag=5.03,
-                    lamc=770.,BW=0.18,Nlam=45,n_ref_star_imgs=30,tel_pupil_area=3.650265060424805*u.m**2,
-                    outdir_time_series = 'OS5',outdir_detector='OS5/OS5_detector',outdir_average='OS5/OS5_average',
-                    process_cubes=True,process_offaxis=True,process_detector=True,take_averages=True):
+def process_SPC_IFS(par,
+                    psf_time_series_folder,
+                    offaxis_psf_filename,
+                    planet_radius = 1*c.R_jup,
+                    mean_contrast=1e-8,
+                    ref_star_T=9377*u.K, ref_star_Vmag=2.37,
+                    target_star_T=5887*u.K, target_star_Vmag=5.03,
+                    lamc=770.,BW=0.18,Nlam=45,n_ref_star_imgs=30,
+                    tel_pupil_area=3.650265060424805*u.m**2,
+                    outdir_time_series = 'OS5',
+                    outdir_detector='OS5/OS5_detector',
+                    outdir_average='OS5/OS5_average',
+                    process_cubes=True,
+                    process_offaxis=True,
+                    process_detector=True,
+                    process_noiseless=False,
+                    take_averages=True):
     '''
     Process SPC PSF cubes from J. Krist through the IFS
 
@@ -159,6 +170,10 @@ def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
         ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector)   
         offaxis_filename = os.path.abspath(outdir_average+'/offaxis.fits')
         target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,offaxis = offaxis_filename)
+    elif process_noiseless:
+        ref_det_outlist = noiselessDetector(par,ref_outlist,outdir_detector)   
+        offaxis_filename = os.path.abspath(outdir_average+'/offaxis.fits')
+        target_det_outlist = noiselessDetector(par,target_outlist,outdir_detector,offaxis = offaxis_filename)
     else:
         ref_det_outlist = []
         target_det_outlist = []
@@ -500,5 +515,4 @@ def SPC_IFS_systematics(par,psf_time_series_folder,offaxis_psf_filename,
     log.info('Total time: %.3f' % (times['Computed signal and noise arrays']-times['Start']))
 
     return signal,noise,off
-
 
