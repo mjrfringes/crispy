@@ -497,7 +497,7 @@ def calculateWaveList(par,lam_list=None):
     lam_midpts = np.exp(loglam_midpts)
     return lam_midpts,lam_endpts
 
-def lstsqExtract(par,name,ifsimage,ivar=False):
+def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=True):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -535,27 +535,59 @@ def lstsqExtract(par,name,ifsimage,ivar=False):
         ifsimage.ivar = None
         
     cube = np.zeros((psflets.shape[0],par.nlens,par.nlens))
+
+    resid = np.empty(ifsimage.data.shape)
+    resid[:] = ifsimage.data
+    newresid = np.empty(ifsimage.data.shape)
+    newresid[:] = ifsimage.data
+    
     
     ydim,xdim = ifsimage.data.shape
-    
+    residual = np.zeros(ifsimage.data.shape)
     for i in range(par.nlens):
         for j in range(par.nlens):
             xlist = []
             ylist = []
             good = True
             for lam in lamlist:
-                _x,_y = psftool.return_locations(lam, allcoef, j-par.nlens/2, i-par.nlens/2)
-                good *= (_x > 2)*(_x < xdim-2)*(_y > 3)*(_y < ydim-3)
+                _x,_y = psftool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
+                good *= (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
                 xlist += [_x]    
                 ylist += [_y]   
-                 
+                
             if good:
-                subim, psflet_subarr, [x0, x1, y0, y1] = get_cutout(ifsimage,xlist,ylist,psflets)
+                subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xlist,ylist,psflets,dy)
                 cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
+                for ilam in range(psflet_subarr.shape[0]):
+                    resid[y0:y1, x0:x1] -= cube[ilam,j,i]*psflet_subarr[ilam]
             else:
                 cube[:,j,i] = np.NaN
-
+                
+    resid_img = Image(data=resid)    
+    if refine:
+        for i in range(par.nlens):
+            for j in range(par.nlens):
+                xlist = []
+                ylist = []
+                good = True
+                for lam in lamlist:
+                    _x,_y = psftool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
+                    good *= (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
+                    xlist += [_x]    
+                    ylist += [_y]   
+                
+                if good:
+                    subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(resid_img,xlist,ylist,psflets,dy)
+                    cube[:,j,i] += fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
+                    for ilam in range(psflet_subarr.shape[0]):
+                        newresid[y0:y1, x0:x1] -= cube[ilam,j,i]*psflet_subarr[ilam]
+                else:
+                    cube[:,j,i] = np.NaN
+                    
+    
     pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
+    pyf.PrimaryHDU(resid).writeto(name+'_resid.fits',clobber=True)
+    pyf.PrimaryHDU(newresid).writeto(name+'_newresid.fits',clobber=True)
     return cube
 
 def get_cutout(im, x, y, psflets, dy=3):
@@ -597,7 +629,7 @@ def get_cutout(im, x, y, psflets, dy=3):
     """
 
     x0, x1 = [int(np.amin(x)) - dy+1, int(np.amax(x)) + dy+1]
-    y0, y1 = [int(np.amin(y)) - dy, int(np.amax(y)) + dy+1]
+    y0, y1 = [int(np.amin(y)) - dy+1, int(np.amax(y)) + dy+1]
 
     subim = im.data[y0:y1, x0:x1]
     if im.ivar is not None:
@@ -613,6 +645,7 @@ def get_cutout(im, x, y, psflets, dy=3):
 
     return subim, psflet_subarr, [y0,y1, x0,x1]
 
+
 def fit_cutout(subim, psflets, mode='lstsq'):
     """
     Fit a series of PSFlets to an image, recover the best-fit coefficients.
@@ -620,18 +653,26 @@ def fit_cutout(subim, psflets, mode='lstsq'):
     could be more complex if/when we regularize the problem or adopt some
     other approach.
 
-    Inputs:
-    1. subim:   2D nadarray, microspectrum to fit
-    2. psflets: 3D ndarray, first dimension is wavelength.  psflets[0] 
+    Parameters
+    ----------
+    subim:   2D nadarray
+        Microspectrum to fit
+    psflets: 3D ndarray
+        First dimension is wavelength.  psflets[0] 
                 must match the shape of subim.
-    3. mode:    string, method to use.  Currently limited to lstsq (a 
+    mode:    string
+        Method to use.  Currently limited to lstsq (a 
                 simple least-squares fit using linalg.lstsq), this can
                 be expanded to include an arbitrary approach.
     
-    Returns:
-    1. coef:    the best-fit coefficients (i.e. the microspectrum).
+    Returns
+    -------
+    coef:    array
+        The best-fit coefficients (i.e. the microspectrum).
 
-    Note: this routine may also return the covariance matrix in the future.
+    Notes
+    -----
+    This routine may also return the covariance matrix in the future.
     It will depend on the performance of the algorithms and whether/how we
     implement regularization.
     """

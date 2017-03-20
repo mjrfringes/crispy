@@ -125,10 +125,10 @@ def process_SPC_IFS(par,psf_time_series_folder,offaxis_psf_filename,
                 # by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800
             else:
                 offaxiscube.header['LAM_C']=lamc/1000.
-                offaxiscube.header['PIXSIZE']*=lamc/0.77
+                offaxiscube.header['PIXSIZE']*=lamc/770.
         else:
             offaxiscube.header['LAM_C']=lamc/1000.
-            offaxiscube.header['PIXSIZE']*=lamc/0.77
+            offaxiscube.header['PIXSIZE']*=lamc/770.
         par.saveDetector=False
         offaxiscube.write(outdir_average+'/offaxiscube_processed.fits',clobber=True)
         detectorFrame = propagateIFS(par,lamlist.value/1000.,offaxiscube)
@@ -338,6 +338,7 @@ def SPC_IFS_systematics(par,psf_time_series_folder,offaxis_psf_filename,
         for i in range(offaxiscube.data.shape[0]):
             contrast_cube[i,:,:] += contrast[i]
         offaxiscube.data*=offaxis_star_cube*contrast_cube
+        offaxiscube.write(outdir_average+'/offaxiscubePhPerSec.fits',clobber=True)
 
         
         # adjust headers for slightly different wavelength
@@ -348,12 +349,11 @@ def SPC_IFS_systematics(par,psf_time_series_folder,offaxis_psf_filename,
                 # by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800
             else:
                 offaxiscube.header['LAM_C']=lamc/1000.
-                offaxiscube.header['PIXSIZE']*=lamc/0.77
+                offaxiscube.header['PIXSIZE']*=lamc/770.
         else:
             offaxiscube.header['LAM_C']=lamc/1000.
-            offaxiscube.header['PIXSIZE']*=lamc/0.77
+            offaxiscube.header['PIXSIZE']*=lamc/770.
         par.saveDetector=False
-        offaxiscube.write(outdir_average+'/offaxiscubePhPerSec.fits',clobber=True)
 
         detectorFrame = propagateIFS(par,lamlist.value/1000.,offaxiscube)
         Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/offaxis.fits',clobber=True)

@@ -302,6 +302,34 @@ def make_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
     return image
 
 
+def get_sim_hires(par,x, y, lam, image, upsample=5, nsubarr=5, npix=13, renorm=True):
+    """
+    Build high resolution images of the undersampled PSF using the
+    monochromatic frames. This version of the function uses the perfect
+    knowledge of the Gaussian PSFLet. Only valid if par.gaussian=True.
+    All PSFLets are the same across the entire FOV
+
+    """
+
+
+    hires_arr = np.zeros((nsubarr, nsubarr, upsample*(npix + 1), upsample*(npix + 1)))
+    size = upsample*(npix + 1)
+    _x = np.arange(size)-size//2
+    _y = np.arange(size)-size//2
+    _x, _y = np.meshgrid(_x, _y)
+    sig = par.FWHM/2.35*upsample
+    psflet = np.exp(-((_x)**2+(_y)**2)/(2.*(sig*lam/par.FWHMlam)**2))
+    psflet *= upsample**2/np.sum(psflet)
+    
+    for i in range(nsubarr):
+        for j in range(nsubarr):
+            hires_arr[i,j]=psflet
+
+            
+    return hires_arr
+
+
+
 
 def gethires(x, y, image, upsample=5, nsubarr=5, npix=13, renorm=True):
     """
@@ -470,9 +498,9 @@ def gethires(x, y, image, upsample=5, nsubarr=5, npix=13, renorm=True):
 
 
 def buildcalibrations(par,filelist=None, lamlist=None,order=3,
-                      inspect=True, genwavelengthsol=True, makehiresPSFlets=True,
-                      savehiresimages=True,borderpix = 4, upsample=3,nsubarr=3,
-                      parallel=True):
+                      inspect=False, genwavelengthsol=True, makehiresPSFlets=True,
+                      savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
+                      parallel=True,inspect_first=True):
     """
     Master wavelength calibration function
     
@@ -493,6 +521,9 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     inspect: Boolean
             Whether or not to create PNG files that overlay PSFLet fitted position on the
             monochromatic pictures, to visually inspect the fitting results
+    inspect_first: Boolean
+            Whether or not to create a PNG file that overlays PSFLet fitted position on the
+            monochromatic picture of the first file, to visually inspect the fitting results
     makehiresPSFlets: Boolean
             Whether or not to do a high-resolution fitting of the PSFs, using the sampling
             diversity. This requires high-SNR monochromatic images.
@@ -570,12 +601,13 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
         im.data+=1e-9
         imlist += [im]
         if genwavelengthsol:
-            x, y, good, coef = locatePSFlets(im, polyorder=order, sig=par.FWHM,coef=coef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
+            x, y, good, coef = locatePSFlets(im, polyorder=order, sig=par.FWHM/2.35,coef=coef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
             allcoef += [[lamlist[i]] + list(coef)]
             if inspect:
                 do_inspection(par,im.data,x,y,lamlist[i])
+            elif inspect_first and i==0:
+                do_inspection(par,im.data,x,y,lamlist[i])
 
-    
     if genwavelengthsol:
         log.info("Saving wavelength solution to " + outdir + "lamsol.dat")
         allcoef = np.asarray(allcoef)
@@ -623,8 +655,12 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                 w.start()
         
             for i in range(len(lam)):
-                tasks.put(Task(i, gethires, (allxpos[i], allypos[i],
-                                                            imlist[i], upsample,nsubarr)))
+                if par.gaussian_hires:
+                    tasks.put(Task(i, get_sim_hires, (par, allxpos[i], allypos[i],lam[i],
+                                                                imlist[i], upsample,nsubarr)))                    
+                else:
+                    tasks.put(Task(i, gethires, (allxpos[i], allypos[i],
+                                                                imlist[i], upsample,nsubarr)))
         
             for i in range(ncpus):
                 tasks.put(None)
@@ -646,7 +682,10 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                 xpos, ypos = psftool.return_locations(lam[i], allcoef, xindx, yindx)
                 xpos = np.reshape(xpos, -1)
                 ypos = np.reshape(ypos, -1)
-                hiresarr = gethires(xpos, ypos, imlist[i],upsample,nsubarr)
+                if par.gaussian_hires:
+                    hiresarr = get_sim_hires(par, xpos, ypos,lam[i], imlist[i],upsample,nsubarr)                
+                else:    
+                    hiresarr = gethires(xpos, ypos, imlist[i],upsample,nsubarr)
                 hires_arrs += [hiresarr]
 
                 if savehiresimages:
@@ -659,12 +698,6 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                     out.writeto(par.wavecalDir + 'hires_psflets_lam%d.fits' % (lam[i]), clobber=True)
 
         lam_midpts,lam_endpts=calculateWaveList(par,lam)
-#         Nspec = int(np.log(lam2*1./lam1)*R + 1.5)
-#         log.info('Reduced cube will have %d wavelength bins' % Nspec)
-#         loglam_endpts = np.linspace(np.log(lam1), np.log(lam2), Nspec)
-#         loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
-#         lam_endpts = np.exp(loglam_endpts)
-#         lam_midpts = np.exp(loglam_midpts)
         Nspec = len(lam_endpts)
         polyimage = np.zeros((Nspec - 1, ysize, xsize))
         xpos = []
