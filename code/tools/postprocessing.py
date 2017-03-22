@@ -615,8 +615,8 @@ def SPC_process_offaxis_only(par,offaxis_psf_filename,
             newread = readDetector(par,img,inttime=inttime)
             frame += newread
             varframe += newread**2
-        frame /= par.Nreads
-        varframe /= par.Nreads
+        frame /= par.Nreads*Naverage
+        varframe /= par.Nreads*Naverage
         varframe -= frame**2
         Image(data=frame).write(outdir_average+'/offaxis_only_detectorized.fits')
 
