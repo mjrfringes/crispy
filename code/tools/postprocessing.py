@@ -602,7 +602,7 @@ def SPC_process_offaxis_only(par,offaxis_psf_filename,
     # Step 4: Only process the off-axis target, no noise added
     ###################################################################################
 
-	if process_detector:
+    if process_detector:
         # Apply detector 
         img = Image(filename=outdir_average+'/offaxis.fits')
         inttime = par.timeframe/par.Nreads
@@ -620,7 +620,7 @@ def SPC_process_offaxis_only(par,offaxis_psf_filename,
         varframe -= frame**2
         Image(data=frame).write(outdir_average+'/offaxis_only_detectorized.fits')
 
-# 		target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,offaxis = outdir_average+'/offaxis.fits')
+#       target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,offaxis = outdir_average+'/offaxis.fits')
 #     im_offaxis = Image(outdir_average+'/offaxis.fits')
 #     im_offaxis.data *= par.QE*par.losses *par.timeframe/par.Nreads
 #     im_offaxis.write(outdir_average+'/offaxis_at_detector.fits')
