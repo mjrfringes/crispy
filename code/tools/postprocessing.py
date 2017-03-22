@@ -13,7 +13,7 @@ except:
     import pyfits as fits
 from time import time
 import os
-from tools.detector import averageDetectorReadout,noiselessDetector
+from tools.detector import averageDetectorReadout,noiselessDetector,readDetector
 
 
 def process_SPC_IFS(par,
