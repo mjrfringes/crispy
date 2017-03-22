@@ -23,7 +23,7 @@ def process_SPC_IFS(par,
                     mean_contrast=1e-8,
                     ref_star_T=9377*u.K, ref_star_Vmag=2.37,
                     target_star_T=5887*u.K, target_star_Vmag=5.03,
-                    lamc=770.,BW=0.18,Nlam=45,n_ref_star_imgs=30,
+                    lamc=770.,BW=0.18,n_ref_star_imgs=30,
                     tel_pupil_area=3.650265060424805*u.m**2,
                     outdir_time_series = 'OS5',
                     outdir_detector='OS5/OS5_detector',
@@ -36,7 +36,61 @@ def process_SPC_IFS(par,
     '''
     Process SPC PSF cubes from J. Krist through the IFS
 
-
+    Parameters
+    ----------
+    par: Params instance
+        Contains all the parameters of the IFS
+    psf_time_series_folder: string
+        Where the files from Krist are located
+    offaxis_psf_filename: string
+        Where the off-axis PSF is located
+    mean_contrast: float
+        Mean contrast of the planet spectrum
+    ref_star_T: `u.K` float
+        Reference star temperature, float multiplied by astropy.units.K
+    ref_star_Vmag: float
+        Vmag of the reference star
+    target_star_T: `u.K` float
+        Target star temperature, float multiplied by astropy.units.K
+    target_star_T_star_Vmag: float
+        Vmag of the target star
+    lamc: float
+        Band's central wavelength in nm
+    BW: float
+        Bandwidth
+    n_ref_star_imgs: int
+        Number of reference star images in the list
+    tel_pupil_area: `u.m**2` float
+        Effective surface area of telescope, including all geometric losses. Float
+        multiplied by astropy.units.m**2
+    outdir_time_series: string
+        Where to store the noiseless IFS detector images
+    outdir_detector: string
+        Where to store the noisy IFS detector images
+    outdir_average: string
+        Where to store the averages of the time series
+    process_cubes: Boolean
+        Whether to process the raw images from Krist, or skip this step if it was already done
+    process_offaxis: Boolean
+        Whether to process the offaxis images and add it to the images
+    process_detector: Boolean
+        Whether to add detector QE, IFS losses and noise to the IFS images
+    process_noiseless: Boolean
+        Whether to add detector QE, IFS losses but no detector noise to the IFS images
+    take_averages: Boolean
+        Whether to average all IFS detector images in the time series to create averages
+    
+    Returns
+    -------
+    signal: ndarray
+        Array with the matched-filtered flux at each of the final cube's wavelengths;
+        The background is already subtracted
+    noise: ndarray
+        Noise estimate using the pixel-to-pixel variance within the dark hole, multiplied
+        by the number of effective pixels within the matched filter (sum of matched filter
+        cube)
+    
+    
     '''
     
     times = {'Start':time()}
@@ -45,14 +99,15 @@ def process_SPC_IFS(par,
     # Step 1: Convert all the cubes to photons/seconds
     ###################################################################################
 
-    lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)*u.nm
-
     # load the filenames
     filelist = glob.glob(psf_time_series_folder+'/*')
     filelist.sort()
     
     # load first filelist to get its shape
     fileshape = Image(filename=filelist[0]).data.shape
+    
+    Nlam = fileshape[0]
+    lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)*u.nm
 
     # reference and target star cube conversions
     ref_star_cube = convert_krist_cube(fileshape,lamlist,ref_star_T,ref_star_Vmag,tel_pupil_area)
@@ -618,7 +673,7 @@ def SPC_process_offaxis_only(par,offaxis_psf_filename,
         frame /= par.Nreads*Naverage
         varframe /= par.Nreads*Naverage
         varframe -= frame**2
-        Image(data=frame).write(outdir_average+'/offaxis_only_detectorized.fits')
+        Image(data=frame,header=par.hdr).write(outdir_average+'/offaxis_only_detectorized.fits')
 
 #       target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,offaxis = outdir_average+'/offaxis.fits')
 #     im_offaxis = Image(outdir_average+'/offaxis.fits')
@@ -690,7 +745,7 @@ def SPC_process_offaxis_only(par,offaxis_psf_filename,
     residual = residualImg.data
     residual /= flatfield.data
     residual[np.isnan(flatfield.data)]=np.nan
-    Image(data=residual).write(outdir_average+'/residual_flatfielded.fits',clobber=True)
+    Image(data=residual,header=par.hdr).write(outdir_average+'/residual_flatfielded.fits',clobber=True)
     
     # loop over all the slices in the cube:
     matched_filter = np.zeros(residual.shape)

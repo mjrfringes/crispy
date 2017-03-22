@@ -140,7 +140,7 @@ def noiselessDetector(par,filelist,detectorFolderOut,suffix = 'detector',offaxis
         if offaxis is not None:
             off = Image(offaxis)
             img.data+=off.data
-        inttime = par.timeframe/1
+        inttime = par.timeframe/par.Nreads
         img.data*=par.QE*par.losses
         #refreshes parameter header
         par.makeHeader()
