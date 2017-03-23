@@ -17,7 +17,8 @@
         VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,8 +27,8 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
-    <link rel="top" title="crispy 0.1.0 documentation" href="../index.html" />
-    <link rel="up" title="Module code" href="index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
 <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
 <script type="text/javascript" src="../_static/copybutton.js"></script>
 
@@ -85,7 +86,10 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">params</span> <span class="k">import</span> <span class="n">Params</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pyfits</span> <span class="k">as</span> <span class="nn">pyf</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">tools</span>
@@ -93,7 +97,6 @@
 <span class="kn">from</span> <span class="nn">tools.lenslet</span> <span class="k">import</span> <span class="n">Lenslets</span><span class="p">,</span><span class="n">processImagePlane</span>
 <span class="kn">from</span> <span class="nn">tools.spectrograph</span> <span class="k">import</span> <span class="n">createAllWeightsArray</span><span class="p">,</span><span class="n">selectKernel</span><span class="p">,</span><span class="n">loadKernels</span>
 <span class="kn">from</span> <span class="nn">tools.detector</span> <span class="k">import</span> <span class="n">rebinDetector</span>
-<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="k">import</span> <span class="n">initLogger</span>
 <span class="kn">from</span> <span class="nn">tools.plotting</span> <span class="k">import</span> <span class="n">plotKernels</span>
 <span class="kn">from</span> <span class="nn">tools.reduction</span> <span class="k">import</span> <span class="n">simpleReduction</span><span class="p">,</span><span class="n">densifiedSimpleReduction</span><span class="p">,</span><span class="n">testReduction</span><span class="p">,</span><span class="n">lstsqExtract</span><span class="p">,</span><span class="n">intOptimalExtract</span><span class="p">,</span><span class="n">GPImethod2</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
@@ -205,7 +208,7 @@
     <span class="c1"># Calculate sampling ratio to resample rotated image and match the lenslet sampling</span>
     <span class="c1">###################################################################### </span>
 
-    <span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span> <span class="o">=</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">input_sampling</span><span class="o">/</span><span class="n">input_wav</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="o">/</span><span class="p">(</span><span class="n">input_sampling</span> <span class="o">*</span> <span class="n">input_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;The number of input pixels per lenslet is </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span><span class="p">)</span>
     <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;SCALE&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span><span class="p">,</span><span class="s1">&#39;Factor by which the input slice is rescaled&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
 
@@ -444,8 +447,8 @@
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
-    Last built 17 Mar 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 22 Mar 2017. <br/>
   </p>
 </footer>
   </body>

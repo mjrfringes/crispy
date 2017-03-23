@@ -17,7 +17,8 @@
         VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -26,7 +27,8 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
     <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
-    <link rel="top" title="crispy 0.1.0 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="PISCES Data Reduction" href="PISCES_Reduce.html" />
     <link rel="prev" title="Introduction to crispy" href="Introduction.html" />
 <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
@@ -249,12 +251,12 @@ div.nboutput div.output_area.stderr {
 <h1>PISCES wavelength calibration<a class="headerlink" href="#PISCES-wavelength-calibration" title="Permalink to this headline">¶</a></h1>
 <p>We have PISCES VARIA calibration sets. We will show how to process them
 to build a new wavelength calibration</p>
-<div class="nbinput container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span>
@@ -264,21 +266,21 @@ to build a new wavelength calibration</p>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast container">
-<div class="prompt empty container">
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area container">
+<div class="output_area docutils container">
 <div class="highlight"><pre>
 Populating the interactive namespace from numpy and matplotlib
 </pre></div></div>
 </div>
 <p>Import crispy-related stuff</p>
-<div class="nbinput nblast container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../code&#39;</span>
 <span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
@@ -294,12 +296,12 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="section" id="Import-files-and-subtract-darks">
 <h2>Import files and subtract darks<a class="headerlink" href="#Import-files-and-subtract-darks" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">VARIA_ON</span><span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;IFS???nm.fits&#39;</span><span class="p">)</span>
 <span class="n">VARIA_OFF</span><span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;IFSdark???nm.fits&#39;</span><span class="p">)</span>
 <span class="n">par</span><span class="o">.</span><span class="n">lamlist</span> <span class="o">=</span> <span class="p">[]</span>
@@ -312,10 +314,10 @@ Populating the interactive namespace from numpy and matplotlib
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast container">
-<div class="prompt empty container">
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area container">
+<div class="output_area docutils container">
 <div class="highlight"><pre>
 crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS605nm.fits
 crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFSdark605nm.fits
@@ -359,12 +361,12 @@ crispy - INFO - Writing data to ../../code/ReferenceFiles/Calibra_170306/det725.
 </pre></div></div>
 </div>
 <p>Image the last file</p>
-<div class="nbinput container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_heat&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
@@ -372,7 +374,7 @@ crispy - INFO - Writing data to ../../code/ReferenceFiles/Calibra_170306/det725.
 </pre></div>
 </div>
 </div>
-<div class="nboutput container">
+<div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>Out[4]:
 </pre></div>
@@ -382,27 +384,27 @@ crispy - INFO - Writing data to ../../code/ReferenceFiles/Calibra_170306/det725.
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast container">
-<div class="prompt empty container">
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area container">
+<div class="output_area docutils container">
 <img alt="_images/PISCES_wavecal_8_1.png" src="_images/PISCES_wavecal_8_1.png" />
 </div>
 </div>
-<div class="nbinput container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="k">print</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">lamlist</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast container">
-<div class="prompt empty container">
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area container">
+<div class="output_area docutils container">
 <div class="highlight"><pre>
 [605.0, 615.0, 625.0, 635.0, 645.0, 655.0, 665.0, 675.0, 685.0, 695.0, 705.0, 715.0, 725.0]
 </pre></div></div>
@@ -410,200 +412,55 @@ crispy - INFO - Writing data to ../../code/ReferenceFiles/Calibra_170306/det725.
 </div>
 <div class="section" id="Build-wavelength-calibration-files">
 <h2>Build wavelength calibration files<a class="headerlink" href="#Build-wavelength-calibration-files" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [6]:
+<span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">tools.wavecal</span> <span class="kn">import</span> <span class="n">buildcalibrations</span>
 <span class="n">buildcalibrations</span><span class="p">(</span><span class="n">par</span><span class="p">,</span>
                   <span class="n">genwavelengthsol</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># Compute wavelength at the center of all pixels</span>
-                  <span class="n">makehiresPSFlets</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="c1"># do NOT make high-resolution PSFLets unless we have extremely good SNR</span>
-                  <span class="n">inspect</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1"># build inspection PNGs in par.wavecalDir</span>
+                  <span class="n">makehiresPSFlets</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c1"># do NOT make high-resolution PSFLets unless we have extremely good SNR</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<div class="highlight"><pre>
-crispy - INFO - Building calibration files, placing results in ../../code/ReferenceFiles/Calibra_170306/
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det605.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det605.0.fits
-crispy - INFO - Initializing PSFlet location transformation coefficients
-crispy - INFO - Performing initial optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det605.0.fits
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det605.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det615.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det615.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det625.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det625.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det635.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det635.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det645.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det645.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det655.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det655.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det665.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det665.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det675.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det675.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det685.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det685.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det695.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det695.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det705.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det705.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det715.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det715.0.fits
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/Calibra_170306/det725.0.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../code/ReferenceFiles/Calibra_170306/det725.0.fits
-crispy - INFO - Saving wavelength solution to ../../code/ReferenceFiles/Calibra_170306/lamsol.dat
-crispy - INFO - Computing wavelength values at pixel centers
-crispy - INFO - Saving wavelength calibration cube
-crispy - INFO - Total time elapsed: 401 s
-</pre></div></div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_1.png" src="_images/PISCES_wavecal_11_1.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_2.png" src="_images/PISCES_wavecal_11_2.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_3.png" src="_images/PISCES_wavecal_11_3.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_4.png" src="_images/PISCES_wavecal_11_4.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_5.png" src="_images/PISCES_wavecal_11_5.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_6.png" src="_images/PISCES_wavecal_11_6.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_7.png" src="_images/PISCES_wavecal_11_7.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_8.png" src="_images/PISCES_wavecal_11_8.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_9.png" src="_images/PISCES_wavecal_11_9.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_10.png" src="_images/PISCES_wavecal_11_10.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_11.png" src="_images/PISCES_wavecal_11_11.png" />
-</div>
-</div>
-<div class="nboutput container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_12.png" src="_images/PISCES_wavecal_11_12.png" />
-</div>
-</div>
-<div class="nboutput nblast container">
-<div class="prompt empty container">
-</div>
-<div class="output_area container">
-<img alt="_images/PISCES_wavecal_11_13.png" src="_images/PISCES_wavecal_11_13.png" />
-</div>
-</div>
-<div class="nbinput nblast container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -632,13 +489,13 @@ crispy - INFO - Total time elapsed: 401 s
     </div>
 <footer class="footer">
   <p class="pull-right">
-    <a href="_sources/PISCES_wavecal.txt"
+    <a href="_sources/PISCES_wavecal.ipynb.txt"
        rel="nofollow">Page Source</a> &nbsp;
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
-    Last built 15 Mar 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 22 Mar 2017. <br/>
   </p>
 </footer>
   </body>

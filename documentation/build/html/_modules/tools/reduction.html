@@ -17,7 +17,8 @@
         VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
@@ -26,8 +27,8 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../../_static/astropy_logo.ico"/>
-    <link rel="top" title="crispy 0.1.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
 <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
 <script type="text/javascript" src="../../_static/copybutton.js"></script>
 
@@ -73,14 +74,16 @@
           <div class="body" role="main">
             
   <h1>Source code for tools.reduction</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pyfits</span> <span class="k">as</span> <span class="nn">pyf</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="k">import</span> <span class="n">getLogger</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">signal</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">interp1d</span>
-<span class="c1"># from photutils import RectangularAperture</span>
-<span class="c1"># from photutils import aperture_photometry</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">ndimage</span>
 <span class="kn">from</span> <span class="nn">tools.locate_psflets</span> <span class="k">import</span> <span class="n">PSFLets</span>
 <span class="kn">from</span> <span class="nn">tools.image</span> <span class="k">import</span> <span class="n">Image</span>
@@ -570,7 +573,7 @@
     <span class="n">lam_midpts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">loglam_midpts</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span></div>
 
-<div class="viewcode-block" id="lstsqExtract"><a class="viewcode-back" href="../../tools.html#tools.reduction.lstsqExtract">[docs]</a><span class="k">def</span> <span class="nf">lstsqExtract</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">ifsimage</span><span class="p">,</span><span class="n">ivar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="lstsqExtract"><a class="viewcode-back" href="../../tools.html#tools.reduction.lstsqExtract">[docs]</a><span class="k">def</span> <span class="nf">lstsqExtract</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">ifsimage</span><span class="p">,</span><span class="n">ivar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">dy</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">refine</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Least squares extraction, inspired by T. Brandt and making use of some of his code.</span>
 <span class="sd">    </span>
@@ -608,27 +611,59 @@
         <span class="n">ifsimage</span><span class="o">.</span><span class="n">ivar</span> <span class="o">=</span> <span class="kc">None</span>
         
     <span class="n">cube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">psflets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="p">))</span>
+
+    <span class="n">resid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">ifsimage</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">resid</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">ifsimage</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">newresid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">ifsimage</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">newresid</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">ifsimage</span><span class="o">.</span><span class="n">data</span>
+    
     
     <span class="n">ydim</span><span class="p">,</span><span class="n">xdim</span> <span class="o">=</span> <span class="n">ifsimage</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-    
+    <span class="n">residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ifsimage</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="p">):</span>
             <span class="n">xlist</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">ylist</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">good</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lamlist</span><span class="p">:</span>
-                <span class="n">_x</span><span class="p">,</span><span class="n">_y</span> <span class="o">=</span> <span class="n">psftool</span><span class="o">.</span><span class="n">return_locations</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">allcoef</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
-                <span class="n">good</span> <span class="o">*=</span> <span class="p">(</span><span class="n">_x</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">_x</span> <span class="o">&lt;</span> <span class="n">xdim</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">_y</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">_y</span> <span class="o">&lt;</span> <span class="n">ydim</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+                <span class="n">_x</span><span class="p">,</span><span class="n">_y</span> <span class="o">=</span> <span class="n">psftool</span><span class="o">.</span><span class="n">return_locations</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">allcoef</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">good</span> <span class="o">*=</span> <span class="p">(</span><span class="n">_x</span> <span class="o">&gt;</span> <span class="n">dy</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">_x</span> <span class="o">&lt;</span> <span class="n">xdim</span><span class="o">-</span><span class="n">dy</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">_y</span> <span class="o">&gt;</span> <span class="n">dy</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">_y</span> <span class="o">&lt;</span> <span class="n">ydim</span><span class="o">-</span><span class="n">dy</span><span class="p">)</span>
                 <span class="n">xlist</span> <span class="o">+=</span> <span class="p">[</span><span class="n">_x</span><span class="p">]</span>    
                 <span class="n">ylist</span> <span class="o">+=</span> <span class="p">[</span><span class="n">_y</span><span class="p">]</span>   
-                 
+                
             <span class="k">if</span> <span class="n">good</span><span class="p">:</span>
-                <span class="n">subim</span><span class="p">,</span> <span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_cutout</span><span class="p">(</span><span class="n">ifsimage</span><span class="p">,</span><span class="n">xlist</span><span class="p">,</span><span class="n">ylist</span><span class="p">,</span><span class="n">psflets</span><span class="p">)</span>
+                <span class="n">subim</span><span class="p">,</span> <span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_cutout</span><span class="p">(</span><span class="n">ifsimage</span><span class="p">,</span><span class="n">xlist</span><span class="p">,</span><span class="n">ylist</span><span class="p">,</span><span class="n">psflets</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
                 <span class="n">cube</span><span class="p">[:,</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_cutout</span><span class="p">(</span><span class="n">subim</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">psflet_subarr</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">ilam</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="n">resid</span><span class="p">[</span><span class="n">y0</span><span class="p">:</span><span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span><span class="n">x1</span><span class="p">]</span> <span class="o">-=</span> <span class="n">cube</span><span class="p">[</span><span class="n">ilam</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">psflet_subarr</span><span class="p">[</span><span class="n">ilam</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cube</span><span class="p">[:,</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
-
+                
+    <span class="n">resid_img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">resid</span><span class="p">)</span>    
+    <span class="k">if</span> <span class="n">refine</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="p">):</span>
+                <span class="n">xlist</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">ylist</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">good</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lamlist</span><span class="p">:</span>
+                    <span class="n">_x</span><span class="p">,</span><span class="n">_y</span> <span class="o">=</span> <span class="n">psftool</span><span class="o">.</span><span class="n">return_locations</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">allcoef</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="n">good</span> <span class="o">*=</span> <span class="p">(</span><span class="n">_x</span> <span class="o">&gt;</span> <span class="n">dy</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">_x</span> <span class="o">&lt;</span> <span class="n">xdim</span><span class="o">-</span><span class="n">dy</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">_y</span> <span class="o">&gt;</span> <span class="n">dy</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">_y</span> <span class="o">&lt;</span> <span class="n">ydim</span><span class="o">-</span><span class="n">dy</span><span class="p">)</span>
+                    <span class="n">xlist</span> <span class="o">+=</span> <span class="p">[</span><span class="n">_x</span><span class="p">]</span>    
+                    <span class="n">ylist</span> <span class="o">+=</span> <span class="p">[</span><span class="n">_y</span><span class="p">]</span>   
+                
+                <span class="k">if</span> <span class="n">good</span><span class="p">:</span>
+                    <span class="n">subim</span><span class="p">,</span> <span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_cutout</span><span class="p">(</span><span class="n">resid_img</span><span class="p">,</span><span class="n">xlist</span><span class="p">,</span><span class="n">ylist</span><span class="p">,</span><span class="n">psflets</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+                    <span class="n">cube</span><span class="p">[:,</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">fit_cutout</span><span class="p">(</span><span class="n">subim</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">psflet_subarr</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">ilam</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                        <span class="n">newresid</span><span class="p">[</span><span class="n">y0</span><span class="p">:</span><span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span><span class="n">x1</span><span class="p">]</span> <span class="o">-=</span> <span class="n">cube</span><span class="p">[</span><span class="n">ilam</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">psflet_subarr</span><span class="p">[</span><span class="n">ilam</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cube</span><span class="p">[:,</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+                    
+    
     <span class="n">pyf</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">cube</span><span class="p">)</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">pyf</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">resid</span><span class="p">)</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_resid.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">pyf</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">newresid</span><span class="p">)</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_newresid.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cube</span></div>
 
 <div class="viewcode-block" id="get_cutout"><a class="viewcode-back" href="../../tools.html#tools.reduction.get_cutout">[docs]</a><span class="k">def</span> <span class="nf">get_cutout</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">psflets</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
@@ -670,7 +705,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">-</span> <span class="n">dy</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="n">dy</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">-</span> <span class="n">dy</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">+</span> <span class="n">dy</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">-</span> <span class="n">dy</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">+</span> <span class="n">dy</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="n">subim</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">y0</span><span class="p">:</span><span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">:</span><span class="n">x1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">im</span><span class="o">.</span><span class="n">ivar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -686,6 +721,7 @@
 
     <span class="k">return</span> <span class="n">subim</span><span class="p">,</span> <span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span><span class="n">x1</span><span class="p">]</span></div>
 
+
 <div class="viewcode-block" id="fit_cutout"><a class="viewcode-back" href="../../tools.html#tools.reduction.fit_cutout">[docs]</a><span class="k">def</span> <span class="nf">fit_cutout</span><span class="p">(</span><span class="n">subim</span><span class="p">,</span> <span class="n">psflets</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a series of PSFlets to an image, recover the best-fit coefficients.</span>
@@ -693,18 +729,26 @@
 <span class="sd">    could be more complex if/when we regularize the problem or adopt some</span>
 <span class="sd">    other approach.</span>
 
-<span class="sd">    Inputs:</span>
-<span class="sd">    1. subim:   2D nadarray, microspectrum to fit</span>
-<span class="sd">    2. psflets: 3D ndarray, first dimension is wavelength.  psflets[0] </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subim:   2D nadarray</span>
+<span class="sd">        Microspectrum to fit</span>
+<span class="sd">    psflets: 3D ndarray</span>
+<span class="sd">        First dimension is wavelength.  psflets[0] </span>
 <span class="sd">                must match the shape of subim.</span>
-<span class="sd">    3. mode:    string, method to use.  Currently limited to lstsq (a </span>
+<span class="sd">    mode:    string</span>
+<span class="sd">        Method to use.  Currently limited to lstsq (a </span>
 <span class="sd">                simple least-squares fit using linalg.lstsq), this can</span>
 <span class="sd">                be expanded to include an arbitrary approach.</span>
 <span class="sd">    </span>
-<span class="sd">    Returns:</span>
-<span class="sd">    1. coef:    the best-fit coefficients (i.e. the microspectrum).</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    coef:    array</span>
+<span class="sd">        The best-fit coefficients (i.e. the microspectrum).</span>
 
-<span class="sd">    Note: this routine may also return the covariance matrix in the future.</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This routine may also return the covariance matrix in the future.</span>
 <span class="sd">    It will depend on the performance of the algorithms and whether/how we</span>
 <span class="sd">    implement regularization.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1056,8 +1100,8 @@
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
-    Last built 17 Mar 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 22 Mar 2017. <br/>
   </p>
 </footer>
   </body>

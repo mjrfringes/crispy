@@ -17,7 +17,8 @@
         VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,8 +27,8 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
-    <link rel="top" title="crispy 0.1.0 documentation" href="../index.html" />
-    <link rel="up" title="Module code" href="index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
 <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
 <script type="text/javascript" src="../_static/copybutton.js"></script>
 
@@ -134,6 +135,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">FWHM</span> <span class="o">=</span> <span class="mi">2</span>               <span class="c1"># FWHM of gaussian kernel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">FWHMlam</span> <span class="o">=</span> <span class="mf">660.</span>         <span class="c1"># Lam at which FWHM is defined</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gaussian</span> <span class="o">=</span> <span class="kc">True</span>        <span class="c1"># Use standard Gaussian kernels instead of library</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaussian_hires</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Use Gaussians for hires PSFLet matching, instead</span>
+                                    <span class="c1"># of Lucy-Richardson deconvolution</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">RN</span> <span class="o">=</span> <span class="mf">0.2</span>               <span class="c1"># FWHM of gaussian kernel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">CIC</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">3</span>             <span class="c1"># Lam at which FWHM is defined</span>
@@ -197,8 +200,8 @@
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
-    Last built 17 Mar 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 22 Mar 2017. <br/>
   </p>
 </footer>
   </body>

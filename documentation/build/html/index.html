@@ -17,7 +17,8 @@
         VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -26,7 +27,8 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
     <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
-    <link rel="top" title="crispy 0.1.0 documentation" href="#" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Introduction to crispy" href="Introduction.html" />
 <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
 <script type="text/javascript" src="_static/copybutton.js"></script>
@@ -103,6 +105,12 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="PISCES_Reduce.html">PISCES Data Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MultiProcExample.html">Process multiple IFS images in parallel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="MultiProcExample.html#Import-files-to-reduce,-doesn't-matter-how-many">Import files to reduce, doesn&#8217;t matter how many</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MultiProcExample.html#No-parallelization">No parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MultiProcExample.html#Parallelized-version">Parallelized version</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -115,18 +123,18 @@
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.detector">tools.detector module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.detutils">tools.detutils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.image">tools.image module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-imgtools-module">tools.imgtools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.imgtools">tools.imgtools module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.initLogger">tools.initLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.inputScene">tools.inputScene module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-lenslet-module">tools.lenslet module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.lenslet">tools.lenslet module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.locate_psflets">tools.locate_psflets module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.par_utils">tools.par_utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.plotting">tools.plotting module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-postprocessing-module">tools.postprocessing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-reduction-module">tools.reduction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.postprocessing">tools.postprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.reduction">tools.reduction module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.rotate">tools.rotate module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-spectrograph-module">tools.spectrograph module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-wavecal-module">tools.wavecal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.spectrograph">tools.spectrograph module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.wavecal">tools.wavecal module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools">Module contents</a></li>
 </ul>
 </li>
@@ -164,13 +172,13 @@
     </div>
 <footer class="footer">
   <p class="pull-right">
-    <a href="_sources/index.txt"
+    <a href="_sources/index.rst.txt"
        rel="nofollow">Page Source</a> &nbsp;
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4.6. &nbsp;
-    Last built 17 Mar 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 22 Mar 2017. <br/>
   </p>
 </footer>
   </body>

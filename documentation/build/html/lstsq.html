@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>PISCES Data Reduction &#8212; crispy 0.1.0 documentation</title>
+    <title>Least squares reduction &#8212; crispy 0.1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,8 +29,6 @@
     <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Process multiple IFS images in parallel" href="MultiProcExample.html" />
-    <link rel="prev" title="PISCES wavelength calibration" href="PISCES_wavecal.html" />
 <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
 <script type="text/javascript" src="_static/copybutton.js"></script>
 
@@ -59,23 +57,12 @@
 <div class="related">
     <h3>Navigation</h3>
     <ul>
-      <li class="right">
-	<a href="MultiProcExample.html" title="Process multiple IFS images in parallel">
-	  next &raquo;
-	</a>
-      </li>
-      <li class="right">
-	<a href="PISCES_wavecal.html" title="PISCES wavelength calibration">
-	  &laquo; previous
-	</a>
-	 |
-      </li>
       <li>
 	<a href="index.html">crispy 0.1.0 documentation</a>
 	 &#187;
       </li>
       
-      <li>PISCES Data Reduction</li> 
+       
     </ul>
 </div>
   
@@ -247,90 +234,92 @@ div.nboutput div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 </style>
-<div class="section" id="PISCES-Data-Reduction">
-<h1>PISCES Data Reduction<a class="headerlink" href="#PISCES-Data-Reduction" title="Permalink to this headline">¶</a></h1>
-<p>The data reduction pipeline for PISCES is kept as simple as possible for
-easing integration with JPL&#8217;s coronagraph control software. It requires
-an existing wavelength calibration.</p>
+<div class="section" id="Least-squares-reduction">
+<h1>Least squares reduction<a class="headerlink" href="#Least-squares-reduction" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../code&#39;</span>
 <span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">PISCESparams</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
 <span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<p>This is simple: load the reduction function, and call it!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [5]:
+<span></span>In [3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">glob</span>
-<span class="c1"># call the reduction routine with an example image</span>
-<span class="n">VARIA_ON</span><span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;IFS665nm.fits&#39;</span><span class="p">)</span>
-<span class="n">VARIA_OFF</span><span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;IFSdark665nm.fits&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">VARIA_ON</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
-<span class="kn">from</span> <span class="nn">tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="n">test_img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">VARIA_ON</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">Image</span><span class="p">(</span><span class="n">VARIA_OFF</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span><span class="p">))</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_varia.fits&#39;</span><span class="p">)</span>
-<span class="n">reduced_cube</span><span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_varia.fits&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">tmp</span><span class="o">=</span><span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;det_760.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+<span class="n">tmp</span><span class="o">=</span><span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-../../code/ReferenceFiles/Calibra_170306/IFS665nm.fits
-crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS665nm.fits
-crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFSdark665nm.fits
-crispy - INFO - Writing data to ../../code/SimResults/test_varia.fits
-crispy - INFO - Read data from HDU 1 of ../../code/SimResults/test_varia.fits
-crispy - INFO - Reduced cube will have 24 wavelength bins
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="stderr output_area docutils container">
-<div class="highlight"><pre>
-/Users/mrizzo/anaconda/envs/py27/lib/python2.7/site-packages/numpy/lib/nanfunctions.py:703: RuntimeWarning: Mean of empty slice
-  warnings.warn(&#34;Mean of empty slice&#34;, RuntimeWarning)
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Writing data to ../../code/SimResults/test_varia_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_760.fits
+crispy - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fits
 </pre></div></div>
 </div>
-<p>The wavelengths of the cube slices are the following:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
-<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Wavelengths at midpoints (nm): &#39;</span><span class="p">,</span><span class="n">lam_midpts</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Wavelengths at endpoints (nm): &#39;</span><span class="p">,</span><span class="n">lam_endpts</span><span class="p">)</span>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
 </pre></div>
 </div>
 </div>
-<p>The files are exported in the folder par.exportDir. Look for the
-introduction documentation page for more details.</p>
 </div>
 
 
@@ -340,7 +329,7 @@ introduction documentation page for more details.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
 <ul>
-<li><a class="reference internal" href="#">PISCES Data Reduction</a></li>
+<li><a class="reference internal" href="#">Least squares reduction</a></li>
 </ul>
 
 
@@ -350,7 +339,7 @@ introduction documentation page for more details.</p>
     </div>
 <footer class="footer">
   <p class="pull-right">
-    <a href="_sources/PISCES_Reduce.ipynb.txt"
+    <a href="_sources/lstsq.ipynb.txt"
        rel="nofollow">Page Source</a> &nbsp;
     <a href="#">Back to Top</a></p>
   <p>
