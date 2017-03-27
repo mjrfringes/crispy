@@ -96,7 +96,7 @@ def propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame,
     return True
 
 
-def propagateIFS(par,wavelist,inputcube,name='detectorFrame',parallel=False,cpus=6):
+def propagateIFS(par,wavelist,inputcube,name='detectorFrame'):
     '''
     Propagates an input cube through the Integral Field Spectrograph
     
@@ -262,7 +262,7 @@ def main():
     log.shutdown()
 
     
-def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
+def reduceIFSMap(par,IFSimageName,method='optext'):
     '''
     Main reduction function
     
@@ -274,59 +274,127 @@ def reduceIFSMap(par,IFSimageName,method='optext',ivar=False):
             Contains all IFS parameters
     IFSimageName : string
             Path of image file
-    method : 'simple', 'dense', 'apphot', 'test', 'lstsq', 'optext'
+    method : 'lstsq', 'optext'
             Method used for reduction.
-            'simple': brute force photometry, adds up the fluxes in a line of pixels
-            centered where the centroid at that wavelength falls. Not very accurate.
-            'dense': does the same but after interpolating/densifying the image by a factor of 10,
-            which gives the previous method more accuracy (but depends on the interpolation scheme).
-            'test': use the method defined in the testReduction function, for experimenting.
             'lstsq': use the knowledge of the PSFs at each location and each wavelength and fits
             the microspectrum as a weighted sum of these PSFs in the least-square sense. Can weigh the data by its variance.
             'optext': use a matched filter to appropriately weigh each pixel and assign the fluxes, making use of the inverse
             wavlength calibration map. Then remap each microspectrum onto the desired wavelengths 
-    ivar : Boolean
-            Uses the variance information. If the original image doesn't have a variance HDU, then
-            use the image itself as its own variance (Poisson noise). Default False.
-         
+    
+    Returns
+    -------
+    cube: 3D ndarray
+        Reduced IFS cube
+    
     '''
+    start = time.time()
+
     # reset header (in the case where we do simulation followed by extraction)
-    #par.makeHeader()
-    par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)
-    par.hdr.append(('comment', '*'*22 + ' Cube Extraction ' + '*'*21), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)    
-    par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('R',par.R,'Spectral resolution of final cube'), end=True) 
-    par.hdr.append(('CALDIR',par.wavecalDir.split('/')[-2],'Directory of wavelength solution'), end=True) 
+    if 'CALDIR' in par.hdr:
+        pass
+    else:
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)
+        par.hdr.append(('comment', '*'*22 + ' Cube Extraction ' + '*'*21), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)    
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('R',par.R,'Spectral resolution of final cube'), end=True) 
+        par.hdr.append(('CALDIR',par.wavecalDir.split('/')[-2],'Directory of wavelength solution'), end=True) 
 
     IFSimage = Image(filename = IFSimageName)
     reducedName = IFSimageName.split('/')[-1].split('.')[0]
-    if method == 'simple':
-        reducedName += '_red_simple'
-        cube = simpleReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
-    elif method == 'dense':
-        reducedName += '_red_dense'
-        cube = densifiedSimpleReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
-#     elif method == 'apphot':
-#         reducedName += '_red_apphot'
-#         cube = apertureReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
-    elif method == 'test':
-        reducedName += '_red_test'
-        cube = testReduction(par,par.exportDir+'/'+reducedName,IFSimage.data)
-    elif method == 'GPI2':
-        reducedName += '_red_gpi2'
-        cube = GPImethod2(par,par.exportDir+'/'+reducedName,IFSimage.data)
     elif method == 'lstsq':
         reducedName += '_red_lstsq'
         cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage)
     elif method == 'optext':
         reducedName += '_red_optext'
-        if ivar==False: IFSimage.ivar = np.ones(IFSimage.data.shape)
         cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage)
     else:
         log.info("Method not found")
+        
+    log.info('Elapsed time: %fs' % (time.time()-start))
+
     return cube
+
+
+def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True):
+    '''
+    Main reduction function
+    
+    Uses various routines to extract an IFS detector map into a spectral-spatial cube.
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+            Contains all IFS parameters
+    IFSimageNameList : list
+            List of strings containing the paths to the image files
+    method : 'lstsq', 'optext'
+            Method used for reduction.
+            'lstsq': use the knowledge of the PSFs at each location and each wavelength and fits
+            the microspectrum as a weighted sum of these PSFs in the least-square sense. Can weigh the data by its variance.
+            'optext': use a matched filter to appropriately weigh each pixel and assign the fluxes, making use of the inverse
+            wavlength calibration map. Then remap each microspectrum onto the desired wavelengths 
+             
+    '''
+    # reset header (in the case where we do simulation followed by extraction)
+    #par.makeHeader()
+    start = time.time()
+
+    if 'CALDIR' in par.hdr:
+        pass
+    else:
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)
+        par.hdr.append(('comment', '*'*22 + ' Cube Extraction ' + '*'*21), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)    
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('R',par.R,'Spectral resolution of final cube'), end=True) 
+        par.hdr.append(('CALDIR',par.wavecalDir.split('/')[-2],'Directory of wavelength solution'), end=True) 
+
+    
+    if parallel:
+        tasks = multiprocessing.Queue()
+        results = multiprocessing.Queue()
+        ncpus = multiprocessing.cpu_count()
+        consumers = [ Consumer(tasks, results)
+                      for i in range(ncpus) ]
+        for w in consumers:
+            w.start()
+
+        # you call the function here, with all its arguments in a list
+        for i in range(len(IFSimageNameList)):
+            IFSimage = Image(filename = IFSimageNameList[i])
+            reducedName = IFSimageNameIFSimageNameList[i].split('/')[-1].split('.')[0]
+            elif method == 'lstsq':
+                reducedName += '_red_lstsq'
+                tasks.put(Task(i, lstsqExtract, (par, par.exportDir+'/'+reducedName,IFSimage)))
+            elif method == 'optext':
+                reducedName += '_red_optext'
+                tasks.put(Task(i, intOptimalExtract, (par, par.exportDir+'/'+reducedName,IFSimage)))
+            else:
+                log.info("Method not found")
+    
+        for i in range(ncpus):
+            tasks.put(None)
+
+        for i in range(len(IFSimageNameList)):
+            index, result = results.get()
+
+    else:
+        for i in range(len(IFSimageNameList)):
+            IFSimage = Image(filename = IFSimageNameList[i])
+            reducedName = IFSimageNameList[i].split('/')[-1].split('.')[0]
+            elif method == 'lstsq':
+                reducedName += '_red_lstsq'
+                cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage)
+            elif method == 'optext':
+                reducedName += '_red_optext'
+                cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage)
+            else:
+                log.info("Method not found")
+
+    log.info('Elapsed time: %fs' % (time.time()-start))
 
 
 

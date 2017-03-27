@@ -894,17 +894,13 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
         for j in range(yindx.shape[1]):
             good = True
             for lam in lamlist:
-                _x,_y = PSFlet_tool.return_locations(lam, allcoef, j-par.nlens/2, i-par.nlens/2)
+                _x,_y = PSFlet_tool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
                 good *= (_x > delt_y)*(_x < xdim-delt_y)*(_y > delt_y)*(_y < ydim-delt_y)
                  
             if good:
                 _x = xindx[i, j, :PSFlet_tool.nlam[i, j]]
                 _y = yindx[i, j, :PSFlet_tool.nlam[i, j]]
                 _lam = PSFlet_tool.lam_indx[i, j, :PSFlet_tool.nlam[i, j]]
-#                 if not (np.all(_x > x[0, 10]) and np.all(_x < x[0, -10]) and 
-#                         np.all(_y > y[10, 0]) and np.all(_y < y[-10, 0])):
-#                     continue
-
                 iy = np.nanmean(_y)
                 if ~np.isnan(iy):
                     i1 = int(iy - delt_y/2.)+1
@@ -932,12 +928,12 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
                 cube[:,j,i] = np.NaN
                 ivarcube[:,j,i] = 0.
                 
-
-    par.hdr.append(('cubemode','Optimal Extraction', 'Method used to extract data cube'), end=True)
-    par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum mid wavelength of extracted cube'), end=True)
-    par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum mid wavelength of extracted cube'), end=True)
-    par.hdr.append(('dloglam',loglam[1]-loglam[0], 'Log spacing of extracted wavelength bins'), end=True)
-    par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
+    if 'cubemode' not in par.hdr:
+        par.hdr.append(('cubemode','Optimal Extraction', 'Method used to extract data cube'), end=True)
+        par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum mid wavelength of extracted cube'), end=True)
+        par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum mid wavelength of extracted cube'), end=True)
+        par.hdr.append(('dloglam',loglam[1]-loglam[0], 'Log spacing of extracted wavelength bins'), end=True)
+        par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
     
     if smoothandmask:
         par.hdr.append(('SMOOTHED',True, 'Cube smoothed over bad lenslets'), end=True)

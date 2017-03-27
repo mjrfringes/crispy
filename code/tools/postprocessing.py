@@ -15,6 +15,8 @@ from time import time
 import os
 from tools.detector import averageDetectorReadout,noiselessDetector,readDetector
 
+import multiprocessing
+from tools.par_utils import Task, Consumer
 
 def process_SPC_IFS(par,
                     psf_time_series_folder,
@@ -121,44 +123,102 @@ def process_SPC_IFS(par,
     ###################################################################################
     ref_outlist = []
     target_outlist = []
-    # this should be parallelized
-    for i in range(len(filelist)):
-        reffile = filelist[i]
+    # Parallelized propagation
+    if parallel:
         if process_cubes:
-            log.info('Processing file '+reffile.split('/')[-1])
-            cube = fits.open(reffile)[0]
-            if i<n_ref_star_imgs:
-                cube.data*=ref_star_cube
-            else:
-                cube.data*=target_star_cube
-            # adjust headers for slightly different wavelength
-            log.debug('Modifying cube header')
-            if cube.header['LAM_C']==0.8:
-                if lamc==770.:
-                    cube.header['LAM_C']=0.77
-                    # by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800
+            tasks = multiprocessing.Queue()
+            results = multiprocessing.Queue()
+            ncpus = multiprocessing.cpu_count()
+            consumers = [ Consumer(tasks, results)
+                          for i in range(ncpus) ]
+            for w in consumers:
+                w.start()
+
+            # you call the function here, with all its arguments in a list
+            for i in range(len(filelist)):
+                reffile = filelist[i]
+                log.info('Processing file '+reffile.split('/')[-1])
+                cube = fits.open(reffile)[0]
+                if i<n_ref_star_imgs:
+                    cube.data*=ref_star_cube
+                else:
+                    cube.data*=target_star_cube
+                # adjust headers for slightly different wavelength
+                log.debug('Modifying cube header')
+                if cube.header['LAM_C']==0.8:
+                    if lamc==770.:
+                        cube.header['LAM_C']=0.77
+                        # by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800
+                    else:
+                        cube.header['LAM_C']=lamc/1000.
+                        cube.header['PIXSIZE']*=lamc/0.77
                 else:
                     cube.header['LAM_C']=lamc/1000.
                     cube.header['PIXSIZE']*=lamc/0.77
-            else:
-                cube.header['LAM_C']=lamc/1000.
-                cube.header['PIXSIZE']*=lamc/0.77
-            par.saveDetector=False  
+                par.saveDetector=False  
 
-            detectorFrame = propagateIFS(par,lamlist.value/1000.,cube)
+                tasks.put(Task(i, propagateIFS, (par, lamlist.value/1000.,cube)))
 
-            if i<n_ref_star_imgs:
-                Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
-                ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
-            else:
-                Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits',clobber=True)
-                target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+            for i in range(ncpus):
+                tasks.put(None)
+
+            for i in range(len(filelist)):
+                index, result = results.get()
+                if i<n_ref_star_imgs:
+                    Image(data = result,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
+                    ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
+                else:
+                    Image(data = result,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits',clobber=True)
+                    target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+                
+
         else:
+            for i in range(len(filelist)):
+                reffile = filelist[i]
+                if i<n_ref_star_imgs:
+                    ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
+                else:
+                    target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+            
 
-            if i<n_ref_star_imgs:
-                ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
+    else:
+        for i in range(len(filelist)):
+            reffile = filelist[i]
+            if process_cubes:
+                log.info('Processing file '+reffile.split('/')[-1])
+                cube = fits.open(reffile)[0]
+                if i<n_ref_star_imgs:
+                    cube.data*=ref_star_cube
+                else:
+                    cube.data*=target_star_cube
+                # adjust headers for slightly different wavelength
+                log.debug('Modifying cube header')
+                if cube.header['LAM_C']==0.8:
+                    if lamc==770.:
+                        cube.header['LAM_C']=0.77
+                        # by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800
+                    else:
+                        cube.header['LAM_C']=lamc/1000.
+                        cube.header['PIXSIZE']*=lamc/0.77
+                else:
+                    cube.header['LAM_C']=lamc/1000.
+                    cube.header['PIXSIZE']*=lamc/0.77
+                par.saveDetector=False  
+
+                detectorFrame = propagateIFS(par,lamlist.value/1000.,cube)
+
+                if i<n_ref_star_imgs:
+                    Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
+                    ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
+                else:
+                    Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits',clobber=True)
+                    target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
             else:
-                target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+
+                if i<n_ref_star_imgs:
+                    ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
+                else:
+                    target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
             
     times['Process cubes through IFS'] = time()
 
