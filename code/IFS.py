@@ -303,7 +303,7 @@ def reduceIFSMap(par,IFSimageName,method='optext'):
 
     IFSimage = Image(filename = IFSimageName)
     reducedName = IFSimageName.split('/')[-1].split('.')[0]
-    elif method == 'lstsq':
+    if method == 'lstsq':
         reducedName += '_red_lstsq'
         cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage)
     elif method == 'optext':
