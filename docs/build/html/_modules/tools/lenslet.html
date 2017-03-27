@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tools.lenslet &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      <li><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tools.lenslet</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pyfits</span> <span class="k">as</span> <span class="nn">pyf</span>
+<span class="kn">from</span> <span class="nn">tools.rotate</span> <span class="k">import</span> <span class="n">Rotate</span>
+<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="k">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">tools.detutils</span> <span class="k">import</span> <span class="n">frebin</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">ndimage</span>
+<span class="kn">from</span> <span class="nn">tools.spectrograph</span> <span class="k">import</span> <span class="n">distort</span>
+<span class="kn">from</span> <span class="nn">tools.locate_psflets</span> <span class="k">import</span> <span class="n">initcoef</span><span class="p">,</span><span class="n">transform</span>
+
+
+<div class="viewcode-block" id="processImagePlane"><a class="viewcode-back" href="../../tools.html#tools.lenslet.processImagePlane">[docs]</a><span class="k">def</span> <span class="nf">processImagePlane</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">imagePlane</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Function processImagePlane</span>
+<span class="sd">    </span>
+<span class="sd">    Rotates an image or slice, and rebins in a flux-conservative way</span>
+<span class="sd">    on an array of lenslets, using the plate scale provided in par.pixperlenslet.</span>
+<span class="sd">    Each pixel represents the flux within a lenslet. Starts by padding the original</span>
+<span class="sd">    image to avoid cropping edges when rotating. This step necessarily involves an</span>
+<span class="sd">    interpolation, so one needs to be cautious.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    par :   Parameters instance</span>
+<span class="sd">            Contains all IFS parameters</span>
+<span class="sd">    imagePlane : Image instance containing 3D input cube</span>
+<span class="sd">            Input cube to IFS sim, first dimension of data is wavelength</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    imagePlaneRot : 2D array</span>
+<span class="sd">            Rotated image plane on same sampling as original.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">paddedImagePlane</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">imagePlane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span><span class="nb">int</span><span class="p">(</span><span class="n">imagePlane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))))</span>
+    
+    <span class="n">xdim</span><span class="p">,</span><span class="n">ydim</span> <span class="o">=</span> <span class="n">paddedImagePlane</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">xpad</span> <span class="o">=</span> <span class="n">xdim</span><span class="o">-</span><span class="n">imagePlane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ypad</span> <span class="o">=</span> <span class="n">ydim</span><span class="o">-</span><span class="n">imagePlane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">xpad</span> <span class="o">//=</span><span class="mi">2</span>
+    <span class="n">ypad</span> <span class="o">//=</span><span class="mi">2</span>
+    <span class="n">paddedImagePlane</span><span class="p">[</span><span class="n">xpad</span><span class="p">:</span><span class="o">-</span><span class="n">xpad</span><span class="p">,</span><span class="n">ypad</span><span class="p">:</span><span class="o">-</span><span class="n">ypad</span><span class="p">]</span> <span class="o">=</span> <span class="n">imagePlane</span>
+    
+    <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="n">Rotate</span><span class="p">(</span><span class="n">paddedImagePlane</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="p">,</span><span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    
+    <span class="c1">###################################################################### </span>
+    <span class="c1"># Flux conservative rebinning</span>
+    <span class="c1">###################################################################### </span>
+    <span class="n">newShape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">imagePlaneRot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">imagePlaneRot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span><span class="p">))</span>
+    <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="n">frebin</span><span class="p">(</span><span class="n">imagePlaneRot</span><span class="p">,</span><span class="n">newShape</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Input plane is </span><span class="si">%d</span><span class="s1">x</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">imagePlaneRot</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">imagePlaneRot</span></div>
+
+
+
+<div class="viewcode-block" id="Lenslets"><a class="viewcode-back" href="../../tools.html#tools.lenslet.Lenslets">[docs]</a><span class="k">def</span> <span class="nf">Lenslets</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">imageplane</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span><span class="n">lensletplane</span><span class="p">,</span> <span class="n">allweights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">kernels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">locations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function Lenslets</span>
+<span class="sd">    </span>
+<span class="sd">    Creates the IFS map on a &#39;dense&#39; detector array where each pixel is smaller than the</span>
+<span class="sd">    final detector pixels by a factor par.pxperdetpix. Adds to lensletplane array to save</span>
+<span class="sd">    memory.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    par :   Parameters instance</span>
+<span class="sd">            Contains all IFS parameters</span>
+<span class="sd">    image : 2D array</span>
+<span class="sd">            Image plane incident on lenslets.</span>
+<span class="sd">    lam : float</span>
+<span class="sd">            Wavelength (microns)</span>
+<span class="sd">    lensletplane : 2D array</span>
+<span class="sd">            Densified detector plane; the function updates this variable</span>
+<span class="sd">    allweights : 3D array</span>
+<span class="sd">            Cube with weights for each kernel</span>
+<span class="sd">    kernels : 3D array</span>
+<span class="sd">            Kernels at locations on the detector</span>
+<span class="sd">    locations : 2D array</span>
+<span class="sd">            Locations where the kernels are sampled</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># select row values</span>
+    <span class="n">nx</span><span class="p">,</span><span class="n">ny</span> <span class="o">=</span> <span class="n">imageplane</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">rowList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">nx</span><span class="p">)</span>
+    <span class="n">colList</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">ny</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">nx</span><span class="p">)</span>
+
+    <span class="n">I</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="n">J</span> <span class="o">=</span> <span class="mi">35</span>
+    <span class="c1"># loop on all lenslets; there&#39;s got to be a way to do this faster</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ny</span><span class="p">):</span>
+            <span class="n">jcoord</span> <span class="o">=</span> <span class="n">colList</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">icoord</span> <span class="o">=</span> <span class="n">rowList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">imageplane</span><span class="p">[</span><span class="n">jcoord</span><span class="o">+</span><span class="n">imageplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">icoord</span><span class="o">+</span><span class="n">imageplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+            
+            <span class="c1"># exit early where there is no flux</span>
+            <span class="k">if</span> <span class="n">val</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">distortPISCES</span><span class="p">:</span>
+                <span class="c1"># in this case, the lensletplane array is oversampled by a factor par.pxperdetpix</span>
+                <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">jcoord</span><span class="p">,</span><span class="n">icoord</span><span class="p">)</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">icoord</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">jcoord</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="p">)</span>
+                <span class="c1">#if i==I and j==J: print x,y</span>
+            
+                <span class="c1"># transform this coordinate including the distortion and dispersion</span>
+                <span class="n">factor</span> <span class="o">=</span> <span class="mf">1000.</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pitch</span>
+                <span class="n">X</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">factor</span> <span class="c1"># this is now in millimeters</span>
+                <span class="n">Y</span> <span class="o">=</span> <span class="n">y</span><span class="o">*</span><span class="n">factor</span> <span class="c1"># this is now in millimeters</span>
+            
+                <span class="c1"># apply polynomial transform</span>
+                <span class="n">ytmp</span><span class="p">,</span><span class="n">xtmp</span> <span class="o">=</span> <span class="n">distort</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">lam</span><span class="p">)</span>
+                <span class="n">sy</span> <span class="o">=</span> <span class="n">ytmp</span><span class="o">/</span><span class="mf">1000.</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">pixsize</span><span class="o">+</span><span class="n">lensletplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span>
+                <span class="n">sx</span> <span class="o">=</span> <span class="n">xtmp</span><span class="o">/</span><span class="mf">1000.</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">pixsize</span><span class="o">+</span><span class="n">lensletplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">order</span> <span class="o">=</span> <span class="mi">3</span>
+                <span class="n">dispersion</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">npixperdlam</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="o">*</span><span class="p">(</span><span class="n">lam</span><span class="o">*</span><span class="mf">1000.</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">FWHMlam</span><span class="p">)</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">FWHMlam</span>
+                <span class="c1">### NOTE THE NEGATIVE SIGN TO PHILENS</span>
+                <span class="n">coef</span> <span class="o">=</span> <span class="n">initcoef</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">pitch</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">pixsize</span><span class="p">,</span> <span class="n">phi</span><span class="o">=-</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="n">dispersion</span><span class="p">)</span>
+                <span class="n">sy</span><span class="p">,</span> <span class="n">sx</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">coef</span><span class="p">)</span>
+                <span class="n">sx</span><span class="o">+=</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span>
+                <span class="n">sy</span><span class="o">+=</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span>
+                
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">par</span><span class="o">.</span><span class="n">gaussian</span><span class="p">:</span>
+                <span class="c1"># put the kernel in the correct spot with the correct weight</span>
+                <span class="n">kx</span><span class="p">,</span><span class="n">ky</span> <span class="o">=</span> <span class="n">kernels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+                <span class="k">if</span> <span class="n">sx</span><span class="o">&gt;</span><span class="n">kx</span><span class="o">//</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">sx</span><span class="o">&lt;</span><span class="n">lensletplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">kx</span><span class="o">//</span><span class="mi">2</span> \
+                    <span class="ow">and</span> <span class="n">sy</span><span class="o">&gt;</span><span class="n">ky</span><span class="o">//</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">sy</span><span class="o">&lt;</span><span class="n">lensletplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ky</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span>
+                    <span class="n">isx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sx</span><span class="p">)</span>
+                    <span class="n">isy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span>
+                
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">)):</span>
+                        <span class="n">wx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">isx</span><span class="o">/</span><span class="n">lensletplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">allweights</span><span class="p">[:,:,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">wy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">isy</span><span class="o">/</span><span class="n">lensletplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">allweights</span><span class="p">[:,:,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">weight</span> <span class="o">=</span> <span class="n">allweights</span><span class="p">[</span><span class="n">wx</span><span class="p">,</span><span class="n">wy</span><span class="p">,</span><span class="n">k</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">weight</span> <span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="n">xlow</span> <span class="o">=</span> <span class="n">isy</span><span class="o">-</span><span class="n">ky</span><span class="o">//</span><span class="mi">2</span>
+                        <span class="n">xhigh</span> <span class="o">=</span> <span class="n">xlow</span><span class="o">+</span><span class="n">ky</span>
+                        <span class="n">ylow</span> <span class="o">=</span> <span class="n">isx</span><span class="o">-</span><span class="n">kx</span><span class="o">//</span><span class="mi">2</span>
+                        <span class="n">yhigh</span> <span class="o">=</span> <span class="n">ylow</span><span class="o">+</span><span class="n">kx</span>
+                        <span class="n">lensletplane</span><span class="p">[</span><span class="n">xlow</span><span class="p">:</span><span class="n">xhigh</span><span class="p">,</span><span class="n">ylow</span><span class="p">:</span><span class="n">yhigh</span><span class="p">]</span><span class="o">+=</span><span class="n">val</span><span class="o">*</span><span class="n">weight</span><span class="o">*</span><span class="n">kernels</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pitch</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">sx</span><span class="o">&gt;</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">sx</span><span class="o">&lt;</span><span class="n">lensletplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span> \
+                    <span class="ow">and</span> <span class="n">sy</span><span class="o">&gt;</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">sy</span><span class="o">&lt;</span><span class="n">lensletplane</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size</span><span class="p">)</span><span class="o">-</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span> 
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size</span><span class="p">)</span><span class="o">-</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span> 
+                    <span class="n">_x</span><span class="p">,</span> <span class="n">_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                    <span class="n">isx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sx</span><span class="p">)</span>
+                    <span class="n">isy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sy</span><span class="p">)</span>
+                    <span class="n">rsx</span> <span class="o">=</span> <span class="n">sx</span><span class="o">-</span><span class="n">isx</span>
+                    <span class="n">rsy</span> <span class="o">=</span> <span class="n">sy</span><span class="o">-</span><span class="n">isy</span>
+                    <span class="n">sig</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">FWHM</span><span class="o">/</span><span class="mf">2.35</span>
+                    <span class="n">psflet</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">_x</span><span class="o">-</span> <span class="n">rsx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">_y</span><span class="o">-</span> <span class="n">rsy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">sig</span><span class="o">*</span><span class="n">lam</span><span class="o">*</span><span class="mi">1000</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">FWHMlam</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+                    <span class="n">psflet</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflet</span><span class="p">)</span>
+                    <span class="n">xlow</span> <span class="o">=</span> <span class="n">isy</span><span class="o">-</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span>
+                    <span class="n">xhigh</span> <span class="o">=</span> <span class="n">xlow</span><span class="o">+</span><span class="n">size</span>
+                    <span class="n">ylow</span> <span class="o">=</span> <span class="n">isx</span><span class="o">-</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span>
+                    <span class="n">yhigh</span> <span class="o">=</span> <span class="n">ylow</span><span class="o">+</span><span class="n">size</span>
+                    <span class="n">lensletplane</span><span class="p">[</span><span class="n">xlow</span><span class="p">:</span><span class="n">xhigh</span><span class="p">,</span><span class="n">ylow</span><span class="p">:</span><span class="n">yhigh</span><span class="p">]</span><span class="o">+=</span><span class="n">val</span><span class="o">*</span><span class="n">psflet</span></div>
+
+    
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right"> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 27 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>
