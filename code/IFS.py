@@ -366,7 +366,7 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True):
         for i in range(len(IFSimageNameList)):
             IFSimage = Image(filename = IFSimageNameList[i])
             reducedName = IFSimageNameIFSimageNameList[i].split('/')[-1].split('.')[0]
-            elif method == 'lstsq':
+            if method == 'lstsq':
                 reducedName += '_red_lstsq'
                 tasks.put(Task(i, lstsqExtract, (par, par.exportDir+'/'+reducedName,IFSimage)))
             elif method == 'optext':
@@ -385,7 +385,7 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True):
         for i in range(len(IFSimageNameList)):
             IFSimage = Image(filename = IFSimageNameList[i])
             reducedName = IFSimageNameList[i].split('/')[-1].split('.')[0]
-            elif method == 'lstsq':
+            if method == 'lstsq':
                 reducedName += '_red_lstsq'
                 cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage)
             elif method == 'optext':
