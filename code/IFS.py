@@ -365,7 +365,7 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True):
         # you call the function here, with all its arguments in a list
         for i in range(len(IFSimageNameList)):
             IFSimage = Image(filename = IFSimageNameList[i])
-            reducedName = IFSimageNameIFSimageNameList[i].split('/')[-1].split('.')[0]
+            reducedName = IFSimageNameList[i].split('/')[-1].split('.')[0]
             if method == 'lstsq':
                 reducedName += '_red_lstsq'
                 tasks.put(Task(i, lstsqExtract, (par, par.exportDir+'/'+reducedName,IFSimage)))
