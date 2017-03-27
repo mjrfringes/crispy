@@ -19,8 +19,6 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../code/'))
-sys.path.insert(1, os.path.abspath('../../notebooks/'))
 
 
 # from astropy documentation
@@ -40,13 +38,26 @@ class Mock(object):
         else:
             return Mock()
 
-MOCK_MODULES = ['astropy_helpers']
+MOCK_MODULES = ['astropy_helpers','astropy_helpers.sphinx','astropy_helpers.sphinx.conf']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
 
 
+try:
+    import astropy_helpers
+except ImportError:
+    # Building from inside the docs/ directory?
+    if os.path.basename(os.getcwd()) == 'source':
+        a_h_path = os.path.abspath(os.path.join('..', 'astropy_helpers'))
+        if os.path.isdir(a_h_path):
+            sys.path.insert(1, a_h_path)
+
+
 
 from astropy_helpers.sphinx.conf import *
+
+
+sys.path.insert(0, os.path.abspath('../../code/'))
 
 # -- General configuration ------------------------------------------------
 
