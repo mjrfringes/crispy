@@ -1,0 +1,523 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Process multiple IFS images in parallel &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tools package" href="../tools.html" />
+    <link rel="prev" title="PISCES Data Reduction" href="PISCES_Reduce.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li class="right">
+	<a href="../tools.html" title="tools package">
+	  next &raquo;
+	</a>
+      </li>
+      <li class="right">
+	<a href="PISCES_Reduce.html" title="PISCES Data Reduction">
+	  &laquo; previous
+	</a>
+	 |
+      </li>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+      <li>Process multiple IFS images in parallel</li> 
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="Process-multiple-IFS-images-in-parallel">
+<h1>Process multiple IFS images in parallel<a class="headerlink" href="#Process-multiple-IFS-images-in-parallel" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../code&#39;</span>
+<span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PISCESparams</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Import-files-to-reduce,-doesn't-matter-how-many">
+<h2>Import files to reduce, doesn&#8217;t matter how many<a class="headerlink" href="#Import-files-to-reduce,-doesn't-matter-how-many" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="c1"># call the reduction routine with an example image</span>
+<span class="n">filelist</span><span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;IFS???nm.fits&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="No-parallelization">
+<h2>No parallelization<a class="headerlink" href="#No-parallelization" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="c1"># import parallel tools</span>
+<span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">:</span>
+    <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">filename</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Elapsed time: </span><span class="si">%f</span><span class="s1">s&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS605nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+/Users/mrizzo/anaconda/lib/python2.7/site-packages/numpy/lib/nanfunctions.py:703: RuntimeWarning: Mean of empty slice
+  warnings.warn(&#34;Mean of empty slice&#34;, RuntimeWarning)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../code/SimResults/IFS605nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS615nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../code/SimResults/IFS615nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS625nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS625nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS635nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS635nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS645nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS645nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS655nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS655nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS665nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS665nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS675nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS675nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS685nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS685nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS695nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS695nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS705nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS705nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS715nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS715nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS725nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS725nm_red_optext.fits
+Elapsed time: 201.540511s
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Parallelized-version">
+<h2>Parallelized version<a class="headerlink" href="#Parallelized-version" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">tools.par_utils</span> <span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">Consumer</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="n">tasks</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+<span class="n">ncpus</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+<span class="n">consumers</span> <span class="o">=</span> <span class="p">[</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncpus</span><span class="p">)</span> <span class="p">]</span>
+<span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">consumers</span><span class="p">:</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1"># you call the function here, with all its arguments in a list</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filelist</span><span class="p">)):</span>
+        <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">Task</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">reduceIFSMap</span><span class="p">,</span> <span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">filelist</span><span class="p">[</span><span class="n">i</span><span class="p">])))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncpus</span><span class="p">):</span>
+    <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="c1"># if the function returns something, that&#39;s where you process them</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filelist</span><span class="p">)):</span>
+    <span class="n">index</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="c1"># index tells us which task this was</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;File </span><span class="si">%s</span><span class="s2"> processed&quot;</span> <span class="o">%</span> <span class="n">filelist</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+    <span class="c1"># if the function you put in Task returned something, it is result</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Elapsed time: </span><span class="si">%f</span><span class="s1">s&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS605nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS645nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS675nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS645nm_red_optext.fits
+crispy - INFO - Writing data to ../../code/SimResults/IFS615nm_red_optext.fits
+crispy - INFO - Writing data to ../../code/SimResults/IFS605nm_red_optext.fits
+crispy - INFO - Writing data to ../../code/SimResults/IFS675nm_red_optext.fits
+crispy - INFO - Writing data to ../../code/SimResults/IFS635nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS715nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS655nm_red_optext.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Writing data to ../../code/SimResults/IFS625nm_red_optext.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS725nm.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - Reduced cube will have 17 wavelength bins
+File ../../code/ReferenceFiles/Calibra_170306/IFS615nm.fits processed
+File ../../code/ReferenceFiles/Calibra_170306/IFS645nm.fits processed
+File ../../code/ReferenceFiles/Calibra_170306/IFS605nm.fits processed
+File ../../code/ReferenceFiles/Calibra_170306/IFS675nm.fits processed
+File ../../code/ReferenceFiles/Calibra_170306/IFS635nm.fits processed
+File ../../code/ReferenceFiles/Calibra_170306/IFS655nm.fits processed
+File ../../code/ReferenceFiles/Calibra_170306/IFS625nm.fits processed
+crispy - INFO - Writing data to ../../code/SimResults/IFS665nm_red_optext.fits
+File ../../code/ReferenceFiles/Calibra_170306/IFS665nm.fits processed
+crispy - INFO - Writing data to ../../code/SimResults/IFS695nm_red_optext.fits
+crispy - INFO - Writing data to ../../code/SimResults/IFS705nm_red_optext.fits
+File ../../code/ReferenceFiles/Calibra_170306/IFS695nm.fits processed
+File ../../code/ReferenceFiles/Calibra_170306/IFS705nm.fits processed
+crispy - INFO - Writing data to ../../code/SimResults/IFS725nm_red_optext.fits
+crispy - INFO - Writing data to ../../code/SimResults/IFS685nm_red_optext.fits
+File ../../code/ReferenceFiles/Calibra_170306/IFS725nm.fits processed
+File ../../code/ReferenceFiles/Calibra_170306/IFS685nm.fits processed
+crispy - INFO - Writing data to ../../code/SimResults/IFS715nm_red_optext.fits
+File ../../code/ReferenceFiles/Calibra_170306/IFS715nm.fits processed
+Elapsed time: 45.754292s
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Process multiple IFS images in parallel</a><ul>
+<li><a class="reference internal" href="#Import-files-to-reduce,-doesn't-matter-how-many">Import files to reduce, doesn&#8217;t matter how many</a></li>
+<li><a class="reference internal" href="#No-parallelization">No parallelization</a></li>
+<li><a class="reference internal" href="#Parallelized-version">Parallelized version</a></li>
+</ul>
+</li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/MultiProcExample.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 26 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>

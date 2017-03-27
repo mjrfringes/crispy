@@ -1,0 +1,499 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PISCES Wavelength calibration &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="PISCES-Wavelength-calibration">
+<h1>PISCES Wavelength calibration<a class="headerlink" href="#PISCES-Wavelength-calibration" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tools</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">PISCESparams</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="kn">as</span> <span class="nn">log</span>
+<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="kn">import</span> <span class="n">initLogger</span>
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="Load-PISCES-parameters">
+<h2>Load PISCES parameters<a class="headerlink" href="#Load-PISCES-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Most parameters are default already in params.py. Change the paths and
+names if necessary in the first part of the file.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+
+<span class="c1"># This is the logger system to print to file and to print to console</span>
+<span class="n">initLogger</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/IFS.log&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Define-wavelengths-and-list-of-wavelength-calibration-files">
+<h2>Define wavelengths and list of wavelength calibration files<a class="headerlink" href="#Define-wavelengths-and-list-of-wavelength-calibration-files" title="Permalink to this headline">¶</a></h2>
+<p>Watch out, the two lists need to be in the same order. The default
+location of the calibration files is in
+par.wavecalDir=&#8217;./ReferenceFiles/VARIAWavecal/&#8217;</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">par</span><span class="o">.</span><span class="n">lamlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">605</span><span class="p">,</span><span class="mi">725</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">par</span><span class="o">.</span><span class="n">filelist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s2">&quot;Calibra*.FIT&quot;</span><span class="p">))</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Generate-wavelength-calibration-from-scratch">
+<h2>Generate wavelength calibration from scratch<a class="headerlink" href="#Generate-wavelength-calibration-from-scratch" title="Permalink to this headline">¶</a></h2>
+<p>This routine uses a first guess at the location of the lenslets, and
+then fits polynomials on the detector maps at each wavelength using an
+optimization routine. You can inspect the results in your folder
+par.wavecalDir as a set of .png images to make sure the wavelength
+calibration has succeeded.</p>
+<p>The other files that are created with this routine: - lamsol.dat, which
+contains all the wavelengths and the coefficients of the polynomial
+representation of their positions - PSFloc.fits, which contains the
+inverse wavelength solution consisting of the wavelength value at the
+center of each pixel for each micro-spectrum</p>
+<p>Note that if you have already generated a previous wavelength
+calibration, you can just skip this step.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.wavecal</span> <span class="kn">import</span> <span class="n">buildcalibrations</span>
+
+<span class="c1"># these are the standard parameters for PISCES. You cannot use hires=True without risks.</span>
+<span class="c1"># Parallelization is not used when hires=False</span>
+<span class="n">buildcalibrations</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">parallel</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">hires</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+2017-02-02 17:32:08,129: INFO     Building calibration files, placing results in /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/
+WARNING: Unexpected extra padding at the end of the file.  This padding may not be preserved when saving changes. [astropy.io.fits.header]
+2017-02-02 17:32:08,156: WARNING  Unexpected extra padding at the end of the file.  This padding may not be preserved when saving changes.
+2017-02-02 17:32:08,166: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_605nm.FIT
+2017-02-02 17:32:08,172: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_605nm.FIT
+2017-02-02 17:32:09,278: INFO     Initializing PSFlet location transformation coefficients
+2017-02-02 17:32:11,545: INFO     Performing initial optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_605nm.FIT
+2017-02-02 17:32:25,310: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_605nm.FIT
+2017-02-02 17:33:38,614: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_615nm.FIT
+2017-02-02 17:33:39,726: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:33:50,044: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_615nm.FIT
+2017-02-02 17:34:43,597: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_625nm.FIT
+2017-02-02 17:34:44,715: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:34:55,215: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_625nm.FIT
+2017-02-02 17:35:35,870: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_635nm.FIT
+2017-02-02 17:35:36,986: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:35:47,246: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_635nm.FIT
+2017-02-02 17:36:19,232: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_645nm.FIT
+2017-02-02 17:36:20,357: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:36:30,801: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_645nm.FIT
+2017-02-02 17:37:00,690: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_655nm.FIT
+2017-02-02 17:37:01,824: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:37:12,211: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_655nm.FIT
+2017-02-02 17:37:47,619: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_665nm.FIT
+2017-02-02 17:37:48,741: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:37:59,519: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_665nm.FIT
+2017-02-02 17:38:32,073: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_675nm.FIT
+2017-02-02 17:38:33,188: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:38:43,588: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_675nm.FIT
+2017-02-02 17:39:21,956: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_685nm.FIT
+2017-02-02 17:39:23,476: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:39:34,967: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_685nm.FIT
+2017-02-02 17:40:16,638: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_695nm.FIT
+2017-02-02 17:40:17,987: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:40:29,373: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_695nm.FIT
+2017-02-02 17:41:01,192: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_705nm.FIT
+2017-02-02 17:41:02,301: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:41:12,691: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_705nm.FIT
+2017-02-02 17:41:52,770: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_715nm.FIT
+2017-02-02 17:41:53,923: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:42:04,245: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_715nm.FIT
+2017-02-02 17:42:37,606: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_725nm.FIT
+2017-02-02 17:42:38,720: INFO     Initializing transformation coefficients with previous values
+2017-02-02 17:42:48,966: INFO     Performing final optimization of PSFlet location transformation coefficients for frame /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_725nm.FIT
+2017-02-02 17:43:18,395: INFO     Saving wavelength solution to /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/lamsol.dat
+2017-02-02 17:43:18,398: INFO     Computing wavelength values at pixel centers
+2017-02-02 17:43:20,796: INFO     Saving wavelength calibration cube
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total time elapsed: 673 s
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="Reduce-PISCES-data">
+<h1>Reduce PISCES data<a class="headerlink" href="#Reduce-PISCES-data" title="Permalink to this headline">¶</a></h1>
+<p>This is the standard reduction routine. This will work as long as the
+calibration files can be found within par.wavecalDir</p>
+<p>The available methods for PISCES are: - &#8216;simple&#8217;: sums pixel columns
+across the microspectrum - &#8216;dense&#8217;: densifies the image and pixel
+columns across the microspectrum - &#8216;apphot&#8217;: aperture photometry using
+photutils package to pixel columns across the microspectrum - &#8216;intopt&#8217;:
+RECOMMENDED. Optimal extraction: uses inverse wavelength solution to fit
+gaussian values to each pixel column within the microspectrum, then
+remaps results on desired wavelength bins. There is no reason to use
+anything else than this in my opinion.</p>
+<p>reduceIFSMap returns the IFS cube, and also creates a FITS file in
+par.exportDir with the same name as the input file, with an extension
+designating the method used.</p>
+<p>There is more work to be done on this. We should create a mask of bad
+pixels and bad lenslets.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">fname</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">filelist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>    <span class="c1">#INSERT YOUR PISCES FILENAME HERE</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">fname</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;intopt&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: Unexpected extra padding at the end of the file.  This padding may not be preserved when saving changes. [astropy.io.fits.header]
+2017-02-02 17:52:50,128: WARNING  Unexpected extra padding at the end of the file.  This padding may not be preserved when saving changes.
+2017-02-02 17:52:50,156: INFO     Read data from HDU 0 of /Users/mrizzo/IFS/IFS-Simulator/ReferenceFiles/VARIAwavecal/Calibra_161205_605nm.FIT
+2017-02-02 17:52:50,173: INFO     Reduced cube will have 21 wavelength bins
+tools/reduction.py:555: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  pix_center_vals = [np.sum(im.data[i1:i1 + delt_y, val]*gaussian) for val in ix]/weights
+/Users/mrizzo/anaconda/envs/py27/lib/python2.7/site-packages/numpy/lib/nanfunctions.py:703: RuntimeWarning: Mean of empty slice
+  warnings.warn(&#34;Mean of empty slice&#34;, RuntimeWarning)
+2017-02-02 17:53:20,367: INFO     Writing data to /Users/mrizzo/IFS/IFS-Simulator/SimResults/Calibra_161205_605nm_red_intopt.fits
+</pre></div></div>
+</div>
+<p>The list of wavelengths corresponding to the center and edges of each
+slice of the cube can be obtained by the following routine. It can be
+changed and tweaked by changing the parameter par.R</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">lam_midpts</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+2017-02-02 17:54:09,338: INFO     Reduced cube will have 21 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[ 607.74296519  613.26626033  618.83975233  624.46389739  630.13915586
+  635.86599227  641.64487536  647.47627815  653.36067795  659.2985564
+  665.29039953  671.33669779  677.43794607  683.59464377  689.80729483
+  696.07640776  702.40249569  708.78607644  715.22767251  721.72781114]
+</pre></div></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">PISCES Wavelength calibration</a><ul>
+<li><a class="reference internal" href="#Load-PISCES-parameters">Load PISCES parameters</a></li>
+<li><a class="reference internal" href="#Define-wavelengths-and-list-of-wavelength-calibration-files">Define wavelengths and list of wavelength calibration files</a></li>
+<li><a class="reference internal" href="#Generate-wavelength-calibration-from-scratch">Generate wavelength calibration from scratch</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Reduce-PISCES-data">Reduce PISCES data</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/PISCES.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 26 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>

@@ -32,7 +32,8 @@ def process_SPC_IFS(par,
                     process_offaxis=True,
                     process_detector=True,
                     process_noiseless=False,
-                    take_averages=True):
+                    take_averages=True,
+                    parallel=True):
     '''
     Process SPC PSF cubes from J. Krist through the IFS
 

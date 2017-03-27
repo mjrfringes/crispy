@@ -1,0 +1,1752 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Shaped pupil propagation through IFS &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="Shaped-pupil-propagation-through-IFS">
+<h1>Shaped pupil propagation through IFS<a class="headerlink" href="#Shaped-pupil-propagation-through-IFS" title="Permalink to this headline">¶</a></h1>
+<p>This notebook illustrates processing the Shaped Pupil time series from
+J. Krist through the IFS. We produce realistic IFS detector maps and
+reduce them using crispy.</p>
+<div class="section" id="1.-Reference-star-processing">
+<h2>1. Reference star processing<a class="headerlink" href="#1.-Reference-star-processing" title="Permalink to this headline">¶</a></h2>
+<p>For this first step, we only process the reference star time series</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [90]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">os5folder</span> <span class="o">=</span> <span class="s1">&#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/with_lowfc&#39;</span>
+<span class="n">nref</span> <span class="o">=</span> <span class="mi">30</span> <span class="c1"># only the first 30 images are from the reference star</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os5folder</span><span class="o">+</span><span class="s1">&#39;/*&#39;</span><span class="p">)</span>
+<span class="n">filelist</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">filelist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[3]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&#39;os5_spc_001&#39;
+</pre></div>
+</div>
+</div>
+<p>Imports</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
+<span class="kn">import</span> <span class="nn">astropy.constants</span> <span class="kn">as</span> <span class="nn">c</span>
+<span class="kn">import</span> <span class="nn">astropy.analytic_functions</span> <span class="kn">as</span> <span class="nn">af</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filelist</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># offaxispsf= &#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits&#39;</span>
+<span class="c1"># cube = fits.open(offaxispsf)[0]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(45, 315, 315)
+6.15106675942e-08
+</pre></div></div>
+</div>
+<div class="section" id="Process-a-cube-to-turn-it-into-counts-per-pixel">
+<h3>Process a cube to turn it into counts per pixel<a class="headerlink" href="#Process-a-cube-to-turn-it-into-counts-per-pixel" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="c1"># what is the area of the WFIRST pupil?</span>
+<span class="kn">import</span> <span class="nn">webbpsf</span>
+<span class="kn">from</span> <span class="nn">webbpsf</span> <span class="kn">import</span> <span class="n">wfirst</span>
+<span class="n">webbpsf</span><span class="o">.</span><span class="n">setup_logging</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span><span class="p">)</span> <span class="c1"># Reduce the verbosity</span>
+<span class="n">diskspc</span> <span class="o">=</span> <span class="n">wfirst</span><span class="o">.</span><span class="n">CGI</span><span class="p">()</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">diskspc</span><span class="o">.</span><span class="n">calc_psf</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">pupil_pix_area</span> <span class="o">=</span> <span class="p">(</span><span class="n">diskspc</span><span class="o">.</span><span class="n">optsys</span><span class="o">.</span><span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pixelscale</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">pix</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">tel_pupil_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">diskspc</span><span class="o">.</span><span class="n">optsys</span><span class="o">.</span><span class="n">planes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">amplitude</span><span class="p">)</span><span class="o">*</span><span class="n">pupil_pix_area</span>
+
+
+<span class="n">BW</span><span class="o">=</span><span class="mf">0.18</span>
+<span class="n">lamc</span> <span class="o">=</span> <span class="mi">770</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nanometer</span>
+<span class="n">Nlam</span><span class="o">=</span><span class="mi">45</span>
+<span class="n">lamlist</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="o">+</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">Nlam</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">convert_cube</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">star_T</span><span class="p">,</span><span class="n">star_Vmag</span><span class="p">,</span><span class="n">tel_area</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    This functions calculates the number of photons per second</span>
+<span class="sd">    entering the WFIRST obscured aperture</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+
+    <span class="c1"># We need to determine the coefficient of proportionality between a blackbody source and the</span>
+    <span class="c1"># actualy flux received (depends on size of the star, distance, etc)</span>
+    <span class="c1"># define Vband</span>
+    <span class="n">lambda_cent</span> <span class="o">=</span> <span class="mi">550</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nanometer</span>
+
+    <span class="c1"># this is the flux density per steradian (specific intensity) you would expect from Vband</span>
+    <span class="n">flux_bb_F550</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">blackbody_nu</span><span class="p">(</span><span class="n">lambda_cent</span><span class="p">,</span> <span class="n">star_T</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">sr</span><span class="p">)</span>
+
+    <span class="c1"># this is the actual flux density received in Vband</span>
+    <span class="n">Vband_zero_pt</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3953</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Jansky</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="p">)</span>
+    <span class="n">flux_star_Vband</span> <span class="o">=</span> <span class="n">Vband_zero_pt</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">star_Vmag</span><span class="p">)</span>
+
+    <span class="c1"># the ratio is coefficient we seek; this will multiply a blackbody function to yield flux densities</span>
+    <span class="c1"># at all wavelengths</span>
+    <span class="n">ratio_star</span> <span class="o">=</span> <span class="p">(</span><span class="n">flux_star_Vband</span><span class="o">/</span><span class="n">flux_bb_F550</span><span class="p">)</span>
+
+    <span class="c1"># this is the ratio which we want to multiply phot_Uma_Vband for the other bands</span>
+    <span class="c1">#print(&quot;Ratio of blackbodies is %f&quot; % ratio_Uma)</span>
+
+    <span class="c1"># Now convert each slice to photons per second per square meter</span>
+    <span class="n">dlam</span> <span class="o">=</span> <span class="n">lamlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">lamlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">newcube</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)):</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="p">(</span><span class="n">lamlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">dlam</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="p">(</span><span class="n">lamlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">dlam</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">low</span><span class="o">+</span><span class="n">high</span><span class="p">)</span> <span class="c1"># middle frequency</span>
+        <span class="n">dnu</span> <span class="o">=</span> <span class="n">high</span><span class="o">-</span><span class="n">low</span>
+        <span class="n">E_ph</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">mid</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">J</span><span class="p">)</span> <span class="c1"># photon energy at middle frequency</span>
+        <span class="n">BBlam</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">blackbody_nu</span><span class="p">(</span><span class="n">lamlist</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">star_T</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">sr</span><span class="p">)</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="p">(</span><span class="n">BBlam</span><span class="o">*</span><span class="n">ratio_star</span><span class="o">*</span><span class="n">dnu</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">W</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># this is Watts per m2</span>
+        <span class="n">photon_flux</span> <span class="o">=</span> <span class="n">flux</span><span class="o">/</span><span class="n">E_ph</span> <span class="c1"># This is in Photons per second per m2</span>
+        <span class="c1"># also divide by pixel size</span>
+        <span class="n">newcube</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:]</span> <span class="o">+=</span> <span class="n">photon_flux</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1">#newcube[i] += (photon_flux.to(1./u.s/u.m**2)).value#*(0.1*(lamc.to(u.m)).value/(2.34))**2</span>
+
+    <span class="n">newcube</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)</span><span class="o">*</span><span class="n">tel_area</span>
+    <span class="k">return</span> <span class="n">newcube</span>
+
+<span class="c1"># reference star</span>
+<span class="n">beta_Uma_T</span> <span class="o">=</span> <span class="mi">9377</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">K</span> <span class="c1"># Thanks wikipedia</span>
+<span class="n">beta_Uma_Vmag</span> <span class="o">=</span> <span class="mf">2.37</span> <span class="c1"># Thanks wikipedia</span>
+<span class="n">beta_Uma_cube</span> <span class="o">=</span> <span class="n">convert_cube</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">beta_Uma_T</span><span class="p">,</span><span class="n">beta_Uma_Vmag</span><span class="p">,</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+
+<span class="n">Uma47_T</span> <span class="o">=</span> <span class="mi">5887</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">K</span> <span class="c1"># Thanks wikipedia</span>
+<span class="n">Uma47_Vmag</span> <span class="o">=</span> <span class="mf">5.03</span> <span class="c1"># Thanks wikipedia</span>
+<span class="n">Uma47_cube</span> <span class="o">=</span> <span class="n">convert_cube</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">Uma47_T</span><span class="p">,</span><span class="n">Uma47_Vmag</span><span class="p">,</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WebbPSF log messages of level ERROR and above will be shown.
+WebbPSF log outputs will be directed to the screen.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [101]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+3.650265060424805 m2
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="Process-the-files-using-the-function-above">
+<h2>Process the files using the function above<a class="headerlink" href="#Process-the-files-using-the-function-above" title="Permalink to this headline">¶</a></h2>
+<p>First, set up the IFS sim</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;../code&#39;</span>
+<span class="k">if</span> <span class="n">folder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">propagateIFS</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="c1">#from tools.initLogger import initLogger</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/IFS.log&#39;</span><span class="p">,</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="c1"># log = logging.getLogger(&#39;main&#39;)</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveRotatedInput</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveDetector</span> <span class="o">=</span> <span class="bp">False</span>
+
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="Reference-star">
+<h3>Reference star<a class="headerlink" href="#Reference-star" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+
+<span></span><span class="k">for</span> <span class="n">reffile</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">[:</span><span class="n">nref</span><span class="p">]:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Processing file &#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">reffile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="n">beta_Uma_cube</span>
+    <span class="c1"># adjust headers for slightly different wavelength</span>
+    <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span><span class="o">=</span><span class="mf">0.77</span>
+    <span class="c1"># by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800</span>
+    <span class="c1">#cube.header[&#39;PIXSIZE&#39;]*=0.8/0.77</span>
+    <span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">propagateIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">lamlist</span><span class="o">.</span><span class="n">value</span><span class="o">/</span><span class="mf">1000.</span><span class="p">,</span><span class="n">cube</span><span class="p">)</span>
+    <span class="c1">### NEED TO ADD HEADERS HERE!!!</span>
+    <span class="n">Image</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">detectorFrame</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/&#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_beta_Uma_IFS.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Processing file os5_spc_001.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+../code/tools/lenslet.py:36: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
+../code/tools/lenslet.py:43: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane[xpad:-xpad,ypad:-ypad] = imagePlane
+../code/tools/detutils.py:64: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  temp = np.zeros((shape[1], x),dtype=float)
+../code/tools/detutils.py:89: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  result = np.zeros((shape[0], shape[1]), dtype=float)
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Processing file os5_spc_002.fits
+Processing file os5_spc_003.fits
+Processing file os5_spc_004.fits
+Processing file os5_spc_005.fits
+Processing file os5_spc_006.fits
+Processing file os5_spc_007.fits
+Processing file os5_spc_008.fits
+Processing file os5_spc_009.fits
+Processing file os5_spc_010.fits
+Processing file os5_spc_011.fits
+Processing file os5_spc_012.fits
+Processing file os5_spc_013.fits
+Processing file os5_spc_014.fits
+Processing file os5_spc_015.fits
+Processing file os5_spc_016.fits
+Processing file os5_spc_017.fits
+Processing file os5_spc_018.fits
+Processing file os5_spc_019.fits
+Processing file os5_spc_020.fits
+Processing file os5_spc_021.fits
+Processing file os5_spc_022.fits
+Processing file os5_spc_023.fits
+Processing file os5_spc_024.fits
+Processing file os5_spc_025.fits
+Processing file os5_spc_026.fits
+Processing file os5_spc_027.fits
+Processing file os5_spc_028.fits
+Processing file os5_spc_029.fits
+Processing file os5_spc_030.fits
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Process-the-target-star">
+<h3>Process the target star<a class="headerlink" href="#Process-the-target-star" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">reffile</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">[</span><span class="n">nref</span><span class="p">:]:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Processing file &#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">reffile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="n">Uma47_cube</span>
+    <span class="c1"># adjust headers for slightly different wavelength</span>
+    <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span><span class="o">=</span><span class="mf">0.77</span>
+    <span class="c1"># by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800</span>
+    <span class="c1">#cube.header[&#39;PIXSIZE&#39;]*=0.8/0.77</span>
+    <span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">propagateIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">lamlist</span><span class="o">.</span><span class="n">value</span><span class="o">/</span><span class="mf">1000.</span><span class="p">,</span><span class="n">cube</span><span class="p">)</span>
+    <span class="c1">### NEED TO ADD HEADERS HERE!!!</span>
+    <span class="n">Image</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">detectorFrame</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/&#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_Uma47_IFS.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Processing file os5_spc_031.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+../code/tools/lenslet.py:36: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
+../code/tools/lenslet.py:43: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane[xpad:-xpad,ypad:-ypad] = imagePlane
+../code/tools/detutils.py:64: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  temp = np.zeros((shape[1], x),dtype=float)
+../code/tools/detutils.py:89: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  result = np.zeros((shape[0], shape[1]), dtype=float)
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Processing file os5_spc_032.fits
+Processing file os5_spc_033.fits
+Processing file os5_spc_034.fits
+Processing file os5_spc_035.fits
+Processing file os5_spc_036.fits
+Processing file os5_spc_037.fits
+Processing file os5_spc_038.fits
+Processing file os5_spc_039.fits
+Processing file os5_spc_040.fits
+Processing file os5_spc_041.fits
+Processing file os5_spc_042.fits
+Processing file os5_spc_043.fits
+Processing file os5_spc_044.fits
+Processing file os5_spc_045.fits
+Processing file os5_spc_046.fits
+Processing file os5_spc_047.fits
+Processing file os5_spc_048.fits
+Processing file os5_spc_049.fits
+Processing file os5_spc_050.fits
+Processing file os5_spc_051.fits
+Processing file os5_spc_052.fits
+Processing file os5_spc_053.fits
+Processing file os5_spc_054.fits
+Processing file os5_spc_055.fits
+Processing file os5_spc_056.fits
+Processing file os5_spc_057.fits
+Processing file os5_spc_058.fits
+Processing file os5_spc_059.fits
+Processing file os5_spc_060.fits
+Processing file os5_spc_061.fits
+Processing file os5_spc_062.fits
+Processing file os5_spc_063.fits
+Processing file os5_spc_064.fits
+Processing file os5_spc_065.fits
+Processing file os5_spc_066.fits
+Processing file os5_spc_067.fits
+Processing file os5_spc_068.fits
+Processing file os5_spc_069.fits
+Processing file os5_spc_070.fits
+Processing file os5_spc_071.fits
+Processing file os5_spc_072.fits
+Processing file os5_spc_073.fits
+Processing file os5_spc_074.fits
+Processing file os5_spc_075.fits
+Processing file os5_spc_076.fits
+Processing file os5_spc_077.fits
+Processing file os5_spc_078.fits
+Processing file os5_spc_079.fits
+Processing file os5_spc_080.fits
+Processing file os5_spc_081.fits
+Processing file os5_spc_082.fits
+Processing file os5_spc_083.fits
+Processing file os5_spc_084.fits
+Processing file os5_spc_085.fits
+Processing file os5_spc_086.fits
+Processing file os5_spc_087.fits
+Processing file os5_spc_088.fits
+Processing file os5_spc_089.fits
+Processing file os5_spc_090.fits
+Processing file os5_spc_091.fits
+Processing file os5_spc_092.fits
+Processing file os5_spc_093.fits
+Processing file os5_spc_094.fits
+Processing file os5_spc_095.fits
+Processing file os5_spc_096.fits
+Processing file os5_spc_097.fits
+Processing file os5_spc_098.fits
+Processing file os5_spc_099.fits
+Processing file os5_spc_100.fits
+Processing file os5_spc_101.fits
+Processing file os5_spc_102.fits
+Processing file os5_spc_103.fits
+Processing file os5_spc_104.fits
+Processing file os5_spc_105.fits
+Processing file os5_spc_106.fits
+Processing file os5_spc_107.fits
+Processing file os5_spc_108.fits
+Processing file os5_spc_109.fits
+Processing file os5_spc_110.fits
+Processing file os5_spc_111.fits
+Processing file os5_spc_112.fits
+Processing file os5_spc_113.fits
+Processing file os5_spc_114.fits
+Processing file os5_spc_115.fits
+Processing file os5_spc_116.fits
+Processing file os5_spc_117.fits
+Processing file os5_spc_118.fits
+Processing file os5_spc_119.fits
+Processing file os5_spc_120.fits
+Processing file os5_spc_121.fits
+Processing file os5_spc_122.fits
+Processing file os5_spc_123.fits
+Processing file os5_spc_124.fits
+Processing file os5_spc_125.fits
+Processing file os5_spc_126.fits
+Processing file os5_spc_127.fits
+Processing file os5_spc_128.fits
+Processing file os5_spc_129.fits
+Processing file os5_spc_130.fits
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Apply-detector-readout,-noise-and-averaging">
+<h2>Apply detector readout, noise and averaging<a class="headerlink" href="#Apply-detector-readout,-noise-and-averaging" title="Permalink to this headline">¶</a></h2>
+<p>Now we apply a detector readout scheme. Let&#8217;s start by dividing each
+image (1000s) into integrations of 100 seconds. Then average all images
+for beta Uma and 47Uma. Extract beta Uma and 47Uma from the averaged
+images, and subtract beta Uma from 47Uma.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.detector</span> <span class="kn">import</span> <span class="n">readDetector</span>
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/os5_spc*.fits&#39;</span><span class="p">)</span>
+<span class="n">filelist</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="n">QE</span><span class="o">=</span><span class="mf">0.7</span>
+<span class="n">losses</span> <span class="o">=</span> <span class="mf">0.34</span>
+<span class="n">Nreads</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">timeframe</span> <span class="o">=</span> <span class="mf">1000.</span> <span class="c1"># number of seconds for each frame, set by J Krist</span>
+<span class="k">for</span> <span class="n">reffile</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Processing file &#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">reffile</span><span class="p">)</span>
+    <span class="n">inttime</span> <span class="o">=</span> <span class="n">timeframe</span><span class="o">/</span><span class="n">Nreads</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="n">QE</span><span class="o">*</span><span class="n">losses</span>
+    <span class="c1"># refreshes parameter header</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">makeHeader</span><span class="p">()</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;QE&#39;</span><span class="p">,</span><span class="n">QE</span><span class="p">,</span><span class="s1">&#39;Quantum efficiency of the detector&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;LOSS&#39;</span><span class="p">,</span><span class="n">losses</span><span class="p">,</span><span class="s1">&#39;Transmission factor for the IFS (J. Krist)&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;INTTIME&#39;</span><span class="p">,</span><span class="n">inttime</span><span class="p">,</span><span class="s1">&#39;Time for each infividual frame&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;NREADS&#39;</span><span class="p">,</span><span class="n">Nreads</span><span class="p">,</span><span class="s1">&#39;Number of frames averaged&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">,</span><span class="n">timeframe</span><span class="p">,</span><span class="s1">&#39;Total exposure time&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">varframe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="c1"># averaging reads</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nreads</span><span class="p">):</span>
+        <span class="n">newread</span> <span class="o">=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">inttime</span><span class="o">=</span><span class="n">inttime</span><span class="p">)</span>
+        <span class="n">frame</span> <span class="o">+=</span> <span class="n">newread</span>
+        <span class="n">varframe</span> <span class="o">+=</span> <span class="n">newread</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">frame</span> <span class="o">/=</span> <span class="n">Nreads</span>
+    <span class="n">varframe</span> <span class="o">/=</span> <span class="n">Nreads</span>
+    <span class="n">varframe</span> <span class="o">-=</span> <span class="n">frame</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">outimg</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span><span class="n">ivar</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="n">varframe</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span>
+    <span class="n">outimg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_detector/&#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_detector.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Processing file os5_spc_001_beta_Uma_IFS.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+/local/data/nicolaus2/mrizzo/anaconda3/lib/python3.5/site-packages/ipykernel/__main__.py:31: RuntimeWarning: divide by zero encountered in true_divide
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+[astropy] VerifyWarning: Card is too long, comment will be truncated.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Processing file os5_spc_002_beta_Uma_IFS.fits
+Processing file os5_spc_003_beta_Uma_IFS.fits
+Processing file os5_spc_004_beta_Uma_IFS.fits
+Processing file os5_spc_005_beta_Uma_IFS.fits
+Processing file os5_spc_006_beta_Uma_IFS.fits
+Processing file os5_spc_007_beta_Uma_IFS.fits
+Processing file os5_spc_008_beta_Uma_IFS.fits
+Processing file os5_spc_009_beta_Uma_IFS.fits
+Processing file os5_spc_010_beta_Uma_IFS.fits
+Processing file os5_spc_011_beta_Uma_IFS.fits
+Processing file os5_spc_012_beta_Uma_IFS.fits
+Processing file os5_spc_013_beta_Uma_IFS.fits
+Processing file os5_spc_014_beta_Uma_IFS.fits
+Processing file os5_spc_015_beta_Uma_IFS.fits
+Processing file os5_spc_016_beta_Uma_IFS.fits
+Processing file os5_spc_017_beta_Uma_IFS.fits
+Processing file os5_spc_018_beta_Uma_IFS.fits
+Processing file os5_spc_019_beta_Uma_IFS.fits
+Processing file os5_spc_020_beta_Uma_IFS.fits
+Processing file os5_spc_021_beta_Uma_IFS.fits
+Processing file os5_spc_022_beta_Uma_IFS.fits
+Processing file os5_spc_023_beta_Uma_IFS.fits
+Processing file os5_spc_024_beta_Uma_IFS.fits
+Processing file os5_spc_025_beta_Uma_IFS.fits
+Processing file os5_spc_026_beta_Uma_IFS.fits
+Processing file os5_spc_027_beta_Uma_IFS.fits
+Processing file os5_spc_028_beta_Uma_IFS.fits
+Processing file os5_spc_029_beta_Uma_IFS.fits
+Processing file os5_spc_030_beta_Uma_IFS.fits
+Processing file os5_spc_031_Uma47_IFS.fits
+Processing file os5_spc_032_Uma47_IFS.fits
+Processing file os5_spc_033_Uma47_IFS.fits
+Processing file os5_spc_034_Uma47_IFS.fits
+Processing file os5_spc_035_Uma47_IFS.fits
+Processing file os5_spc_036_Uma47_IFS.fits
+Processing file os5_spc_037_Uma47_IFS.fits
+Processing file os5_spc_038_Uma47_IFS.fits
+Processing file os5_spc_039_Uma47_IFS.fits
+Processing file os5_spc_040_Uma47_IFS.fits
+Processing file os5_spc_041_Uma47_IFS.fits
+Processing file os5_spc_042_Uma47_IFS.fits
+Processing file os5_spc_043_Uma47_IFS.fits
+Processing file os5_spc_044_Uma47_IFS.fits
+Processing file os5_spc_045_Uma47_IFS.fits
+Processing file os5_spc_046_Uma47_IFS.fits
+Processing file os5_spc_047_Uma47_IFS.fits
+Processing file os5_spc_048_Uma47_IFS.fits
+Processing file os5_spc_049_Uma47_IFS.fits
+Processing file os5_spc_050_Uma47_IFS.fits
+Processing file os5_spc_051_Uma47_IFS.fits
+Processing file os5_spc_052_Uma47_IFS.fits
+Processing file os5_spc_053_Uma47_IFS.fits
+Processing file os5_spc_054_Uma47_IFS.fits
+Processing file os5_spc_055_Uma47_IFS.fits
+Processing file os5_spc_056_Uma47_IFS.fits
+Processing file os5_spc_057_Uma47_IFS.fits
+Processing file os5_spc_058_Uma47_IFS.fits
+Processing file os5_spc_059_Uma47_IFS.fits
+Processing file os5_spc_060_Uma47_IFS.fits
+Processing file os5_spc_061_Uma47_IFS.fits
+Processing file os5_spc_062_Uma47_IFS.fits
+Processing file os5_spc_063_Uma47_IFS.fits
+Processing file os5_spc_064_Uma47_IFS.fits
+Processing file os5_spc_065_Uma47_IFS.fits
+Processing file os5_spc_066_Uma47_IFS.fits
+Processing file os5_spc_067_Uma47_IFS.fits
+Processing file os5_spc_068_Uma47_IFS.fits
+Processing file os5_spc_069_Uma47_IFS.fits
+Processing file os5_spc_070_Uma47_IFS.fits
+Processing file os5_spc_071_Uma47_IFS.fits
+Processing file os5_spc_072_Uma47_IFS.fits
+Processing file os5_spc_073_Uma47_IFS.fits
+Processing file os5_spc_074_Uma47_IFS.fits
+Processing file os5_spc_075_Uma47_IFS.fits
+Processing file os5_spc_076_Uma47_IFS.fits
+Processing file os5_spc_077_Uma47_IFS.fits
+Processing file os5_spc_078_Uma47_IFS.fits
+Processing file os5_spc_079_Uma47_IFS.fits
+Processing file os5_spc_080_Uma47_IFS.fits
+Processing file os5_spc_081_Uma47_IFS.fits
+Processing file os5_spc_082_Uma47_IFS.fits
+Processing file os5_spc_083_Uma47_IFS.fits
+Processing file os5_spc_084_Uma47_IFS.fits
+Processing file os5_spc_085_Uma47_IFS.fits
+Processing file os5_spc_086_Uma47_IFS.fits
+Processing file os5_spc_087_Uma47_IFS.fits
+Processing file os5_spc_088_Uma47_IFS.fits
+Processing file os5_spc_089_Uma47_IFS.fits
+Processing file os5_spc_090_Uma47_IFS.fits
+Processing file os5_spc_091_Uma47_IFS.fits
+Processing file os5_spc_092_Uma47_IFS.fits
+Processing file os5_spc_093_Uma47_IFS.fits
+Processing file os5_spc_094_Uma47_IFS.fits
+Processing file os5_spc_095_Uma47_IFS.fits
+Processing file os5_spc_096_Uma47_IFS.fits
+Processing file os5_spc_097_Uma47_IFS.fits
+Processing file os5_spc_098_Uma47_IFS.fits
+Processing file os5_spc_099_Uma47_IFS.fits
+Processing file os5_spc_100_Uma47_IFS.fits
+Processing file os5_spc_101_Uma47_IFS.fits
+Processing file os5_spc_102_Uma47_IFS.fits
+Processing file os5_spc_103_Uma47_IFS.fits
+Processing file os5_spc_104_Uma47_IFS.fits
+Processing file os5_spc_105_Uma47_IFS.fits
+Processing file os5_spc_106_Uma47_IFS.fits
+Processing file os5_spc_107_Uma47_IFS.fits
+Processing file os5_spc_108_Uma47_IFS.fits
+Processing file os5_spc_109_Uma47_IFS.fits
+Processing file os5_spc_110_Uma47_IFS.fits
+Processing file os5_spc_111_Uma47_IFS.fits
+Processing file os5_spc_112_Uma47_IFS.fits
+Processing file os5_spc_113_Uma47_IFS.fits
+Processing file os5_spc_114_Uma47_IFS.fits
+Processing file os5_spc_115_Uma47_IFS.fits
+Processing file os5_spc_116_Uma47_IFS.fits
+Processing file os5_spc_117_Uma47_IFS.fits
+Processing file os5_spc_118_Uma47_IFS.fits
+Processing file os5_spc_119_Uma47_IFS.fits
+Processing file os5_spc_120_Uma47_IFS.fits
+Processing file os5_spc_121_Uma47_IFS.fits
+Processing file os5_spc_122_Uma47_IFS.fits
+Processing file os5_spc_123_Uma47_IFS.fits
+Processing file os5_spc_124_Uma47_IFS.fits
+Processing file os5_spc_125_Uma47_IFS.fits
+Processing file os5_spc_126_Uma47_IFS.fits
+Processing file os5_spc_127_Uma47_IFS.fits
+Processing file os5_spc_128_Uma47_IFS.fits
+Processing file os5_spc_129_Uma47_IFS.fits
+Processing file os5_spc_130_Uma47_IFS.fits
+</pre></div></div>
+</div>
+<div class="section" id="Average-the-images">
+<h3>Average the images<a class="headerlink" href="#Average-the-images" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">beta_Uma_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_detector/*beta*.fits&#39;</span><span class="p">)</span>
+
+<span class="n">beta_Uma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">beta_Uma_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">beta_Uma_file</span> <span class="ow">in</span> <span class="n">beta_Uma_files</span><span class="p">:</span>
+    <span class="n">beta_Uma</span> <span class="o">+=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">beta_Uma_file</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">beta_Uma</span><span class="o">/=</span><span class="nb">len</span><span class="p">(</span><span class="n">beta_Uma_files</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">beta_Uma</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/average_beta_Uma_detector.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">Uma47_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_detector/*47*.fits&#39;</span><span class="p">)</span>
+
+<span class="n">Uma47</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">Uma47_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">Uma47_file</span> <span class="ow">in</span> <span class="n">Uma47_files</span><span class="p">:</span>
+    <span class="n">Uma47</span> <span class="o">+=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">Uma47_file</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">Uma47</span><span class="o">/=</span><span class="nb">len</span><span class="p">(</span><span class="n">Uma47_files</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">Uma47</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/average_Uma47_detector.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Extraction">
+<h1>Extraction<a class="headerlink" href="#Extraction" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">fname</span><span class="o">=</span><span class="s1">&#39;OS5/OS5_average/average_beta_Uma_detector.fits&#39;</span>
+<span class="n">cube_beta</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">fname</span><span class="o">=</span><span class="s1">&#39;OS5/OS5_average/average_Uma47_detector.fits&#39;</span>
+<span class="n">cube_47</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+[astropy] VerifyWarning: Card is too long, comment will be truncated.
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+[astropy] VerifyWarning: Card is too long, comment will be truncated.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="c1"># naive subtraction</span>
+<span class="n">residual</span> <span class="o">=</span> <span class="n">cube_47</span><span class="o">.</span><span class="n">data</span><span class="o">-</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">beta_Uma_Vmag</span><span class="o">-</span><span class="n">Uma47_Vmag</span><span class="p">))</span><span class="o">*</span><span class="n">cube_beta</span><span class="o">.</span><span class="n">data</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">residual</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/residual.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Add-off-axis-PSF">
+<h1>Add off-axis PSF<a class="headerlink" href="#Add-off-axis-PSF" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">offaxispsf</span><span class="o">=</span> <span class="s1">&#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits&#39;</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxispsf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Processing file &#39;</span><span class="o">+</span><span class="n">offaxispsf</span><span class="p">)</span>
+<span class="n">Uma47_cube_off_axis</span> <span class="o">=</span> <span class="n">convert_cube</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">Uma47_T</span><span class="p">,</span><span class="n">Uma47_Vmag</span><span class="p">,</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="n">Uma47_cube_off_axis</span>
+<span class="c1"># adjust headers for slightly different wavelength</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span><span class="o">=</span><span class="mf">0.77</span>
+<span class="c1"># by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800</span>
+<span class="c1">#cube.header[&#39;PIXSIZE&#39;]*=0.8/0.77</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveDetector</span><span class="o">=</span><span class="bp">False</span>
+<span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">propagateIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">lamlist</span><span class="o">.</span><span class="n">value</span><span class="o">/</span><span class="mf">1000.</span><span class="p">,</span><span class="n">cube</span><span class="p">)</span>
+<span class="c1">### NEED TO ADD HEADERS HERE!!!</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">detectorFrame</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/offaxis.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Processing file /local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+../code/tools/lenslet.py:36: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
+../code/tools/lenslet.py:43: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane[xpad:-xpad,ypad:-ypad] = imagePlane
+../code/tools/detutils.py:64: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  temp = np.zeros((shape[1], x),dtype=float)
+../code/tools/detutils.py:89: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  result = np.zeros((shape[0], shape[1]), dtype=float)
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.detector</span> <span class="kn">import</span> <span class="n">readDetector</span>
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/os5_spc*.fits&#39;</span><span class="p">)</span>
+<span class="n">filelist</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="n">QE</span><span class="o">=</span><span class="mf">0.7</span>
+<span class="n">losses</span> <span class="o">=</span> <span class="mf">0.34</span>
+<span class="n">Nreads</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">timeframe</span> <span class="o">=</span> <span class="mf">1000.</span> <span class="c1"># number of seconds for each frame, set by J Krist</span>
+
+<span class="n">contrast</span> <span class="o">=</span> <span class="mf">1e-8</span> <span class="c1"># contrast of planet</span>
+<span class="k">for</span> <span class="n">reffile</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">:</span>
+<span class="c1">#     print(&#39;Processing file &#39;+reffile.split(&#39;/&#39;)[-1])</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">reffile</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;Uma47&#39;</span> <span class="ow">in</span> <span class="n">reffile</span><span class="p">:</span>
+        <span class="n">off_axis_psf</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;OS5/offaxis.fits&#39;</span><span class="p">)</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">contrast</span><span class="o">*</span><span class="n">off_axis_psf</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">inttime</span> <span class="o">=</span> <span class="n">timeframe</span><span class="o">/</span><span class="n">Nreads</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="n">QE</span><span class="o">*</span><span class="n">losses</span>
+    <span class="c1"># refreshes parameter header</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">makeHeader</span><span class="p">()</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;QE&#39;</span><span class="p">,</span><span class="n">QE</span><span class="p">,</span><span class="s1">&#39;Quantum efficiency of the detector&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;LOSS&#39;</span><span class="p">,</span><span class="n">losses</span><span class="p">,</span><span class="s1">&#39;Transmission factor for the IFS (J. Krist)&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;INTTIME&#39;</span><span class="p">,</span><span class="n">inttime</span><span class="p">,</span><span class="s1">&#39;Time for each infividual frame&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;NREADS&#39;</span><span class="p">,</span><span class="n">Nreads</span><span class="p">,</span><span class="s1">&#39;Number of frames averaged&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">,</span><span class="n">timeframe</span><span class="p">,</span><span class="s1">&#39;Total exposure time&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+
+    <span class="c1"># subtract offaxis psf if Uma47 is in filename</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">varframe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="c1"># averaging readsAdd</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nreads</span><span class="p">):</span>
+        <span class="n">newread</span> <span class="o">=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">inttime</span><span class="o">=</span><span class="n">inttime</span><span class="p">)</span>
+        <span class="n">frame</span> <span class="o">+=</span> <span class="n">newread</span>
+        <span class="n">varframe</span> <span class="o">+=</span> <span class="n">newread</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">frame</span> <span class="o">/=</span> <span class="n">Nreads</span>
+    <span class="n">varframe</span> <span class="o">/=</span> <span class="n">Nreads</span>
+    <span class="n">varframe</span> <span class="o">-=</span> <span class="n">frame</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">outimg</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span><span class="n">ivar</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="n">varframe</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span>
+    <span class="n">outimg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_with_target_detector/&#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_detector.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+/local/data/nicolaus2/mrizzo/anaconda3/lib/python3.5/site-packages/ipykernel/__main__.py:38: RuntimeWarning: divide by zero encountered in true_divide
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+[astropy] VerifyWarning: Card is too long, comment will be truncated.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">beta_Uma_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_with_target_detector/*beta*.fits&#39;</span><span class="p">)</span>
+
+<span class="n">Uma47_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_with_target_detector/*47*.fits&#39;</span><span class="p">)</span>
+
+<span class="n">Uma47</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">Uma47_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">Uma47_file</span> <span class="ow">in</span> <span class="n">Uma47_files</span><span class="p">:</span>
+    <span class="n">Uma47</span> <span class="o">+=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">Uma47_file</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">Uma47</span><span class="o">/=</span><span class="nb">len</span><span class="p">(</span><span class="n">Uma47_files</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">Uma47</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/average_Uma47_offaxis_detector.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">fname</span><span class="o">=</span><span class="s1">&#39;OS5/OS5_average/average_Uma47_offaxis_detector.fits&#39;</span>
+<span class="n">cube_47_offaxis</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+[astropy] VerifyWarning: Card is too long, comment will be truncated.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">residual</span> <span class="o">=</span> <span class="n">cube_47_offaxis</span><span class="o">.</span><span class="n">data</span><span class="o">-</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">beta_Uma_Vmag</span><span class="o">-</span><span class="n">Uma47_Vmag</span><span class="p">))</span><span class="o">*</span><span class="n">cube_beta</span><span class="o">.</span><span class="n">data</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">residual</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/residual_offaxis.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="SNR-calculation">
+<h1>SNR calculation<a class="headerlink" href="#SNR-calculation" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [78]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="c1"># still naive subtraction, but subtract off the means</span>
+<span class="n">cube47_noave</span> <span class="o">=</span> <span class="n">cube_47_offaxis</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">cube_47_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="n">cubebeta_noave</span> <span class="o">=</span> <span class="n">cube_beta</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">cube_beta</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="n">residual</span> <span class="o">=</span> <span class="n">cube47_noave</span><span class="o">-</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">beta_Uma_Vmag</span><span class="o">-</span><span class="n">Uma47_Vmag</span><span class="p">))</span><span class="o">*</span><span class="n">cubebeta_noave</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">residual</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/residual_offaxis_nomean.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [85]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="c1">#offaxis_ideal = reduceIFSMap(par,&#39;OS5/offaxis.fits&#39;)</span>
+<span class="n">offaxis_ideal_norm</span> <span class="o">=</span> <span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">matched_filter</span> <span class="o">=</span> <span class="n">offaxis_ideal_norm</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">((</span><span class="n">offaxis_ideal_norm</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">matched_filter</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/matched_filter.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">offaxis_ideal_norm</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/offaxis_ideal_norm.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+[astropy] VerifyWarning: Card is too long, comment will be truncated.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1.46082806545
+0.0832134649332
+SNR =  17.5551885338
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [95]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">offaxispsf</span><span class="o">=</span> <span class="s1">&#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits&#39;</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxispsf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Processing file &#39;</span><span class="o">+</span><span class="n">offaxispsf</span><span class="p">)</span>
+<span class="n">Uma47_cube_off_axis</span> <span class="o">=</span> <span class="n">convert_cube</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">Uma47_T</span><span class="p">,</span><span class="n">Uma47_Vmag</span><span class="p">,</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="n">Uma47_cube_off_axis</span>
+
+<span class="c1"># flip the image</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fliplr</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># adjust headers for slightly different wavelength</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span><span class="o">=</span><span class="mf">0.77</span>
+<span class="c1"># by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800</span>
+<span class="c1">#cube.header[&#39;PIXSIZE&#39;]*=0.8/0.77</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveDetector</span><span class="o">=</span><span class="bp">False</span>
+<span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">propagateIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">lamlist</span><span class="o">.</span><span class="n">value</span><span class="o">/</span><span class="mf">1000.</span><span class="p">,</span><span class="n">cube</span><span class="p">)</span>
+<span class="c1">### NEED TO ADD HEADERS HERE!!!</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">detectorFrame</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/offaxis_flipped.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Processing file /local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+../code/tools/lenslet.py:36: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
+../code/tools/lenslet.py:43: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane[xpad:-xpad,ypad:-ypad] = imagePlane
+../code/tools/detutils.py:64: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  temp = np.zeros((shape[1], x),dtype=float)
+../code/tools/detutils.py:89: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  result = np.zeros((shape[0], shape[1]), dtype=float)
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_ShapedPupilIFS_47_2.png" src="../_images/notebooks_ShapedPupilIFS_47_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [98]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">offaxis_ideal_flipped</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="s1">&#39;OS5/offaxis_flipped.fits&#39;</span><span class="p">)</span>
+<span class="n">offaxis_ideal_norm_flipped</span> <span class="o">=</span> <span class="n">offaxis_ideal_flipped</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_ideal_flipped</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">matched_filter_flipped</span> <span class="o">=</span> <span class="n">offaxis_ideal_norm_flipped</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">((</span><span class="n">offaxis_ideal_norm_flipped</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">matched_filter_flipped</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/matched_filter_flipped.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">offaxis_ideal_norm_flipped</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/offaxis_ideal_norm_flipped.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+[astropy] AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead.
+WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io.fits.card]
+[astropy] VerifyWarning: Card is too long, comment will be truncated.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [99]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">psf_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">matched_filter</span><span class="o">*</span><span class="n">residual</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1">#cube47_noave_no_offaxis = cube_47.data - np.nanmean(cube_47.data)</span>
+<span class="c1">#residual_no_offaxis = cube47_noave_no_offaxis-10**(0.4*(beta_Uma_Vmag-Uma47_Vmag))*cubebeta_noave</span>
+<span class="c1">#Image(data=residual).write(&#39;OS5/OS5_average/residual_noave_no_offaxis.fits&#39;,clobber=True)</span>
+
+<span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">matched_filter_flipped</span><span class="o">*</span><span class="n">residual</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1">#psf_fit = np.nansum(matched_filter*offaxis_ideal_norm)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">psf_fit</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;SNR = &#39;</span><span class="p">,</span><span class="n">psf_fit</span><span class="o">/</span><span class="n">noise</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1.46082806545
+0.0267014152218
+SNR =  54.7097617606
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">residual</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(17, 108, 108)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [84]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[84]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x7f35b8f9bc18&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_ShapedPupilIFS_52_1.png" src="../_images/notebooks_ShapedPupilIFS_52_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [93]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">oap</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fliplr</span><span class="p">(</span><span class="n">oap</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[93]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x7f35b972f198&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_ShapedPupilIFS_53_1.png" src="../_images/notebooks_ShapedPupilIFS_53_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [100]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+3.650265060424805 m2
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Shaped pupil propagation through IFS</a><ul>
+<li><a class="reference internal" href="#1.-Reference-star-processing">1. Reference star processing</a><ul>
+<li><a class="reference internal" href="#Process-a-cube-to-turn-it-into-counts-per-pixel">Process a cube to turn it into counts per pixel</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Process-the-files-using-the-function-above">Process the files using the function above</a><ul>
+<li><a class="reference internal" href="#Reference-star">Reference star</a></li>
+<li><a class="reference internal" href="#Process-the-target-star">Process the target star</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Apply-detector-readout,-noise-and-averaging">Apply detector readout, noise and averaging</a><ul>
+<li><a class="reference internal" href="#Average-the-images">Average the images</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Extraction">Extraction</a></li>
+<li><a class="reference internal" href="#Add-off-axis-PSF">Add off-axis PSF</a></li>
+<li><a class="reference internal" href="#SNR-calculation">SNR calculation</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/ShapedPupilIFS.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 26 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>

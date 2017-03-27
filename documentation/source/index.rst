@@ -14,7 +14,7 @@ IFS Simulator
 .. toctree::
    :maxdepth: 2
 
-   Introduction
+   notebooks/Introduction
 
 PISCES
 ======
@@ -22,9 +22,9 @@ PISCES
 .. toctree::
    :maxdepth: 2
    
-   PISCES_wavecal
-   PISCES_Reduce
-   MultiProcExample
+   notebooks/PISCES_wavecal
+   notebooks/PISCES_Reduce
+   notebooks/MultiProcExample
    
 API
 ===

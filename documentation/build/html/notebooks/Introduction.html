@@ -1,0 +1,856 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to crispy &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PISCES wavelength calibration" href="../PISCES_wavecal.html" />
+    <link rel="prev" title="The Coronagraph and Rapid Imaging Spectrograph in Python" href="../index.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li class="right">
+	<a href="../PISCES_wavecal.html" title="PISCES wavelength calibration">
+	  next &raquo;
+	</a>
+      </li>
+      <li class="right">
+	<a href="../index.html" title="The Coronagraph and Rapid Imaging Spectrograph in Python">
+	  &laquo; previous
+	</a>
+	 |
+      </li>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+      <li>Introduction to crispy</li> 
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="Introduction-to-crispy">
+<h1>Introduction to crispy<a class="headerlink" href="#Introduction-to-crispy" title="Permalink to this headline">¶</a></h1>
+<p>This software is designed to simulate lenslet array-based Integral Field
+Spectrographs and their reduction process. This was developed within the
+context of NASA&#8217;s WFIRST Coronagraph mission.</p>
+<p>In this notebook we go straight to the point and illustrate how to use
+the code. We require astropy, numpy. This notebook was written in a
+Python 3.5 kernel but should be backward compatible with Python 2.7.</p>
+<div class="section" id="Create-a-polychromatic-flatfield">
+<h2>Create a polychromatic flatfield<a class="headerlink" href="#Create-a-polychromatic-flatfield" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Initialization">
+<h3>Initialization<a class="headerlink" href="#Initialization" title="Permalink to this headline">¶</a></h3>
+<p>First we need to load the various modules that we need. Since the
+notebook can be located anywhere, we need to add the location of the
+Python code to the path first.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../code&#39;</span>
+<span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">tools</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>All the IFS parameters are contained within a Python class called
+&#8216;Params&#8217;. This class is initialized using only the path the &#8216;code&#8217;
+directory from the repo. In particular, the Params class stores all the
+relevant paths. All parameters can be changed on the fly.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>All the parameters are stored in this class. During the various steps of
+the software, they are appended to a header file.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[3]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>SIMPLE  =                    T / conforms to FITS standard
+BITPIX  =                    8 / array data type
+NAXIS   =                    0 / number of array dimensions
+EXTEND  =                    T
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** General parameters ******************
+COMMENT ************************************************************
+COMMENT
+NLENS   =                  108 / # lenslets across array
+PITCH   =             0.000174 / Lenslet pitch (meters)
+INTERLAC=                    2 / Interlacing
+PHILENS =    26.56505117707799 / Rotation angle of the lenslets (deg)
+PIXSIZE =              1.3E-05 / Pixel size (meters)
+LENSAMP =                  0.5 / Lenslet sampling (lam/D)
+LSAMPWAV=                600.0 / Lenslet sampling wavelength (nm)
+FWHM    =                    2 / FHWM of PSFLet at detector (pixels)
+FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
+NPIX    =                 1024 / Number of detector pixels
+DISPDIST=                    F / Use PISCES distortion/dispersion?
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-the-flatfield">
+<h3>Create the flatfield<a class="headerlink" href="#Create-the-flatfield" title="Permalink to this headline">¶</a></h3>
+<p>Creating a flatfield is a function built into the unitTests module. In
+this case, we will construct a cube of nlam wavelength slices, each
+having 512x512 pixels of value 1. The standard</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">unitTests</span> <span class="kn">import</span> <span class="n">testCreateFlatfield</span>
+<span class="n">help</span><span class="p">(</span><span class="n">testCreateFlatfield</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Help on function testCreateFlatfield in module unitTests:
+
+testCreateFlatfield(par, pixsize=0.1, npix=512, pixval=1.0, outname=&#39;flatfield.fits&#39;)
+    Creates a polychromatic flatfield
+
+    Parameters
+    ----------
+    par :   Parameter instance
+        Contains all IFS parameters
+    pixsize:   float
+       Pixel scale (lam/D)
+    npix: int
+        Each input frame has a pixel size npix x npix
+    pixval: float
+        Each input frame has a unform value pixval
+
+</pre></div></div>
+</div>
+<p>This test function will create a polychromatic flatfield at the
+wavelengths provided by the existing wavelength calibration. Those
+wavelengths can be retrieved as follows.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">help</span><span class="p">(</span><span class="n">calculateWaveList</span><span class="p">)</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Help on function calculateWaveList in module tools.reduction:
+
+calculateWaveList(par, lam_list=None)
+    Computes the wavelength lists corresponding to the center and endpoints of each
+    spectral bin. Wavelengths are separated by a constant value in log space. Number of
+    wavelengths depends on spectral resolution.
+
+    Parameters
+    ----------
+    par:        Parameter instance
+            Contains all IFS parameters
+    lam_list:   list of wavelengths
+            Usually this is left to None. If so, we use the wavelengths used for wavelength
+            calibration. Otherwise, we could decide to focus on a smaller/larger region of
+            the spectrum to retrieve. The final processed cubes will have bins centered
+            on lam_midpts
+
+    Returns
+    -------
+    lam_midpts: list of floats
+            Wavelengths at the midpoint of each bin
+    lam_endpts: list of floats
+            Wavelengths at the edges of each bin
+
+crispy - INFO - Reduced cube will have 17 wavelength bins
+[ 704.42954343  711.94828852  719.54728511  727.22738976  734.9894682
+  742.83439535  750.76305552  758.77634242  766.87515933  775.06041915
+  783.33304453  791.69396797  800.14413192  808.68448889  817.31600156
+  826.03964288  834.85639619]
+</pre></div></div>
+</div>
+<p>Now let&#8217;s create our flatfield. By default it will be stored as
+par.unitTestsOutput/flatfield.fits</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">testCreateFlatfield</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - The number of input pixels per lenslet is 3.911980
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Final detector pixel per PSFLet: 40.000000
+crispy - INFO - Processing wavelength 0.704430 (0 out of 17)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-6-e5ebb797e059&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>testCreateFlatfield<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/IFS/IFS-Simulator/code/unitTests.py</span> in <span class="ansi-cyan-fg">testCreateFlatfield</span><span class="ansi-blue-fg">(par, pixsize, npix, pixval, outname)</span>
+<span class="ansi-green-intense-fg ansi-bold">    138</span>     inCube<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>header<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;LAM_C&#39;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>median<span class="ansi-blue-fg">(</span>lamlist<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">/</span><span class="ansi-cyan-fg">1000.</span>
+<span class="ansi-green-intense-fg ansi-bold">    139</span>     inCube<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>header<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;PIXSIZE&#39;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> pixsize
+<span class="ansi-green-fg">--&gt; 140</span><span class="ansi-red-fg">     </span>detectorFrame <span class="ansi-blue-fg">=</span> propagateIFS<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">,</span>lamlist<span class="ansi-blue-fg">/</span><span class="ansi-cyan-fg">1000.</span><span class="ansi-blue-fg">,</span>inCube<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    141</span>     Image<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">=</span>detectorFrame<span class="ansi-blue-fg">,</span>header<span class="ansi-blue-fg">=</span>par<span class="ansi-blue-fg">.</span>hdr<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>write<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">.</span>unitTestsOutputs<span class="ansi-blue-fg">+</span><span class="ansi-blue-fg">&#39;/&#39;</span><span class="ansi-blue-fg">+</span>outname<span class="ansi-blue-fg">,</span>clobber<span class="ansi-blue-fg">=</span>True<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    142</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/IFS/IFS-Simulator/code/IFS.py</span> in <span class="ansi-cyan-fg">propagateIFS</span><span class="ansi-blue-fg">(par, wavelist, inputcube, name, parallel, cpus)</span>
+<span class="ansi-green-intense-fg ansi-bold">    191</span>                                             refWaveList,kernelList,allweights,locations)
+<span class="ansi-green-intense-fg ansi-bold">    192</span>             <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 193</span><span class="ansi-red-fg">                 </span>propagateSingleWavelength<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">,</span>i<span class="ansi-blue-fg">,</span>wavelist<span class="ansi-blue-fg">,</span>interpolatedInputCube<span class="ansi-blue-fg">,</span>finalFrame<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    194</span>
+<span class="ansi-green-intense-fg ansi-bold">    195</span>     <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/IFS/IFS-Simulator/code/IFS.py</span> in <span class="ansi-cyan-fg">propagateSingleWavelength</span><span class="ansi-blue-fg">(par, i, wavelist, interpolatedInputCube, finalFrame, refWaveList, kernelList, allweights, locations)</span>
+<span class="ansi-green-intense-fg ansi-bold">     92</span>         Lenslets<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">,</span> imagePlaneRot<span class="ansi-blue-fg">,</span> lam<span class="ansi-blue-fg">,</span>finalFrame<span class="ansi-blue-fg">,</span> allweights<span class="ansi-blue-fg">,</span>kernel<span class="ansi-blue-fg">,</span>locations<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     93</span>     <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 94</span><span class="ansi-red-fg">         </span>Lenslets<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">,</span> imagePlaneRot<span class="ansi-blue-fg">,</span> lam<span class="ansi-blue-fg">,</span>finalFrame<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     95</span>     <span class="ansi-green-fg">if</span> par<span class="ansi-blue-fg">.</span>saveLensletPlane<span class="ansi-blue-fg">:</span> Image<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">=</span>finalFrame<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>write<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">.</span>exportDir<span class="ansi-blue-fg">+</span><span class="ansi-blue-fg">&#39;/lensletPlane_%3.1fnm.fits&#39;</span> <span class="ansi-blue-fg">%</span> <span class="ansi-blue-fg">(</span>lam<span class="ansi-blue-fg">*</span><span class="ansi-cyan-fg">1000.</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     96</span>     <span class="ansi-green-fg">return</span> True
+
+<span class="ansi-green-fg">/Users/mrizzo/IFS/IFS-Simulator/code/tools/lenslet.py</span> in <span class="ansi-cyan-fg">Lenslets</span><span class="ansi-blue-fg">(par, imageplane, lam, lensletplane, allweights, kernels, locations)</span>
+<span class="ansi-green-intense-fg ansi-bold">    128</span>                 <span class="ansi-red-fg">### NOTE THE NEGATIVE SIGN TO PHILENS</span>
+<span class="ansi-green-intense-fg ansi-bold">    129</span>                 coef <span class="ansi-blue-fg">=</span> initcoef<span class="ansi-blue-fg">(</span>order<span class="ansi-blue-fg">,</span> scale<span class="ansi-blue-fg">=</span>par<span class="ansi-blue-fg">.</span>pitch<span class="ansi-blue-fg">/</span>par<span class="ansi-blue-fg">.</span>pixsize<span class="ansi-blue-fg">,</span> phi<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">-</span>par<span class="ansi-blue-fg">.</span>philens<span class="ansi-blue-fg">,</span> x0<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">,</span> y0<span class="ansi-blue-fg">=</span>dispersion<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 130</span><span class="ansi-red-fg">                 </span>sy<span class="ansi-blue-fg">,</span> sx <span class="ansi-blue-fg">=</span> transform<span class="ansi-blue-fg">(</span>i<span class="ansi-blue-fg">-</span>nx<span class="ansi-blue-fg">//</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">,</span> j<span class="ansi-blue-fg">-</span>nx<span class="ansi-blue-fg">//</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">,</span> order<span class="ansi-blue-fg">,</span> coef<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    131</span>                 sx<span class="ansi-blue-fg">+=</span>par<span class="ansi-blue-fg">.</span>npix<span class="ansi-blue-fg">//</span><span class="ansi-cyan-fg">2</span>
+<span class="ansi-green-intense-fg ansi-bold">    132</span>                 sy<span class="ansi-blue-fg">+=</span>par<span class="ansi-blue-fg">.</span>npix<span class="ansi-blue-fg">//</span><span class="ansi-cyan-fg">2</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/IFS/IFS-Simulator/code/tools/locate_psflets.py</span> in <span class="ansi-cyan-fg">transform</span><span class="ansi-blue-fg">(x, y, order, coef)</span>
+<span class="ansi-green-intense-fg ansi-bold">    482</span>     <span class="ansi-green-fg">for</span> ix <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>order <span class="ansi-blue-fg">+</span> <span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    483</span>         <span class="ansi-green-fg">for</span> iy <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>order <span class="ansi-blue-fg">-</span> ix <span class="ansi-blue-fg">+</span> <span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 484</span><span class="ansi-red-fg">             </span>_y <span class="ansi-blue-fg">+=</span> coef<span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">*</span>x<span class="ansi-blue-fg">**</span>ix<span class="ansi-blue-fg">*</span>y<span class="ansi-blue-fg">**</span>iy
+<span class="ansi-green-intense-fg ansi-bold">    485</span>             i <span class="ansi-blue-fg">+=</span> <span class="ansi-cyan-fg">1</span>
+<span class="ansi-green-intense-fg ansi-bold">    486</span>
+
+<span class="ansi-red-fg">KeyboardInterrupt</span>:
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Display-results">
+<h3>Display results<a class="headerlink" href="#Display-results" title="Permalink to this headline">¶</a></h3>
+<p>Depending on your version of Python you might see a bunch of
+VisibleDeprecationWarning. We are working on fixing that. Let&#8217;s see what
+we got.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+main - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[9]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x105f1ab38&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Introduction_21_2.png" src="../_images/notebooks_Introduction_21_2.png" />
+</div>
+</div>
+<p>A zoom-in version is visible here:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">subsize</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="n">subsize</span><span class="p">:</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">subsize</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="n">subsize</span><span class="p">:</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">subsize</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+main - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[10]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x11ac2b198&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Introduction_23_2.png" src="../_images/notebooks_Introduction_23_2.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Simulate-detector-readout">
+<h2>Simulate detector readout<a class="headerlink" href="#Simulate-detector-readout" title="Permalink to this headline">¶</a></h2>
+<p>We have also some routines that can add noise to the detector. Assuming
+that the input detector map is in photons per second, we can
+&#8216;detectorify&#8217; this map by adding Poisson noise, read noise, CIC noise,
+and dark current noise. In the future, we will also implement
+Electron-multiplying noise and Traps.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">tools.detector</span> <span class="kn">import</span> <span class="n">readDetector</span><span class="p">,</span><span class="n">averageDetectorReadout</span>
+<span class="n">flat</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">)</span>
+<span class="n">read</span><span class="o">=</span><span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">flat</span><span class="p">,</span><span class="n">inttime</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">append_header</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+main - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fits
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">subsize</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">read</span><span class="p">[</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="n">subsize</span><span class="p">:</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">subsize</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="n">subsize</span><span class="p">:</span><span class="n">par</span><span class="o">.</span><span class="n">npix</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">subsize</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[12]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x11b0dfdd8&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Introduction_27_1.png" src="../_images/notebooks_Introduction_27_1.png" />
+</div>
+</div>
+<p>Let&#8217;s save the noisified frame to a new name. This is useful to show
+since writing to FITS is a very common task.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">newImage</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">read</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span>
+<span class="n">newImage</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield_noise.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+main - INFO - Writing data to ../../code/unitTestsOutputs/flatfield_noise.fits
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Reduction-step">
+<h2>Reduction step<a class="headerlink" href="#Reduction-step" title="Permalink to this headline">¶</a></h2>
+<p>The reduction step is straightforward, as long as the wavelength
+calibration is good.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield_noise.fits&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+main - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield_noise.fits
+crispy - INFO - Reduced cube will have 17 wavelength bins
+main - INFO - Writing data to ../../code/SimResults/flatfield_noise_red_optext.fits
+</pre></div></div>
+</div>
+<p>Now we can display the cube interactively, or look it up with DS9 (it is
+located in par.exportDir)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">ipywidgets</span>
+<span class="k">def</span> <span class="nf">plt_ifs_optext</span><span class="p">(</span><span class="n">wchan</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">wchan</span><span class="o">-</span><span class="mi">1</span><span class="p">,:,:],</span>
+               <span class="n">vmin</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_heat&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">ipywidgets</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="n">plt_ifs_optext</span><span class="p">,</span> <span class="n">wchan</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Introduction_34_0.png" src="../_images/notebooks_Introduction_34_0.png" />
+</div>
+</div>
+<p>Let&#8217;s look now at the header of the created file</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">cube</span><span class="o">.</span><span class="n">header</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[16]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>SIMPLE  =                    T / conforms to FITS standard
+BITPIX  =                    8 / array data type
+NAXIS   =                    0 / number of array dimensions
+EXTEND  =                    T
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** General parameters ******************
+COMMENT ************************************************************
+COMMENT
+NLENS   =                  108 / # lenslets across array
+PITCH   =             0.000174 / Lenslet pitch (meters)
+INTERLAC=                    2 / Interlacing
+PHILENS =    26.56505117707799 / Rotation angle of the lenslets (deg)
+PIXSIZE =              1.3E-05 / Pixel size (meters)
+LENSAMP =                  0.5 / Lenslet sampling (lam/D)
+LSAMPWAV=                600.0 / Lenslet sampling wavelength (nm)
+FWHM    =                    2 / FHWM of PSFLet at detector (pixels)
+FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
+NPIX    =                 1024 / Number of detector pixels
+DISPDIST=                    F / Use PISCES distortion/dispersion?
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** IFS Simulation ******************
+COMMENT ************************************************************
+COMMENT
+SCALE   =    6.390626327764054 / Factor by which the input slice is rescaled
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** Innput info *************************
+COMMENT ************************************************************
+COMMENT
+INSLICES=                   17 / Number of wavelengths in input cube
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** Detector readout ********************
+COMMENT ************************************************************
+COMMENT
+RN      =                  0.2 / Read noise (electrons/read)
+CIC     =                0.001 / Clock-induced charge
+DARK    =                1E-05 / Dark current
+TRAPS   =                    F / Use traps? T/F
+INTTIME =                  100 / Integration time (s)
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** Cube Extraction *********************
+COMMENT ************************************************************
+COMMENT
+R       =                   50 / Spectral resolution of final cube
+CALDIR  = &#39;wavecalR50_770&#39;     / Directory of wavelength solution
+CUBEMODE= &#39;Optimal Extraction&#39; / Method used to extract data cube
+LAM_MIN =    704.4295434323802 / Minimum mid wavelength of extracted cube
+LAM_MAX =    834.8563961903914 / Maximum mid wavelength of extracted cube
+DLOGLAM =  0.01061696327719375 / Log spacing of extracted wavelength bins
+NLAM    =                   17 / Number of extracted wavelengths
+SMOOTHED=                    F / Cube NOT smoothed over bad lenslets
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Introduction to crispy</a><ul>
+<li><a class="reference internal" href="#Create-a-polychromatic-flatfield">Create a polychromatic flatfield</a><ul>
+<li><a class="reference internal" href="#Initialization">Initialization</a></li>
+<li><a class="reference internal" href="#Create-the-flatfield">Create the flatfield</a></li>
+<li><a class="reference internal" href="#Display-results">Display results</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Simulate-detector-readout">Simulate detector readout</a></li>
+<li><a class="reference internal" href="#Reduction-step">Reduction step</a></li>
+</ul>
+</li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/Introduction.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 26 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>
