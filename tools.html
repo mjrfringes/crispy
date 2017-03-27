@@ -30,7 +30,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="unitTests module" href="unitTests.html" />
-    <link rel="prev" title="Process multiple IFS images in parallel" href="notebooks/MultiProcExample.html" />
+    <link rel="prev" title="Process multiple IFS images in parallel" href="MultiProcExample.html" />
 <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
 <script type="text/javascript" src="_static/copybutton.js"></script>
 
@@ -65,7 +65,7 @@
 	</a>
       </li>
       <li class="right">
-	<a href="notebooks/MultiProcExample.html" title="Process multiple IFS images in parallel">
+	<a href="MultiProcExample.html" title="Process multiple IFS images in parallel">
 	  &laquo; previous
 	</a>
 	 |
@@ -1387,8 +1387,133 @@ order = (order+1)*(order+2)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-postprocessing-module">
-<h2>tools.postprocessing module<a class="headerlink" href="#tools-postprocessing-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.postprocessing">
+<span id="tools-postprocessing-module"></span><h2>tools.postprocessing module<a class="headerlink" href="#module-tools.postprocessing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.postprocessing.SPC_IFS_systematics">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">SPC_IFS_systematics</code><span class="sig-paren">(</span><em>par</em>, <em>psf_time_series_folder</em>, <em>offaxis_psf_filename</em>, <em>planet_radius=&lt;Quantity 71492000.0 m&gt;</em>, <em>mean_contrast=1e-08</em>, <em>ref_star_T=&lt;Quantity 9377.0 K&gt;</em>, <em>ref_star_Vmag=2.37</em>, <em>target_star_T=&lt;Quantity 5887.0 K&gt;</em>, <em>target_star_Vmag=5.03</em>, <em>lamc=770.0</em>, <em>BW=0.18</em>, <em>Nlam=45</em>, <em>n_ref_star_imgs=30</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em>, <em>outdir_time_series='OS5'</em>, <em>outdir_detector='OS5/OS5_detector'</em>, <em>outdir_average='OS5/OS5_average'</em>, <em>process_cubes=True</em>, <em>process_offaxis=True</em>, <em>process_detector=True</em>, <em>take_averages=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#SPC_IFS_systematics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.SPC_IFS_systematics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process SPC PSF cubes from J. Krist through the IFS</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.SPC_process_offaxis_only">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">SPC_process_offaxis_only</code><span class="sig-paren">(</span><em>par</em>, <em>offaxis_psf_filename</em>, <em>Naverage=100</em>, <em>fileshape=(45</em>, <em>315</em>, <em>315)</em>, <em>planet_radius=&lt;Quantity 71492000.0 m&gt;</em>, <em>mean_contrast=1e-08</em>, <em>ref_star_T=&lt;Quantity 9377.0 K&gt;</em>, <em>ref_star_Vmag=2.37</em>, <em>target_star_T=&lt;Quantity 5887.0 K&gt;</em>, <em>target_star_Vmag=5.03</em>, <em>lamc=770.0</em>, <em>BW=0.18</em>, <em>Nlam=45</em>, <em>n_ref_star_imgs=30</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em>, <em>outdir_time_series='OS5'</em>, <em>outdir_detector='OS5/OS5_detector'</em>, <em>outdir_average='OS5/OS5_average'</em>, <em>process_offaxis=True</em>, <em>process_detector=True</em>, <em>take_averages=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#SPC_process_offaxis_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.SPC_process_offaxis_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process SPC PSF cubes from J. Krist through the IFS</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.plot_SNR_spectrum">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">plot_SNR_spectrum</code><span class="sig-paren">(</span><em>wavelist</em>, <em>mean_contrast</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#plot_SNR_spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.plot_SNR_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.process_SPC_IFS">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">process_SPC_IFS</code><span class="sig-paren">(</span><em>par</em>, <em>psf_time_series_folder</em>, <em>offaxis_psf_filename</em>, <em>planet_radius=&lt;Quantity 71492000.0 m&gt;</em>, <em>mean_contrast=1e-08</em>, <em>ref_star_T=&lt;Quantity 9377.0 K&gt;</em>, <em>ref_star_Vmag=2.37</em>, <em>target_star_T=&lt;Quantity 5887.0 K&gt;</em>, <em>target_star_Vmag=5.03</em>, <em>lamc=770.0</em>, <em>BW=0.18</em>, <em>n_ref_star_imgs=30</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em>, <em>outdir_time_series='OS5'</em>, <em>outdir_detector='OS5/OS5_detector'</em>, <em>outdir_average='OS5/OS5_average'</em>, <em>process_cubes=True</em>, <em>process_offaxis=True</em>, <em>process_detector=True</em>, <em>process_noiseless=False</em>, <em>take_averages=True</em>, <em>parallel=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#process_SPC_IFS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.process_SPC_IFS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process SPC PSF cubes from J. Krist through the IFS</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par: Params instance</strong></p>
+<blockquote>
+<div><p>Contains all the parameters of the IFS</p>
+</div></blockquote>
+<p><strong>psf_time_series_folder: string</strong></p>
+<blockquote>
+<div><p>Where the files from Krist are located</p>
+</div></blockquote>
+<p><strong>offaxis_psf_filename: string</strong></p>
+<blockquote>
+<div><p>Where the off-axis PSF is located</p>
+</div></blockquote>
+<p><strong>mean_contrast: float</strong></p>
+<blockquote>
+<div><p>Mean contrast of the planet spectrum</p>
+</div></blockquote>
+<p><strong>ref_star_T: `u.K` float</strong></p>
+<blockquote>
+<div><p>Reference star temperature, float multiplied by astropy.units.K</p>
+</div></blockquote>
+<p><strong>ref_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>Vmag of the reference star</p>
+</div></blockquote>
+<p><strong>target_star_T: `u.K` float</strong></p>
+<blockquote>
+<div><p>Target star temperature, float multiplied by astropy.units.K</p>
+</div></blockquote>
+<p><strong>target_star_T_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>Vmag of the target star</p>
+</div></blockquote>
+<p><strong>lamc: float</strong></p>
+<blockquote>
+<div><p>Band&#8217;s central wavelength in nm</p>
+</div></blockquote>
+<p><strong>BW: float</strong></p>
+<blockquote>
+<div><p>Bandwidth</p>
+</div></blockquote>
+<p><strong>n_ref_star_imgs: int</strong></p>
+<blockquote>
+<div><p>Number of reference star images in the list</p>
+</div></blockquote>
+<p><strong>tel_pupil_area: `u.m**2` float</strong></p>
+<blockquote>
+<div><p>Effective surface area of telescope, including all geometric losses. Float
+multiplied by astropy.units.m**2</p>
+</div></blockquote>
+<p><strong>outdir_time_series: string</strong></p>
+<blockquote>
+<div><p>Where to store the noiseless IFS detector images</p>
+</div></blockquote>
+<p><strong>outdir_detector: string</strong></p>
+<blockquote>
+<div><p>Where to store the noisy IFS detector images</p>
+</div></blockquote>
+<p><strong>outdir_average: string</strong></p>
+<blockquote>
+<div><p>Where to store the averages of the time series</p>
+</div></blockquote>
+<p><strong>process_cubes: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to process the raw images from Krist, or skip this step if it was already done</p>
+</div></blockquote>
+<p><strong>process_offaxis: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to process the offaxis images and add it to the images</p>
+</div></blockquote>
+<p><strong>process_detector: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to add detector QE, IFS losses and noise to the IFS images</p>
+</div></blockquote>
+<p><strong>process_noiseless: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to add detector QE, IFS losses but no detector noise to the IFS images</p>
+</div></blockquote>
+<p><strong>take_averages: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to average all IFS detector images in the time series to create averages</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">signal: ndarray</p>
+<blockquote>
+<div><p>Array with the matched-filtered flux at each of the final cube&#8217;s wavelengths;
+The background is already subtracted</p>
+</div></blockquote>
+<p>noise: ndarray</p>
+<blockquote class="last">
+<div><p>Noise estimate using the pixel-to-pixel variance within the dark hole, multiplied
+by the number of effective pixels within the matched filter (sum of matched filter
+cube)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tools.reduction">
 <span id="tools-reduction-module"></span><h2>tools.reduction module<a class="headerlink" href="#module-tools.reduction" title="Permalink to this headline">¶</a></h2>
@@ -1978,8 +2103,189 @@ top right</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-wavecal-module">
-<h2>tools.wavecal module<a class="headerlink" href="#tools-wavecal-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.wavecal">
+<span id="tools-wavecal-module"></span><h2>tools.wavecal module<a class="headerlink" href="#module-tools.wavecal" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.wavecal.buildcalibrations">
+<code class="descclassname">tools.wavecal.</code><code class="descname">buildcalibrations</code><span class="sig-paren">(</span><em>par</em>, <em>filelist=None</em>, <em>lamlist=None</em>, <em>order=3</em>, <em>inspect=False</em>, <em>genwavelengthsol=True</em>, <em>makehiresPSFlets=True</em>, <em>savehiresimages=True</em>, <em>borderpix=4</em>, <em>upsample=5</em>, <em>nsubarr=3</em>, <em>parallel=True</em>, <em>inspect_first=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#buildcalibrations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.buildcalibrations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Master wavelength calibration function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>filelist: list of strings</strong></p>
+<blockquote>
+<div><p>List of the fits files that contain the monochromatic calibration files</p>
+</div></blockquote>
+<p><strong>lamlist: list of floats</strong></p>
+<blockquote>
+<div><p>Wavelengths in nm at which the files are taken</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote>
+<div><p>Order of the polynomial used to fit the PSFLet positions across the detector</p>
+</div></blockquote>
+<p><strong>genwavelengthsol: Boolean</strong></p>
+<blockquote>
+<div><p>If True, generate the wavelength calibration. Creates a text file with all
+polynomial coefficients that best fit the PSFLet positions at each wavelength.
+If False, then load an already-generated file.</p>
+</div></blockquote>
+<p><strong>inspect: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to create PNG files that overlay PSFLet fitted position on the
+monochromatic pictures, to visually inspect the fitting results</p>
+</div></blockquote>
+<p><strong>inspect_first: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to create a PNG file that overlays PSFLet fitted position on the
+monochromatic picture of the first file, to visually inspect the fitting results</p>
+</div></blockquote>
+<p><strong>makehiresPSFlets: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to do a high-resolution fitting of the PSFs, using the sampling
+diversity. This requires high-SNR monochromatic images.</p>
+</div></blockquote>
+<p><strong>savehiresimages: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to save fits files with the high-res PSFLets</p>
+</div></blockquote>
+<p><strong>borderpix:  int</strong></p>
+<blockquote>
+<div><p>Number of pixels that are not taken into account towards the edges of the detector</p>
+</div></blockquote>
+<p><strong>upsample: int</strong></p>
+<blockquote>
+<div><p>Upsampling factor for each high-resolution PSFLet</p>
+</div></blockquote>
+<p><strong>nsubarr: int</strong></p>
+<blockquote>
+<div><p>Detector will be divided into nsubarr x nsubarr regions. A high-resolution PSFLet
+will be determined in each region from the average of all PSFLets within that
+region</p>
+</div></blockquote>
+<p><strong>parallel: Boolean</strong></p>
+<blockquote class="last">
+<div><p>Whether or not to parallelize the computation for the high-resolution PSFLet and
+polychrome computation. The wavelength calibration step cannot be parallelized since
+each wavelength uses the previous wavelength solution as a guess input.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This function generates all the files required to process IFS cubes:
+lamsol.dat: contains a list of the wavelengths and the polynomial coefficients that</p>
+<blockquote>
+<div>describe the X,Y positions of all lenslets on the detector as a function 
+of lenslet position on the lenslet array.</div></blockquote>
+<dl class="docutils">
+<dt>polychromekeyRXX.fits:  where XX is replaced by the spectral resolution defined in the</dt>
+<dd>parameters file. This is a multi-extension fits file with: 
+- a list of the central wavelengths at which the final cube will be reduced to
+- an array of the X positions of all lenslets
+- an array of the Y positions of all lenslets
+- an array of booleans indicating whether that lenslet is good or not
+(e.g. when it is outside of the detector area)</dd>
+<dt>polychromeRXX.fits: list of 2D arrays of size Npix x Npix which each contain a map with</dt>
+<dd>the high-resolution lenslet PSFLets put in their correct position
+for all the wavelengths that we want in the output cube. Each PSFLet
+in each wavelength slice is used for least-squares fitting.</dd>
+<dt>PSFLoc.fits:    nsubarr x nsubarr array of 2D high-resolution PSFLets at each location</dt>
+<dd>in the detector.</dd>
+</dl>
+<p>polychromeRXX.fits and PSFLoc.fits are only generated if makehiresPSFlets is True.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.computeWavecal">
+<code class="descclassname">tools.wavecal.</code><code class="descname">computeWavecal</code><span class="sig-paren">(</span><em>par</em>, <em>lamlist=None</em>, <em>filelist=None</em>, <em>order=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#computeWavecal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.computeWavecal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a wavelength calibration from a set of fits files
+Uses Tim Brandt&#8217;s locate_PSFlets routine with an initial guess.
+The consecutive solutions use information from previous solutions to improve the
+initial guess.
+The process can be optimized somewhat by reducing the number of lenslets within
+the locatePSFlets function (could make this a parameter!)
+lamlist and filelist can be defined in the parameters in which case they don&#8217;t need to be set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par:        Parameter instance</strong></p>
+<p><strong>lamlist:    list of floats</strong></p>
+<blockquote>
+<div><p>Wavelengths in nm</p>
+</div></blockquote>
+<p><strong>filelist:   list of filenames</strong></p>
+<blockquote>
+<div><p>List of fits files to open in corresponding order</p>
+</div></blockquote>
+<p><strong>order:      int</strong></p>
+<blockquote class="last">
+<div><p>Order of 2d polynomial to be fitted to lenslets</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Obsolete now</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.createPolychrome">
+<code class="descclassname">tools.wavecal.</code><code class="descname">createPolychrome</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#createPolychrome"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.createPolychrome" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be run after generating a wavelength calibration set.
+This function constructs a cube of (lam_max-lam_min)/par.dlam depth,
+in which each slice is a monochromatic map at that wavelength.
+If the wavelength calibration doesn&#8217;t contain all the required wavelengths,
+interpolate between wavelengths using map_coordinates.
+In the end, one should be able to make a cutout at a given location and get a cube
+with all the psflets for that lenslet.</p>
+<p>For now, this only works with simulated, noiseless data in order to get
+almost perfect PSFs. In practice, we will have to create this cube from data.
+For now, already assumes that all wavelengths are available (need to compute these)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.createWavecalFiles">
+<code class="descclassname">tools.wavecal.</code><code class="descname">createWavecalFiles</code><span class="sig-paren">(</span><em>par</em>, <em>lamlist</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#createWavecalFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.createWavecalFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a set of monochromatic IFS images to be used in wavelength calibration step</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.do_inspection">
+<code class="descclassname">tools.wavecal.</code><code class="descname">do_inspection</code><span class="sig-paren">(</span><em>par</em>, <em>image</em>, <em>xpos</em>, <em>ypos</em>, <em>lam</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#do_inspection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.do_inspection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.get_sim_hires">
+<code class="descclassname">tools.wavecal.</code><code class="descname">get_sim_hires</code><span class="sig-paren">(</span><em>par</em>, <em>x</em>, <em>y</em>, <em>lam</em>, <em>image</em>, <em>upsample=5</em>, <em>nsubarr=5</em>, <em>npix=13</em>, <em>renorm=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#get_sim_hires"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.get_sim_hires" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build high resolution images of the undersampled PSF using the
+monochromatic frames. This version of the function uses the perfect
+knowledge of the Gaussian PSFLet. Only valid if par.gaussian=True.
+All PSFLets are the same across the entire FOV</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.gethires">
+<code class="descclassname">tools.wavecal.</code><code class="descname">gethires</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>image</em>, <em>upsample=5</em>, <em>nsubarr=5</em>, <em>npix=13</em>, <em>renorm=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#gethires"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.gethires" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build high resolution images of the undersampled PSF using the
+monochromatic frames.</p>
+<p>Inputs:
+1.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.make_polychrome">
+<code class="descclassname">tools.wavecal.</code><code class="descname">make_polychrome</code><span class="sig-paren">(</span><em>lam1</em>, <em>lam2</em>, <em>hires_arrs</em>, <em>lam_arr</em>, <em>psftool</em>, <em>allcoef</em>, <em>xindx</em>, <em>yindx</em>, <em>ydim</em>, <em>xdim</em>, <em>upsample=5</em>, <em>nlam=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#make_polychrome"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.make_polychrome" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tools" title="Permalink to this headline">¶</a></h2>
@@ -2005,11 +2311,11 @@ top right</p>
 <li><a class="reference internal" href="#module-tools.locate_psflets">tools.locate_psflets module</a></li>
 <li><a class="reference internal" href="#module-tools.par_utils">tools.par_utils module</a></li>
 <li><a class="reference internal" href="#module-tools.plotting">tools.plotting module</a></li>
-<li><a class="reference internal" href="#tools-postprocessing-module">tools.postprocessing module</a></li>
+<li><a class="reference internal" href="#module-tools.postprocessing">tools.postprocessing module</a></li>
 <li><a class="reference internal" href="#module-tools.reduction">tools.reduction module</a></li>
 <li><a class="reference internal" href="#module-tools.rotate">tools.rotate module</a></li>
 <li><a class="reference internal" href="#module-tools.spectrograph">tools.spectrograph module</a></li>
-<li><a class="reference internal" href="#tools-wavecal-module">tools.wavecal module</a></li>
+<li><a class="reference internal" href="#module-tools.wavecal">tools.wavecal module</a></li>
 <li><a class="reference internal" href="#module-tools">Module contents</a></li>
 </ul>
 </li>
@@ -2028,7 +2334,7 @@ top right</p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Mar 2017. <br/>
+    Last built 26 Mar 2017. <br/>
   </p>
 </footer>
   </body>

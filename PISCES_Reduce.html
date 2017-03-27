@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PISCES Data Reduction &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Process multiple IFS images in parallel" href="MultiProcExample.html" />
+    <link rel="prev" title="PISCES wavelength calibration" href="PISCES_wavecal.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="genindex.html">Index</a></li>
+    <li><a title="Module Index" href="py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li class="right">
+	<a href="MultiProcExample.html" title="Process multiple IFS images in parallel">
+	  next &raquo;
+	</a>
+      </li>
+      <li class="right">
+	<a href="PISCES_wavecal.html" title="PISCES wavelength calibration">
+	  &laquo; previous
+	</a>
+	 |
+      </li>
+      <li>
+	<a href="index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+      <li>PISCES Data Reduction</li> 
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="PISCES-Data-Reduction">
+<h1>PISCES Data Reduction<a class="headerlink" href="#PISCES-Data-Reduction" title="Permalink to this headline">¶</a></h1>
+<p>The data reduction pipeline for PISCES is kept as simple as possible for
+easing integration with JPL&#8217;s coronagraph control software. It requires
+an existing wavelength calibration.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../code&#39;</span>
+<span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">PISCESparams</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>This is simple: load the reduction function, and call it!</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="c1"># call the reduction routine with an example image</span>
+<span class="n">VARIA_ON</span><span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;IFS665nm.fits&#39;</span><span class="p">)</span>
+<span class="n">VARIA_OFF</span><span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;IFSdark665nm.fits&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">VARIA_ON</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="kn">from</span> <span class="nn">tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">test_img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">VARIA_ON</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">Image</span><span class="p">(</span><span class="n">VARIA_OFF</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span><span class="p">))</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_varia.fits&#39;</span><span class="p">)</span>
+<span class="n">reduced_cube</span><span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_varia.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+../../code/ReferenceFiles/Calibra_170306/IFS665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFSdark665nm.fits
+crispy - INFO - Writing data to ../../code/SimResults/test_varia.fits
+crispy - INFO - Read data from HDU 1 of ../../code/SimResults/test_varia.fits
+crispy - INFO - Reduced cube will have 24 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+/Users/mrizzo/anaconda/envs/py27/lib/python2.7/site-packages/numpy/lib/nanfunctions.py:703: RuntimeWarning: Mean of empty slice
+  warnings.warn(&#34;Mean of empty slice&#34;, RuntimeWarning)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../code/SimResults/test_varia_red_optext.fits
+</pre></div></div>
+</div>
+<p>The wavelengths of the cube slices are the following:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Wavelengths at midpoints (nm): &#39;</span><span class="p">,</span><span class="n">lam_midpts</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Wavelengths at endpoints (nm): &#39;</span><span class="p">,</span><span class="n">lam_endpts</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The files are exported in the folder par.exportDir. Look for the
+introduction documentation page for more details.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">PISCES Data Reduction</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="_sources/PISCES_Reduce.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 22 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>
