@@ -1,0 +1,1858 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>&lt;no title&gt; &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="c1">#os.environ[&#39;WEBBPSF_PATH&#39;] =</span>
+<span class="kn">import</span> <span class="nn">webbpsf</span>
+<span class="kn">from</span> <span class="nn">webbpsf</span> <span class="kn">import</span> <span class="n">wfirst</span>
+<span class="kn">import</span> <span class="nn">ipywidgets</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">webbpsf</span><span class="o">.</span><span class="n">setup_logging</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WebbPSF log messages of level INFO and above will be shown.
+WebbPSF log outputs will be directed to the screen.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">ifs_spc</span> <span class="o">=</span> <span class="n">wfirst</span><span class="o">.</span><span class="n">CGI</span><span class="p">()</span>
+<span class="n">ifs_spc</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;CHARSPC_F770&#39;</span>
+
+<span class="n">filter_fname</span> <span class="o">=</span> <span class="n">ifs_spc</span><span class="o">.</span><span class="n">_filters</span><span class="p">[</span><span class="n">ifs_spc</span><span class="o">.</span><span class="n">filter</span><span class="p">]</span><span class="o">.</span><span class="n">filename</span>
+<span class="n">filter_hdulist</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filter_fname</span><span class="p">)</span>
+<span class="n">wave_beg</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">filter_hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LAMBDA0&#39;</span><span class="p">))</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">filter_hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DELTALAM&#39;</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">wave_end</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">filter_hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LAMBDA0&#39;</span><span class="p">))</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">filter_hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DELTALAM&#39;</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">deltalam_ifs</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">filter_hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LAMBDA0&#39;</span><span class="p">))</span><span class="o">/</span><span class="mf">170.</span> <span class="c1"># Assume spectral resolution R = 70</span>
+<span class="n">Nchan</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">wave_end</span> <span class="o">-</span> <span class="n">wave_beg</span><span class="p">)</span><span class="o">/</span><span class="n">deltalam_ifs</span><span class="p">))</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1"># Number of channels, forced to an odd integer</span>
+<span class="n">wavelens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">wave_beg</span><span class="p">,</span> <span class="n">wave_end</span><span class="p">,</span> <span class="n">Nchan</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-10</span> <span class="c1"># all wavelengths to model, in meters</span>
+
+<span class="n">lamoD_asec</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">filter_hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LAMBDA0&#39;</span><span class="p">))</span><span class="o">*</span><span class="mf">1e-10</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">ifs_spc</span><span class="o">.</span><span class="n">PUPIL_RADIUS</span><span class="p">)</span> <span class="o">*</span> <span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">3600</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;System diffraction resolution element scale (lambda_0/D) in arcsec: </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">lamoD_asec</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;IFS spectral parameters: </span><span class="si">%d</span><span class="s2"> channels of characteristic spectral width </span><span class="si">%.2f</span><span class="s2"> nm,&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">Nchan</span><span class="p">,</span><span class="n">deltalam_ifs</span><span class="o">/</span><span class="mf">10.</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ranging from </span><span class="si">%d</span><span class="s2"> nm to </span><span class="si">%d</span><span class="s2"> nm, centered on </span><span class="si">%d</span><span class="s2"> nm&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">wavelens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">1e9</span><span class="p">,</span> <span class="n">wavelens</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mf">1e9</span><span class="p">,</span> <span class="n">wavelens</span><span class="p">[</span><span class="n">Nchan</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mf">1e9</span><span class="p">))</span>
+<span class="n">filter_hdulist</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[webbpsf] Printing the table of WFIRST CGI observing modes supported by WebbPSF.
+[webbpsf] Each is defined by a combo of camera, filter, apodizer, focal plane mask (FPM), and Lyot stop settings:
+[webbpsf] {&#39;CHARSPC_F660&#39;: (&#39;IFS&#39;, &#39;F660&#39;, &#39;CHARSPC&#39;, &#39;CHARSPC_F660_BOWTIE&#39;, &#39;LS30D88&#39;),
+ &#39;CHARSPC_F770&#39;: (&#39;IFS&#39;, &#39;F770&#39;, &#39;CHARSPC&#39;, &#39;CHARSPC_F770_BOWTIE&#39;, &#39;LS30D88&#39;),
+ &#39;CHARSPC_F890&#39;: (&#39;IFS&#39;, &#39;F890&#39;, &#39;CHARSPC&#39;, &#39;CHARSPC_F890_BOWTIE&#39;, &#39;LS30D88&#39;),
+ &#39;DISKSPC_F721&#39;: (&#39;IMAGER&#39;,
+                  &#39;F721&#39;,
+                  &#39;DISKSPC&#39;,
+                  &#39;DISKSPC_F721_ANNULUS&#39;,
+                  &#39;LS30D88&#39;)}
+[webbpsf] Since the mode was not specified at instantiation, defaulting to CHARSPC_F660
+[webbpsf] Set the following optical configuration:
+[webbpsf] camera = IFS, filter = F660, apodizer = CHARSPC, fpm = CHARSPC_F660_BOWTIE, lyotstop = LS30D88
+[webbpsf] Set the following optical configuration:
+[webbpsf] camera = IFS, filter = F770, apodizer = CHARSPC, fpm = CHARSPC_F770_BOWTIE, lyotstop = LS30D88
+System diffraction resolution element scale (lambda_0/D) in arcsec: 0.066
+IFS spectral parameters: 31 channels of characteristic spectral width 4.53 nm,
+ranging from 700 nm to 839 nm, centered on 770 nm
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">ifs_spc</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;source_offset_r&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># arcsec</span>
+<span class="n">ifs_spc</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;source_offset_theta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># deg w.r.t. North</span>
+
+<span class="n">ifs_psf_onax</span> <span class="o">=</span> <span class="n">ifs_spc</span><span class="o">.</span><span class="n">calc_datacube</span><span class="p">(</span><span class="n">wavelens</span><span class="p">,</span> <span class="n">fov_arcsec</span><span class="o">=</span><span class="mf">1.64</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;The resulting data cube has dimensions {} wavelengths x {} pixels x {} pixels&quot;</span><span class="o">.</span><span class="n">format</span>\
+      <span class="p">(</span><span class="n">ifs_psf_onax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ifs_psf_onax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ifs_psf_onax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[  poppy] Starting multiwavelength data cube calculation.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.007e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.168 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.0532e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.129 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.0994e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.121 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.1456e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.127 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.1918e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.130 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.238e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.121 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.2842e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.125 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.3304e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.163 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.3766e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.131 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.4228e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.116 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.469e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.120 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.5152e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.119 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.5614e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.113 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.6076e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.128 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.6538e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.141 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.7e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.119 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.7462e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.123 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.7924e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.116 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.8386e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.125 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.8848e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.110 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.931e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.128 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.9772e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.151 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.0234e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.143 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.0696e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.128 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.1158e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.131 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.162e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.133 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.2082e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.117 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.2544e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.131 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.3006e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.119 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.3468e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.157 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.393e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.137 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+The resulting data cube has dimensions 31 wavelengths x 66 pixels x 66 pixels
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">ifs_spc</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;source_offset_r&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span><span class="o">*</span><span class="n">lamoD_asec</span> <span class="c1"># 6 lam/D in arcsec</span>
+<span class="n">ifs_spc</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;source_offset_theta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">90.</span> <span class="c1"># deg w.r.t. North</span>
+
+<span class="n">ifs_psf_offax</span> <span class="o">=</span> <span class="n">ifs_spc</span><span class="o">.</span><span class="n">calc_datacube</span><span class="p">(</span><span class="n">wavelens</span><span class="p">,</span> <span class="n">fov_arcsec</span><span class="o">=</span><span class="mf">1.64</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">offax_peak_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ifs_psf_offax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">offax_peak_cube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">offax_peak_vec</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span>
+                          <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ifs_psf_onax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">ifs_psf_onax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">ifs_psf_onax_contrast</span> <span class="o">=</span> <span class="n">ifs_psf_onax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">/</span> <span class="n">offax_peak_cube</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[  poppy] Starting multiwavelength data cube calculation.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.007e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.113 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.0532e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.183 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.0994e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.197 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.1456e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.145 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.1918e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.148 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.238e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.158 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.2842e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.158 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.3304e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.139 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.3766e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.151 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.4228e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.136 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.469e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.132 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.5152e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.128 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.5614e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.134 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.6076e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.127 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.6538e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.135 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.7e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.121 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.7462e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.136 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.7924e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.118 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.8386e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.135 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.8848e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.138 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.931e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.122 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 7.9772e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.134 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.0234e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.129 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.0696e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.135 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.1158e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.112 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.162e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.125 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.2082e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.108 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.2544e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.126 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.3006e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.134 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.3468e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.128 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+[  poppy] Monochromatic calculation requested.
+[  poppy] PSF calc using fov_arcsec = 1.640000, oversample = 4, number of wavelengths = 1
+[webbpsf] Creating optical system model:
+[  poppy] Initialized OpticalSystem: WFIRST+CGI
+[  poppy] WFIRST Entrance Pupil: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/AFTA_CGI_C5_Pupil_onax_256px_flip.fits
+[  poppy] Added pupil plane: WFIRST Entrance Pupil
+[  poppy] Added coordinate inversion plane: OTE exit pupil
+[  poppy] CHARSPC: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_SP_256pix.fits.gz
+[  poppy] Added pupil plane: CHARSPC
+[  poppy] CHARSPC_F770_BOWTIE: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/CHARSPC_FPM_25WA90_2x65deg_-_FP1res4_evensamp_D072_F770.fits.gz
+[  poppy] Added image plane: CHARSPC_F770_BOWTIE
+[  poppy] LS30D88: Loaded amplitude transmission from /Users/mrizzo/IFS/webbpsf-data/CGI/optics/SPC_LS_30D88_256pix.fits.gz
+[  poppy] Added pupil plane: LS30D88
+[  poppy] Added detector with pixelscale=0.025 and oversampling=4: CGI detector
+[  poppy] Calculating PSF with 1 wavelengths
+[  poppy]  Propagating wavelength = 8.393e-07 m meters using Matrix FTs
+[  poppy]   Calculation completed in 0.122 s
+[  poppy] PSF Calculation completed.
+[  poppy]  Adding extension with image downsampled to detector pixel scale.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">plt_ifs_psf_onax</span><span class="p">(</span><span class="n">wchan</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ifs_psf_onax_contrast</span><span class="p">[</span><span class="n">wchan</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">norm</span><span class="o">=</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">(),</span>
+               <span class="n">vmin</span><span class="o">=</span><span class="mf">3e-10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">3e-8</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_heat&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">ipywidgets</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="n">plt_ifs_psf_onax</span><span class="p">,</span> <span class="n">wchan</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Nchan</span><span class="p">));</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_CGI-IFS_7_0.png" src="../_images/notebooks_CGI-IFS_7_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">ifs_psf_onax_contrast</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ifs_psf_onax_contrast.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wavelens</span><span class="o">.</span><span class="n">T</span><span class="o">*</span><span class="mf">1e6</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wavelens</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[ 0.7007   0.70532  0.70994  0.71456  0.71918  0.7238   0.72842  0.73304
+  0.73766  0.74228  0.7469   0.75152  0.75614  0.76076  0.76538  0.77
+  0.77462  0.77924  0.78386  0.78848  0.7931   0.79772  0.80234  0.80696
+  0.81158  0.8162   0.82082  0.82544  0.83006  0.83468  0.8393 ]
+31
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">propagateIFS</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="kn">as</span> <span class="nn">log</span>
+<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="kn">import</span> <span class="n">initLogger</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="c1"># load parameters</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">output</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Number of lenslets: 108
+Lenslet pitch in meters: 0.000174
+Interlacing: 2
+Rotation angle: 0.463647609001
+Pinhole? True
+Pinhole diameter: 2.5e-05
+Number of pixels in final detector: 1024
+Detector pixel size in meters: 1.3e-05
+Oversampling: 11
+Convolve with Gaussian as defocus? True
+FWHM of Gaussian convolution 2 detector pixel
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="c1"># initalize logger; both console and text file</span>
+<span class="c1">#initLogger(par.exportDir+&#39;/IFS.log&#39;)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading input&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="c1"># need to figure out the scale of the incoming cube...</span>
+<span class="n">mperpix</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">4.</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pitch</span>
+<span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">pitch</span><span class="o">/</span><span class="n">mperpix</span>
+<span class="n">par</span><span class="o">.</span><span class="n">mperpix</span> <span class="o">=</span> <span class="n">mperpix</span>
+<span class="n">wavlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">605</span><span class="p">,</span><span class="mi">725</span><span class="p">,</span><span class="mi">31</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">finalFrame</span> <span class="o">=</span> <span class="n">propagateIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">wavlist</span><span class="o">*</span><span class="mf">1e-3</span><span class="p">,</span><span class="n">ifs_psf_onax_contrast</span><span class="p">,</span><span class="n">parallel</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+[   root] Wavelength out of range of reference kernels
+/Users/mrizzo/IFS/IFS-Simulator/tools/lenslet.py:35: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane = np.zeros((imagePlane.shape[0]*np.sqrt(2),imagePlane.shape[1]*np.sqrt(2)))
+/Users/mrizzo/IFS/IFS-Simulator/tools/lenslet.py:41: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  paddedImagePlane[xpad:-xpad-1,ypad:-ypad-1] = imagePlane
+/Users/mrizzo/IFS/IFS-Simulator/tools/detutils.py:37: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  temp = np.zeros((shape[1], x),dtype=float)
+/Users/mrizzo/IFS/IFS-Simulator/tools/detutils.py:62: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  result = np.zeros((shape[0], shape[1]), dtype=float)
+/Users/mrizzo/IFS/IFS-Simulator/tools/lenslet.py:134: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  lensletplane[xlow:xhigh,ylow:yhigh]+=val*weight*kernels[k]
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+[   root] Wavelength out of range of reference kernels
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">finalFrame</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;PuBu_r&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[15]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x11a548588&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_CGI-IFS_15_1.png" src="../_images/notebooks_CGI-IFS_15_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">fname</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/IFS-Simulator/SimResults/detectorFrame.fits&#39;</span>
+<span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="o">=</span><span class="mi">110</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">fname</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;intopt&#39;</span><span class="p">,</span><span class="n">ivar</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+/Users/mrizzo/IFS/IFS-Simulator/tools/reduction.py:548: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  pix_center_vals = [np.sum(im.data[i1:i1 + delt_y, val]*gaussian) for val in ix]/weights
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">cube</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/IFS-Simulator/SimResults/detectorFrame_red_intopt3.5.fits&#39;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+
+<span class="kn">import</span> <span class="nn">ipywidgets</span>
+
+<span class="k">def</span> <span class="nf">plt_ifs_intopt</span><span class="p">(</span><span class="n">wchan</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube</span><span class="p">[</span><span class="n">wchan</span><span class="o">-</span><span class="mi">1</span><span class="p">,:,:],</span> <span class="c1">#norm=matplotlib.colors.LogNorm(),</span>
+               <span class="n">vmin</span><span class="o">=</span><span class="mf">3e-10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">3e-8</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_heat&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">ipywidgets</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="n">plt_ifs_intopt</span><span class="p">,</span> <span class="n">wchan</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">cube</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_CGI-IFS_17_0.png" src="../_images/notebooks_CGI-IFS_17_0.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul class="simple">
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/CGI-IFS.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 27 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>

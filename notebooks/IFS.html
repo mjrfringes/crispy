@@ -1,0 +1,636 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>&lt;no title&gt; &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">propagateIFS</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="kn">as</span> <span class="nn">log</span>
+<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="kn">import</span> <span class="n">initLogger</span>
+
+<span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="c1"># load parameters</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+<span class="k">print</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">output</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Number of lenslets: 108
+Lenslet pitch in meters: 0.000174
+Interlacing: 2
+Rotation angle: -0.463647609001
+Pinhole? True
+Pinhole diameter: 2.5e-05
+Number of pixels in final detector: 1024
+Detector pixel size in meters: 1.3e-05
+Oversampling: 11
+Convolve with Gaussian as defocus? True
+FWHM of Gaussian convolution 1.5 detector pixel
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="c1"># initalize logger; both console and text file</span>
+<span class="n">initLogger</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/IFS.log&#39;</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading input&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+2017-01-12 16:31:18,721: INFO     Loading input
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="c1"># this is an example input cube</span>
+<span class="n">BW</span> <span class="o">=</span> <span class="mf">0.18</span>
+<span class="n">Nlam</span> <span class="o">=</span> <span class="mi">51</span>
+<span class="n">clam</span> <span class="o">=</span> <span class="mf">0.77</span>
+<span class="n">wavelist</span><span class="o">=</span> <span class="n">clam</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="o">+</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">Nlam</span><span class="p">)</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;./Inputs/PSF_SPLC_Nwvl51_BW18pct_star.fits&#39;</span>
+<span class="n">hdu</span> <span class="o">=</span> <span class="n">pyf</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">inputcube</span> <span class="o">=</span> <span class="n">hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">mperpix</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">5.</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pitch</span> <span class="c1"># 5 pixels per lambda/D</span>
+<span class="n">par</span><span class="o">.</span><span class="n">pixperlenslet</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">pitch</span><span class="o">/</span><span class="n">mperpix</span>
+<span class="n">par</span><span class="o">.</span><span class="n">mperpix</span> <span class="o">=</span> <span class="n">mperpix</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="c1"># main function; saves things to FITS</span>
+<span class="n">finalFrame</span> <span class="o">=</span> <span class="n">propagateIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">wavelist</span><span class="p">,</span><span class="n">inputcube</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+2017-01-12 16:31:25,635: INFO     The number of input pixels per lenslet is 1.666667
+2017-01-12 16:31:25,636: INFO     The plate scale of the input cube is 104.400000 um/pixel
+2017-01-12 16:31:25,637: INFO     Import all kernels and rescale them to same plate scale
+2017-01-12 16:31:25,638: INFO     Loading spot diagrams.
+2017-01-12 16:31:25,681: INFO     kernel scale average is 1.706 micron per pixel at 890 nm
+2017-01-12 16:31:25,682: INFO     Resampling kernels to match input
+2017-01-12 16:31:25,753: INFO     pxprlens: 184.000
+2017-01-12 16:31:25,755: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,765: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,772: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,778: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,784: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,790: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,796: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,802: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,808: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,814: INFO     Loading spot diagrams.
+2017-01-12 16:31:25,851: INFO     kernel scale average is 1.475 micron per pixel at 770 nm
+2017-01-12 16:31:25,852: INFO     Resampling kernels to match input
+2017-01-12 16:31:25,907: INFO     Padding smaller kernels
+2017-01-12 16:31:25,910: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,915: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,922: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,928: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,934: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,940: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,946: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,952: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,958: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:25,963: INFO     Loading spot diagrams.
+2017-01-12 16:31:25,998: INFO     kernel scale average is 1.264 micron per pixel at 660 nm
+2017-01-12 16:31:25,999: INFO     Resampling kernels to match input
+2017-01-12 16:31:26,039: INFO     Padding smaller kernels
+2017-01-12 16:31:26,041: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:26,047: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:26,055: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:26,061: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:26,066: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:26,073: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:26,078: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:26,084: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:26,090: WARNING  Kernel too small to capture crosstalk
+2017-01-12 16:31:26,121: INFO     Final detector pixel per lenslet: 16.000000
+2017-01-12 16:31:26,122: INFO     Processing wavelength 0.700700 (0 out of 51)
+2017-01-12 16:31:26,146: INFO     Rotate and scale slice 0
+tools/detutils.py:37: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  temp = np.zeros((shape[1], x),dtype=float)
+tools/detutils.py:62: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  result = np.zeros((shape[0], shape[1]), dtype=float)
+2017-01-12 16:31:26,155: INFO     Propagate through lenslet array
+2017-01-12 16:31:26,517: INFO     Processing wavelength 0.703472 (1 out of 51)
+2017-01-12 16:31:26,541: INFO     Rotate and scale slice 1
+2017-01-12 16:31:26,547: INFO     Propagate through lenslet array
+2017-01-12 16:31:26,755: INFO     Processing wavelength 0.706244 (2 out of 51)
+2017-01-12 16:31:26,776: INFO     Rotate and scale slice 2
+2017-01-12 16:31:26,783: INFO     Propagate through lenslet array
+2017-01-12 16:31:26,999: INFO     Processing wavelength 0.709016 (3 out of 51)
+2017-01-12 16:31:27,022: INFO     Rotate and scale slice 3
+2017-01-12 16:31:27,029: INFO     Propagate through lenslet array
+2017-01-12 16:31:27,234: INFO     Processing wavelength 0.711788 (4 out of 51)
+2017-01-12 16:31:27,257: INFO     Rotate and scale slice 4
+2017-01-12 16:31:27,264: INFO     Propagate through lenslet array
+2017-01-12 16:31:27,486: INFO     Processing wavelength 0.714560 (5 out of 51)
+2017-01-12 16:31:27,509: INFO     Rotate and scale slice 5
+2017-01-12 16:31:27,516: INFO     Propagate through lenslet array
+2017-01-12 16:31:27,719: INFO     Processing wavelength 0.717332 (6 out of 51)
+2017-01-12 16:31:27,743: INFO     Rotate and scale slice 6
+2017-01-12 16:31:27,749: INFO     Propagate through lenslet array
+2017-01-12 16:31:27,961: INFO     Processing wavelength 0.720104 (7 out of 51)
+2017-01-12 16:31:27,985: INFO     Rotate and scale slice 7
+2017-01-12 16:31:27,991: INFO     Propagate through lenslet array
+2017-01-12 16:31:28,203: INFO     Processing wavelength 0.722876 (8 out of 51)
+2017-01-12 16:31:28,226: INFO     Rotate and scale slice 8
+2017-01-12 16:31:28,233: INFO     Propagate through lenslet array
+2017-01-12 16:31:28,441: INFO     Processing wavelength 0.725648 (9 out of 51)
+2017-01-12 16:31:28,463: INFO     Rotate and scale slice 9
+2017-01-12 16:31:28,470: INFO     Propagate through lenslet array
+2017-01-12 16:31:28,674: INFO     Processing wavelength 0.728420 (10 out of 51)
+2017-01-12 16:31:28,697: INFO     Rotate and scale slice 10
+2017-01-12 16:31:28,705: INFO     Propagate through lenslet array
+2017-01-12 16:31:28,917: INFO     Processing wavelength 0.731192 (11 out of 51)
+2017-01-12 16:31:28,939: INFO     Rotate and scale slice 11
+2017-01-12 16:31:28,946: INFO     Propagate through lenslet array
+2017-01-12 16:31:29,154: INFO     Processing wavelength 0.733964 (12 out of 51)
+2017-01-12 16:31:29,177: INFO     Rotate and scale slice 12
+2017-01-12 16:31:29,184: INFO     Propagate through lenslet array
+2017-01-12 16:31:29,397: INFO     Processing wavelength 0.736736 (13 out of 51)
+2017-01-12 16:31:29,420: INFO     Rotate and scale slice 13
+2017-01-12 16:31:29,427: INFO     Propagate through lenslet array
+2017-01-12 16:31:29,636: INFO     Processing wavelength 0.739508 (14 out of 51)
+2017-01-12 16:31:29,662: INFO     Rotate and scale slice 14
+2017-01-12 16:31:29,668: INFO     Propagate through lenslet array
+2017-01-12 16:31:29,882: INFO     Processing wavelength 0.742280 (15 out of 51)
+2017-01-12 16:31:29,906: INFO     Rotate and scale slice 15
+2017-01-12 16:31:29,914: INFO     Propagate through lenslet array
+2017-01-12 16:31:30,126: INFO     Processing wavelength 0.745052 (16 out of 51)
+2017-01-12 16:31:30,149: INFO     Rotate and scale slice 16
+2017-01-12 16:31:30,156: INFO     Propagate through lenslet array
+2017-01-12 16:31:30,372: INFO     Processing wavelength 0.747824 (17 out of 51)
+2017-01-12 16:31:30,395: INFO     Rotate and scale slice 17
+2017-01-12 16:31:30,402: INFO     Propagate through lenslet array
+2017-01-12 16:31:30,604: INFO     Processing wavelength 0.750596 (18 out of 51)
+2017-01-12 16:31:30,629: INFO     Rotate and scale slice 18
+2017-01-12 16:31:30,635: INFO     Propagate through lenslet array
+2017-01-12 16:31:30,843: INFO     Processing wavelength 0.753368 (19 out of 51)
+2017-01-12 16:31:30,866: INFO     Rotate and scale slice 19
+2017-01-12 16:31:30,872: INFO     Propagate through lenslet array
+2017-01-12 16:31:31,087: INFO     Processing wavelength 0.756140 (20 out of 51)
+2017-01-12 16:31:31,110: INFO     Rotate and scale slice 20
+2017-01-12 16:31:31,117: INFO     Propagate through lenslet array
+2017-01-12 16:31:31,331: INFO     Processing wavelength 0.758912 (21 out of 51)
+2017-01-12 16:31:31,356: INFO     Rotate and scale slice 21
+2017-01-12 16:31:31,363: INFO     Propagate through lenslet array
+2017-01-12 16:31:31,565: INFO     Processing wavelength 0.761684 (22 out of 51)
+2017-01-12 16:31:31,591: INFO     Rotate and scale slice 22
+2017-01-12 16:31:31,597: INFO     Propagate through lenslet array
+2017-01-12 16:31:31,804: INFO     Processing wavelength 0.764456 (23 out of 51)
+2017-01-12 16:31:31,831: INFO     Rotate and scale slice 23
+2017-01-12 16:31:31,838: INFO     Propagate through lenslet array
+2017-01-12 16:31:32,044: INFO     Processing wavelength 0.767228 (24 out of 51)
+2017-01-12 16:31:32,066: INFO     Rotate and scale slice 24
+2017-01-12 16:31:32,074: INFO     Propagate through lenslet array
+2017-01-12 16:31:32,281: INFO     Processing wavelength 0.770000 (25 out of 51)
+2017-01-12 16:31:32,310: INFO     Rotate and scale slice 25
+2017-01-12 16:31:32,317: INFO     Propagate through lenslet array
+2017-01-12 16:31:32,525: INFO     Processing wavelength 0.772772 (26 out of 51)
+2017-01-12 16:31:32,548: INFO     Rotate and scale slice 26
+2017-01-12 16:31:32,554: INFO     Propagate through lenslet array
+2017-01-12 16:31:32,766: INFO     Processing wavelength 0.775544 (27 out of 51)
+2017-01-12 16:31:32,789: INFO     Rotate and scale slice 27
+2017-01-12 16:31:32,795: INFO     Propagate through lenslet array
+2017-01-12 16:31:33,007: INFO     Processing wavelength 0.778316 (28 out of 51)
+2017-01-12 16:31:33,031: INFO     Rotate and scale slice 28
+2017-01-12 16:31:33,037: INFO     Propagate through lenslet array
+2017-01-12 16:31:33,247: INFO     Processing wavelength 0.781088 (29 out of 51)
+2017-01-12 16:31:33,269: INFO     Rotate and scale slice 29
+2017-01-12 16:31:33,276: INFO     Propagate through lenslet array
+2017-01-12 16:31:33,495: INFO     Processing wavelength 0.783860 (30 out of 51)
+2017-01-12 16:31:33,518: INFO     Rotate and scale slice 30
+2017-01-12 16:31:33,524: INFO     Propagate through lenslet array
+2017-01-12 16:31:33,736: INFO     Processing wavelength 0.786632 (31 out of 51)
+2017-01-12 16:31:33,762: INFO     Rotate and scale slice 31
+2017-01-12 16:31:33,769: INFO     Propagate through lenslet array
+2017-01-12 16:31:33,986: INFO     Processing wavelength 0.789404 (32 out of 51)
+2017-01-12 16:31:34,009: INFO     Rotate and scale slice 32
+2017-01-12 16:31:34,016: INFO     Propagate through lenslet array
+2017-01-12 16:31:34,229: INFO     Processing wavelength 0.792176 (33 out of 51)
+2017-01-12 16:31:34,250: INFO     Rotate and scale slice 33
+2017-01-12 16:31:34,257: INFO     Propagate through lenslet array
+2017-01-12 16:31:34,474: INFO     Processing wavelength 0.794948 (34 out of 51)
+2017-01-12 16:31:34,496: INFO     Rotate and scale slice 34
+2017-01-12 16:31:34,503: INFO     Propagate through lenslet array
+2017-01-12 16:31:34,709: INFO     Processing wavelength 0.797720 (35 out of 51)
+2017-01-12 16:31:34,732: INFO     Rotate and scale slice 35
+2017-01-12 16:31:34,739: INFO     Propagate through lenslet array
+2017-01-12 16:31:34,949: INFO     Processing wavelength 0.800492 (36 out of 51)
+2017-01-12 16:31:34,973: INFO     Rotate and scale slice 36
+2017-01-12 16:31:34,980: INFO     Propagate through lenslet array
+2017-01-12 16:31:35,188: INFO     Processing wavelength 0.803264 (37 out of 51)
+2017-01-12 16:31:35,209: INFO     Rotate and scale slice 37
+2017-01-12 16:31:35,217: INFO     Propagate through lenslet array
+2017-01-12 16:31:35,428: INFO     Processing wavelength 0.806036 (38 out of 51)
+2017-01-12 16:31:35,453: INFO     Rotate and scale slice 38
+2017-01-12 16:31:35,460: INFO     Propagate through lenslet array
+2017-01-12 16:31:35,674: INFO     Processing wavelength 0.808808 (39 out of 51)
+2017-01-12 16:31:35,700: INFO     Rotate and scale slice 39
+2017-01-12 16:31:35,706: INFO     Propagate through lenslet array
+2017-01-12 16:31:35,913: INFO     Processing wavelength 0.811580 (40 out of 51)
+2017-01-12 16:31:35,939: INFO     Rotate and scale slice 40
+2017-01-12 16:31:35,946: INFO     Propagate through lenslet array
+2017-01-12 16:31:36,162: INFO     Processing wavelength 0.814352 (41 out of 51)
+2017-01-12 16:31:36,185: INFO     Rotate and scale slice 41
+2017-01-12 16:31:36,192: INFO     Propagate through lenslet array
+2017-01-12 16:31:36,408: INFO     Processing wavelength 0.817124 (42 out of 51)
+2017-01-12 16:31:36,431: INFO     Rotate and scale slice 42
+2017-01-12 16:31:36,437: INFO     Propagate through lenslet array
+2017-01-12 16:31:36,644: INFO     Processing wavelength 0.819896 (43 out of 51)
+2017-01-12 16:31:36,670: INFO     Rotate and scale slice 43
+2017-01-12 16:31:36,676: INFO     Propagate through lenslet array
+2017-01-12 16:31:36,882: INFO     Processing wavelength 0.822668 (44 out of 51)
+2017-01-12 16:31:36,905: INFO     Rotate and scale slice 44
+2017-01-12 16:31:36,912: INFO     Propagate through lenslet array
+2017-01-12 16:31:37,116: INFO     Processing wavelength 0.825440 (45 out of 51)
+2017-01-12 16:31:37,138: INFO     Rotate and scale slice 45
+2017-01-12 16:31:37,147: INFO     Propagate through lenslet array
+2017-01-12 16:31:37,364: INFO     Processing wavelength 0.828212 (46 out of 51)
+2017-01-12 16:31:37,387: INFO     Rotate and scale slice 46
+2017-01-12 16:31:37,394: INFO     Propagate through lenslet array
+2017-01-12 16:31:37,607: INFO     Processing wavelength 0.830984 (47 out of 51)
+2017-01-12 16:31:37,633: INFO     Rotate and scale slice 47
+2017-01-12 16:31:37,639: INFO     Propagate through lenslet array
+2017-01-12 16:31:37,850: INFO     Processing wavelength 0.833756 (48 out of 51)
+2017-01-12 16:31:37,874: INFO     Rotate and scale slice 48
+2017-01-12 16:31:37,880: INFO     Propagate through lenslet array
+2017-01-12 16:31:38,088: INFO     Processing wavelength 0.836528 (49 out of 51)
+2017-01-12 16:31:38,110: INFO     Rotate and scale slice 49
+2017-01-12 16:31:38,117: INFO     Propagate through lenslet array
+2017-01-12 16:31:38,337: INFO     Processing wavelength 0.839300 (50 out of 51)
+2017-01-12 16:31:38,360: INFO     Rotate and scale slice 50
+2017-01-12 16:31:38,367: INFO     Propagate through lenslet array
+2017-01-12 16:31:38,571: INFO     Number of detector pixels per lenslet: 13.384615
+2017-01-12 16:31:38,572: INFO     Rebinning final detector. Image has dimensions 1024x1024
+2017-01-12 16:31:39,224: INFO     Writing data to /Users/mrizzo/IFS/IFS-Simulator/SimResults/finalframe_nodistort_n25.fits
+2017-01-12 16:31:39,225: INFO     Done.
+2017-01-12 16:31:39,226: INFO     Performance: 13 seconds total
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">finalFrame</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;PuBu_r&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[7]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x110da6e10&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_IFS_5_1.png" src="../_images/notebooks_IFS_5_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul class="simple">
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/IFS.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 27 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>

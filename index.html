@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Coronagraph and Rapid Imaging Spectrograph in Python &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction to crispy" href="notebooks/Introduction.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="#"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="genindex.html">Index</a></li>
+    <li><a title="Module Index" href="py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li class="right">
+	<a href="notebooks/Introduction.html" title="Introduction to crispy">
+	  next &raquo;
+	</a>
+      </li>
+      <li>
+	<a href="#">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="the-coronagraph-and-rapid-imaging-spectrograph-in-python">
+<h1>The Coronagraph and Rapid Imaging Spectrograph in Python<a class="headerlink" href="#the-coronagraph-and-rapid-imaging-spectrograph-in-python" title="Permalink to this headline">¶</a></h1>
+<p>This software is designed to simulate lenslet array-based Integral Field Spectrographs and their reduction process. This was developed within the context of NASA&#8217;s WFIRST Coronagraph mission.</p>
+</div>
+<div class="section" id="ifs-simulator">
+<h1>IFS Simulator<a class="headerlink" href="#ifs-simulator" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/Introduction.html">Introduction to crispy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Introduction.html#Create-a-polychromatic-flatfield">Create a polychromatic flatfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Introduction.html#Simulate-detector-readout">Simulate detector readout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Introduction.html#Reduction-step">Reduction step</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="pisces">
+<h1>PISCES<a class="headerlink" href="#pisces" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/PISCES_wavecal.html">PISCES wavelength calibration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/PISCES_wavecal.html#Import-files-and-subtract-darks">Import files and subtract darks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/PISCES_wavecal.html#Build-wavelength-calibration-files">Build wavelength calibration files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/PISCES_Reduce.html">PISCES Data Reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/MultiProcExample.html">Process multiple IFS images in parallel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/MultiProcExample.html#Import-files-to-reduce,-doesn't-matter-how-many">Import files to reduce, doesn&#8217;t matter how many</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/MultiProcExample.html#No-parallelization">No parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/MultiProcExample.html#Parallelized-version">Parallelized version</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="api">
+<h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">tools package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.detector">tools.detector module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.detutils">tools.detutils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.image">tools.image module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.imgtools">tools.imgtools module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.initLogger">tools.initLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.inputScene">tools.inputScene module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.lenslet">tools.lenslet module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.locate_psflets">tools.locate_psflets module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.par_utils">tools.par_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.plotting">tools.plotting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-postprocessing-module">tools.postprocessing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.reduction">tools.reduction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.rotate">tools.rotate module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.spectrograph">tools.spectrograph module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-wavecal-module">tools.wavecal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="unitTests.html">unitTests module</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">The Coronagraph and Rapid Imaging Spectrograph in Python</a></li>
+<li><a class="reference internal" href="#ifs-simulator">IFS Simulator</a></li>
+<li><a class="reference internal" href="#pisces">PISCES</a></li>
+<li><a class="reference internal" href="#api">API</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="_sources/index.rst.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 27 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>

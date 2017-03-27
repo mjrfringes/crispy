@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tools.imgtools &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      <li><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tools.imgtools</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="k">import</span> <span class="n">medfilt</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pyfits</span> <span class="k">as</span> <span class="nn">pyf</span>
+
+
+<div class="viewcode-block" id="gen_bad_pix_mask"><a class="viewcode-back" href="../../tools.html#tools.imgtools.gen_bad_pix_mask">[docs]</a><span class="k">def</span> <span class="nf">gen_bad_pix_mask</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filsize</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">return_smoothed_image</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identify and mask bad pixels using median filter</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image: 2D ndarray</span>
+<span class="sd">            Image to clean</span>
+<span class="sd">    filsize: int</span>
+<span class="sd">            Size of median filter in pixels</span>
+<span class="sd">    threshold: float</span>
+<span class="sd">            Threshold in terms of standard deviations</span>
+<span class="sd">    return_smoothed_image: boolean</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    goodpix: 2D int ndarray</span>
+<span class="sd">            Good pixel mask. 1 where pixel is good</span>
+<span class="sd">    image_sm: 2D ndarray, if return_smoothed_image</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">image_sm</span> <span class="o">=</span> <span class="n">medfilt</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filsize</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">image</span> <span class="o">-</span> <span class="n">image_sm</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="n">goodpix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">/</span><span class="n">sigma</span> <span class="o">&lt;</span> <span class="n">threshold</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">goodpix</span><span class="p">,</span> <span class="n">image_sm</span><span class="p">)</span> <span class="k">if</span> <span class="n">return_smoothed_image</span> <span class="k">else</span> <span class="n">goodpix</span></div>
+
+
+
+<div class="viewcode-block" id="bowtie"><a class="viewcode-back" href="../../tools.html#tools.imgtools.bowtie">[docs]</a><span class="k">def</span> <span class="nf">bowtie</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="n">xc</span><span class="p">,</span><span class="n">yc</span><span class="p">,</span><span class="n">openingAngle</span><span class="p">,</span><span class="n">clocking</span><span class="p">,</span><span class="n">IWApix</span><span class="p">,</span><span class="n">OWApix</span><span class="p">,</span><span class="n">export</span><span class="o">=</span><span class="s1">&#39;bowtie&#39;</span><span class="p">,</span><span class="n">twomasks</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates one or two binary mask for a shaped pupil bowtie mask</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image: 2D ndarray</span>
+<span class="sd">            Image to which the mask needs to be applied</span>
+<span class="sd">    xc: int</span>
+<span class="sd">            X coordinate of center of bowtie</span>
+<span class="sd">    yc: int</span>
+<span class="sd">            Y coordinate of center of bowtie</span>
+<span class="sd">    openingAngle: float</span>
+<span class="sd">            Angle in degrees representing the opening angle of the bowtie mask</span>
+<span class="sd">    clocking: float</span>
+<span class="sd">            Angle of rotation of the mask in degrees</span>
+<span class="sd">    IWApix: float</span>
+<span class="sd">            Radius in pixels corresponding to the inner working angle of the mask</span>
+<span class="sd">    OWApix: float</span>
+<span class="sd">            Radius in pixels corresponding to the outer working angle of the mask</span>
+<span class="sd">    export: boolean</span>
+<span class="sd">            Whether to export the bowtie or not</span>
+<span class="sd">    twomasks: boolean</span>
+<span class="sd">            If True, returns two masks, one for each side of the bowtie</span>
+<span class="sd">            If False, returns one single mask</span>
+<span class="sd">            </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mask: 2D ndarrays of int</span>
+<span class="sd">            Bowtie mask with 1 inside the mask, zero everywhere else.</span>
+<span class="sd">    mask2: 2D ndarrays of int</span>
+<span class="sd">            If twomasks is True, mask and mask2 are the two sides of the bowtie.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">x</span> <span class="o">-=</span> <span class="n">xc</span>
+    <span class="n">y</span> <span class="o">-=</span> <span class="n">yc</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+    
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="n">clocking</span> <span class="o">*=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span>
+    <span class="n">openingAngle</span> <span class="o">*=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span>
+    
+    <span class="c1"># rotate the phase map so that the wrapping occurs on the axis of symmetry between</span>
+    <span class="c1"># the two bowtie sides</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="n">clocking</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">%</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span><span class="o">&lt;</span><span class="n">OWApix</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">r</span><span class="o">&gt;</span><span class="n">IWApix</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">*=</span> <span class="p">(</span><span class="n">theta</span><span class="o">&lt;</span><span class="n">openingAngle</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">*=</span> <span class="p">(</span><span class="n">theta</span><span class="o">&gt;-</span><span class="n">openingAngle</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+    <span class="n">mask2</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span><span class="o">&lt;</span><span class="n">OWApix</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">r</span><span class="o">&gt;</span><span class="n">IWApix</span><span class="p">)</span>
+    <span class="n">mask2</span> <span class="o">*=</span> <span class="p">(</span><span class="n">theta</span><span class="o">&gt;-</span><span class="n">openingAngle</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">mask2</span> <span class="o">*=</span> <span class="p">(</span><span class="n">theta</span><span class="o">&lt;</span><span class="n">openingAngle</span><span class="o">/</span><span class="mf">2.</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">1.5</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">twomasks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">export</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">pyf</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">pyf</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)))</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">export</span><span class="o">+</span><span class="s1">&#39;1.fits&#39;</span><span class="p">,</span> <span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">pyf</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">pyf</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">mask2</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)))</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">export</span><span class="o">+</span><span class="s1">&#39;2.fits&#39;</span><span class="p">,</span> <span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mask</span><span class="p">,</span><span class="n">mask2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">+=</span> <span class="n">mask2</span>
+        <span class="k">if</span> <span class="n">export</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">pyf</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">pyf</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)))</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">export</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span><span class="p">,</span> <span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mask</span><span class="p">,</span><span class="n">mask</span>    </div>
+    
+    
+    
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right"> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 27 Mar 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>
