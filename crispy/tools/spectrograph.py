@@ -9,7 +9,7 @@ except:
     import pyfits as pyf
 
 import re
-from tools.initLogger import getLogger
+from initLogger import getLogger
 log = getLogger('crispy')
 import matplotlib.pyplot as plt
 import codecs

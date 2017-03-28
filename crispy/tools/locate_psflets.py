@@ -7,13 +7,12 @@ except:
     import pyfits as fits
 import copy
 from scipy import signal, ndimage, optimize, interpolate
-import tools
-from tools.image import Image
+from image import Image
 import glob
 import re
 import os
 
-from tools.initLogger import getLogger
+from initLogger import getLogger
 log = getLogger('crispy')
 
 class PSFLets:

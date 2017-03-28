@@ -6,7 +6,7 @@ except:
 import numpy as np
 from datetime import date
 import logging
-from tools.initLogger import getLogger
+from initLogger import getLogger
 log = getLogger('crispy')
 
 ''' most of this code is due to Tim Brandt '''

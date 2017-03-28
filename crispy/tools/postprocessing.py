@@ -1,27 +1,27 @@
 import numpy as np
 import astropy.units as u
 import astropy.constants as c
-from tools.inputScene import convert_krist_cube,calc_contrast
+from inputScene import convert_krist_cube,calc_contrast
 import glob
 from IFS import propagateIFS,reduceIFSMap
-from tools.initLogger import getLogger
+from initLogger import getLogger
 log = getLogger('crispy')
-from tools.image import Image
+from image import Image
 try:
     from astropy.io import fits
 except:
     import pyfits as fits
 from time import time
 import os
-from tools.detector import averageDetectorReadout,noiselessDetector,readDetector
+from detector import averageDetectorReadout,noiselessDetector,readDetector
 
 import multiprocessing
-from tools.par_utils import Task, Consumer
+from par_utils import Task, Consumer
 
 def process_SPC_IFS(par,
                     psf_time_series_folder,
                     offaxis_psf_filename,
-                    planet_radius = 1*c.R_jup,
+                    planet_radius = 1.27*c.R_jup,
                     mean_contrast=1e-8,
                     ref_star_T=9377*u.K, ref_star_Vmag=2.37,
                     target_star_T=5887*u.K, target_star_Vmag=5.03,

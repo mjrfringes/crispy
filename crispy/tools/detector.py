@@ -7,10 +7,10 @@ import scipy.ndimage
 import numpy as np
 import multiprocessing
 import matplotlib.pyplot as plt
-from tools.detutils import frebin
-from tools.initLogger import getLogger
+from detutils import frebin
+from initLogger import getLogger
 log = getLogger('crispy')
-from tools.image import Image
+from image import Image
 
 def rebinDetector(par,finalFrame,clip=False):
     '''

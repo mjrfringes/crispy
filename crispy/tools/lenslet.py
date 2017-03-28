@@ -5,14 +5,14 @@ try:
     from astropy.io import fits as pyf
 except:
     import pyfits as pyf
-from tools.rotate import Rotate
-from tools.initLogger import getLogger
+from rotate import Rotate
+from initLogger import getLogger
 log = getLogger('crispy')
 import matplotlib.pyplot as plt
-from tools.detutils import frebin
+from detutils import frebin
 from scipy import ndimage
-from tools.spectrograph import distort
-from tools.locate_psflets import initcoef,transform
+from spectrograph import distort
+from locate_psflets import initcoef,transform
 
 
 def processImagePlane(par,imagePlane):

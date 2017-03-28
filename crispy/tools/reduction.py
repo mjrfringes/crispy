@@ -4,13 +4,13 @@ except:
     import pyfits as pyf
 
 import numpy as np
-from tools.initLogger import getLogger
+from initLogger import getLogger
 log = getLogger('crispy')
 from scipy import signal
 from scipy.interpolate import interp1d
 from scipy import ndimage
-from tools.locate_psflets import PSFLets
-from tools.image import Image
+from locate_psflets import PSFLets
+from image import Image
 from scipy import interpolate
 
 def _smoothandmask(datacube, good):
