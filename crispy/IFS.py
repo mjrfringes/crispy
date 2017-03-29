@@ -183,37 +183,14 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame'):
     else:
         log.info('Final detector pixel per PSFLet: %f' % (int(3*par.pitch/par.pixsize)))
     
-    if not parallel:
-        for i in range(len(waveList)):
-            log.info('Processing wavelength %f (%d out of %d)' % (waveList[i],i,nframes))
-            if not par.gaussian:
-                propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame,
-                                            refWaveList,kernelList,allweights,locations)
-            else:
-                propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame)
-                
-    else:
-        # This is not yet working because of shared memory issues. Need to fix it...
-        log.info('Starting parallel IFS propagation! Watchout for memory...')
-        tasks = multiprocessing.Queue()
-        results = multiprocessing.Queue()
-        ncpus = min(multiprocessing.cpu_count(),cpus)
-        consumers = [ Consumer(tasks, results)
-                      for i in range(ncpus) ]
-        for w in consumers:
-            w.start()
-    
-        for i in range(len(waveList)):
-            tasks.put(Task(i, propagateSingleWavelength, (par,i,waveList,refWaveList,
-                            kernelList,interpolatedInputCube,allweights,locations,finalFrame)))
-    
-        for i in range(ncpus):
-            tasks.put(None)
-        for i in range(len(waveList)):
-            index,result = results.get()
-            log.info('Done with wavelength %.3f' % waveList[index])
-
-           
+    for i in range(len(waveList)):
+        log.info('Processing wavelength %f (%d out of %d)' % (waveList[i],i,nframes))
+        if not par.gaussian:
+            propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame,
+                                        refWaveList,kernelList,allweights,locations)
+        else:
+            propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame)
+                       
 
     ###################################################################### 
     # Rebinning to detector resolution
