@@ -76,9 +76,9 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     # are generated, put them back in their right place on the detector.
     ###
     
-    return np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)+np.random.poisson(par.RN,IFSimage.data.shape)
+    return np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)+np.random.normal(par.RN,IFSimage.data.shape)
 
-def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None):
+def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False):
     '''	
     Process a list of files and creates individual detector readouts
     If we want only one file, we can just make a list of 1
@@ -92,7 +92,7 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
             off = Image(offaxis)
             img.data+=off.data
         inttime = par.timeframe/par.Nreads
-        img.data*=par.QE*par.losses
+        img.data*=par.QE*par.losses*par.PhCountEff*par.CTE*par.pol
         #refreshes parameter header
         par.makeHeader()
         par.hdr.append(('comment', ''), end=True)
@@ -105,7 +105,10 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
         par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
         par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
+        par.hdr.append(('PHCTEFF',par.PhCountEff,'Photon counting efficiency'),end=True)
+        par.hdr.append(('CTE',par.CTE,'Charge transfer efficiency'),end=True)
         par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
+        par.hdr.append(('POL',par.pol,'Polarization losses'),end=True)
         par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
         par.hdr.append(('NREADS',par.Nreads,'Number of frames averaged'),end=True)
         par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time'),end=True)
@@ -117,9 +120,10 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
             newread = readDetector(par,img,inttime=inttime)
             frame += newread
             varframe += newread**2
-        frame /= par.Nreads
-        varframe /= par.Nreads
-        varframe -= frame**2
+        if averageDivide:
+            frame /= par.Nreads
+            varframe /= par.Nreads
+            varframe -= frame**2
         outimg = Image(data=frame,ivar=1./varframe,header=par.hdr)
         # append '_suffix' to the file name
         outimg.write(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits',clobber=True)

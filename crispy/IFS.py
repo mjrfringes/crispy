@@ -106,9 +106,9 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame'):
             with at least the key IFS parameters, interlacing and scale
     lamlist : list of floats
             List of wavelengths in microns
-    inputcube : 3D ndarray
-            First dimension needs to be the same length as lamlist
-                
+    inputcube : Image
+            or HDU. data is 3D ndarray with first dimension the same length as lamlist
+            header needs to contain the 'PIXSIZE' and 'LAM_C' keywords
     Returns
     -------
     detectorFrame : 2D array
