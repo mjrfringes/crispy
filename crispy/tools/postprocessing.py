@@ -1,7 +1,7 @@
 import numpy as np
 import astropy.units as u
 import astropy.constants as c
-from inputScene import convert_krist_cube,calc_contrast
+from inputScene import convert_krist_cube,calc_contrast,calc_contrast_Bijan
 import glob
 from IFS import propagateIFS,reduceIFSMap
 from initLogger import getLogger
@@ -236,11 +236,11 @@ def process_SPC_IFS(par,
             offaxiscube_recentered[:,diff//2:-diff//2,diff//2:-diff//2] += offaxiscube.data
             offaxiscube = Image(data=offaxiscube_recentered,header = offaxiscube.header)
         offaxis_star_cube = convert_krist_cube(offaxiscube.data.shape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
-        contrast = calc_contrast(lamlist.value,mean_contrast=mean_contrast)
+        contrast = calc_contrast_Bijan(lamlist.value,mean_contrast=mean_contrast)
 
         contrast_cube = np.zeros(offaxiscube.data.shape)
         for i in range(offaxiscube.data.shape[0]):
-            contrast_cube[i,:,:] += contrast[i]
+            contrast_cube[i,:,:] += contrast[i]*offaxiscube.data.shape[0]
         offaxiscube.data*=offaxis_star_cube*contrast_cube
 
 
@@ -311,10 +311,10 @@ def process_SPC_IFS(par,
         target_star_average = np.zeros(Image(filename=target_det_outlist[0]).data.shape)
         for reffile in ref_det_outlist:
             ref_star_average += Image(filename=reffile).data
-        ref_star_average /= len(ref_det_outlist)
+        #ref_star_average /= len(ref_det_outlist)
         for reffile in target_det_outlist:
             target_star_average += Image(filename=reffile).data
-        target_star_average /= len(target_det_outlist)
+        #target_star_average /= len(target_det_outlist)
         #Image(data=ref_star_average,header=par.hdr,extraheader=Image(ref_det_outlist[0]).header).write(outdir_average+'/average_ref_star_detector.fits',clobber=True)
         #Image(data=target_star_average,header=par.hdr,extraheader=Image(ref_det_outlist[0]).header).write(outdir_average+'/average_target_star_detector.fits',clobber=True)
         Image(data=ref_star_average,header=par.hdr).write(outdir_average+'/average_ref_star_detector.fits',clobber=True)

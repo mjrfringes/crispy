@@ -42,7 +42,7 @@ class Params():
         self.pitch = 174e-6         # Lenslet pitch (meters)
         self.interlace = 2          # Interlacing
         self.philens = arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
-        self.pinhole = True         # Use a pinhole grid?
+        self.pinhole = True         # Use a pinhole grid? (not really used)
         self.pin_dia = 25e-6        # Diameter of pinholes (m) (not really used)
         self.lenslet_sampling= 1./2.# lenslet size in lambda/D
         self.lenslet_wav = 600.     # Wavelength at which this is defined (nm)
@@ -62,13 +62,16 @@ class Params():
         self.gaussian_hires = True  # Use Gaussians for hires PSFLet matching, instead
                                     # of Lucy-Richardson deconvolution
 
-        self.RN = 0.2               # FWHM of gaussian kernel
-        self.CIC = 1e-3             # Lam at which FWHM is defined
-        self.dark = 1e-5            # Use standard Gaussian kernels instead of library
+        self.RN = 0.0               # FWHM of gaussian kernel (e/px/fr)
+        self.CIC = 1e-3             # Clock-induced charge (e/px/fr)
+        self.dark = 1e-4            # Dark current noise (e/px/s)
         self.Traps = False          # Use standard Gaussian kernels instead of library
 
-        self.QE = 0.7				# detector QE; need to make this wavelength-dependent
+        self.QE = 0.68				# detector QE; need to make this wavelength-dependent
         self.losses = 0.34			# total losses for on-axis PSF (given by J. Krist)
+        self.PhCountEff = 0.8		# Photon counting efficiency
+        self.CTE = 0.893		    # Charge transfer efficiency (varies with lifetime)
+        self.pol = 0.5		        # Polarization losses
         self.Nreads = 10			# number of reads for a frame
         self.timeframe = 1000		# time in second for a frame (from file)
 
