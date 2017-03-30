@@ -164,6 +164,7 @@ def process_SPC_IFS(par,
 
             for i in range(len(filelist)):
                 index, result = results.get()
+                reffile = filelist[index]
                 if i<n_ref_star_imgs:
                     Image(data = result,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
                     ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
