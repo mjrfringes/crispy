@@ -237,7 +237,7 @@ def process_SPC_IFS(par,
             offaxiscube_recentered[:,diff//2:-diff//2,diff//2:-diff//2] += offaxiscube.data
             offaxiscube = Image(data=offaxiscube_recentered,header = offaxiscube.header)
         offaxis_star_cube = convert_krist_cube(offaxiscube.data.shape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
-        contrast = calc_contrast_Bijan(lamlist.value,mean_contrast=mean_contrast)
+        contrast = calc_contrast_Bijan(lamlist.value)
 
         contrast_cube = np.zeros(offaxiscube.data.shape)
         for i in range(offaxiscube.data.shape[0]):
