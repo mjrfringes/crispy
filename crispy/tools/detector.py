@@ -76,7 +76,7 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     # are generated, put them back in their right place on the detector.
     ###
     
-    return np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)+np.random.normal(par.RN,IFSimage.data.shape)
+    return np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)+np.random.normal(0.0,par.RN,IFSimage.data.shape)
 
 def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False):
     '''	
