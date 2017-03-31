@@ -75,8 +75,10 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     # values, and call this icdf a maximum of 32 times; after the random numbers
     # are generated, put them back in their right place on the detector.
     ###
-    
-    return np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)+np.random.normal(0.0,par.RN,IFSimage.data.shape)
+    detector = np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)
+    if par.RN>0:
+        detector += np.random.normal(0.0,par.RN,IFSimage.data.shape)
+    return detector
 
 def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False):
     '''	
