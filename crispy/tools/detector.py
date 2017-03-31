@@ -75,7 +75,7 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     # values, and call this icdf a maximum of 32 times; after the random numbers
     # are generated, put them back in their right place on the detector.
     ###
-    if ~par.poisson:
+    if not par.poisson:
         return IFSimage.data*inttime+par.dark*inttime+par.CIC
     else:
         detector = np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)
