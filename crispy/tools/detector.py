@@ -75,10 +75,13 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     # values, and call this icdf a maximum of 32 times; after the random numbers
     # are generated, put them back in their right place on the detector.
     ###
-    detector = np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)
-    if par.RN>0:
-        detector += np.random.normal(0.0,par.RN,IFSimage.data.shape)
-    return detector
+    if ~par.poisson:
+        return IFSimage.data*inttime+par.dark*inttime+par.CIC
+    else:
+        detector = np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)
+        if par.RN>0:
+            detector += np.random.normal(0.0,par.RN,IFSimage.data.shape)
+        return detector
 
 def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False):
     '''	
@@ -102,6 +105,7 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
         par.hdr.append(('comment', '*'*60), end=True)    
         par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
         par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
         par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
         par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
@@ -114,6 +118,7 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
         par.hdr.append(('NREADS',par.Nreads,'Number of frames averaged'),end=True)
         par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time'),end=True)
+        
 
         frame = np.zeros(img.data.shape)
         varframe = np.zeros(img.data.shape)

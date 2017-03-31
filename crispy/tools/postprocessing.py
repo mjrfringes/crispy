@@ -384,10 +384,20 @@ def process_SPC_IFS(par,
         # ON
         offaxis_ideal_norm = offaxis_ideal.data[slicenum]/np.nansum(offaxis_ideal.data[slicenum])
         matched_filter[slicenum,:,:] = offaxis_ideal_norm/np.nansum((offaxis_ideal_norm)**2)
+        # calculate correction factor since we are going to crop only the top the of the hat
+        # this is the inverse ratio of the contribution of the brightest pixels over the rest
+        aper_phot = np.sum(matched_filter[slicenum,:,:])/np.sum(matched_filter[matched_filter[slicenum,:,:]>1.0])
+        # Set all low-contributing pixels to 0.0
+        matched_filter[matched_filter[slicenum,:,:]<1.0] = 0.0
+        # Multiply what is left by that aperture correction factor
+        matched_filter[slicenum,:,:]*=aper_phot
         signal[slicenum] = np.nansum(matched_filter[slicenum,:,:]*residual[slicenum,:,:])
         # OFF
         offaxis_ideal_flipped_norm = offaxis_ideal_flipped.data[slicenum]/np.nansum(offaxis_ideal_flipped.data[slicenum])
         matched_filter_flipped[slicenum,:,:] = offaxis_ideal_flipped_norm/np.nansum((offaxis_ideal_flipped_norm)**2)
+        aper_phot = np.sum(matched_filter_flipped[slicenum,:,:])/np.sum(matched_filter_flipped[matched_filter_flipped[slicenum,:,:]>1.0])
+        matched_filter_flipped[matched_filter_flipped[slicenum,:,:]<1.0] = 0.0
+        matched_filter_flipped[slicenum,:,:]*=aper_phot
         off[slicenum] = np.nansum(matched_filter_flipped[slicenum,:,:]*residual[slicenum,:,:])
     mf_npix = np.nansum(np.nansum(matched_filter,axis=2),axis=1)
     
@@ -401,7 +411,9 @@ def process_SPC_IFS(par,
                 export='bowtie',twomasks=True)
     # PSF is in the right mask
     pixstd = [np.nanstd(residual[i,:,:]*maskright) for i in range(residual.shape[0])]
-    noise = np.sqrt(2*mf_npix)*pixstd # twice the num of pix since we subtract the off field
+    noiseright = np.sqrt(2*mf_npix)*pixstd # twice the num of pix since we subtract the off field
+    pixstd = [np.nanstd(residual[i,:,:]*maskleft) for i in range(residual.shape[0])]
+    noiseleft = np.sqrt(2*mf_npix)*pixstd # twice the num of pix since we subtract the off field
     
     Image(data=matched_filter).write(outdir_average+'/matched_filter.fits',clobber=True)
     Image(data=matched_filter_flipped).write(outdir_average+'/matched_filter_flipped.fits',clobber=True)
@@ -418,7 +430,7 @@ def process_SPC_IFS(par,
     log.info('Computed signal and noise arrays: %.3f' % (times['Computed signal and noise arrays']-times['Normalize and subtract reference PSF']))
     log.info('Total time: %.3f' % (times['Computed signal and noise arrays']-times['Start']))
 
-    return signal-off,noise
+    return signal-off,noiseright,noiseleft
     
 def SPC_IFS_systematics(par,psf_time_series_folder,offaxis_psf_filename,
                     planet_radius = 1*c.R_jup,mean_contrast=1e-8,
