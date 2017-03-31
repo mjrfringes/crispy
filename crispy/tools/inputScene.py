@@ -60,7 +60,7 @@ def convert_krist_cube(cubeshape,lamlist,star_T,star_Vmag,tel_area):
         newcube[i,:,:] += photon_flux.to(1./u.s/u.m**2)
     
     # multiply by the number of wavelengths since this is the way J. Krist normalizes the cubes
-    newcube *= tel_area
+    newcube *= tel_area*len(lamlist)
     return newcube
 
 def calc_contrast(wavelist,star_T=6000*u.K,planet_type='Jupiter',abundance=1,distance = 5,phase=90,mean_contrast = 1e-8,

@@ -241,7 +241,7 @@ def process_SPC_IFS(par,
 
         contrast_cube = np.zeros(offaxiscube.data.shape)
         for i in range(offaxiscube.data.shape[0]):
-            contrast_cube[i,:,:] += contrast[i]*offaxiscube.data.shape[0]
+            contrast_cube[i,:,:] += contrast[i]
         offaxiscube.data*=offaxis_star_cube*contrast_cube
 
 
