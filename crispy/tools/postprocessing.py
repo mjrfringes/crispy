@@ -352,7 +352,7 @@ def process_SPC_IFS(par,
     par.hdr.append(('comment', '*'*60), end=True)    
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('comment', 'Subtracted scaled mean of reference star PSF'), end=True)
-    Image(data=residual).write(outdir_average+'/residual.fits',header = par.hdr, clobber=True)
+    Image(data=residual,header = par.hdr).write(outdir_average+'/residual.fits', clobber=True)
     
     Image(data=np.sum(residual,axis=0)).write(outdir_average+'/residual_stack.fits',header = par.hdr, clobber=True)
 
@@ -367,8 +367,8 @@ def process_SPC_IFS(par,
     residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
     residual[(residual>1e10)*(residual<-1e10)] = np.NaN
     par.hdr.append(('comment', 'Divided by lenslet flatfield'), end=True)
-    Image(data=residual).write(outdir_average+'/residual_flatfielded.fits',header=par.hdr,clobber=True)
-    Image(data=np.sum(residual,axis=0)).write(outdir_average+'/residual_flatfielded_stack.fits',header=par.hdr,clobber=True)
+    Image(data=residual,header=par.hdr).write(outdir_average+'/residual_flatfielded.fits',clobber=True)
+    Image(data=np.sum(residual,axis=0),header=par.hdr).write(outdir_average+'/residual_flatfielded_stack.fits',clobber=True)
     
     # loop over all the slices in the cube:
     matched_filter = np.zeros(residual.shape)
