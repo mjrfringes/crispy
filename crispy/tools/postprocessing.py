@@ -338,9 +338,12 @@ def process_SPC_IFS(par,
     ###################################################################################
     # Step 7: Naive PSF subtraction; match the flux using the Vmag difference
     ###################################################################################
-    ref_cube_noave = ref_cube.data -np.nanmean(ref_cube.data)
-    target_cube_noave = target_cube.data - np.nanmean(target_cube.data)
-    residual = target_cube_noave - 10**(0.4*(ref_star_Vmag-target_star_Vmag))*ref_cube_noave
+    ref_cube_stack = np.sum(ref_cube.data,axis=0)
+    target_cube_stack = np.sum(target_cube.data,axis=0)
+#     ref_cube_noave = ref_cube.data -np.nanmean(ref_cube.data)
+#     target_cube_noave = target_cube.data - np.nanmean(target_cube.data)
+    residual[~np.isnan(residual)] = target_cube[~np.isnan(residual)] - 
+        target_cube_stack[~np.isnan(residual)]/ref_cube_stack[~np.isnan(residual)]*ref_cube.data[~np.isnan(residual)]
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('comment', '*'*60), end=True)
     par.hdr.append(('comment', '*'*22 + ' Postprocessing ' + '*'*20), end=True)
@@ -348,6 +351,8 @@ def process_SPC_IFS(par,
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('comment', 'Subtracted scaled mean of reference star PSF'), end=True)
     Image(data=residual).write(outdir_average+'/residual.fits',header = par.hdr, clobber=True)
+    
+    Image(data=np.sum(residual,axis=0)).write(outdir_average+'/residual_stack.fits',header = par.hdr, clobber=True)
 
     times['Normalize and subtract reference PSF'] = time()
 
@@ -360,6 +365,7 @@ def process_SPC_IFS(par,
     residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
     par.hdr.append(('comment', 'Divided by lenslet flatfield'), end=True)
     Image(data=residual).write(outdir_average+'/residual_flatfielded.fits',header=par.hdr,ßclobber=True)
+    Image(data=np.sum(residual,axis=0)).write(outdir_average+'/residual_flatfielded_stack.fits',header=par.hdr,ßclobber=True)
     
     # loop over all the slices in the cube:
     matched_filter = np.zeros(residual.shape)
