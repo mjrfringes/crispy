@@ -71,7 +71,7 @@ class Params():
         self.losses = 0.34			# total losses for on-axis PSF (given by J. Krist)
         self.PhCountEff = 0.8		# Photon counting efficiency
         self.CTE = 0.893		    # Charge transfer efficiency (varies with lifetime)
-        self.pol = 0.5		        # Polarization losses
+        self.pol = 1.		        # Polarization losses
         self.Nreads = 10			# number of reads for a frame
         self.timeframe = 1000		# time in second for a frame (from file)
 
