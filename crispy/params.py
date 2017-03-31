@@ -62,6 +62,7 @@ class Params():
         self.gaussian_hires = True  # Use Gaussians for hires PSFLet matching, instead
                                     # of Lucy-Richardson deconvolution
 
+        self.poisson = False        # FWHM of gaussian kernel (e/px/fr)
         self.RN = 0.0               # FWHM of gaussian kernel (e/px/fr)
         self.CIC = 1e-3             # Clock-induced charge (e/px/fr)
         self.dark = 1e-4            # Dark current noise (e/px/s)
