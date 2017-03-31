@@ -354,7 +354,7 @@ def process_SPC_IFS(par,
     par.hdr.append(('comment', 'Subtracted scaled mean of reference star PSF'), end=True)
     Image(data=residual,header = par.hdr).write(outdir_average+'/residual.fits', clobber=True)
     
-    Image(data=np.sum(residual,axis=0)).write(outdir_average+'/residual_stack.fits',header = par.hdr, clobber=True)
+    Image(data=np.sum(residual,axis=0),header = par.hdr).write(outdir_average+'/residual_stack.fits', clobber=True)
 
     times['Normalize and subtract reference PSF'] = time()
 
