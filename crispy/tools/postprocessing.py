@@ -388,7 +388,7 @@ def process_SPC_IFS(par,
         # this is the inverse ratio of the contribution of the brightest pixels over the rest
         aper_phot = np.sum(this_slice)/np.sum(this_slice[this_slice>1.0])
         # Set all low-contributing pixels to 0.0
-        this_slice[this_slice[slicenum,:,:]<1.0] = 0.0
+        this_slice[this_slice<1.0] = 0.0
         matched_filter[slicenum,:,:] = this_slice
         # Multiply what is left by that aperture correction factor
         matched_filter[slicenum,:,:]*=aper_phot
@@ -397,7 +397,7 @@ def process_SPC_IFS(par,
         offaxis_ideal_flipped_norm = offaxis_ideal_flipped.data[slicenum]/np.nansum(offaxis_ideal_flipped.data[slicenum])
         this_slice = offaxis_ideal_flipped_norm/np.nansum((offaxis_ideal_flipped_norm)**2)
         aper_phot = np.sum(this_slice)/np.sum(this_slice[this_slice>1.0])
-        this_slice[this_slice[slicenum,:,:]<1.0] = 0.0
+        this_slice[this_slice<1.0] = 0.0
         matched_filter_flipped[slicenum,:,:] = this_slice
         matched_filter_flipped[slicenum,:,:]*=aper_phot
         off[slicenum] = np.nansum(matched_filter_flipped[slicenum,:,:]*residual[slicenum,:,:])
