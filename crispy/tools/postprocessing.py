@@ -351,8 +351,7 @@ def process_SPC_IFS(par,
 
     # First off, normalize the residual cube by a flatfield
     flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
-    residual /= flatfield.data
-    residual[np.isnan(flatfield.data)]=np.nan
+    residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
     Image(data=residual).write(outdir_average+'/residual_flatfielded.fits',clobber=True)
     
     # loop over all the slices in the cube:
