@@ -342,7 +342,10 @@ def process_SPC_IFS(par,
     target_cube_stack = np.sum(target_cube.data,axis=0)
 #     ref_cube_noave = ref_cube.data -np.nanmean(ref_cube.data)
 #     target_cube_noave = target_cube.data - np.nanmean(target_cube.data)
-    residual = target_cube.data - np.nanmean(target_cube_stack)/np.nanmean(ref_cube_stack)*ref_cube.data
+    ratio = np.sum(target_star_cube[:,0,0]) / np.sum(ref_star_cube[:,0,0])
+    residual = target_cube.data - ratio*ref_cube.data
+    
+
     residual[np.isnan(target_cube.data)] = np.NaN
     residual[(residual>1e10)*(residual<-1e10)] = np.NaN
     
