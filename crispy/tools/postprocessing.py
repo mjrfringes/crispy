@@ -364,8 +364,8 @@ def process_SPC_IFS(par,
     flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
     residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
     par.hdr.append(('comment', 'Divided by lenslet flatfield'), end=True)
-    Image(data=residual).write(outdir_average+'/residual_flatfielded.fits',header=par.hdr,ßclobber=True)
-    Image(data=np.sum(residual,axis=0)).write(outdir_average+'/residual_flatfielded_stack.fits',header=par.hdr,ßclobber=True)
+    Image(data=residual).write(outdir_average+'/residual_flatfielded.fits',header=par.hdr,clobber=True)
+    Image(data=np.sum(residual,axis=0)).write(outdir_average+'/residual_flatfielded_stack.fits',header=par.hdr,clobber=True)
     
     # loop over all the slices in the cube:
     matched_filter = np.zeros(residual.shape)
