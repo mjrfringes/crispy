@@ -342,9 +342,10 @@ def process_SPC_IFS(par,
     target_cube_stack = np.sum(target_cube.data,axis=0)
 #     ref_cube_noave = ref_cube.data -np.nanmean(ref_cube.data)
 #     target_cube_noave = target_cube.data - np.nanmean(target_cube.data)
-    residual = target_cube - \
-        target_cube_stack/ref_cube_stack*ref_cube.data
+    residual = target_cube.data - target_cube_stack/ref_cube_stack*ref_cube.data
     residual[np.isnan(ref_cube_stack)] = np.NaN
+    residual[(residual>1e10)*(residual<-1e10)] = np.NaN
+    
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('comment', '*'*60), end=True)
     par.hdr.append(('comment', '*'*22 + ' Postprocessing ' + '*'*20), end=True)
@@ -364,6 +365,7 @@ def process_SPC_IFS(par,
     # First off, normalize the residual cube by a flatfield
     flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
     residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
+    residual[(residual>1e10)*(residual<-1e10)] = np.NaN
     par.hdr.append(('comment', 'Divided by lenslet flatfield'), end=True)
     Image(data=residual).write(outdir_average+'/residual_flatfielded.fits',header=par.hdr,clobber=True)
     Image(data=np.sum(residual,axis=0)).write(outdir_average+'/residual_flatfielded_stack.fits',header=par.hdr,clobber=True)
