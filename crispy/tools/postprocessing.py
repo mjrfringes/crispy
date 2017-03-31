@@ -384,12 +384,20 @@ def process_SPC_IFS(par,
         # ON
         offaxis_ideal_norm = offaxis_ideal.data[slicenum]/np.nansum(offaxis_ideal.data[slicenum])
         matched_filter[slicenum,:,:] = offaxis_ideal_norm/np.nansum((offaxis_ideal_norm)**2)
-        matched_filter[matched_filter<1.0] = 0.0
+        # calculate correction factor since we are going to crop only the top the of the hat
+        # this is the inverse ratio of the contribution of the brightest pixels over the rest
+        aper_phot = np.sum(matched_filter[slicenum,:,:])/np.sum(matched_filter[matched_filter[slicenum,:,:]>1.0])
+        # Set all low-contributing pixels to 0.0
+        matched_filter[matched_filter[slicenum,:,:]<1.0] = 0.0
+        # Multiply what is left by that aperture correction factor
+        matched_filter[slicenum,:,:]*=aper_phot
         signal[slicenum] = np.nansum(matched_filter[slicenum,:,:]*residual[slicenum,:,:])
         # OFF
         offaxis_ideal_flipped_norm = offaxis_ideal_flipped.data[slicenum]/np.nansum(offaxis_ideal_flipped.data[slicenum])
         matched_filter_flipped[slicenum,:,:] = offaxis_ideal_flipped_norm/np.nansum((offaxis_ideal_flipped_norm)**2)
-        matched_filter_flipped[matched_filter_flipped<1.0] = 0.0
+        aper_phot = np.sum(matched_filter_flipped[slicenum,:,:])/np.sum(matched_filter_flipped[matched_filter_flipped[slicenum,:,:]>1.0])
+        matched_filter_flipped[matched_filter_flipped[slicenum,:,:]<1.0] = 0.0
+        matched_filter_flipped[slicenum,:,:]*=aper_phot
         off[slicenum] = np.nansum(matched_filter_flipped[slicenum,:,:]*residual[slicenum,:,:])
     mf_npix = np.nansum(np.nansum(matched_filter,axis=2),axis=1)
     
