@@ -45,7 +45,7 @@ class Params():
         self.pinhole = True         # Use a pinhole grid? (not really used)
         self.pin_dia = 25e-6        # Diameter of pinholes (m) (not really used)
         self.lenslet_sampling= 1./2.# lenslet size in lambda/D
-        self.lenslet_wav = 600.     # Wavelength at which this is defined (nm)
+        self.lenslet_wav = 660.     # Wavelength at which this is defined (nm)
 
         ###################################################################### 
         # Detector stuff

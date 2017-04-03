@@ -895,28 +895,30 @@ import seaborn as sns
 from tools.inputScene import calc_contrast
 from tools.reduction import calculateWaveList
 from scipy import ndimage
+from scipy.interpolate import interp1d
 
-def plot_SNR_spectrum(wavelist,mean_contrast):
+def plot_SNR_spectrum(wavelist,signal, noise, title='Planet+star',edges=1):
     lam_midpts,junk = calculateWaveList(par)
     # wavelist = np.arange(min(lam_midpts),max(lam_midpts),3)
     #wavelist = 770*np.linspace(1.-0.18/2.,1.+0.18/2.,45)
     sns.set_style("whitegrid")
     fig,ax = plt.subplots(figsize=(12,6))
-    real_vals=calc_contrast(wavelist,mean_contrast=mean_contrast)
-    ax.plot(wavelist,calc_contrast(wavelist,mean_contrast=mean_contrast),label='Original spectrum')
+    real_vals=calc_contrast_Bijan(wavelist)
+    ax.plot(wavelist,real_vals,label='Original spectrum')
     ax.errorbar(lam_midpts,signal*np.mean(spectrum)/np.mean(signal),yerr=noise*np.mean(spectrum)/np.mean(signal),label='Recovered spectrum',fmt='o')
 #     ax.plot(lam_midpts,(signal-off)*np.mean(spectrum)/np.mean(signal[1:-1]),'o',label='Recovered spectrum')
     
     FWHM = 4.
     smooth = ndimage.filters.gaussian_filter1d(real_vals,FWHM/2.35,order=0,mode='constant')
     ax.plot(wavelist,smooth,'-',label='Gaussian-smoothed original spectrum w/ FWHM=%.0f bins' % FWHM)
+    smoothfunc=interp1d(wavelist,smooth)
 
     #ax.errorbar(lam_midpts,(signal),yerr=noise,label='Recovered spectrum',fmt='o')
     ax.set_xlabel('Wavelength (nm)')
     ax.set_ylabel('Contrast')
-    ax.set_title('Planet, no star, no noise')
+    ax.set_title(title)
     plt.legend()
-    chisq = np.sum((signal*np.mean(spectrum)/np.mean(signal[1:-1]) - calc_contrast(lam_midpts,mean_contrast=mean_contrast))**2/(noise*np.mean(spectrum)/np.mean(signal[1:-1]))**2)
-    print (chisq/len(signal))
+    chisq = np.sum((signal[edges:-edges]*np.mean(spectrum)/np.mean(signal[edges:-edges]) - smoothfunc[edges:-edges]**2)/(noise[edges:-edges]*np.mean(spectrum)/np.mean(signal[edges:-edges]))**2)
+    return (chisq/len(signal[edges:-edges]))
 
 
