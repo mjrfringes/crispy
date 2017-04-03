@@ -247,7 +247,7 @@ reduce them using crispy.</p>
 <span></span>In [90]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="o">%</span><span class="k">pylab</span> inline --no-import-all
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
@@ -267,7 +267,7 @@ Populating the interactive namespace from numpy and matplotlib
 <span></span>In [1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">os5folder</span> <span class="o">=</span> <span class="s1">&#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/with_lowfc&#39;</span>
 <span class="n">nref</span> <span class="o">=</span> <span class="mi">30</span> <span class="c1"># only the first 30 images are from the reference star</span>
 </pre></div>
@@ -278,7 +278,7 @@ Populating the interactive namespace from numpy and matplotlib
 <span></span>In [2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">glob</span>
 <span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os5folder</span><span class="o">+</span><span class="s1">&#39;/*&#39;</span><span class="p">)</span>
 <span class="n">filelist</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -290,7 +290,7 @@ Populating the interactive namespace from numpy and matplotlib
 <span></span>In [3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">filelist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -311,7 +311,7 @@ Populating the interactive namespace from numpy and matplotlib
 <span></span>In [4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
 <span class="kn">import</span> <span class="nn">astropy.constants</span> <span class="kn">as</span> <span class="nn">c</span>
@@ -326,7 +326,7 @@ Populating the interactive namespace from numpy and matplotlib
 <span></span>In [5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filelist</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
 <span class="c1"># offaxispsf= &#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits&#39;</span>
 <span class="c1"># cube = fits.open(offaxispsf)[0]</span>
@@ -352,7 +352,7 @@ Populating the interactive namespace from numpy and matplotlib
 <span></span>In [6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="c1"># what is the area of the WFIRST pupil?</span>
 <span class="kn">import</span> <span class="nn">webbpsf</span>
 <span class="kn">from</span> <span class="nn">webbpsf</span> <span class="kn">import</span> <span class="n">wfirst</span>
@@ -439,7 +439,7 @@ WebbPSF log outputs will be directed to the screen.
 <span></span>In [101]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="k">print</span><span class="p">(</span><span class="n">tel_pupil_area</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -462,7 +462,7 @@ WebbPSF log outputs will be directed to the screen.
 <span></span>In [7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;../code&#39;</span>
 <span class="k">if</span> <span class="n">folder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
@@ -490,7 +490,7 @@ WebbPSF log outputs will be directed to the screen.
 <span></span>In [11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 
 <span></span><span class="k">for</span> <span class="n">reffile</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">[:</span><span class="n">nref</span><span class="p">]:</span>
     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Processing file &#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -575,7 +575,7 @@ Processing file os5_spc_030.fits
 <span></span>In [12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="k">for</span> <span class="n">reffile</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">[</span><span class="n">nref</span><span class="p">:]:</span>
     <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Processing file &#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">reffile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -726,7 +726,7 @@ Processing file os5_spc_130.fits
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -744,7 +744,7 @@ images, and subtract beta Uma from 47Uma.</p>
 <span></span>In [19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">tools.detector</span> <span class="kn">import</span> <span class="n">readDetector</span>
 <span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/os5_spc*.fits&#39;</span><span class="p">)</span>
 <span class="n">filelist</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -944,7 +944,7 @@ Processing file os5_spc_130_Uma47_IFS.fits
 <span></span>In [26]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">beta_Uma_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_detector/*beta*.fits&#39;</span><span class="p">)</span>
 
 <span class="n">beta_Uma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">beta_Uma_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -978,7 +978,7 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -993,7 +993,7 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 <span></span>In [29]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
 <span class="n">fname</span><span class="o">=</span><span class="s1">&#39;OS5/OS5_average/average_beta_Uma_detector.fits&#39;</span>
 <span class="n">cube_beta</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">fname</span><span class="p">)</span>
@@ -1022,7 +1022,7 @@ WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="c1"># naive subtraction</span>
 <span class="n">residual</span> <span class="o">=</span> <span class="n">cube_47</span><span class="o">.</span><span class="n">data</span><span class="o">-</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">beta_Uma_Vmag</span><span class="o">-</span><span class="n">Uma47_Vmag</span><span class="p">))</span><span class="o">*</span><span class="n">cube_beta</span><span class="o">.</span><span class="n">data</span>
 <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">residual</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/residual.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -1038,7 +1038,7 @@ WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io
 <span></span>In [35]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">offaxispsf</span><span class="o">=</span> <span class="s1">&#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits&#39;</span>
 <span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxispsf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Processing file &#39;</span><span class="o">+</span><span class="n">offaxispsf</span><span class="p">)</span>
@@ -1085,7 +1085,7 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 <span></span>In [38]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">tools.detector</span> <span class="kn">import</span> <span class="n">readDetector</span>
 <span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/os5_spc*.fits&#39;</span><span class="p">)</span>
 <span class="n">filelist</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -1146,7 +1146,7 @@ WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io
 <span></span>In [39]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">beta_Uma_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_with_target_detector/*beta*.fits&#39;</span><span class="p">)</span>
 
 <span class="n">Uma47_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_with_target_detector/*47*.fits&#39;</span><span class="p">)</span>
@@ -1174,7 +1174,7 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 <span></span>In [41]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">fname</span><span class="o">=</span><span class="s1">&#39;OS5/OS5_average/average_Uma47_offaxis_detector.fits&#39;</span>
 <span class="n">cube_47_offaxis</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">fname</span><span class="p">)</span>
 </pre></div>
@@ -1196,7 +1196,7 @@ WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io
 <span></span>In [42]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">residual</span> <span class="o">=</span> <span class="n">cube_47_offaxis</span><span class="o">.</span><span class="n">data</span><span class="o">-</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">beta_Uma_Vmag</span><span class="o">-</span><span class="n">Uma47_Vmag</span><span class="p">))</span><span class="o">*</span><span class="n">cube_beta</span><span class="o">.</span><span class="n">data</span>
 <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">residual</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;OS5/OS5_average/residual_offaxis.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
@@ -1220,7 +1220,7 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 <span></span>In [78]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="c1"># still naive subtraction, but subtract off the means</span>
 <span class="n">cube47_noave</span> <span class="o">=</span> <span class="n">cube_47_offaxis</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">cube_47_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 <span class="n">cubebeta_noave</span> <span class="o">=</span> <span class="n">cube_beta</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">cube_beta</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
@@ -1244,7 +1244,7 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 <span></span>In [85]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="c1">#offaxis_ideal = reduceIFSMap(par,&#39;OS5/offaxis.fits&#39;)</span>
 <span class="n">offaxis_ideal_norm</span> <span class="o">=</span> <span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">matched_filter</span> <span class="o">=</span> <span class="n">offaxis_ideal_norm</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">((</span><span class="n">offaxis_ideal_norm</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
@@ -1281,7 +1281,7 @@ SNR =  17.5551885338
 <span></span>In [95]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">offaxispsf</span><span class="o">=</span> <span class="s1">&#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits&#39;</span>
 <span class="n">cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxispsf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Processing file &#39;</span><span class="o">+</span><span class="n">offaxispsf</span><span class="p">)</span>
@@ -1340,7 +1340,7 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 <span></span>In [98]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">offaxis_ideal_flipped</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="s1">&#39;OS5/offaxis_flipped.fits&#39;</span><span class="p">)</span>
 <span class="n">offaxis_ideal_norm_flipped</span> <span class="o">=</span> <span class="n">offaxis_ideal_flipped</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_ideal_flipped</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">matched_filter_flipped</span> <span class="o">=</span> <span class="n">offaxis_ideal_norm_flipped</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">((</span><span class="n">offaxis_ideal_norm_flipped</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
@@ -1366,7 +1366,7 @@ WARNING: VerifyWarning: Card is too long, comment will be truncated. [astropy.io
 <span></span>In [99]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">psf_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">matched_filter</span><span class="o">*</span><span class="n">residual</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <span class="c1">#cube47_noave_no_offaxis = cube_47.data - np.nanmean(cube_47.data)</span>
@@ -1396,7 +1396,7 @@ SNR =  54.7097617606
 <span></span>In [49]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">residual</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -1414,7 +1414,7 @@ SNR =  54.7097617606
 <span></span>In [84]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -1441,7 +1441,7 @@ SNR =  54.7097617606
 <span></span>In [93]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">oap</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fliplr</span><span class="p">(</span><span class="n">oap</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
@@ -1469,7 +1469,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1479,7 +1479,7 @@ SNR =  54.7097617606
 <span></span>In [100]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="k">print</span><span class="p">(</span><span class="n">tel_pupil_area</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1497,7 +1497,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1507,7 +1507,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1517,7 +1517,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1527,7 +1527,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1537,7 +1537,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1547,7 +1547,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1557,7 +1557,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1567,7 +1567,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1577,7 +1577,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1587,7 +1587,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1597,7 +1597,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1607,7 +1607,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1617,7 +1617,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1627,7 +1627,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1637,7 +1637,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1647,7 +1647,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1657,7 +1657,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1667,7 +1667,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1677,7 +1677,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1687,7 +1687,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1697,7 +1697,7 @@ SNR =  54.7097617606
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -1745,7 +1745,7 @@ SNR =  54.7097617606
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Mar 2017. <br/>
+    Last built 03 Apr 2017. <br/>
   </p>
 </footer>
   </body>

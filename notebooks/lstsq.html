@@ -241,7 +241,7 @@ div.nboutput div.output_area.stderr {
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
 </div>
@@ -251,7 +251,7 @@ div.nboutput div.output_area.stderr {
 <span></span>In [1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span>
@@ -267,35 +267,80 @@ div.nboutput div.output_area.stderr {
 <span></span>In [2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../code&#39;</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../../crispy&#39;</span>
 <span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="kn">from</span> <span class="nn">crispy.params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../crispy&#39;</span>
 <span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
+<div class="section" id="create-flatfield-if-needed">
+<h2>create flatfield if needed<a class="headerlink" href="#create-flatfield-if-needed" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
-<span class="n">tmp</span><span class="o">=</span><span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;det_760.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.unitTests</span> <span class="kn">import</span> <span class="n">testCreateFlatfield</span>
+<span class="n">testCreateFlatfield</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 17 wavelength bins
+crispy - INFO - The number of input pixels per lenslet is 4.303178
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Final detector pixel per PSFLet: 40.000000
+crispy - INFO - Processing wavelength 0.704430 (0 out of 17)
+crispy - INFO - Processing wavelength 0.711948 (1 out of 17)
+crispy - INFO - Processing wavelength 0.719547 (2 out of 17)
+crispy - INFO - Processing wavelength 0.727227 (3 out of 17)
+crispy - INFO - Processing wavelength 0.734989 (4 out of 17)
+crispy - INFO - Processing wavelength 0.742834 (5 out of 17)
+crispy - INFO - Processing wavelength 0.750763 (6 out of 17)
+crispy - INFO - Processing wavelength 0.758776 (7 out of 17)
+crispy - INFO - Processing wavelength 0.766875 (8 out of 17)
+crispy - INFO - Processing wavelength 0.775060 (9 out of 17)
+crispy - INFO - Processing wavelength 0.783333 (10 out of 17)
+crispy - INFO - Processing wavelength 0.791694 (11 out of 17)
+crispy - INFO - Processing wavelength 0.800144 (12 out of 17)
+crispy - INFO - Processing wavelength 0.808684 (13 out of 17)
+crispy - INFO - Processing wavelength 0.817316 (14 out of 17)
+crispy - INFO - Processing wavelength 0.826040 (15 out of 17)
+crispy - INFO - Processing wavelength 0.834856 (16 out of 17)
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 20 seconds total
+crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/flatfield.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="c1">#tmp=reduceIFSMap(par,par.wavecalDir+&#39;det_760.fits&#39;,method=&#39;lstsq&#39;)</span>
 <span class="n">tmp</span><span class="o">=</span><span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
 
 </pre></div>
@@ -306,8 +351,8 @@ div.nboutput div.output_area.stderr {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_760.fits
-crispy - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/unitTestsOutputs/flatfield.fits
+crispy - INFO - Elapsed time: 23.992255s
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -315,9 +360,10 @@ crispy - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fi
 <span></span>In [ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3"><div class="highlight"><pre>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span>
 </pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -329,7 +375,10 @@ crispy - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fi
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
 <ul>
-<li><a class="reference internal" href="#">Least squares reduction</a></li>
+<li><a class="reference internal" href="#">Least squares reduction</a><ul>
+<li><a class="reference internal" href="#create-flatfield-if-needed">create flatfield if needed</a></li>
+</ul>
+</li>
 </ul>
 
 
@@ -345,7 +394,7 @@ crispy - INFO - Read data from HDU 1 of ../../code/unitTestsOutputs/flatfield.fi
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Mar 2017. <br/>
+    Last built 03 Apr 2017. <br/>
   </p>
 </footer>
   </body>

@@ -373,15 +373,15 @@ the column</p>
 <h3>Application to images<a class="headerlink" href="#Application-to-images" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [48]:
+<span></span>In [37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../code&#39;</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../../crispy&#39;</span>
 <span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s1">&#39;../../code/Inputs/os5_spc_064_targetstar_IFS.fits&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s1">&#39;../../../crispy/Inputs/os5_spc_064_targetstar_IFS.fits&#39;</span><span class="p">)</span>
 <span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">200</span><span class="p">:</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">:</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span>
 <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="mi">1000</span>
 
@@ -397,7 +397,7 @@ the column</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ../../code/Inputs/os5_spc_064_targetstar_IFS.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/os5_spc_064_targetstar_IFS.fits
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -413,7 +413,7 @@ crispy - INFO - Read data from HDU 1 of ../../code/Inputs/os5_spc_064_targetstar
 <h2>Seed random traps<a class="headerlink" href="#Seed-random-traps" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [49]:
+<span></span>In [31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -500,12 +500,12 @@ crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
 <h2>Explore multiple traps along the same column<a class="headerlink" href="#Explore-multiple-traps-along-the-same-column" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [25]:
+<span></span>In [32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">fakecolumn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">flux</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">flux</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">fakecolumn</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span>
 <span class="n">fakecolumn</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span>
 <span class="n">fakecolumn</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span>
@@ -533,7 +533,7 @@ crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [27]:
+<span></span>In [33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -544,14 +544,43 @@ crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
     <span class="k">if</span> <span class="n">k</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
         <span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">/</span><span class="n">k</span><span class="o">*</span><span class="n">arr</span><span class="p">)</span><span class="o">/</span><span class="n">k</span>
+        <span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">/</span><span class="n">k</span><span class="o">*</span><span class="n">arr</span><span class="p">)</span><span class="c1">#0.5/k*np.exp(-0.5/k*arr)</span>
+    <span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
 
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [28]:
+<span></span>In [34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -576,19 +605,19 @@ crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_21_1.png" src="../_images/notebooks_TrapsExperiments_21_1.png" />
+<img alt="../_images/notebooks_TrapsExperiments_22_1.png" src="../_images/notebooks_TrapsExperiments_22_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [61]:
+<span></span>In [38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="c1"># traps = np.zeros(imgshape)</span>
 <span class="c1"># traps[traps_Y,traps_X] = 1</span>
 <span class="n">testNoTraps</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
-<span class="n">testNoTraps</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;../../code/SimResults/testNoTraps.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">testNoTraps</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;../../../crispy/SimResults/testNoTraps.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="n">imout</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">imout</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -626,7 +655,7 @@ crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
 <span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;SSIM&#39;</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="s1">&#39;Structural similarity index&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;MSE&#39;</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="s1">&#39;Mean squared error&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;NRMSE&#39;</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="s1">&#39;Normalized Root Mean squared error&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;../../code/SimResults/testMultipleTraps.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;../../../crispy/SimResults/testMultipleTraps.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -635,31 +664,24 @@ crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/testNoTraps.fits
 </pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_22_1.png" src="../_images/notebooks_TrapsExperiments_22_1.png" />
-</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">----------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ImportError</span>                          Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-61-e27b213adc04&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">     25</span>
-<span class="ansi-green-intense-fg ansi-bold">     26</span> testMultipleTraps <span class="ansi-blue-fg">=</span> Image<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">=</span>out<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 27</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">import</span> skimage<span class="ansi-blue-fg">.</span>measure<span class="ansi-blue-fg">.</span>compare_mse <span class="ansi-green-fg">as</span> mse
-<span class="ansi-green-intense-fg ansi-bold">     28</span> <span class="ansi-green-fg">import</span> skimage<span class="ansi-blue-fg">.</span>measure<span class="ansi-blue-fg">.</span>compare_nrmse <span class="ansi-green-fg">as</span> nrmse
-<span class="ansi-green-intense-fg ansi-bold">     29</span> <span class="ansi-green-fg">import</span> skimage<span class="ansi-blue-fg">.</span>measure<span class="ansi-blue-fg">.</span>compare_ssim <span class="ansi-green-fg">as</span> ssim
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">IndexError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-38-c07a890af508&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      7</span> <span class="ansi-green-fg">for</span> icol <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>imout<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      8</span>     Xval <span class="ansi-blue-fg">=</span> traps_X<span class="ansi-blue-fg">[</span>icol<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-fg">----&gt; 9</span><span class="ansi-red-fg">     </span>ntraps <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>cumsum<span class="ansi-blue-fg">(</span>traps<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span>Xval<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span>     data_column <span class="ansi-blue-fg">=</span> img<span class="ansi-blue-fg">.</span>data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span>Xval<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">     11</span>     data_column <span class="ansi-blue-fg">=</span> data_column<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span>
 
-<span class="ansi-red-fg">ImportError</span>: No module named compare_mse
+<span class="ansi-red-fg">IndexError</span>: too many indices for array
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -733,7 +755,7 @@ crispy - INFO - Read data from HDU 1 of ../../code/SimResults/testMultipleTraps.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_23_2.png" src="../_images/notebooks_TrapsExperiments_23_2.png" />
+<img alt="../_images/notebooks_TrapsExperiments_24_2.png" src="../_images/notebooks_TrapsExperiments_24_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -791,7 +813,7 @@ crispy - INFO - Read data from HDU 1 of ../../code/Inputs/os5_spc_064_targetstar
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Mar 2017. <br/>
+    Last built 03 Apr 2017. <br/>
   </p>
 </footer>
   </body>
