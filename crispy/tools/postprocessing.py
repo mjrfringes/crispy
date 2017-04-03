@@ -374,7 +374,7 @@ def process_SPC_IFS(par,
     # First off, normalize the residual cube by a flatfield
     flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
     residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
-    residual[(residual>1e10) or (residual<-1e10)] = np.NaN
+    residual[np.logical_or((residual>1e10),(residual<-1e10))] = np.NaN
     par.hdr.append(('comment', 'Divided by lenslet flatfield'), end=True)
     Image(data=residual,header=par.hdr).write(outdir_average+'/residual_flatfielded.fits',clobber=True)
     Image(data=np.sum(residual,axis=0),header=par.hdr).write(outdir_average+'/residual_flatfielded_stack.fits',clobber=True)
