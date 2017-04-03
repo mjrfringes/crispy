@@ -291,10 +291,6 @@ def process_SPC_IFS(par,
         ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector)   
         offaxis_filename = os.path.abspath(outdir_average+'/offaxis.fits')
         target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,offaxis = offaxis_filename,factor = pp_fact)
-    elif process_noiseless:
-        ref_det_outlist = noiselessDetector(par,ref_outlist,outdir_detector)   
-        offaxis_filename = os.path.abspath(outdir_average+'/offaxis.fits')
-        target_det_outlist = noiselessDetector(par,target_outlist,outdir_detector,offaxis = offaxis_filename)
     else:
         ref_det_outlist = []
         target_det_outlist = []

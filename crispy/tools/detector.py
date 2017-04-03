@@ -95,7 +95,7 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         img = Image(filename=reffile)
         if offaxis is not None:
             off = Image(offaxis)
-            off.data*=factor # Multiplies by post-processing factor
+            img.data*=factor # Multiplies by post-processing factor
             img.data+=off.data
         inttime = par.timeframe/par.Nreads
         img.data*=par.QE*par.losses*par.PhCountEff*par.CTE*par.pol
