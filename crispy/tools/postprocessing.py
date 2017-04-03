@@ -905,12 +905,12 @@ def SNR_spectrum(wavelist,signal, noise, plot=True,outname = 'SNR.png', outfolde
     FWHM = 4.
     smooth = ndimage.filters.gaussian_filter1d(real_vals,FWHM/2.35,order=0,mode='constant')
     smoothfunc=interp1d(wavelist,smooth)
-    chisq = np.sum((signal[edges:-edges]*np.mean(spectrum)/np.mean(signal[edges:-edges]) - smoothfunc[edges:-edges]**2)/(noise[edges:-edges]*np.mean(spectrum)/np.mean(signal[edges:-edges]))**2)
+    chisq = np.sum((signal[edges:-edges]*np.mean(real_vals)/np.mean(signal[edges:-edges]) - smoothfunc[edges:-edges]**2)/(noise[edges:-edges]*np.mean(real_vals)/np.mean(signal[edges:-edges]))**2)
     if plot:
         sns.set_style("whitegrid")
         fig,ax = plt.subplots(figsize=(12,6))
         ax.plot(wavelist,real_vals,label='Original spectrum')
-        ax.errorbar(lam_midpts,signal*np.mean(spectrum)/np.mean(signal),yerr=noise*np.mean(spectrum)/np.mean(signal),label='Recovered spectrum',fmt='o')    
+        ax.errorbar(lam_midpts,signal*np.mean(real_vals)/np.mean(signal),yerr=noise*np.mean(real_vals)/np.mean(signal),label='Recovered spectrum',fmt='o')    
         ax.plot(wavelist,smooth,'-',label='Gaussian-smoothed original spectrum w/ FWHM=%.0f bins' % FWHM)
         ax.set_xlabel('Wavelength (nm)')
         ax.set_ylabel('Contrast')

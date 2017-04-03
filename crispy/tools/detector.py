@@ -58,11 +58,12 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
         par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
         par.hdr.append(('comment', '*'*60), end=True)    
         par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
         par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
         par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
         par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
         par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
-        par.hdr.append(('INTTIME',inttime,'Integration time (s)'), end=True) 
+        par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
         
         
 #     par.hdr.append(('INTTIME',inttime,'Integration time'), end=True)
