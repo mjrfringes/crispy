@@ -14,6 +14,7 @@ except:
 from time import time
 import os
 from detector import averageDetectorReadout,noiselessDetector,readDetector
+import matplotlib.pyplot as plt
 
 import multiprocessing
 from par_utils import Task, Consumer
