@@ -83,7 +83,7 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
             detector += np.random.normal(0.0,par.RN,IFSimage.data.shape)
         return detector
 
-def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False):
+def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False,factor=1.0):
     '''	
     Process a list of files and creates individual detector readouts
     If we want only one file, we can just make a list of 1
@@ -95,6 +95,7 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         img = Image(filename=reffile)
         if offaxis is not None:
             off = Image(offaxis)
+            off.data*=factor # Multiplies by post-processing factor
             img.data+=off.data
         inttime = par.timeframe/par.Nreads
         img.data*=par.QE*par.losses*par.PhCountEff*par.CTE*par.pol

@@ -27,6 +27,8 @@ def process_SPC_IFS(par,
                     target_star_T=5887*u.K, target_star_Vmag=5.03,
                     lamc=770.,BW=0.18,n_ref_star_imgs=30,
                     tel_pupil_area=3.650265060424805*u.m**2,
+                    pp_fact = 0.05,
+                    subtract_ref_psf=True,
                     outdir_time_series = 'OS5',
                     outdir_detector='OS5/OS5_detector',
                     outdir_average='OS5/OS5_average',
@@ -66,6 +68,8 @@ def process_SPC_IFS(par,
     tel_pupil_area: `u.m**2` float
         Effective surface area of telescope, including all geometric losses. Float
         multiplied by astropy.units.m**2
+    pp_fact: float
+        Post-processing factor - multiplies the target star PSF
     outdir_time_series: string
         Where to store the noiseless IFS detector images
     outdir_detector: string
@@ -286,7 +290,7 @@ def process_SPC_IFS(par,
         # Apply detector for both reference star and target
         ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector)   
         offaxis_filename = os.path.abspath(outdir_average+'/offaxis.fits')
-        target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,offaxis = offaxis_filename)
+        target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,offaxis = offaxis_filename,factor = pp_fact)
     elif process_noiseless:
         ref_det_outlist = noiselessDetector(par,ref_outlist,outdir_detector)   
         offaxis_filename = os.path.abspath(outdir_average+'/offaxis.fits')
@@ -338,25 +342,27 @@ def process_SPC_IFS(par,
     ###################################################################################
     # Step 7: Naive PSF subtraction; match the flux using the Vmag difference
     ###################################################################################
-    ref_cube_stack = np.sum(ref_cube.data,axis=0)
-    target_cube_stack = np.sum(target_cube.data,axis=0)
-#     ref_cube_noave = ref_cube.data -np.nanmean(ref_cube.data)
-#     target_cube_noave = target_cube.data - np.nanmean(target_cube.data)
-    ratio = np.sum(target_star_cube[:,0,0]) / np.sum(ref_star_cube[:,0,0])
-    residual = target_cube.data - ratio*ref_cube.data
-    
-
-    residual[np.isnan(target_cube.data)] = np.NaN
-    residual[(residual>1e10)*(residual<-1e10)] = np.NaN
-    
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('comment', '*'*60), end=True)
     par.hdr.append(('comment', '*'*22 + ' Postprocessing ' + '*'*20), end=True)
     par.hdr.append(('comment', '*'*60), end=True)    
     par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('comment', 'Subtracted scaled mean of reference star PSF'), end=True)
-    Image(data=residual,header = par.hdr).write(outdir_average+'/residual.fits', clobber=True)
+    if subtract_ref_psf:
+        ref_cube_stack = np.sum(ref_cube.data,axis=0)
+        target_cube_stack = np.sum(target_cube.data,axis=0)
+    #     ref_cube_noave = ref_cube.data -np.nanmean(ref_cube.data)
+    #     target_cube_noave = target_cube.data - np.nanmean(target_cube.data)
+        ratio = np.sum(target_star_cube[:,0,0]) / np.sum(ref_star_cube[:,0,0])
+        residual = target_cube.data - ratio*ref_cube.data
     
+
+        residual[np.isnan(target_cube.data)] = np.NaN
+        residual[(residual>1e10)*(residual<-1e10)] = np.NaN
+    
+        par.hdr.append(('comment', 'Subtracted scaled mean of reference star PSF'), end=True)
+    else:
+        residual = target_cube.data
+    Image(data=residual,header = par.hdr).write(outdir_average+'/residual.fits', clobber=True)
     Image(data=np.sum(residual,axis=0),header = par.hdr).write(outdir_average+'/residual_stack.fits', clobber=True)
 
     times['Normalize and subtract reference PSF'] = time()
@@ -368,7 +374,7 @@ def process_SPC_IFS(par,
     # First off, normalize the residual cube by a flatfield
     flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
     residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
-    residual[(residual>1e10)*(residual<-1e10)] = np.NaN
+    residual[(residual>1e10) or (residual<-1e10)] = np.NaN
     par.hdr.append(('comment', 'Divided by lenslet flatfield'), end=True)
     Image(data=residual,header=par.hdr).write(outdir_average+'/residual_flatfielded.fits',clobber=True)
     Image(data=np.sum(residual,axis=0),header=par.hdr).write(outdir_average+'/residual_flatfielded_stack.fits',clobber=True)
