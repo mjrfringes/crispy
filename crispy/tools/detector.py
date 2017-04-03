@@ -53,17 +53,23 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     generating IFSimage images
     '''
     if append_header and not 'RN' in par.hdr:
-        par.hdr.append(('comment', ''), end=True)
-        par.hdr.append(('comment', '*'*60), end=True)
-        par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
-        par.hdr.append(('comment', '*'*60), end=True)    
-        par.hdr.append(('comment', ''), end=True)
+#         par.hdr.append(('comment', ''), end=True)
+#         par.hdr.append(('comment', '*'*60), end=True)
+#         par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
+#         par.hdr.append(('comment', '*'*60), end=True)    
+#         par.hdr.append(('comment', ''), end=True)
         par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
         par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
         par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
         par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
         par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
         par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
+        par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
+        par.hdr.append(('PHCTEFF',par.PhCountEff,'Photon counting efficiency'),end=True)
+        par.hdr.append(('CTE',par.CTE,'Charge transfer efficiency'),end=True)
+        par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
+        par.hdr.append(('POL',par.pol,'Polarization losses'),end=True)
+        par.hdr.append(('INTTIME',inttime,'Integration time per frame'),end=True)
         
         
 #     par.hdr.append(('INTTIME',inttime,'Integration time'), end=True)
@@ -76,10 +82,12 @@ def readDetector(par,IFSimage,inttime=100,append_header=False):
     # values, and call this icdf a maximum of 32 times; after the random numbers
     # are generated, put them back in their right place on the detector.
     ###
+    eff = par.QE*par.losses*par.PhCountEff*par.CTE*par.pol
+    
     if not par.poisson:
-        return IFSimage.data*inttime+par.dark*inttime+par.CIC
+        return IFSimage.data*eff*inttime+par.dark*inttime+par.CIC
     else:
-        detector = np.random.poisson(IFSimage.data*inttime+par.dark*inttime+par.CIC)
+        detector = np.random.poisson(IFSimage.data*eff*inttime+par.dark*inttime+par.CIC)
         if par.RN>0:
             detector += np.random.normal(0.0,par.RN,IFSimage.data.shape)
         return detector
@@ -99,7 +107,7 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
             img.data*=factor # Multiplies by post-processing factor
             img.data+=off.data
         inttime = par.timeframe/par.Nreads
-        img.data*=par.QE*par.losses*par.PhCountEff*par.CTE*par.pol
+        #img.data*=par.QE*par.losses*par.PhCountEff*par.CTE*par.pol
         #refreshes parameter header
         par.makeHeader()
         par.hdr.append(('comment', ''), end=True)
@@ -107,17 +115,17 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
         par.hdr.append(('comment', '*'*60), end=True)    
         par.hdr.append(('comment', ''), end=True)
-        par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
-        par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
-        par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
-        par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
-        par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
-        par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
-        par.hdr.append(('PHCTEFF',par.PhCountEff,'Photon counting efficiency'),end=True)
-        par.hdr.append(('CTE',par.CTE,'Charge transfer efficiency'),end=True)
-        par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
-        par.hdr.append(('POL',par.pol,'Polarization losses'),end=True)
-        par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
+#         par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
+#         par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
+#         par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
+#         par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
+#         par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
+#         par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
+#         par.hdr.append(('PHCTEFF',par.PhCountEff,'Photon counting efficiency'),end=True)
+#         par.hdr.append(('CTE',par.CTE,'Charge transfer efficiency'),end=True)
+#         par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
+#         par.hdr.append(('POL',par.pol,'Polarization losses'),end=True)
+#         par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
         par.hdr.append(('NREADS',par.Nreads,'Number of frames averaged'),end=True)
         par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time'),end=True)
         
