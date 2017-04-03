@@ -898,7 +898,7 @@ from scipy import ndimage
 from scipy.interpolate import interp1d
 
 def SNR_spectrum(wavelist,signal, noise, plot=True,outname = 'SNR.png', outfolder = '',title='Planet+star',edges=1,):
-    lam_midpts,junk = calculateWaveList(par)
+    #lam_midpts,junk = calculateWaveList(par)
     # wavelist = np.arange(min(lam_midpts),max(lam_midpts),3)
     #wavelist = 770*np.linspace(1.-0.18/2.,1.+0.18/2.,45)
     real_vals=calc_contrast_Bijan(wavelist)
