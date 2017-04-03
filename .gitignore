@@ -1,29 +1,29 @@
 
-code/SimResults/*
+crispy/SimResults/*
 
-code/unitTestsOutputs/*
+crispy/unitTestsOutputs/*
 
 *.pyc
 
-code/ReferenceFiles/simpsf/allweights.dat
+crispy/ReferenceFiles/simpsf/allweights.dat
 
 *.log
 
 .ipynb_checkpoints/IFS-checkpoint.ipynb
 
-code/ReferenceFiles/wavecal/*
+crispy/ReferenceFiles/wavecal/*
 
-code/ReferenceFiles/HighSNRWavecal/*
+crispy/ReferenceFiles/HighSNRWavecal/*
 
 
 
 
 *.png
 
-code/ReferenceFiles/LLTFcalCube.fits
+crispy/ReferenceFiles/LLTFcalCube.fits
 
-code/ReferenceFiles/lltf_655nm_2017-01-13-15-01-42_sub.fits
+crispy/ReferenceFiles/lltf_655nm_2017-01-13-15-01-42_sub.fits
 
-code/ReferenceFiles/hires_psflets_lam655.fits
+crispy/ReferenceFiles/hires_psflets_lam655.fits
 
 *checkpoint.ipynb
