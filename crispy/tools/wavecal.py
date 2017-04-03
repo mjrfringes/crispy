@@ -1,7 +1,7 @@
-from tools.locate_psflets import locatePSFlets,PSFLets
-from tools.image import Image
-from tools.par_utils import Task, Consumer
-from IFS import propagateIFS
+from locate_psflets import locatePSFlets,PSFLets
+from image import Image
+from par_utils import Task, Consumer
+from crispy.IFS import propagateIFS
 import matplotlib as mpl
 import numpy as np
 from scipy import signal
@@ -10,14 +10,14 @@ try:
 except:
     import pyfits as pyf
 
-from tools.initLogger import getLogger
+from initLogger import getLogger
 log = getLogger('crispy')
 import os
 import time
 import multiprocessing
 from scipy import ndimage
 import matplotlib.pyplot as plt
-from tools.reduction import calculateWaveList
+from reduction import calculateWaveList
 
 
 def createWavecalFiles(par,lamlist):

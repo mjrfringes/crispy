@@ -9,25 +9,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 5,
    "metadata": {
     "collapsed": true
    },
@@ -42,64 +24,63 @@
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": null,
+   "cell_type": "markdown",
    "metadata": {
     "collapsed": true
    },
-   "outputs": [],
-   "source": []
+   "source": [
+    "### Loading crispy's dependencies"
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 1,
    "metadata": {
-    "collapsed": true
+    "collapsed": false
    },
    "outputs": [],
    "source": [
     "import sys\n",
-    "codefolder = '../../code'\n",
+    "codefolder = '../../../../crispy'\n",
     "if codefolder not in sys.path: sys.path.append(codefolder)\n",
-    "from tools.initLogger import getLogger\n",
+    "from crispy.tools.initLogger import getLogger\n",
     "log = getLogger('crispy')\n",
-    "from params import Params\n",
+    "from crispy.params import Params\n",
+    "codefolder = '../../../crispy'\n",
     "par = Params(codefolder)"
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": null,
+   "cell_type": "markdown",
    "metadata": {
     "collapsed": true
    },
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
    "source": [
-    "par.lamlist = np.loadtxt(par.wavecalDir + \"lamsol.dat\")[:, 0]\n",
-    "par.filelist = np.sort(glob.glob(par.wavecalDir + \"det*.fits\"))\n"
+    "### Loading wavelengths/filelists"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 6,
    "metadata": {
-    "collapsed": true
+    "collapsed": false
    },
    "outputs": [],
-   "source": []
+   "source": [
+    "par.lamlist = np.loadtxt(par.wavecalDir + \"lamsol.dat\")[:, 0]\n",
+    "par.filelist = np.sort(glob.glob(par.wavecalDir + \"det*.fits\"))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Run calibration. Choose parameters wisely."
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 7,
    "metadata": {
     "collapsed": false
    },
@@ -108,54 +89,58 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "crispy - INFO - Building calibration files, placing results in ../../code/ReferenceFiles/wavecalR50_770/\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_700.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_700.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_710.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_720.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_730.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_740.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_750.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_760.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_770.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_779.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_789.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_799.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_809.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_819.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_829.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/ReferenceFiles/wavecalR50_770/det_839.fits\n",
-      "crispy - INFO - Loading wavelength solution from ../../code/ReferenceFiles/wavecalR50_770/lamsol.dat\n",
+      "crispy - INFO - Building calibration files, placing results in ../../../crispy/ReferenceFiles/wavecalR50_770/\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_700.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_700.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_710.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_720.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_730.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_740.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_750.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_760.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_770.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_779.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_789.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_799.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_809.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_819.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_829.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_839.fits\n",
+      "crispy - INFO - Loading wavelength solution from ../../../crispy/ReferenceFiles/wavecalR50_770/lamsol.dat\n",
       "crispy - INFO - Computing wavelength values at pixel centers\n",
       "crispy - INFO - Making high-resolution PSFLet models\n",
-      "crispy - INFO - Starting parallel computation\n",
+      "crispy - INFO - Starting parallel computation\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "WARNING: AstropyDeprecationWarning: \"clobber\" was deprecated in version 1.3 and will be removed in a future version. Use argument \"overwrite\" instead. [astropy.utils.decorators]\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
       "crispy - INFO - Reduced cube will have 17 wavelength bins\n",
       "crispy - INFO - Making polychrome cube\n",
       "crispy - INFO - Saving polychrome cube\n",
       "crispy - INFO - Saving wavelength calibration cube\n",
-      "crispy - INFO - Total time elapsed: 91 s\n"
+      "crispy - INFO - Total time elapsed: 53 s\n"
      ]
     }
    ],
    "source": [
-    "from tools.wavecal import buildcalibrations\n",
+    "from crispy.tools.wavecal import buildcalibrations\n",
     "buildcalibrations(par,\n",
-    "                  order=5,\n",
-    "                  upsample=10,\n",
-    "                  nsubarr=1,\n",
-    "                  genwavelengthsol=False, # Compute wavelength at the center of all pixels\n",
-    "                  makehiresPSFlets=True, # Compute hires PSFLets\n",
+    "                  order=3, # Order of polynomial map of the PSFLets (between 1 and 5)\n",
+    "                  upsample=10, # Upsampling factor of the PSFLets, needs to be at least ~5\n",
+    "                  nsubarr=1, # How many zones on the detector have their own PSFLets? \n",
+    "                  genwavelengthsol=False, # Compute wavelength at the center of all pixels (need to do this at least once)\n",
+    "                  makehiresPSFlets=True, # Compute hires PSFLets (usually False)\n",
     "                  parallel=True) # Use all computer cores"
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
   },
   {
    "cell_type": "code",

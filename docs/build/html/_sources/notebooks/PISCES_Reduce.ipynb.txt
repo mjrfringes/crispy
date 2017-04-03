@@ -18,15 +18,15 @@
    "cell_type": "code",
    "execution_count": 1,
    "metadata": {
-    "collapsed": true
+    "collapsed": false
    },
    "outputs": [],
    "source": [
     "import sys\n",
-    "codefolder = '../../code'\n",
+    "codefolder = '../../../../crispy' # this is the path to the entire repo (that contains crispy, docs, notebooks)\n",
     "if codefolder not in sys.path: sys.path.append(codefolder)\n",
-    "from PISCESparams import Params\n",
-    "par = Params(codefolder)"
+    "from crispy.PISCESparams import Params\n",
+    "par = Params('../../../crispy')\n"
    ]
   },
   {
@@ -38,7 +38,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 2,
    "metadata": {
     "collapsed": false
    },
@@ -47,19 +47,20 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "../../code/ReferenceFiles/Calibra_170306/IFS665nm.fits\n",
-      "crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFS665nm.fits\n",
-      "crispy - INFO - Read data from HDU 0 of ../../code/ReferenceFiles/Calibra_170306/IFSdark665nm.fits\n",
-      "crispy - INFO - Writing data to ../../code/SimResults/test_varia.fits\n",
-      "crispy - INFO - Read data from HDU 1 of ../../code/SimResults/test_varia.fits\n",
-      "crispy - INFO - Reduced cube will have 24 wavelength bins\n"
+      "../../../crispy/ReferenceFiles/Calibra_170306/IFS665nm.fits\n",
+      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170306/IFS665nm.fits\n",
+      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170306/IFSdark665nm.fits\n",
+      "crispy - INFO - Writing data to ../../../crispy/SimResults/test_varia.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/test_varia.fits\n",
+      "crispy - INFO - Reduced cube will have 17 wavelength bins\n"
      ]
     },
     {
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "/Users/mrizzo/anaconda/envs/py27/lib/python2.7/site-packages/numpy/lib/nanfunctions.py:703: RuntimeWarning: Mean of empty slice\n",
+      "WARNING: AstropyDeprecationWarning: \"clobber\" was deprecated in version 1.3 and will be removed in a future version. Use argument \"overwrite\" instead. [astropy.utils.decorators]\n",
+      "/Users/mrizzo/anaconda/lib/python2.7/site-packages/numpy/lib/nanfunctions.py:703: RuntimeWarning: Mean of empty slice\n",
       "  warnings.warn(\"Mean of empty slice\", RuntimeWarning)\n"
      ]
     },
@@ -67,7 +68,8 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "crispy - INFO - Writing data to ../../code/SimResults/test_varia_red_optext.fits\n"
+      "crispy - INFO - Writing data to ../../../crispy/SimResults/test_varia_red_optext.fits\n",
+      "crispy - INFO - Elapsed time: 15.292309s\n"
      ]
     }
    ],
@@ -77,8 +79,8 @@
     "VARIA_ON= glob.glob(par.wavecalDir+'IFS665nm.fits')\n",
     "VARIA_OFF= glob.glob(par.wavecalDir+'IFSdark665nm.fits')\n",
     "print(VARIA_ON[0])\n",
-    "from IFS import reduceIFSMap\n",
-    "from tools.image import Image\n",
+    "from crispy.IFS import reduceIFSMap\n",
+    "from crispy.tools.image import Image\n",
     "test_img = Image(data = (Image(VARIA_ON[0]).data - Image(VARIA_OFF[0]).data)).write(par.exportDir+'/test_varia.fits')\n",
     "reduced_cube= reduceIFSMap(par,par.exportDir+'/test_varia.fits')"
    ]
@@ -92,13 +94,31 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 5,
    "metadata": {
     "collapsed": false
    },
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "crispy - INFO - Reduced cube will have 17 wavelength bins\n",
+      "('Wavelengths at midpoints (nm): ', array([ 608.22830721,  614.73669273,  621.31472164,  627.96313916,\n",
+      "        634.6826985 ,  641.4741609 ,  648.33829579,  655.27588078,\n",
+      "        662.28770183,  669.37455333,  676.53723812,  683.77656768,\n",
+      "        691.09336215,  698.48845043,  705.96267033,  713.51686859,\n",
+      "        721.15190102]))\n",
+      "('Wavelengths at endpoints (nm): ', array([ 605.        ,  611.47384081,  618.01695537,  624.63008493,\n",
+      "        631.31397871,  638.06939392,  644.89709588,  651.79785809,\n",
+      "        658.77246235,  665.8216988 ,  672.94636605,  680.14727125,\n",
+      "        687.4252302 ,  694.78106741,  702.21561622,  709.72971889,\n",
+      "        717.32422669,  725.        ]))\n"
+     ]
+    }
+   ],
    "source": [
-    "from tools.reduction import calculateWaveList\n",
+    "from crispy.tools.reduction import calculateWaveList\n",
     "lam_midpts,lam_endpts = calculateWaveList(par)\n",
     "print('Wavelengths at midpoints (nm): ',lam_midpts)\n",
     "print('Wavelengths at endpoints (nm): ',lam_endpts)"

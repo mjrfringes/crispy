@@ -3,7 +3,7 @@ import astropy.units as u
 import astropy.constants as c
 from inputScene import convert_krist_cube,calc_contrast,calc_contrast_Bijan
 import glob
-from IFS import propagateIFS,reduceIFSMap
+from crispy.IFS import propagateIFS,reduceIFSMap
 from initLogger import getLogger
 log = getLogger('crispy')
 from image import Image
