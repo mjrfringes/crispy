@@ -7,9 +7,9 @@ make html
 cd ..
 
 # commit and push
-# git add -A
-# git commit -m "building and pushing docs"
-# git push origin master
+git add .
+git commit -m "building and pushing docs"
+git push origin master
 
 # switch branches and pull the data we want
 git checkout gh-pages
