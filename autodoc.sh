@@ -7,8 +7,8 @@ make html
 cd ..
 
 # commit and push
-# git add .
-git commit -am "building and pushing docs"
+git add -A
+git commit -m "building and pushing docs"
 git push origin master
 
 # switch branches and pull the data we want
