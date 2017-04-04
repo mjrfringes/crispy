@@ -31,3 +31,7 @@ crispy/ReferenceFiles/hires_psflets_lam655.fits
 crispy/ReferenceFiles/wavecalR50_770/polychromeR50.fits
 
 crispy/ReferenceFiles/wavecalR50_770/hires*.fits
+
+crispy/ReferenceFiles/wavecalR50_770_test/*
+
+crispy/SimResults/*

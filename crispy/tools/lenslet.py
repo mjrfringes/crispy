@@ -11,6 +11,7 @@ log = getLogger('crispy')
 import matplotlib.pyplot as plt
 from detutils import frebin
 from scipy import ndimage
+from scipy.special import erf
 from spectrograph import distort
 from locate_psflets import initcoef,transform
 
@@ -163,7 +164,16 @@ def Lenslets(par, imageplane, lam,lensletplane, allweights=None,kernels=None,loc
                     rsx = sx-isx
                     rsy = sy-isy
                     sig = par.FWHM/2.35
-                    psflet = np.exp(-((_x- rsx)**2+(_y- rsy)**2)/(2*(sig*lam*1000/par.FWHMlam)**2))
+                    #psflet = np.exp(-((_x- rsx)**2+(_y- rsy)**2)/(2*(sig*lam*1000/par.FWHMlam)**2))
+                    sigma = (sig*lam*1000/par.FWHMlam)
+#                     psflet = (((erf((x - x_0 + 0.5) / (np.sqrt(2) * sigma)) -
+#                         erf((x - x_0 - 0.5) / (np.sqrt(2) * sigma))) *
+#                         (erf((y - y_0 + 0.5) / (np.sqrt(2) * sigma)) -
+#                         erf((y - y_0 - 0.5) / (np.sqrt(2) * sigma)))))
+                    psflet = (erf((_x - rsx + 0.5) / (np.sqrt(2) * sigma)) - \
+                        erf((_x - rsx - 0.5) / (np.sqrt(2) * sigma))) * \
+                        (erf((_y - rsy + 0.5) / (np.sqrt(2) * sigma)) - \
+                        erf((_y - rsy - 0.5) / (np.sqrt(2) * sigma)))
                     psflet /= np.sum(psflet)
                     xlow = isy-size//2
                     xhigh = xlow+size

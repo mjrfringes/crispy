@@ -18,18 +18,19 @@ import multiprocessing
 from scipy import ndimage
 import matplotlib.pyplot as plt
 from reduction import calculateWaveList
+from scipy.special import erf
 
 
-def createWavecalFiles(par,lamlist):
+
+def createWavecalFiles(par,lamlist,lamc=770.):
     '''
     Creates a set of monochromatic IFS images to be used in wavelength calibration step
-    
     '''
     
     par.saveDetector=False
     inputCube = np.ones((1,512,512),dtype=float)
     inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))
-    inCube[0].header['LAM_C'] = 0.770
+    inCube[0].header['LAM_C'] = lamc/1000.
     inCube[0].header['PIXSIZE'] = 0.1
     filelist = []
     for wav in lamlist:
@@ -318,7 +319,17 @@ def get_sim_hires(par,x, y, lam, image, upsample=5, nsubarr=5, npix=13, renorm=T
     _y = np.arange(size)-size//2
     _x, _y = np.meshgrid(_x, _y)
     sig = par.FWHM/2.35*upsample
-    psflet = np.exp(-((_x)**2+(_y)**2)/(2.*(sig*lam/par.FWHMlam)**2))
+    #psflet = np.exp(-((_x)**2+(_y)**2)/(2.*(sig*lam/par.FWHMlam)**2))
+    sigma = sig*lam/par.FWHMlam
+#                     psflet = (((erf((x - x_0 + 0.5) / (np.sqrt(2) * sigma)) -
+#                         erf((x - x_0 - 0.5) / (np.sqrt(2) * sigma))) *
+#                         (erf((y - y_0 + 0.5) / (np.sqrt(2) * sigma)) -
+#                         erf((y - y_0 - 0.5) / (np.sqrt(2) * sigma)))))
+    psflet = (erf((_x + 0.5) / (np.sqrt(2) * sigma)) - \
+        erf((_x - 0.5) / (np.sqrt(2) * sigma))) * \
+        (erf((_y + 0.5) / (np.sqrt(2) * sigma)) - \
+        erf((_y - 0.5) / (np.sqrt(2) * sigma)))
+
     psflet *= upsample**2/np.sum(psflet)
     
     for i in range(nsubarr):
