@@ -1,0 +1,104 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(array([[False, False, False, ..., False, False, False],\n",
+       "        [False, False, False, ..., False, False, False],\n",
+       "        [False, False, False, ..., False, False, False],\n",
+       "        ..., \n",
+       "        [False, False, False, ..., False, False, False],\n",
+       "        [False, False, False, ..., False, False, False],\n",
+       "        [False, False, False, ..., False, False, False]], dtype=bool),\n",
+       " array([[False, False, False, ..., False, False, False],\n",
+       "        [False, False, False, ..., False, False, False],\n",
+       "        [False, False, False, ..., False, False, False],\n",
+       "        ..., \n",
+       "        [False, False, False, ..., False, False, False],\n",
+       "        [False, False, False, ..., False, False, False],\n",
+       "        [False, False, False, ..., False, False, False]], dtype=bool))"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from tools.imgtools import bowtie\n",
+    "import numpy as np\n",
+    "\n",
+    "image = np.zeros((1024,1024))\n",
+    "bowtie(image, 512,512,65,25,100,400)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "import sys\n",
+    "folder = '/Users/mrizzo/IFS/crispy'\n",
+    "if folder not in sys.path: sys.path.append(folder)\n",
+    "\n",
+    "from crispy.IFS import reduceIFSMap\n",
+    "from crispy.tools import reduction\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "u'/Users/mrizzo/IFS/crispy/docs/source/notebooks'"
+      ]
+     },
+     "execution_count": 1,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pwd"
+   ]
+  }
+ ],
+ "metadata": {
+  "anaconda-cloud": {},
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.13"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}
