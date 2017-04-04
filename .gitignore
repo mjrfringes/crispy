@@ -35,3 +35,5 @@ crispy/ReferenceFiles/wavecalR50_770/hires*.fits
 crispy/ReferenceFiles/wavecalR50_770_test/*
 
 crispy/SimResults
+
+crispy/ReferenceFiles/wavecalR50_770/polychromekeyR50.fits
