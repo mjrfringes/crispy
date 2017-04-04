@@ -51,6 +51,17 @@
    ]
   },
   {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "par.wavecalDir = par.prefix+'/wavecalR50_770_test/'"
+   ]
+  },
+  {
    "cell_type": "markdown",
    "metadata": {
     "collapsed": true
@@ -61,7 +72,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 4,
    "metadata": {
     "collapsed": false
    },
@@ -71,30 +82,30 @@
      "output_type": "stream",
      "text": [
       "crispy - INFO - Reduced cube will have 17 wavelength bins\n",
-      "crispy - INFO - The number of input pixels per lenslet is 4.303178\n",
+      "crispy - INFO - The number of input pixels per lenslet is 4.303534\n",
       "crispy - INFO - Using PSFlet gaussian approximation\n",
       "crispy - INFO - Final detector pixel per PSFLet: 40.000000\n",
-      "crispy - INFO - Processing wavelength 0.704430 (0 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.711948 (1 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.719547 (2 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.727227 (3 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.734989 (4 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.742834 (5 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.750763 (6 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.758776 (7 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.766875 (8 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.775060 (9 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.783333 (10 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.791694 (11 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.800144 (12 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.808684 (13 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.817316 (14 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.826040 (15 out of 17)\n",
-      "crispy - INFO - Processing wavelength 0.834856 (16 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.703764 (0 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.711352 (1 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.719022 (2 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.726775 (3 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.734612 (4 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.742533 (5 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.750539 (6 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.758632 (7 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.766812 (8 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.775080 (9 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.783437 (10 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.791884 (11 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.800423 (12 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.809054 (13 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.817777 (14 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.826595 (15 out of 17)\n",
+      "crispy - INFO - Processing wavelength 0.835508 (16 out of 17)\n",
       "crispy - INFO - Number of detector pixels per lenslet: 13.384615\n",
       "crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024\n",
       "crispy - INFO - Done.\n",
-      "crispy - INFO - Performance: 20 seconds total\n",
+      "crispy - INFO - Performance: 33 seconds total\n",
       "crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/flatfield.fits\n"
      ]
     },
@@ -113,7 +124,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 6,
    "metadata": {
     "collapsed": false
    },
@@ -123,14 +134,17 @@
      "output_type": "stream",
      "text": [
       "crispy - INFO - Read data from HDU 1 of ../../../crispy/unitTestsOutputs/flatfield.fits\n",
-      "crispy - INFO - Elapsed time: 23.992255s\n"
+      "crispy - INFO - Elapsed time: 23.596739s\n",
+      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/polychromeR50stack.fits\n",
+      "crispy - INFO - Elapsed time: 24.745372s\n"
      ]
     }
    ],
    "source": [
     "from crispy.IFS import reduceIFSMap\n",
     "#tmp=reduceIFSMap(par,par.wavecalDir+'det_760.fits',method='lstsq')\n",
-    "tmp=reduceIFSMap(par,par.unitTestsOutputs+'/flatfield.fits',method='lstsq')\n"
+    "tmp=reduceIFSMap(par,par.unitTestsOutputs+'/flatfield.fits',method='lstsq')\n",
+    "tmp=reduceIFSMap(par,par.wavecalDir+'polychromeR50stack.fits',method='lstsq')\n"
    ]
   },
   {
