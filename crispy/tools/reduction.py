@@ -492,12 +492,12 @@ def calculateWaveList(par,lam_list=None,Nspec=None):
     if Nspec is None:
         Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*par.npixperdlam+2)
     log.info('Reduced cube will have %d wavelength bins' % (Nspec-1))
-    loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
-    loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
-    lam_endpts = np.exp(loglam_endpts)
-    lam_midpts = np.exp(loglam_midpts)
-#     lam_endpts = np.linspace(min(lamlist), max(lamlist), Nspec)
-#     lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
+#     loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
+#     loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
+#     lam_endpts = np.exp(loglam_endpts)
+#     lam_midpts = np.exp(loglam_midpts)
+    lam_endpts = np.linspace(min(lamlist), max(lamlist), Nspec)
+    lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
     return lam_midpts,lam_endpts
 
 def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=False,smoothandmask=False):
