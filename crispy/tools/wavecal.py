@@ -1,7 +1,6 @@
 from locate_psflets import locatePSFlets,PSFLets
 from image import Image
 from par_utils import Task, Consumer
-from crispy.IFS import propagateIFS
 import matplotlib as mpl
 import numpy as np
 from scipy import signal
@@ -22,24 +21,6 @@ from scipy.special import erf
 
 
 
-def createWavecalFiles(par,lamlist,lamc=770.):
-    '''
-    Creates a set of monochromatic IFS images to be used in wavelength calibration step
-    '''
-    
-    par.saveDetector=False
-    inputCube = np.ones((1,512,512),dtype=float)
-    inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))
-    inCube[0].header['LAM_C'] = lamc/1000.
-    inCube[0].header['PIXSIZE'] = 0.1
-    filelist = []
-    for wav in lamlist:
-        detectorFrame = propagateIFS(par,[wav*1e-3],inCube[0])
-        filename = par.wavecalDir+'det_%3d.fits' % (wav)
-        filelist.append(filename)
-        Image(data=detectorFrame).write(filename)
-    par.lamlist = lamlist
-    par.filelist = filelist
 
 
 
@@ -186,7 +167,7 @@ def do_inspection(par,image,xpos,ypos,lam):
     
 
 def make_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
-                     xindx, yindx, ydim,xdim, upsample=5, nlam=10):
+                     xindx, yindx, ydim,xdim, upsample=10, nlam=10):
     """
     """
 
@@ -196,10 +177,11 @@ def make_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
     x, y = np.meshgrid(x, x)
     npix = hires_arrs[0].shape[2]//upsample
 
-    dloglam = (np.log(lam2) - np.log(lam1))/nlam
-    loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
-
-    for lam in np.exp(loglam):
+#     dloglam = (np.log(lam2) - np.log(lam1))/nlam
+#     loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
+# 
+#     for lam in np.exp(loglam):
+    for lam in np.linspace(lam1,lam2,nlam):
 
         ################################################################
         # Build the appropriate average hires image by averaging over
@@ -303,7 +285,7 @@ def make_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
     return image
 
 
-def get_sim_hires(par,x, y, lam, image, upsample=5, nsubarr=5, npix=13, renorm=True):
+def get_sim_hires(par,lam, upsample=10, nsubarr=1, npix=13, renorm=True):
     """
     Build high resolution images of the undersampled PSF using the
     monochromatic frames. This version of the function uses the perfect
@@ -319,12 +301,8 @@ def get_sim_hires(par,x, y, lam, image, upsample=5, nsubarr=5, npix=13, renorm=T
     _y = np.arange(size)-size//2
     _x, _y = np.meshgrid(_x, _y)
     sig = par.FWHM/2.35*upsample
-    #psflet = np.exp(-((_x)**2+(_y)**2)/(2.*(sig*lam/par.FWHMlam)**2))
+#     psflet = np.exp(-((_x)**2+(_y)**2)/(2.*(sig*lam/par.FWHMlam)**2))
     sigma = sig*lam/par.FWHMlam
-#                     psflet = (((erf((x - x_0 + 0.5) / (np.sqrt(2) * sigma)) -
-#                         erf((x - x_0 - 0.5) / (np.sqrt(2) * sigma))) *
-#                         (erf((y - y_0 + 0.5) / (np.sqrt(2) * sigma)) -
-#                         erf((y - y_0 - 0.5) / (np.sqrt(2) * sigma)))))
     psflet = (erf((_x + 0.5) / (np.sqrt(2) * sigma)) - \
         erf((_x - 0.5) / (np.sqrt(2) * sigma))) * \
         (erf((_y + 0.5) / (np.sqrt(2) * sigma)) - \
@@ -508,6 +486,80 @@ def gethires(x, y, image, upsample=5, nsubarr=5, npix=13, renorm=True):
     return hires_arr
 
 
+def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, savehiresimages=True,upsample=5,nsubarr=5):
+    '''
+    Construct high-resolution PSFLets
+    
+    '''
+    hires_arrs = []
+    allxpos = []
+    allypos = []
+
+    log.info('Making high-resolution PSFLet models')
+
+    if parallel:
+        log.info('Starting parallel computation')
+        if not par.gaussian:
+            for i in range(len(lam)):
+
+                xpos, ypos = psftool.return_locations(lam[i], allcoef, xindx, yindx)
+                xpos = np.reshape(xpos, -1)
+                ypos = np.reshape(ypos, -1)
+                allxpos += [xpos]
+                allypos += [ypos]
+
+        tasks = multiprocessing.Queue()
+        results = multiprocessing.Queue()
+        ncpus = multiprocessing.cpu_count()
+        consumers = [ Consumer(tasks, results)
+                      for i in range(ncpus) ]
+        for w in consumers:
+            w.start()
+    
+        for i in range(len(lam)):
+            if par.gaussian_hires:
+                tasks.put(Task(i, get_sim_hires, (par, lam[i], upsample,nsubarr)))                    
+            else:
+                tasks.put(Task(i, gethires, (allxpos[i], allypos[i],
+                                                            imlist[i], upsample,nsubarr)))
+    
+        for i in range(ncpus):
+            tasks.put(None)
+        for i in range(len(lam)):
+            index, hiresarr = results.get()
+            hires_arrs += [hiresarr]
+    
+            if savehiresimages:
+                di, dj = hiresarr.shape[0], hiresarr.shape[2]
+                outim = np.zeros((di*dj, di*dj))
+                for ii in range(di):
+                    for jj in range(di):
+                        outim[ii*dj:(ii + 1)*dj, jj*dj:(jj + 1)*dj] = hiresarr[ii, jj]
+                out = pyf.HDUList(pyf.PrimaryHDU(hiresarr.astype(np.float32)))
+                out.writeto(par.wavecalDir + 'hires_psflets_lam%d.fits' % (lam[index]), clobber=True)
+    else:
+        log.info('No parallel computation')
+        for i in range(len(lam)):
+            if par.gaussian_hires:
+                hiresarr = get_sim_hires(par, lam[i], upsample,nsubarr)               
+            else:    
+                xpos, ypos = psftool.return_locations(lam[i], allcoef, xindx, yindx)
+                xpos = np.reshape(xpos, -1)
+                ypos = np.reshape(ypos, -1)
+                hiresarr = gethires(xpos, ypos, imlist[i],upsample,nsubarr)
+            hires_arrs += [hiresarr]
+
+            if savehiresimages:
+                di, dj = hiresarr.shape[0], hiresarr.shape[2]
+                outim = np.zeros((di*dj, di*dj))
+                for ii in range(di):
+                    for jj in range(di):
+                        outim[ii*dj:(ii + 1)*dj, jj*dj:(jj + 1)*dj] = hiresarr[ii, jj]
+                out = pyf.HDUList(pyf.PrimaryHDU(hiresarr.astype(np.float32)))
+                out.writeto(par.wavecalDir + 'hires_psflets_lam%d.fits' % (lam[i]), clobber=True)
+
+    return hires_arrs
+
 def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=True, makehiresPSFlets=True,
                       savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
@@ -641,72 +693,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
 
     if makehiresPSFlets:
 
-        hires_arrs = []
-        allxpos = []
-        allypos = []
-    
-        log.info('Making high-resolution PSFLet models')
-
-        if parallel:
-            log.info('Starting parallel computation')
-            for i in range(len(lam)):
-
-                xpos, ypos = psftool.return_locations(lam[i], allcoef, xindx, yindx)
-                xpos = np.reshape(xpos, -1)
-                ypos = np.reshape(ypos, -1)
-                allxpos += [xpos]
-                allypos += [ypos]
-
-            tasks = multiprocessing.Queue()
-            results = multiprocessing.Queue()
-            ncpus = multiprocessing.cpu_count()
-            consumers = [ Consumer(tasks, results)
-                          for i in range(ncpus) ]
-            for w in consumers:
-                w.start()
-        
-            for i in range(len(lam)):
-                if par.gaussian_hires:
-                    tasks.put(Task(i, get_sim_hires, (par, allxpos[i], allypos[i],lam[i],
-                                                                imlist[i], upsample,nsubarr)))                    
-                else:
-                    tasks.put(Task(i, gethires, (allxpos[i], allypos[i],
-                                                                imlist[i], upsample,nsubarr)))
-        
-            for i in range(ncpus):
-                tasks.put(None)
-            for i in range(len(lam)):
-                index, hiresarr = results.get()
-                hires_arrs += [hiresarr]
-        
-                if savehiresimages:
-                    di, dj = hiresarr.shape[0], hiresarr.shape[2]
-                    outim = np.zeros((di*dj, di*dj))
-                    for ii in range(di):
-                        for jj in range(di):
-                            outim[ii*dj:(ii + 1)*dj, jj*dj:(jj + 1)*dj] = hiresarr[ii, jj]
-                    out = pyf.HDUList(pyf.PrimaryHDU(hiresarr.astype(np.float32)))
-                    out.writeto(outdir + 'hires_psflets_lam%d.fits' % (lamlist[index]), clobber=True)
-        else:
-            log.info('No parallel computation')
-            for i in range(len(lam)):
-                xpos, ypos = psftool.return_locations(lam[i], allcoef, xindx, yindx)
-                xpos = np.reshape(xpos, -1)
-                ypos = np.reshape(ypos, -1)
-                if par.gaussian_hires:
-                    hiresarr = get_sim_hires(par, xpos, ypos,lam[i], imlist[i],upsample,nsubarr)                
-                else:    
-                    hiresarr = gethires(xpos, ypos, imlist[i],upsample,nsubarr)
-                hires_arrs += [hiresarr]
-
-                if savehiresimages:
-                    di, dj = hiresarr.shape[0], hiresarr.shape[2]
-                    outim = np.zeros((di*dj, di*dj))
-                    for ii in range(di):
-                        for jj in range(di):
-                            outim[ii*dj:(ii + 1)*dj, jj*dj:(jj + 1)*dj] = hiresarr[ii, jj]
-                    out = pyf.HDUList(pyf.PrimaryHDU(hiresarr.astype(np.float32)))
-                    out.writeto(par.wavecalDir + 'hires_psflets_lam%d.fits' % (lam[i]), clobber=True)
+        hires_arrs = makeHires(par,xindx,yindx,lam,allcoef, psftool,imlist, parallel,savehiresimages,upsample,nsubarr)
 
         lam_midpts,lam_endpts=calculateWaveList(par,lam)
         Nspec = len(lam_endpts)
@@ -719,7 +706,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     
         if parallel==False:
             for i in range(Nspec - 1):
-                polyimage[i] = make_polychrome(lam_endpts[i], lam_endpts[i + 1],
+                polyimage[i] = (lam_endpts[index + 1]-lam_endpts[index])*make_polychrome(lam_endpts[i], lam_endpts[i + 1],
                                                           hires_arrs, lam, psftool, 
                                                           allcoef, xindx, yindx,ysize,xsize,upsample=upsample)
                 _x, _y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
@@ -745,7 +732,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                 tasks.put(None)
             for i in range(Nspec - 1):
                 index, poly = results.get()
-                polyimage[index] = poly
+                polyimage[index] = poly*(lam_endpts[index + 1]-lam_endpts[index])
                 _x, _y = psftool.return_locations(lam_midpts[index], allcoef, xindx, yindx)
                 _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
                 xpos += [_x]

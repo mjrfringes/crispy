@@ -12,7 +12,7 @@ except:
     import pyfits as fits
 from tools.locate_psflets import PSFLets
 from tools.reduction import get_cutout,fit_cutout,calculateWaveList
-from IFS import propagateIFS
+from IFS import propagateIFS,polychromeIFS
 from tools.spectrograph import selectKernel,loadKernels
 from tools.plotting import plotKernels
 from scipy import ndimage
@@ -112,7 +112,7 @@ def testGenPixSol(par):
     psftool.genpixsol(lamlist,allcoef)
     psftool.savepixsol(outdir = par.exportDir)
 
-def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,outname='flatfield.fits'):
+def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outname='flatfield.fits'):
     '''
     Creates a polychromatic flatfield
     
@@ -125,21 +125,24 @@ def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,outname='flat
     npix: int
         Each input frame has a pixel size npix x npix
     pixval: float
-        Each input frame has a unform value pixval
+        Each input frame has a unform value pixval in photons per second per nm of bandwidth
     
     '''
     
-    lamlist,junk = calculateWaveList(par)
-    photon_count_rate_per_input_pixel = pixval # Photons per second per cube slice
+    lam_midpts,lam_endpts = calculateWaveList(par,Nspec=Nspec)
+    inputCube = np.ones((len(lam_midpts),npix,npix),dtype=np.float32)
+    for i in range(len(lam_midpts)):
+        inputCube[i,:,:]*=pixval #/lam_midpts[i]
     
-    inputCube = np.ones((len(lamlist),npix,npix),dtype=float)*photon_count_rate_per_input_pixel
     par.saveDetector=False
-    inCube = fits.HDUList(fits.PrimaryHDU(inputCube))
-    inCube[0].header['LAM_C'] = np.median(lamlist)/1000.
+    inCube = fits.HDUList(fits.PrimaryHDU(inputCube.astype(np.float32)))
+    inCube[0].header['LAM_C'] = np.median(lam_midpts)/1000.
     inCube[0].header['PIXSIZE'] = pixsize
-    detectorFrame = propagateIFS(par,lamlist/1000.,inCube[0])
+#     Image(data=inCube[0].data,header=inCube[0].header).write(par.unitTestsOutputs+'/inputcube.fits',clobber=True)
+    inCube.writeto(par.unitTestsOutputs+'/inputcube.fits', clobber=True)
+
+#     detectorFrame = propagateIFS(par,lamlist/1000.,inCube[0])
+    detectorFrame = polychromeIFS(par,lam_midpts,inCube[0],parallel=True,wavelist_endpts=lam_endpts)
     Image(data=detectorFrame,header=par.hdr).write(par.unitTestsOutputs+'/'+outname,clobber=True)
     
     
-if __name__ == '__main__':
-    testLoadKernels()

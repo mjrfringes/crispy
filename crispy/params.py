@@ -19,6 +19,7 @@ class Params():
         self.saveRotatedInput = False
         self.saveLensletPlane = False 
         self.saveDetector = True
+        self.savePoly = False # save polychromatic cubes
         self.codeRoot = codeRoot
         self.prefix = self.codeRoot+'/ReferenceFiles'
         self.exportDir = self.codeRoot+'/SimResults'

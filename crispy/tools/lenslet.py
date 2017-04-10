@@ -30,8 +30,8 @@ def processImagePlane(par,imagePlane):
     ----------
     par :   Parameters instance
             Contains all IFS parameters
-    imagePlane : Image instance containing 3D input cube
-            Input cube to IFS sim, first dimension of data is wavelength
+    imagePlane : 2D array
+            Input slice to IFS sim, first dimension of data is wavelength
 
     Returns
     -------
@@ -58,6 +58,171 @@ def processImagePlane(par,imagePlane):
     log.debug('Input plane is %dx%d' % imagePlaneRot.shape)
     
     return imagePlaneRot
+
+
+
+def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None, 
+                     upsample=5, nlam=10,npix=13):
+    """
+    """
+
+    padding = 10
+    ydim,xdim = imageplane.shape
+    
+    xindx = np.arange(-xdim//2, -xdim//2+xdim)
+    xindx, yindx = np.meshgrid(xindx, xindx)
+    
+#     val = imageplane[jcoord+imageplane.shape[0]//2,icoord+imageplane.shape[0]//2]
+
+    image = np.zeros((par.npix + 2*padding, par.npix + 2*padding))
+    x = np.arange(image.shape[0])
+    x, y = np.meshgrid(x, x)
+
+#     dloglam = (np.log(lam2) - np.log(lam1))/nlam
+#     loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
+# 
+#     for lam in np.exp(loglam):
+    for lam in np.linspace(lam1,lam2,nlam):
+
+
+#         if not par.gaussian:
+        ################################################################
+        # Build the appropriate average hires image by averaging over
+        # the nearest wavelengths.  Then apply a spline filter to the
+        # interpolated high resolution PSFlet images to avoid having
+        # to do this later, saving a factor of a few in time.
+        ################################################################
+    
+        if (hires_arrs is None) or (lam_arr is None):
+            log.error('No template PSFLets given!')
+            return
+        else:
+            hires = np.zeros((hires_arrs[0].shape))
+            if lam <= np.amin(lam_arr):
+                hires[:] = hires_arrs[0]
+            elif lam >= np.amax(lam_arr):
+                hires[:] = hires_arrs[-1]
+            else:
+                i1 = np.amax(np.arange(len(lam_arr))[np.where(lam > lam_arr)])
+                i2 = i1 + 1
+                hires = hires_arrs[i1]*(lam - lam_arr[i1])/(lam_arr[i2] - lam_arr[i1])
+                hires += hires_arrs[i2]*(lam_arr[i2] - lam)/(lam_arr[i2] - lam_arr[i1])
+
+            for i in range(hires.shape[0]):
+                for j in range(hires.shape[1]):
+                    hires[i, j] = ndimage.spline_filter(hires[i, j])
+        
+
+        ################################################################
+        # Run through lenslet centroids at this wavelength using the
+        # fitted coefficients in psftool to get the centroids.  For
+        # each centroid, compute the weights for the four nearest
+        # regions on which the high-resolution PSFlets have been made.
+        # Interpolate the high-resolution PSFlets and take their
+        # weighted average, adding this to the image in the
+        # appropriate place.
+        ################################################################
+
+        ################################################################
+        # NOTE THE NEGATIVE SIGN TO PHILENS
+        # here is where one could import any kind of polynomial mapping
+        # and introduce distortions
+        ################################################################
+        order = 3
+        dispersion = par.npixperdlam*par.R*(lam-par.FWHMlam)/par.FWHMlam
+        coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=0, y0=dispersion)
+        ycen, xcen = transform(xindx, yindx, order, coef)
+        xcen+=par.npix//2
+        ycen+=par.npix//2
+
+        xcen += padding
+        ycen += padding
+        xindx = np.reshape(xindx,-1)
+        yindx = np.reshape(yindx,-1)
+        xcen = np.reshape(xcen, -1)
+        ycen = np.reshape(ycen, -1)
+        for i in range(xcen.shape[0]):
+            if not (xcen[i] > npix//2 and xcen[i] < image.shape[0] - npix//2 and 
+                    ycen[i] > npix//2 and ycen[i] < image.shape[0] - npix//2):
+                continue
+                
+            # these are the coordinates of the lenslet within the image plane
+            Ycoord = yindx[i] + imageplane.shape[0]//2
+            Xcoord = xindx[i] + imageplane.shape[1]//2
+            
+            if not (Xcoord>0 and Xcoord<imageplane.shape[1] and Ycoord>0 and Ycoord<imageplane.shape[0]):
+                continue
+            
+            val = imageplane[Ycoord,Xcoord]
+            
+            # if the value is 0, don't waste time
+            if val==0.0:
+                continue
+                
+            # central pixel -> npix*upsample//2
+            iy1 = int(ycen[i]) - npix//2
+            iy2 = iy1 + npix
+            ix1 = int(xcen[i]) - npix//2
+            ix2 = ix1 + npix
+            
+            # Now find the closest high-resolution PSFs from a library
+            yinterp = (y[iy1:iy2, ix1:ix2] - ycen[i])*upsample + upsample*npix/2
+            xinterp = (x[iy1:iy2, ix1:ix2] - xcen[i])*upsample + upsample*npix/2
+        
+            
+            if hires.shape[0]==1 and hires.shape[1]==1:
+                image[iy1:iy2, ix1:ix2] += val*ndimage.map_coordinates(hires[0,0], [yinterp, xinterp], prefilter=False)/nlam
+            else:
+                x_hires = xcen[i]*1./image.shape[1]
+                y_hires = ycen[i]*1./image.shape[0]
+        
+                x_hires = x_hires*hires_arrs[0].shape[1] - 0.5
+                y_hires = y_hires*hires_arrs[0].shape[0] - 0.5
+        
+                totweight = 0
+        
+                if x_hires <= 0:
+                    i1 = i2 = 0
+                elif x_hires >= hires_arrs[0].shape[1] - 1:
+                    i1 = i2 = hires_arrs[0].shape[1] - 1
+                else:
+                    i1 = int(x_hires)
+                    i2 = i1 + 1
+
+                if y_hires < 0:
+                    j1 = j2 = 0
+                elif y_hires >= hires_arrs[0].shape[0] - 1:
+                    j1 = j2 = hires_arrs[0].shape[0] - 1
+                else:
+                    j1 = int(y_hires)
+                    j2 = j1 + 1
+
+
+        
+                ##############################################################
+                # Bilinear interpolation by hand.  Do not extrapolate, but
+                # instead use the nearest PSFlet near the edge of the
+                # image.  The outer regions will therefore have slightly
+                # less reliable PSFlet reconstructions.  Then take the
+                # weighted average of the interpolated PSFlets.
+                ##############################################################
+                weight22 = max(0, (x_hires - i1)*(y_hires - j1))
+                weight12 = max(0, (x_hires - i1)*(j2 - y_hires))
+                weight21 = max(0, (i2 - x_hires)*(y_hires - j1))
+                weight11 = max(0, (i2 - x_hires)*(j2 - y_hires))
+                totweight = weight11 + weight21 + weight12 + weight22
+                weight11 /= totweight*nlam
+                weight12 /= totweight*nlam
+                weight21 /= totweight*nlam
+                weight22 /= totweight*nlam
+
+                image[iy1:iy2, ix1:ix2] += val*weight11*ndimage.map_coordinates(hires[j1, i1], [yinterp, xinterp], prefilter=False)
+                image[iy1:iy2, ix1:ix2] += val*weight12*ndimage.map_coordinates(hires[j1, i2], [yinterp, xinterp], prefilter=False)
+                image[iy1:iy2, ix1:ix2] += val*weight21*ndimage.map_coordinates(hires[j2, i1], [yinterp, xinterp], prefilter=False)
+                image[iy1:iy2, ix1:ix2] += val*weight22*ndimage.map_coordinates(hires[j2, i2], [yinterp, xinterp], prefilter=False)
+     
+    image = image[padding:-padding, padding:-padding]
+    return image
 
 
 
@@ -164,16 +329,12 @@ def Lenslets(par, imageplane, lam,lensletplane, allweights=None,kernels=None,loc
                     rsx = sx-isx
                     rsy = sy-isy
                     sig = par.FWHM/2.35
-                    #psflet = np.exp(-((_x- rsx)**2+(_y- rsy)**2)/(2*(sig*lam*1000/par.FWHMlam)**2))
-                    sigma = (sig*lam*1000/par.FWHMlam)
-#                     psflet = (((erf((x - x_0 + 0.5) / (np.sqrt(2) * sigma)) -
-#                         erf((x - x_0 - 0.5) / (np.sqrt(2) * sigma))) *
-#                         (erf((y - y_0 + 0.5) / (np.sqrt(2) * sigma)) -
-#                         erf((y - y_0 - 0.5) / (np.sqrt(2) * sigma)))))
-                    psflet = (erf((_x - rsx + 0.5) / (np.sqrt(2) * sigma)) - \
-                        erf((_x - rsx - 0.5) / (np.sqrt(2) * sigma))) * \
-                        (erf((_y - rsy + 0.5) / (np.sqrt(2) * sigma)) - \
-                        erf((_y - rsy - 0.5) / (np.sqrt(2) * sigma)))
+                    psflet = np.exp(-((_x- rsx)**2+(_y- rsy)**2)/(2*(sig*lam*1000/par.FWHMlam)**2))
+#                     sigma = (sig*lam*1000/par.FWHMlam)
+#                     psflet = (erf((_x - rsx + 0.5) / (np.sqrt(2) * sigma)) - \
+#                         erf((_x - rsx - 0.5) / (np.sqrt(2) * sigma))) * \
+#                         (erf((_y - rsy + 0.5) / (np.sqrt(2) * sigma)) - \
+#                         erf((_y - rsy - 0.5) / (np.sqrt(2) * sigma)))
                     psflet /= np.sum(psflet)
                     xlow = isy-size//2
                     xhigh = xlow+size

@@ -18,13 +18,14 @@ import time
 import matplotlib.pyplot as plt
 import tools
 from tools.image import Image
-from tools.lenslet import Lenslets,processImagePlane
+from tools.lenslet import Lenslets,processImagePlane,propagateLenslets
 from tools.spectrograph import createAllWeightsArray,selectKernel,loadKernels
 from tools.detector import rebinDetector
 from tools.plotting import plotKernels
 from tools.reduction import simpleReduction,densifiedSimpleReduction,testReduction,lstsqExtract,intOptimalExtract,GPImethod2
 import multiprocessing
 from tools.par_utils import Task, Consumer
+from tools.wavecal import get_sim_hires
 
 from tools.initLogger import getLogger
 log = getLogger('crispy')
@@ -95,6 +96,153 @@ def propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame,
     if par.saveLensletPlane: Image(data=finalFrame).write(par.exportDir+'/lensletPlane_%3.1fnm.fits' % (lam*1000.))
     return True
 
+
+def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, wavelist_endpts=None,dlambda=None,lam_arr=None):
+    '''
+    Propagates an input cube through the Integral Field Spectrograph
+    
+    Parameters
+    ----------
+    par :   Parameter instance
+            with at least the key IFS parameters, interlacing and scale
+    lamlist : list of floats
+            List of wavelengths in microns
+    inputcube : Image
+            or HDU. data is 3D ndarray with first dimension the same length as lamlist
+            header needs to contain the 'PIXSIZE' and 'LAM_C' keywords
+    Returns
+    -------
+    detectorFrame : 2D array
+            Return the detector frame
+    '''
+    par.makeHeader()
+    par.hdr.append(('comment', ''), end=True)
+    par.hdr.append(('comment', '*'*60), end=True)
+    par.hdr.append(('comment', '*'*22 + ' IFS Simulation ' + '*'*18), end=True)
+    par.hdr.append(('comment', '*'*60), end=True)    
+    par.hdr.append(('comment', ''), end=True)
+    
+    try:
+        input_sampling = inputcube.header['PIXSIZE']
+        input_wav = inputcube.header['LAM_C']*1000.
+    except:
+        log.error('Missing header information in input file')
+        raise
+
+    ###################################################################### 
+    # Calculate sampling ratio to resample rotated image and match the lenslet sampling
+    ###################################################################### 
+
+    par.pixperlenslet = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)
+    log.debug('The number of input pixels per lenslet is %f' % par.pixperlenslet)
+    par.hdr.append(('SCALE',par.pixperlenslet,'Factor by which the input slice is rescaled'), end=True) 
+
+    nframes = inputcube.data.shape[0]
+    allweights = None
+    
+    if inputcube.data.shape[0] != len(wavelist):
+        log.error('Number of wavelengths does not match the number of slices')
+
+    ###################################################################### 
+    # Create cube that is interpolated to the correct level if necessary
+    ###################################################################### 
+    waveList,interpolatedInputCube = prepareCube(par,wavelist,inputcube)
+
+    ###################################################################### 
+    # Defines an array of times for performance monitoring
+    ###################################################################### 
+    t = {'Start':time.time()}
+
+    if not par.gaussian:
+        log.info('Using templates PSFLets')
+    else:
+        log.info('Using PSFlet gaussian approximation')
+        
+    ###################################################################### 
+    # Allocate arrays, make sure you have abundant memory
+    ###################################################################### 
+    finalFrame=np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
+    polyimage=np.zeros((len(waveList), par.npix*par.pxperdetpix, par.npix*par.pxperdetpix))
+    
+    
+    ###################################################################### 
+    # Determine wavelength endpoints
+    ###################################################################### 
+    if wavelist_endpts is None:
+        log.info('Assuming slices are evenly spread in wavelengths')
+        if len(waveList)>1:
+            dlam = waveList[1]-waveList[0]
+            wavelist_endpts = np.zeros(len(waveList)+1)
+            wavelist_endpts[:-1] = waveList-dlam/2.
+            wavelist_endpts[-1] = waveList[-1]+dlam/2.
+        else:
+            if dlambda is None:
+                log.error('No bandwidth specified')
+            else:
+                wavelist_endpts=np.array([waveList[0]-dlambda/2.,waveList[0]+dlambda/2.])
+    else:
+        log.info('Assuming endpoints wavelist is given')
+    print wavelist_endpts
+    
+    ###################################################################### 
+    # Load template PSFLets
+    ###################################################################### 
+    if par.gaussian:
+        hires_arrs = []
+        if lam_arr is None:
+            lam_arr=np.arange(700.,845.,10.)  # hard coded for now, need to modify this
+        for i in range(len(lam_arr)):
+            hiresarr = get_sim_hires(par, lam_arr[i])               
+            hires_arrs += [hiresarr]
+    else:
+        log.error('Importing PSFLets is not yet implemented')
+    
+    inputCube = []
+    
+    if parallel==False:
+        for i in range(len(waveList)):
+            imagePlaneRot = (wavelist_endpts[i + 1]-wavelist_endpts[i])*processImagePlane(par,interpolatedInputCube.data[i])
+            inputCube += [imagePlaneRot]
+            polyimage[i] = propagateLenslets(par,imagePlaneRot, 
+                            wavelist_endpts[i], wavelist_endpts[i + 1],
+                            hires_arrs,lam_arr,10)
+    else:
+        tasks = multiprocessing.Queue()
+        results = multiprocessing.Queue()
+        ncpus = multiprocessing.cpu_count()
+        consumers = [ Consumer(tasks, results)
+                      for i in range(ncpus) ]
+        for w in consumers:
+            w.start()
+    
+        for i in range(len(waveList)):
+            imagePlaneRot = (wavelist_endpts[i + 1]-wavelist_endpts[i])*processImagePlane(par,interpolatedInputCube.data[i])
+            inputCube += [imagePlaneRot]
+            tasks.put(Task(i, propagateLenslets, (par,imagePlaneRot,
+                        wavelist_endpts[i], wavelist_endpts[i + 1],
+                        hires_arrs,lam_arr,10)))
+    
+        for i in range(ncpus):
+            tasks.put(None)
+        for i in range(len(waveList)):
+            index, poly = results.get()
+            polyimage[index] = poly
+    
+    if par.saveRotatedInput: Image(data=np.array(inputCube),header=par.hdr).write(par.exportDir+'/imagePlaneRot.fits')
+    if par.savePoly: Image(data=polyimage,header=par.hdr).write(par.exportDir+'/'+name+'poly.fits') 
+    
+    finalFrame = np.sum(polyimage,axis=0)
+    
+    detectorFrame = rebinDetector(par,finalFrame,clip=False)
+    if par.saveDetector: Image(data=detectorFrame,header=par.hdr).write(par.exportDir+'/'+name+'.fits') 
+    log.info('Done.')
+    t['End'] = time.time()
+    log.info("Performance: %d seconds total" % (t['End'] - t['Start']))
+
+    return detectorFrame
+
+        
+    
 
 def propagateIFS(par,wavelist,inputcube,name='detectorFrame'):
     '''
@@ -178,7 +326,6 @@ def propagateIFS(par,wavelist,inputcube,name='detectorFrame'):
     finalFrame=np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
 
     if not par.gaussian:
-        log.info('Small pixels per lenslet: %f' % (par.pxprlens))    
         log.info('Final detector pixel per lenslet: %f' % (par.pxprlens/par.pxperdetpix))
     else:
         log.info('Final detector pixel per PSFLet: %f' % (int(3*par.pitch/par.pixsize)))
@@ -385,7 +532,7 @@ def prepareCube(par,wavelist,inputcube):
     
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('comment', '*'*60), end=True)
-    par.hdr.append(('comment', '*'*22 + ' Innput info ' + '*'*25), end=True)
+    par.hdr.append(('comment', '*'*22 + ' Input info ' + '*'*25), end=True)
     par.hdr.append(('comment', '*'*60), end=True)    
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('INSLICES',len(wavelist),'Number of wavelengths in input cube'), end=True) 
@@ -395,6 +542,25 @@ def prepareCube(par,wavelist,inputcube):
     outcube = Image(data=inputcube.data,header=inputcube.header)
     return wavelist,outcube
 
-if __name__ == '__main__':
-    main()
+
+
+def createWavecalFiles(par,lamlist,lamc=770.,dlam=2.):
+    '''
+    Creates a set of monochromatic IFS images to be used in wavelength calibration step
+    '''
+    
+    par.saveDetector=False
+    inputCube = np.ones((1,512,512),dtype=float)
+    inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))
+    inCube[0].header['LAM_C'] = lamc/1000.
+    inCube[0].header['PIXSIZE'] = 0.1
+    filelist = []
+    for wav in lamlist:
+#         detectorFrame = propagateIFS(par,[wav*1e-3],inCube[0])
+        detectorFrame = polychromeIFS(par,[wav],inCube[0],dlambda=dlam,parallel=False)
+        filename = par.wavecalDir+'det_%3d.fits' % (wav)
+        filelist.append(filename)
+        Image(data=detectorFrame).write(filename)
+    par.lamlist = lamlist
+    par.filelist = filelist
 

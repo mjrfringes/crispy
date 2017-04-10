@@ -460,7 +460,7 @@ def testReduction(par,name,ifsimage):
     pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
     return cube
 
-def calculateWaveList(par,lam_list=None):
+def calculateWaveList(par,lam_list=None,Nspec=None):
 
     '''
     Computes the wavelength lists corresponding to the center and endpoints of each
@@ -489,15 +489,18 @@ def calculateWaveList(par,lam_list=None):
         lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
     else:
         lamlist = lam_list
-    Nspec = int(np.log(max(lamlist)/min(lamlist))*par.npixperdlam*par.R)
+    if Nspec is None:
+        Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*par.npixperdlam+2)
     log.info('Reduced cube will have %d wavelength bins' % (Nspec-1))
     loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
     loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
     lam_endpts = np.exp(loglam_endpts)
     lam_midpts = np.exp(loglam_midpts)
+#     lam_endpts = np.linspace(min(lamlist), max(lamlist), Nspec)
+#     lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
     return lam_midpts,lam_endpts
 
-def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=True):
+def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=False,smoothandmask=False):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -527,23 +530,17 @@ def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=True):
     
     if ivar:
         if ifsimage.ivar is None:
-            ifsimage.ivar = ifsimage.data.copy()
-            ifsimage.ivar = 1./ifsimage.ivar
-        else:
-            ifsimage.ivar = None
+            ifsimage.ivar = np.ones(ifsimage.data.shape)
     else:
         ifsimage.ivar = None
         
     cube = np.zeros((psflets.shape[0],par.nlens,par.nlens))
 
     resid = np.empty(ifsimage.data.shape)
-    resid[:] = ifsimage.data
-    newresid = np.empty(ifsimage.data.shape)
-    newresid[:] = ifsimage.data
+    resid = ifsimage.data.copy()
     
     
     ydim,xdim = ifsimage.data.shape
-    residual = np.zeros(ifsimage.data.shape)
     for i in range(par.nlens):
         for j in range(par.nlens):
             xlist = []
@@ -558,36 +555,78 @@ def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=True):
             if good:
                 subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xlist,ylist,psflets,dy)
                 cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
-                for ilam in range(psflet_subarr.shape[0]):
-                    resid[y0:y1, x0:x1] -= cube[ilam,j,i]*psflet_subarr[ilam]
+#                 for ilam in range(psflet_subarr.shape[0]):
+#                     resid[y0:y1, x0:x1] -= cube[ilam,j,i]*psflet_subarr[ilam]
             else:
                 cube[:,j,i] = np.NaN
-                
-    resid_img = Image(data=resid)    
-    if refine:
-        for i in range(par.nlens):
-            for j in range(par.nlens):
-                xlist = []
-                ylist = []
-                good = True
-                for lam in lamlist:
-                    _x,_y = psftool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
-                    good *= (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
-                    xlist += [_x]    
-                    ylist += [_y]   
-                
-                if good:
-                    subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(resid_img,xlist,ylist,psflets,dy)
-                    cube[:,j,i] += fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
-                    for ilam in range(psflet_subarr.shape[0]):
-                        newresid[y0:y1, x0:x1] -= cube[ilam,j,i]*psflet_subarr[ilam]
-                else:
-                    cube[:,j,i] = np.NaN
-                    
     
-    pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
-    pyf.PrimaryHDU(resid).writeto(name+'_resid.fits',clobber=True)
-    pyf.PrimaryHDU(newresid).writeto(name+'_newresid.fits',clobber=True)
+    xindx = np.arange(-par.nlens/2, par.nlens/2)
+    xindx, yindx = np.meshgrid(xindx, xindx)
+    lam_midpts,lam_endpts = calculateWaveList(par)
+    for i in range(len(psflets)):
+        ydim,xdim=ifsimage.data.shape
+        _x,_y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
+        good = (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
+        psflet_indx = _tag_psflets(ifsimage.data.shape, _x, _y, good,dy=10)
+        coefs_flat = np.reshape(cube[i].transpose(), -1)
+        resid -= psflets[i]*coefs_flat[psflet_indx]
+#         Image(data=psflets[i]*coefs_flat[psflet_indx]).write(par.exportDir+'/test_%d.fits' % i)
+#     for i in range(len(psflets)):
+#         _x,_y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
+#         good = (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
+#         psflet_indx = _tag_psflets(ifsimage.data.shape, _x, _y, good,dy=10)
+#         #psflet_indx = _tag_psflets(psflets[i].shape, x[i], y[i], good[i],
+#         #                           dx[i], dy[i])
+#         coefs_flat = np.reshape(cube[i].transpose(), -1)
+#         resid -= psflets[i]*coefs_flat[psflet_indx]
+                
+#     resid_img = Image(data=resid)    
+#     newresid = np.empty(resid.shape)
+#     newresid = resid.copy()
+#     if refine:
+#         for i in range(par.nlens):
+#             for j in range(par.nlens):
+#                 xlist = []
+#                 ylist = []
+#                 good = True
+#                 for lam in lamlist:
+#                     _x,_y = psftool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
+#                     good *= (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
+#                     xlist += [_x]    
+#                     ylist += [_y]   
+#                 
+#                 if good:
+#                     subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(resid_img,xlist,ylist,psflets,dy)
+#                     cube[:,j,i] += fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
+#                     for ilam in range(psflet_subarr.shape[0]):
+#                         newresid[y0:y1, x0:x1] -= cube[ilam,j,i]*psflet_subarr[ilam]
+#                 else:
+#                     cube[:,j,i] = np.NaN
+
+    if 'cubemode' not in par.hdr:
+        par.hdr.append(('cubemode','Least squares', 'Method used to extract data cube'), end=True)
+        par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum mid wavelength of extracted cube'), end=True)
+        par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum mid wavelength of extracted cube'), end=True)
+        par.hdr.append(('dlam',(np.amax(lamlist)-np.amin(lamlist))/nlam, 'Spacing of extracted wavelength bins'), end=True)
+        par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
+    
+    if smoothandmask:
+        par.hdr.append(('SMOOTHED',True, 'Cube smoothed over bad lenslets'), end=True)
+        cube = Image(data=cube,ivar=ivarcube)
+        good = np.any(cube.data != 0, axis=0)
+        cube = _smoothandmask(cube, good)
+    else:
+        par.hdr.append(('SMOOTHED',False, 'Cube NOT smoothed over bad lenslets'), end=True)
+        cube = Image(data=cube,ivar=ivarcube)
+
+    cube = Image(data=cube.data,ivar=cube.ivar,header=par.hdr,extraheader=im.extraheader)
+
+
+    #pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
+    #pyf.PrimaryHDU(resid).writeto(name+'_resid.fits',clobber=True)
+    Image(data=cube,header=par.hdr,extraheader=im.extraheader).write(name+'.fits',clobber=True)
+    Image(data=resid,header=par.hdr,extraheader=im.extraheader).write(name+'_resid.fits',clobber=True)
+#     pyf.PrimaryHDU(newresid).writeto(name+'_newresid.fits',clobber=True)
     return cube
 
 def get_cutout(im, x, y, psflets, dy=3):
@@ -700,6 +739,74 @@ def fit_cutout(subim, psflets, mode='lstsq'):
 
     return coef
 
+def _tag_psflets(shape, x, y, good, dx=6, dy=6):
+    """
+    Create an array with the index of each lenslet at a given
+    wavelength.  This will make it very easy to remove the best-fit
+    spectra accounting for nearest-neighbor crosstalk.
+
+    Parameters
+    ----------
+    shape:  tuple
+        Shape of the image and psflet arrays.
+    x:      ndarray
+        x indices of the PSFlet centroids at a given wavelength
+    y:      ndarray
+        y indices of the PSFlet centroids
+    good:  boolean ndarray
+        True if the PSFlet falls on the detector
+
+    Returns
+    -------
+    psflet_indx: ndarray
+        Has the requested input shape (matching the PSFlet image). 
+        The array contains the indices of the closest lenslet to each
+        pixel at the wavelength of x and y
+
+    Notes
+    -----
+    The output, psflet_indx, is to be used as follows:
+    coefs[psflet_indx] will give the scaling of the monochromatic PSF-let
+    frame.
+
+    """
+
+    psflet_indx = np.zeros(shape, np.int)
+    oldshape = x.shape
+    x_int = (np.reshape(x + 0.5, -1)).astype(int)
+    y_int = (np.reshape(y + 0.5, -1)).astype(int)
+    
+    good = np.reshape(good, -1)
+    x = np.reshape(x, -1)
+    y = np.reshape(y, -1)
+
+    x_i = np.arange(shape[1])
+    y_i = np.arange(shape[0])
+    x_i, y_i = np.meshgrid(x_i, y_i)
+
+    mindist = np.ones(shape)*1e10
+
+    for i in range(x_int.shape[0]):
+        if good[i]:
+            #psflet_indx[y_int[i] - 6:y_int[i] + 7, x_int[i] - 6:x_int[i] + 7] = i
+            iy1, iy2 = [y_int[i] - dy, y_int[i] + dy + 1]
+            ix1, ix2 = [x_int[i] - dx, x_int[i] + dx + 1]
+
+            dist = (y[i] - y_i[iy1:iy2, ix1:ix2])**2 
+            dist += (x[i] - x_i[iy1:iy2, ix1:ix2])**2
+            indx = np.where(dist < mindist[iy1:iy2, ix1:ix2])
+
+            psflet_indx[iy1:iy2, ix1:ix2][indx] = i
+            mindist[iy1:iy2, ix1:ix2][indx] = dist[indx]
+            
+    good = np.reshape(good, oldshape)
+    x = np.reshape(x, oldshape)
+    y = np.reshape(y, oldshape)
+
+    return psflet_indx
+
+
+
 
 def intOptimalExtract(par,name,IFSimage):
     """
@@ -727,6 +834,7 @@ def intOptimalExtract(par,name,IFSimage):
     """
 
     loc = PSFLets(load=True, infiledir=par.wavecalDir)
+    #Nspec = int(par.BW*par.npixperdlam*par.R)
     lam_midpts,scratch = calculateWaveList(par)
     
     datacube = fitspec_intpix_np(par,IFSimage, loc, lam_midpts)
