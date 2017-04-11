@@ -1,0 +1,990 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Constructing fiducials inputs for benchmarking &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../../crispy&#39;</span>
+<span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../crispy&#39;</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+<span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;/wavecalR50_770_test/&#39;</span>
+<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[1]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>SIMPLE  =                    T / conforms to FITS standard
+BITPIX  =                    8 / array data type
+NAXIS   =                    0 / number of array dimensions
+EXTEND  =                    T
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** General parameters ******************
+COMMENT ************************************************************
+COMMENT
+NLENS   =                  108 / # lenslets across array
+PITCH   =             0.000174 / Lenslet pitch (meters)
+INTERLAC=                    2 / Interlacing
+PHILENS =    26.56505117707799 / Rotation angle of the lenslets (deg)
+PIXSIZE =              1.3E-05 / Pixel size (meters)
+LENSAMP =                  0.5 / Lenslet sampling (lam/D)
+LSAMPWAV=                660.0 / Lenslet sampling wavelength (nm)
+FWHM    =                    2 / FHWM of PSFLet at detector (pixels)
+FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
+NPIX    =                 1024 / Number of detector pixels
+DISPDIST=                    F / Use PISCES distortion/dispersion?
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMapList</span>
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s2">&quot;det*.fits&quot;</span><span class="p">))</span>
+<span class="n">reduceIFSMapList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">filelist</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_700.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_710.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_720.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_730.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_740.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_750.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_760.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_770.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_780.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_790.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_800.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_810.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_820.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_830.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_840.fits
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Elapsed time: 128.535863s
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;whitegrid&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">red_filelist</span> <span class="o">=</span> <span class="p">[</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_red_lstsq.fits&#39;</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">lam_mid</span><span class="p">,</span><span class="n">lam_end</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">red_filelist</span><span class="p">:</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">wavs</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_mid</span><span class="p">,</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="n">ny</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Flux (photons/s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_700_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_710_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_720_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_730_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_740_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_750_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_760_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_770_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_780_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_790_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_800_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_810_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_820_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_830_red_lstsq.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/det_840_red_lstsq.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_CodeCharacterization_2_1.png" src="../_images/notebooks_CodeCharacterization_2_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_CodeCharacterization_3_0.png" src="../_images/notebooks_CodeCharacterization_3_0.png" />
+</div>
+</div>
+<div class="section" id="Constructing-fiducials-inputs-for-benchmarking">
+<h1>Constructing fiducials inputs for benchmarking<a class="headerlink" href="#Constructing-fiducials-inputs-for-benchmarking" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="monochromatic-wavelengths-at-different-separations">
+<h2>monochromatic wavelengths at different separations<a class="headerlink" href="#monochromatic-wavelengths-at-different-separations" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">polychromeIFS</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveDetector</span><span class="o">=</span><span class="bp">False</span>
+<span class="n">inputCube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">512</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">inCube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">inputCube</span><span class="p">))</span>
+<span class="n">lamc</span> <span class="o">=</span> <span class="mf">770.</span>
+<span class="n">inCube</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">/</span><span class="mf">1000.</span>
+<span class="n">inCube</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PIXSIZE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">dlam</span><span class="o">=</span><span class="mf">2.</span>
+<span class="n">filelist</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">polychromeIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,[</span><span class="mf">749.</span><span class="p">],</span><span class="n">inCube</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">dlambda</span><span class="o">=</span><span class="n">dlam</span><span class="p">,</span><span class="n">parallel</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">separation</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">polychromeIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,[</span><span class="mf">749.</span><span class="o">+</span><span class="n">separation</span><span class="p">],</span><span class="n">inCube</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">dlambda</span><span class="o">=</span><span class="n">dlam</span><span class="p">,</span><span class="n">parallel</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/sep</span><span class="si">%d</span><span class="s1">.fits&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">separation</span><span class="p">)</span>
+    <span class="n">filelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">detectorFrame</span><span class="o">+</span><span class="n">ref</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 748.  750.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 750.  752.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep2.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 752.  754.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep4.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 754.  756.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep6.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 756.  758.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep8.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 758.  760.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep10.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 760.  762.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 5 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep12.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 762.  764.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep14.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 764.  766.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep16.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 766.  768.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep18.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 768.  770.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep20.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 770.  772.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep22.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 772.  774.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep24.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 774.  776.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep26.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 776.  778.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep28.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 778.  780.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep30.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 780.  782.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep32.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 782.  784.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep34.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 784.  786.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep36.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 786.  788.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep38.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 788.  790.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep40.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 790.  792.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep42.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 792.  794.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep44.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 794.  796.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep46.fits
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming slices are evenly spread in wavelengths
+[ 796.  798.]
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep48.fits
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMapList</span>
+
+<span class="k">def</span> <span class="nf">sort_nicely</span><span class="p">(</span> <span class="n">l</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Sort the given list in the way that humans expect.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">convert</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">text</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">text</span>
+    <span class="n">alphanum_key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="p">[</span> <span class="n">convert</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;([0-9]+)&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="p">]</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span> <span class="n">key</span><span class="o">=</span><span class="n">alphanum_key</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">l</span>
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">sort_nicely</span><span class="p">([</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span> <span class="o">+</span> <span class="s2">&quot;/sep*.fits&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;red&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="p">])</span>
+<span class="c1">#reduceIFSMapList(par,filelist,method=&#39;lstsq&#39;)</span>
+<span class="n">reduceIFSMapList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">filelist</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">filelist</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;whitegrid&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_palette</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">diverging_palette</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">25</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="c1">#red_filelist = [par.exportDir+&quot;/&quot;+filename.split(&#39;/&#39;)[-1].split(&#39;.&#39;)[0]+&#39;_red_lstsq.fits&#39; for filename in filelist]</span>
+<span class="n">red_filelist</span> <span class="o">=</span> <span class="p">[</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_red_optext.fits&#39;</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">red_filelist</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">Nspec</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">npixperdlam</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">lam_mid</span><span class="p">,</span><span class="n">lam_end</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">Nspec</span><span class="o">=</span><span class="n">Nspec</span><span class="p">)</span>
+<span class="c1"># flatfield = Image(par.exportDir+&quot;/flatfield_red_lstsq.fits&quot;)</span>
+<span class="n">flatfield</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/flatfield_red_optext.fits&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">red_filelist</span><span class="p">:</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">wavs</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_mid</span><span class="p">,</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="n">ny</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">flatfield</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="n">ny</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;sep&quot;</span><span class="o">+</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;sep&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Flux (photons/s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep2.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep4.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep6.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep8.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep10.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep12.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep14.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep16.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep18.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep20.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep22.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep24.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep26.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep28.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep30.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep32.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep34.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep36.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep38.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep40.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep42.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep44.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep46.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep48.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep4_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep8_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep2_red_optext.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 18 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep12_red_optext.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep16_red_optext.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep6_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep14_red_optext.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep10_red_optext.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep18_red_optext.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep24_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep26_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep28_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep20_red_optext.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep30_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep22_red_optext.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep32_red_optext.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep40_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep42_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep38_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep34_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep44_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep36_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep48_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/sep46_red_optext.fits
+crispy - INFO - Elapsed time: 80.725917s
+[&#39;../../../crispy/SimResults/sep2.fits&#39;, &#39;../../../crispy/SimResults/sep4.fits&#39;, &#39;../../../crispy/SimResults/sep6.fits&#39;, &#39;../../../crispy/SimResults/sep8.fits&#39;, &#39;../../../crispy/SimResults/sep10.fits&#39;, &#39;../../../crispy/SimResults/sep12.fits&#39;, &#39;../../../crispy/SimResults/sep14.fits&#39;, &#39;../../../crispy/SimResults/sep16.fits&#39;, &#39;../../../crispy/SimResults/sep18.fits&#39;, &#39;../../../crispy/SimResults/sep20.fits&#39;, &#39;../../../crispy/SimResults/sep22.fits&#39;, &#39;../../../crispy/SimResults/sep24.fits&#39;, &#39;../../../crispy/SimResults/sep26.fits&#39;, &#39;../../../crispy/SimResults/sep28.fits&#39;, &#39;../../../crispy/SimResults/sep30.fits&#39;, &#39;../../../crispy/SimResults/sep32.fits&#39;, &#39;../../../crispy/SimResults/sep34.fits&#39;, &#39;../../../crispy/SimResults/sep36.fits&#39;, &#39;../../../crispy/SimResults/sep38.fits&#39;, &#39;../../../crispy/SimResults/sep40.fits&#39;, &#39;../../../crispy/SimResults/sep42.fits&#39;, &#39;../../../crispy/SimResults/sep44.fits&#39;, &#39;../../../crispy/SimResults/sep46.fits&#39;, &#39;../../../crispy/SimResults/sep48.fits&#39;]
+[&#39;../../../crispy/SimResults/sep2_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep4_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep6_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep8_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep10_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep12_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep14_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep16_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep18_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep20_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep22_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep24_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep26_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep28_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep30_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep32_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep34_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep36_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep38_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep40_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep42_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep44_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep46_red_optext.fits&#39;, &#39;../../../crispy/SimResults/sep48_red_optext.fits&#39;]
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/flatfield_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/flatfield_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep2_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep2_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep4_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep4_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep6_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep6_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep8_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep8_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep10_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep10_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep12_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep12_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep14_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep14_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep16_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep16_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep18_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep18_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep20_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep20_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep22_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep22_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep24_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep24_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep26_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep26_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep28_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep28_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep30_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep30_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep32_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep32_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep34_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep34_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep36_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep36_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep38_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep38_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep40_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep40_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep42_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep42_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep44_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep44_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep46_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep46_red_optext.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/sep48_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/sep48_red_optext.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_CodeCharacterization_7_11.png" src="../_images/notebooks_CodeCharacterization_7_11.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">Nspec</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">npixperdlam</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">lam_mid</span><span class="p">,</span><span class="n">lam_end</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">Nspec</span><span class="o">=</span><span class="n">Nspec</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">lam_mid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 18 wavelength bins
+[ 703.88888889  711.66666667  719.44444444  727.22222222  735.
+  742.77777778  750.55555556  758.33333333  766.11111111  773.88888889
+  781.66666667  789.44444444  797.22222222  805.          812.77777778
+  820.55555556  828.33333333  836.11111111]
+</pre></div></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Constructing fiducials inputs for benchmarking</a><ul>
+<li><a class="reference internal" href="#monochromatic-wavelengths-at-different-separations">monochromatic wavelengths at different separations</a></li>
+</ul>
+</li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/CodeCharacterization.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 11 Apr 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>
