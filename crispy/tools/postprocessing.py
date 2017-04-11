@@ -1,23 +1,29 @@
 import numpy as np
 import astropy.units as u
 import astropy.constants as c
-from inputScene import convert_krist_cube,calc_contrast,calc_contrast_Bijan
+from crispy.tools.inputScene import convert_krist_cube,calc_contrast,calc_contrast_Bijan
 import glob
-from crispy.IFS import propagateIFS,reduceIFSMap
+from crispy.IFS import propagateIFS,reduceIFSMap,polychromeIFS
 from initLogger import getLogger
 log = getLogger('crispy')
-from image import Image
+from crispy.tools.image import Image
 try:
     from astropy.io import fits
 except:
     import pyfits as fits
 from time import time
 import os
-from detector import averageDetectorReadout,noiselessDetector,readDetector
+from crispy.tools.detector import averageDetectorReadout,noiselessDetector,readDetector
 import matplotlib.pyplot as plt
 
 import multiprocessing
-from par_utils import Task, Consumer
+from crispy.tools.par_utils import Task, Consumer
+import seaborn as sns
+from crispy.tools.inputScene import calc_contrast
+from crispy.tools.reduction import calculateWaveList
+from scipy import ndimage
+from scipy.interpolate import interp1d
+
 
 def process_SPC_IFS(par,
                     psf_time_series_folder,
@@ -162,7 +168,7 @@ def process_SPC_IFS(par,
                     cube.header['PIXSIZE']*=lamc/0.77
                 par.saveDetector=False  
 
-                tasks.put(Task(i, propagateIFS, (par, lamlist.value/1000.,cube)))
+                tasks.put(Task(i, polychromeIFS, (par, lamlist.value,cube)))
 
             for i in range(ncpus):
                 tasks.put(None)
@@ -211,7 +217,7 @@ def process_SPC_IFS(par,
                     cube.header['PIXSIZE']*=lamc/0.77
                 par.saveDetector=False  
 
-                detectorFrame = propagateIFS(par,lamlist.value/1000.,cube)
+                detectorFrame = polychromeIFS(par,lamlist.value,cube)
 
                 if i<n_ref_star_imgs:
                     Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
@@ -892,11 +898,6 @@ def SPC_process_offaxis_only(par,offaxis_psf_filename,
     return signal,noise,off
 
 
-import seaborn as sns
-from tools.inputScene import calc_contrast
-from tools.reduction import calculateWaveList
-from scipy import ndimage
-from scipy.interpolate import interp1d
 
 def SNR_spectrum(lam_midpts,signal, noise, plot=True,outname = 'SNR.png', outfolder = '',title='Planet+star',edges=1,):
     #lam_midpts,junk = calculateWaveList(par)
