@@ -256,6 +256,7 @@ div.nboutput div.output_area.stderr {
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
 
@@ -264,7 +265,7 @@ div.nboutput div.output_area.stderr {
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [2]:
+<span></span>In [1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -279,14 +280,48 @@ div.nboutput div.output_area.stderr {
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
+<div class="section" id="This-is-a-test-wavecal-with-slightly-different-PSFLet-models">
+<h2>This is a test wavecal with slightly different PSFLet models<a class="headerlink" href="#This-is-a-test-wavecal-with-slightly-different-PSFLet-models" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;/wavecalR50_770_test/&#39;</span>
+<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
+
 </pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[3]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>SIMPLE  =                    T / conforms to FITS standard
+BITPIX  =                    8 / array data type
+NAXIS   =                    0 / number of array dimensions
+EXTEND  =                    T
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** General parameters ******************
+COMMENT ************************************************************
+COMMENT
+NLENS   =                  108 / # lenslets across array
+PITCH   =             0.000174 / Lenslet pitch (meters)
+INTERLAC=                    2 / Interlacing
+PHILENS =    26.56505117707799 / Rotation angle of the lenslets (deg)
+PIXSIZE =              1.3E-05 / Pixel size (meters)
+LENSAMP =                  0.5 / Lenslet sampling (lam/D)
+LSAMPWAV=                660.0 / Lenslet sampling wavelength (nm)
+FWHM    =                    2 / FHWM of PSFLet at detector (pixels)
+FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
+NPIX    =                 1024 / Number of detector pixels
+DISPDIST=                    F / Use PISCES distortion/dispersion?
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="create-flatfield-if-needed">
@@ -298,6 +333,8 @@ div.nboutput div.output_area.stderr {
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">crispy.unitTests</span> <span class="kn">import</span> <span class="n">testCreateFlatfield</span>
+<span class="c1"># par.savePoly = True</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveRotatedInput</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="n">testCreateFlatfield</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -307,32 +344,77 @@ div.nboutput div.output_area.stderr {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Reduced cube will have 17 wavelength bins
-crispy - INFO - The number of input pixels per lenslet is 4.303534
+crispy - INFO - Reduced cube will have 44 wavelength bins
 crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Final detector pixel per PSFLet: 40.000000
-crispy - INFO - Processing wavelength 0.703764 (0 out of 17)
-crispy - INFO - Processing wavelength 0.711352 (1 out of 17)
-crispy - INFO - Processing wavelength 0.719022 (2 out of 17)
-crispy - INFO - Processing wavelength 0.726775 (3 out of 17)
-crispy - INFO - Processing wavelength 0.734612 (4 out of 17)
-crispy - INFO - Processing wavelength 0.742533 (5 out of 17)
-crispy - INFO - Processing wavelength 0.750539 (6 out of 17)
-crispy - INFO - Processing wavelength 0.758632 (7 out of 17)
-crispy - INFO - Processing wavelength 0.766812 (8 out of 17)
-crispy - INFO - Processing wavelength 0.775080 (9 out of 17)
-crispy - INFO - Processing wavelength 0.783437 (10 out of 17)
-crispy - INFO - Processing wavelength 0.791884 (11 out of 17)
-crispy - INFO - Processing wavelength 0.800423 (12 out of 17)
-crispy - INFO - Processing wavelength 0.809054 (13 out of 17)
-crispy - INFO - Processing wavelength 0.817777 (14 out of 17)
-crispy - INFO - Processing wavelength 0.826595 (15 out of 17)
-crispy - INFO - Processing wavelength 0.835508 (16 out of 17)
+crispy - INFO - Assuming endpoints wavelist is given
+[ 700.          703.18181818  706.36363636  709.54545455  712.72727273
+  715.90909091  719.09090909  722.27272727  725.45454545  728.63636364
+  731.81818182  735.          738.18181818  741.36363636  744.54545455
+  747.72727273  750.90909091  754.09090909  757.27272727  760.45454545
+  763.63636364  766.81818182  770.          773.18181818  776.36363636
+  779.54545455  782.72727273  785.90909091  789.09090909  792.27272727
+  795.45454545  798.63636364  801.81818182  805.          808.18181818
+  811.36363636  814.54545455  817.72727273  820.90909091  824.09090909
+  827.27272727  830.45454545  833.63636364  836.81818182  840.        ]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../../crispy/SimResults/imagePlaneRot.fits
 crispy - INFO - Number of detector pixels per lenslet: 13.384615
 crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
 crispy - INFO - Done.
-crispy - INFO - Performance: 33 seconds total
+crispy - INFO - Performance: 44 seconds total
 crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/flatfield.fits
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="c1">#tmp=reduceIFSMap(par,par.wavecalDir+&#39;det_760.fits&#39;,method=&#39;lstsq&#39;)</span>
+<span class="c1"># tmp=reduceIFSMap(par,par.wavecalDir+&#39;polychromeR50stack_highdensity.fits&#39;,method=&#39;lstsq&#39;)</span>
+<span class="c1"># tmp=reduceIFSMap(par,par.unitTestsOutputs+&#39;/flatfield.fits&#39;)</span>
+<span class="c1">#tmp=reduceIFSMap(par,par.unitTestsOutputs+&#39;/flatfield.fits&#39;,method=&#39;lstsq&#39;)</span>
+<span class="n">tmp</span><span class="o">=</span><span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">)</span>
+<span class="c1"># tmp=reduceIFSMap(par,par.wavecalDir+&#39;polychromeR50stack.fits&#39;,method=&#39;lstsq&#39;)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/unitTestsOutputs/flatfield.fits
+crispy - INFO - Reduced cube will have 18 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/flatfield_red_optext.fits
+crispy - INFO - Elapsed time: 13.112292s
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -349,10 +431,73 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
+<span class="n">offaxis</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;../../../../OS5/offaxis/spc_offaxis_psf.fits&#39;</span><span class="p">)</span>
+<span class="n">lamc</span><span class="o">=</span><span class="mf">770.</span>
+<span class="n">BW</span><span class="o">=</span><span class="mf">0.17</span>
+<span class="n">offaxis</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">/</span><span class="mf">1000.</span>
+<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">polychromeIFS</span>
+<span class="n">Nlam</span> <span class="o">=</span> <span class="n">offaxis</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">lamlist</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="o">+</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">Nlam</span><span class="p">)</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">Nspec</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveDetector</span><span class="o">=</span><span class="bp">True</span>
+<span class="n">polychromeIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">offaxis</span><span class="p">,</span><span class="n">parallel</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">wavelist_endpts</span><span class="o">=</span><span class="n">lam_endpts</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of ../../../../OS5/offaxis/spc_offaxis_psf.fits
+crispy - INFO - Reduced cube will have 44 wavelength bins
+crispy - ERROR - Number of wavelengths does not match the number of slices
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - INFO - Assuming endpoints wavelist is given
+[ 700.          703.18181818  706.36363636  709.54545455  712.72727273
+  715.90909091  719.09090909  722.27272727  725.45454545  728.63636364
+  731.81818182  735.          738.18181818  741.36363636  744.54545455
+  747.72727273  750.90909091  754.09090909  757.27272727  760.45454545
+  763.63636364  766.81818182  770.          773.18181818  776.36363636
+  779.54545455  782.72727273  785.90909091  789.09090909  792.27272727
+  795.45454545  798.63636364  801.81818182  805.          808.18181818
+  811.36363636  814.54545455  817.72727273  820.90909091  824.09090909
+  827.27272727  830.45454545  833.63636364  836.81818182  840.        ]
+crispy - INFO - Writing data to ../../../crispy/SimResults/imagePlaneRot.fits
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Writing data to ../../../crispy/SimResults/detectorFrame.fits
+crispy - INFO - Done.
+crispy - INFO - Performance: 25 seconds total
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[6]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>array([[ 0.,  0.,  0., ...,  0.,  0.,  0.],
+       [ 0.,  0.,  0., ...,  0.,  0.,  0.],
+       [ 0.,  0.,  0., ...,  0.,  0.,  0.],
+       ...,
+       [ 0.,  0.,  0., ...,  0.,  0.,  0.],
+       [ 0.,  0.,  0., ...,  0.,  0.,  0.],
+       [ 0.,  0.,  0., ...,  0.,  0.,  0.]])
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
-<span class="c1">#tmp=reduceIFSMap(par,par.wavecalDir+&#39;det_760.fits&#39;,method=&#39;lstsq&#39;)</span>
-<span class="n">tmp</span><span class="o">=</span><span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
-<span class="n">tmp</span><span class="o">=</span><span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;polychromeR50stack.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+<span class="n">tmp</span><span class="o">=</span><span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/detectorFrame.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -362,21 +507,70 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ../../../crispy/unitTestsOutputs/flatfield.fits
-crispy - INFO - Elapsed time: 23.596739s
-crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/polychromeR50stack.fits
-crispy - INFO - Elapsed time: 24.745372s
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/detectorFrame.fits
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Elapsed time: 12.421115s
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [ ]:
+<span></span>In [8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span>
+<span></span><span class="n">resid</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/detectorFrame_red_lstsq_resid.fits&#39;</span><span class="p">)</span>
+<span class="n">detframe</span><span class="o">=</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/detectorFrame.fits&#39;</span><span class="p">)</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="n">resid</span><span class="o">.</span><span class="n">data</span><span class="o">/</span><span class="n">detframe</span><span class="o">.</span><span class="n">data</span>
+<span class="n">ratio</span><span class="p">[</span><span class="n">ratio</span><span class="o">&gt;=</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="mf">0.</span>
+<span class="n">ratio</span><span class="p">[</span><span class="n">ratio</span><span class="o">&lt;=-</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/resid_detectorFrame_ratio.fits&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/detectorFrame_red_lstsq_resid.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/detectorFrame.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/resid_detectorFrame_ratio.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+/Users/mrizzo/anaconda/lib/python2.7/site-packages/ipykernel/__main__.py:3: RuntimeWarning: divide by zero encountered in divide
+  app.launch_new_instance()
+/Users/mrizzo/anaconda/lib/python2.7/site-packages/ipykernel/__main__.py:3: RuntimeWarning: invalid value encountered in divide
+  app.launch_new_instance()
+/Users/mrizzo/anaconda/lib/python2.7/site-packages/ipykernel/__main__.py:4: RuntimeWarning: invalid value encountered in greater_equal
+/Users/mrizzo/anaconda/lib/python2.7/site-packages/ipykernel/__main__.py:5: RuntimeWarning: invalid value encountered in less_equal
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">tmp</span><span class="o">=</span><span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;/det_750.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test//det_750.fits
+crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Elapsed time: 12.673125s
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -389,6 +583,7 @@ crispy - INFO - Elapsed time: 24.745372s
         <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
 <ul>
 <li><a class="reference internal" href="#">Least squares reduction</a><ul>
+<li><a class="reference internal" href="#This-is-a-test-wavecal-with-slightly-different-PSFLet-models">This is a test wavecal with slightly different PSFLet models</a></li>
 <li><a class="reference internal" href="#create-flatfield-if-needed">create flatfield if needed</a></li>
 </ul>
 </li>
@@ -407,7 +602,7 @@ crispy - INFO - Elapsed time: 24.745372s
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 04 Apr 2017. <br/>
+    Last built 11 Apr 2017. <br/>
   </p>
 </footer>
   </body>

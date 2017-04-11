@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &#8212; crispy 0.1.0 documentation</title>
+    <title>Constructing fiducials inputs for benchmarking &#8212; crispy 0.1.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -234,78 +234,23 @@ div.nboutput div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 </style>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [2]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">tools.imgtools</span> <span class="kn">import</span> <span class="n">bowtie</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-
-<span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1024</span><span class="p">,</span><span class="mi">1024</span><span class="p">))</span>
-<span class="n">bowtie</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">65</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[2]:
-</pre></div>
-</div>
-<div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>(array([[False, False, False, ..., False, False, False],
-        [False, False, False, ..., False, False, False],
-        [False, False, False, ..., False, False, False],
-        ...,
-        [False, False, False, ..., False, False, False],
-        [False, False, False, ..., False, False, False],
-        [False, False, False, ..., False, False, False]], dtype=bool),
- array([[False, False, False, ..., False, False, False],
-        [False, False, False, ..., False, False, False],
-        [False, False, False, ..., False, False, False],
-        ...,
-        [False, False, False, ..., False, False, False],
-        [False, False, False, ..., False, False, False],
-        [False, False, False, ..., False, False, False]], dtype=bool))
-</pre></div>
-</div>
-</div>
+<div class="section" id="Constructing-fiducials-inputs-for-benchmarking">
+<h1>Constructing fiducials inputs for benchmarking<a class="headerlink" href="#Constructing-fiducials-inputs-for-benchmarking" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Flatfields">
+<h2>Flatfields<a class="headerlink" href="#Flatfields" title="Permalink to this headline">¶</a></h2>
+<p>We are going to create a flatfield input cube that represents a
+uniformly illuminated lenslet array of constant photon flux per unit
+wavelength (ph/s/nm) across the band.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [2]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/crispy&#39;</span>
-<span class="k">if</span> <span class="n">folder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
-<span class="kn">from</span> <span class="nn">crispy.tools</span> <span class="kn">import</span> <span class="n">reduction</span>
-
-
+<span></span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [1]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">pwd</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[1]:
-</pre></div>
-</div>
-<div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>u&#39;/Users/mrizzo/IFS/crispy/docs/source/notebooks&#39;
-</pre></div>
 </div>
 </div>
 
@@ -315,7 +260,11 @@ div.nboutput div.output_area.stderr {
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
-<ul class="simple">
+<ul>
+<li><a class="reference internal" href="#">Constructing fiducials inputs for benchmarking</a><ul>
+<li><a class="reference internal" href="#Flatfields">Flatfields</a></li>
+</ul>
+</li>
 </ul>
 
 
@@ -325,13 +274,13 @@ div.nboutput div.output_area.stderr {
     </div>
 <footer class="footer">
   <p class="pull-right">
-    <a href="../_sources/notebooks/Untitled1.ipynb.txt"
+    <a href="../_sources/notebooks/ConstructFiducials.ipynb.txt"
        rel="nofollow">Page Source</a> &nbsp;
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 04 Apr 2017. <br/>
+    Last built 11 Apr 2017. <br/>
   </p>
 </footer>
   </body>

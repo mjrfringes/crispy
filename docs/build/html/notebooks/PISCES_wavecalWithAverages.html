@@ -1,0 +1,752 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PISCES wavelength calibration &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="PISCES-wavelength-calibration">
+<h1>PISCES wavelength calibration<a class="headerlink" href="#PISCES-wavelength-calibration" title="Permalink to this headline">¶</a></h1>
+<p>We have PISCES VARIA calibration sets. We will show how to process them
+to build a new wavelength calibration</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+</pre></div>
+</div>
+</div>
+<p>Import crispy-related stuff</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../../crispy&#39;</span>
+<span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="kn">as</span> <span class="nn">log</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">crispy.PISCESparams</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../crispy&#39;</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Import-files-and-subtract-darks">
+<h2>Import files and subtract darks<a class="headerlink" href="#Import-files-and-subtract-darks" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">allfiles</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s2">&quot;Calibra_170407*.fits&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">allfiles</span>
+<span class="n">darks</span><span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">allfiles</span> <span class="k">if</span> <span class="s2">&quot;dark&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+<span class="n">dark</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">darks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">darks</span><span class="p">:</span>
+    <span class="n">dark</span> <span class="o">+=</span> <span class="n">Image</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">dark</span><span class="o">/=</span><span class="nb">len</span><span class="p">(</span><span class="n">darks</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">dark</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s2">&quot;dark.fits&quot;</span><span class="p">)</span>
+
+
+<span class="n">par</span><span class="o">.</span><span class="n">lamlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">615.</span><span class="p">,</span><span class="mf">720.</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">par</span><span class="o">.</span><span class="n">filelist</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">lamlist</span><span class="p">)):</span>
+    <span class="n">lam</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">lamlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">lamfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">allfiles</span> <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">nm&quot;</span> <span class="o">%</span> <span class="n">lam</span><span class="p">)</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">lamfiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">lamfile</span> <span class="ow">in</span> <span class="n">lamfiles</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">+=</span> <span class="n">Image</span><span class="p">(</span><span class="n">lamfile</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">img</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lamfiles</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">-=</span> <span class="n">dark</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">filelist</span><span class="o">+=</span> <span class="p">[</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s2">&quot;ave_cal_</span><span class="si">%d</span><span class="s2">nm.fits&quot;</span> <span class="o">%</span> <span class="n">lam</span><span class="p">]</span>
+    <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">filelist</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_615nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_625nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_645nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_655nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_675nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_685nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_695nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_705nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_715nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark605nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark635nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark665nm.fits&#39;, &#39;../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark695nm.fits&#39;]
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark605nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark605nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark695nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/dark.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_615nm.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_615nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_615nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_625nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_625nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark635nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_635nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_645nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_645nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_655nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_655nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark665nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_665nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_675nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_675nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_685nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_685nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_dark695nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_695nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_705nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_705nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_715nm.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_715nm.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_715nm.fits
+</pre></div></div>
+</div>
+<p>Image the last file</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_heat&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_PISCES_wavecalWithAverages_8_0.png" src="../_images/notebooks_PISCES_wavecalWithAverages_8_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">lamlist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[ 615.  625.  635.  645.  655.  665.  675.  685.  695.  705.  715.]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Build-wavelength-calibration-files">
+<h2>Build wavelength calibration files<a class="headerlink" href="#Build-wavelength-calibration-files" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.wavecal</span> <span class="kn">import</span> <span class="n">buildcalibrations</span>
+<span class="n">buildcalibrations</span><span class="p">(</span><span class="n">par</span><span class="p">,</span>
+                  <span class="n">inspect</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                  <span class="n">genwavelengthsol</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># Compute wavelength at the center of all pixels</span>
+                  <span class="n">makehiresPSFlets</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c1"># do NOT make high-resolution PSFLets unless we have extremely good SNR</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Building calibration files, placing results in ../../../crispy/ReferenceFiles/Calibra_170407/
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_615nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_615nm.fits
+crispy - INFO - Initializing PSFlet location transformation coefficients
+crispy - INFO - Performing initial optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_615nm.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_615nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_625nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_625nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_635nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_635nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_645nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_645nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_655nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_655nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_665nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_665nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_675nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_675nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_685nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_685nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_695nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_695nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_705nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_705nm.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_715nm.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_715nm.fits
+crispy - INFO - Saving wavelength solution to ../../../crispy/ReferenceFiles/Calibra_170407/lamsol.dat
+crispy - INFO - Computing wavelength values at pixel centers
+crispy - INFO - Saving wavelength calibration cube
+crispy - INFO - Total time elapsed: 1110 s
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;/ave_cal_655nm.fits&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407//ave_cal_655nm.fits
+crispy - INFO - Reduced cube will have 22 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+/Users/mrizzo/anaconda/lib/python2.7/site-packages/numpy/lib/nanfunctions.py:703: RuntimeWarning: Mean of empty slice
+  warnings.warn(&#34;Mean of empty slice&#34;, RuntimeWarning)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../../crispy/SimResults/ave_cal_655nm_red_optext.fits
+crispy - INFO - Elapsed time: 14.132913s
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">ipywidgets</span>
+<span class="k">def</span> <span class="nf">plt_ifs_optext</span><span class="p">(</span><span class="n">wchan</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">wchan</span><span class="o">-</span><span class="mi">1</span><span class="p">,:,:],</span>
+               <span class="n">vmin</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_heat&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">ipywidgets</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="n">plt_ifs_optext</span><span class="p">,</span> <span class="n">wchan</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">cube</span><span class="o">.</span><span class="n">header</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[9]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>SIMPLE  =                    T / conforms to FITS standard
+BITPIX  =                    8 / array data type
+NAXIS   =                    0 / number of array dimensions
+EXTEND  =                    T
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** General parameters ******************
+COMMENT ************************************************************
+COMMENT
+NLENS   =                  108 / # lenslets across array
+PITCH   =             0.000174 / Lenslet pitch (meters)
+INTERLAC=                    2 / Interlacing
+PHILENS =    26.56505117707799 / Rotation angle of the lenslets (deg)
+PIXSIZE =              1.3E-05 / Pixel size (meters)
+LENSAMP =                  0.5 / Lenslet sampling (lam/D)
+LSAMPWAV=                600.0 / Lenslet sampling wavelength (nm)
+FWHM    =                    2 / FHWM of PSFLet at detector (pixels)
+FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
+NPIX    =                 1024 / Number of detector pixels
+DISPDIST=                    F / Use PISCES distortion/dispersion?
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** Cube Extraction *********************
+COMMENT ************************************************************
+COMMENT
+R       =                   70 / Spectral resolution of final cube
+CALDIR  = &#39;Calibra_170407&#39;     / Directory of wavelength solution
+CUBEMODE= &#39;Optimal Extraction&#39; / Method used to extract data cube
+LAM_MIN =    617.2727272727273 / Minimum mid wavelength of extracted cube
+LAM_MAX =    712.7272727272727 / Maximum mid wavelength of extracted cube
+DLOGLAM = 0.007336790063853904 / Log spacing of extracted wavelength bins
+NLAM    =                   22 / Number of extracted wavelengths
+SMOOTHED=                    F / Cube NOT smoothed over bad lenslets
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Wavelengths at midpoints (nm): &#39;</span><span class="p">,</span><span class="n">lam_midpts</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Wavelengths at endpoints (nm): &#39;</span><span class="p">,</span><span class="n">lam_endpts</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 22 wavelength bins
+(&#39;Wavelengths at midpoints (nm): &#39;, array([ 617.27272727,  621.81818182,  626.36363636,  630.90909091,
+        635.45454545,  640.        ,  644.54545455,  649.09090909,
+        653.63636364,  658.18181818,  662.72727273,  667.27272727,
+        671.81818182,  676.36363636,  680.90909091,  685.45454545,
+        690.        ,  694.54545455,  699.09090909,  703.63636364,
+        708.18181818,  712.72727273]))
+(&#39;Wavelengths at endpoints (nm): &#39;, array([ 615.        ,  619.54545455,  624.09090909,  628.63636364,
+        633.18181818,  637.72727273,  642.27272727,  646.81818182,
+        651.36363636,  655.90909091,  660.45454545,  665.        ,
+        669.54545455,  674.09090909,  678.63636364,  683.18181818,
+        687.72727273,  692.27272727,  696.81818182,  701.36363636,
+        705.90909091,  710.45454545,  715.        ]))
+</pre></div></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">PISCES wavelength calibration</a><ul>
+<li><a class="reference internal" href="#Import-files-and-subtract-darks">Import files and subtract darks</a></li>
+<li><a class="reference internal" href="#Build-wavelength-calibration-files">Build wavelength calibration files</a></li>
+</ul>
+</li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/PISCES_wavecalWithAverages.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 11 Apr 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>
