@@ -993,7 +993,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
     ivarcube = np.zeros((len(lamlist),par.nlens,par.nlens))    
     xarr, yarr = np.meshgrid(np.arange(Nmax),np.arange(delt_y))
 
-    loglam = np.log(lamlist)
+    #loglam = np.log(lamlist)
     lamsol = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
     allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
     PSFlet_tool.geninterparray(lamsol, allcoef)
@@ -1025,10 +1025,10 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
 
                     coefs[:len(_lam), i, j] = np.sum(weight*data*ivar, axis=0)
                     coefs[:len(_lam), i, j] /= np.sum(weight**2*ivar, axis=0)
-                    tck = interpolate.splrep(np.log(_lam), coefs[:len(_lam), i, j], s=0, k=3)
-                    cube[:,j,i] = interpolate.splev(loglam, tck, ext=1)
-                    tck = interpolate.splrep(np.log(_lam), np.sum(weight**2*ivar, axis=0)/np.sum(weight**2, axis=0), s=0, k=3)
-                    ivarcube[:,j,i] = interpolate.splev(loglam, tck, ext=1)
+                    tck = interpolate.splrep(_lam, coefs[:len(_lam), i, j], s=0, k=3)
+                    cube[:,j,i] = interpolate.splev(lamlist, tck, ext=1)
+                    tck = interpolate.splrep(_lam, np.sum(weight**2*ivar, axis=0)/np.sum(weight**2, axis=0), s=0, k=3)
+                    ivarcube[:,j,i] = interpolate.splev(lamlist, tck, ext=1)
                 else:
                     cube[:,j,i] = np.NaN
                     ivarcube[:,j,i] = 0.
@@ -1040,7 +1040,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
         par.hdr.append(('cubemode','Optimal Extraction', 'Method used to extract data cube'), end=True)
         par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum mid wavelength of extracted cube'), end=True)
         par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum mid wavelength of extracted cube'), end=True)
-        par.hdr.append(('dloglam',loglam[1]-loglam[0], 'Log spacing of extracted wavelength bins'), end=True)
+        par.hdr.append(('dlam',lamlist[1]-lamlist[0], 'Spacing of extracted wavelength bins'), end=True)
         par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
     
     if smoothandmask:
