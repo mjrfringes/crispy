@@ -123,7 +123,7 @@ class PSFLets:
         self.order = order
         xarr = np.ones((lam.shape[0], order + 1))
         for i in range(1, order + 1):
-            xarr[:, i] = np.log(lam)**i
+            xarr[:, i] = lam**i
 
         for i in range(self.interp_arr.shape[1]):
             coef = np.linalg.lstsq(xarr, allcoef[:, i])[0]
@@ -202,7 +202,7 @@ class PSFLets:
         for i in range(n_spline):
             coef = np.zeros((coeforder + 1)*(coeforder + 2))
             for k in range(1, interporder + 1):
-                coef += k*self.interp_arr[k]*np.log(interp_lam[i])**(k - 1)
+                coef += k*self.interp_arr[k]*interp_lam[i]**(k - 1)
             _dx, _dy = transform(xindx, yindx, coeforder, coef)
 
             dx += [_dx]
@@ -220,7 +220,7 @@ class PSFLets:
 
         coef = np.zeros(self.interp_arr[0].shape)
         for k in range(self.order + 1):
-            coef += self.interp_arr[k]*np.log(lam)**k
+            coef += self.interp_arr[k]*lam**k
         return coef
 
     def return_locations(self, lam, allcoef, xindx, yindx, order=3):
@@ -262,7 +262,7 @@ class PSFLets:
 
         coef = np.zeros((coeforder + 1)*(coeforder + 2))
         for k in range(self.order + 1):
-            coef += self.interp_arr[k]*np.log(lam)**k
+            coef += self.interp_arr[k]*lam**k
         interp_x, interp_y = transform(xindx, yindx, coeforder, coef)
 
         return interp_x, interp_y
@@ -323,7 +323,7 @@ class PSFLets:
         for i in range(n_spline):
             coef = np.zeros((coeforder + 1)*(coeforder + 2))
             for k in range(interporder + 1):
-                coef += self.interp_arr[k]*np.log(interp_lam[i])**k
+                coef += self.interp_arr[k]*interp_lam[i]**k
             interp_x[i], interp_y[i] = transform(xindx, yindx, coeforder, coef)
 
         x = np.zeros(tuple(list(xindx.shape) + [1000]))

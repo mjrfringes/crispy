@@ -139,7 +139,7 @@ def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outn
     inCube[0].header['LAM_C'] = np.median(lam_midpts)/1000.
     inCube[0].header['PIXSIZE'] = pixsize
 #     Image(data=inCube[0].data,header=inCube[0].header).write(par.unitTestsOutputs+'/inputcube.fits',clobber=True)
-    inCube.writeto(par.unitTestsOutputs+'/inputcube.fits', clobber=True)
+    #inCube.writeto(par.unitTestsOutputs+'/inputcube.fits', clobber=True)
 
 #     detectorFrame = propagateIFS(par,lamlist/1000.,inCube[0])
     detectorFrame = polychromeIFS(par,lam_midpts,inCube[0],parallel=True,wavelist_endpts=lam_endpts)
