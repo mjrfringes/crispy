@@ -18,7 +18,7 @@ from scipy import ndimage
 import matplotlib.pyplot as plt
 from reduction import calculateWaveList
 from scipy.special import erf
-
+from shutil import copy2
 
 
 
@@ -560,6 +560,55 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
 
     return hires_arrs
 
+def monochromatic_update(par,inImage,inLam,order=3):
+    '''
+    TODO: also update polychrome when specified
+    '''
+    log.info("Making copies of wavelength solution from " + par.wavecalDir + "/lamsol.dat")
+    copy2(par.wavecalDir + "/lamsol.dat",par.wavecalDir + "/lamsol_old.dat")
+    lamsol = np.loadtxt(os.path.join(par.wavecalDir, "lamsol.dat"))
+    lam = lamsol[:, 0]
+    allcoef = lamsol[:, 1:]
+    psftool = PSFLets()
+    oldcoef = psftool.monochrome_coef(inLam, lam, allcoef, order=order)
+
+    log.info('Generating new wavelength solution')
+    x, y, good, newcoef = locatePSFlets(inImage, polyorder=order, sig=par.FWHM/2.35,coef=oldcoef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
+    psftool.geninterparray(lam, allcoef, order=order)
+    dcoef = newcoef - oldcoef
+
+    indx = np.asarray([0, 1, 4, 10, 11, 14])
+    psftool.interp_arr[0][indx] += dcoef[indx]    
+    psftool.genpixsol(par,lam, allcoef, order=order, lam1=min(lam)/1.04, lam2=max(lam)*1.03)
+    psftool.savepixsol(outdir=par.wavecalDir)
+    
+    #################################################################
+    # Update coefficients at all wavelengths
+    #################################################################    
+    for i in range(lamsol.shape[0]):
+        lamsol[i, indx+1] += dcoef[indx]
+    
+    
+    #################################################################
+    # Record the shift in the spot locations.
+    #################################################################    
+
+    phi1 = np.mean([np.arctan2(oldcoef[4], oldcoef[1]), 
+                    np.arctan2(-oldcoef[11], oldcoef[14])])
+    phi2 = np.mean([np.arctan2(newcoef[4], newcoef[1]),
+                    np.arctan2(-newcoef[11], newcoef[14])])
+    dx, dy, dphi = [dcoef[0], dcoef[10], phi2 - phi1]
+    
+    log.info('%.2f: x-shift from archival spot positions (pixels)'% dx)
+    log.info('%.2f: y-shift from archival spot positions (pixels)'% dy)
+    log.info('%.2f: rotation from archival spot positions (degrees)'% (dphi*180./np.pi))
+    
+    log.info("Overwriting old wavecal")
+    np.savetxt(par.wavecalDir + "lamsol.dat", lamsol)
+    
+
+
+
 def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=True, makehiresPSFlets=True,
                       savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
@@ -685,7 +734,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
 
     log.info("Computing wavelength values at pixel centers")
     psftool = PSFLets()
-    psftool.genpixsol(par,lam, allcoef, lam1=lam1/1.04, lam2=lam2*1.03)
+    psftool.genpixsol(par,lam, allcoef, order=order,lam1=lam1/1.04, lam2=lam2*1.03)
     psftool.savepixsol(outdir=outdir)
 
     xindx = np.arange(-par.nlens/2, par.nlens/2)
