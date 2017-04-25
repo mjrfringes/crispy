@@ -63,18 +63,23 @@ class Params():
         self.gaussian_hires = True  # Use Gaussians for hires PSFLet matching, instead
                                     # of Lucy-Richardson deconvolution
 
-        self.poisson = True        # FWHM of gaussian kernel (e/px/fr)
-        self.RN = 0.0               # FWHM of gaussian kernel (e/px/fr)
-        self.CIC = 1e-3             # Clock-induced charge (e/px/fr)
+        self.poisson = True         # Use Poisson statistics?
+        self.RN = 20.0              # Read noise (e/px/fr)
+#         self.CIC = 1.2e-2           # Clock-induced charge (e/px/fr)
+        self.CIC = 1e-2           # Clock-induced charge (e/px/fr)
         self.dark = 1e-4            # Dark current noise (e/px/s)
         self.Traps = False          # Use standard Gaussian kernels instead of library
-
-        self.QE = 0.68				# detector QE; need to make this wavelength-dependent
+        self.QE = "QE_CCD201.txt"	# detector QE
         self.losses = 0.34			# total losses for on-axis PSF (given by J. Krist)
-        self.PhCountEff = 0.8		# Photon counting efficiency
-        self.CTE = 0.893		    # Charge transfer efficiency (varies with lifetime)
+        self.PhCountEff = 1.0		# Photon counting efficiency
+        self.lifefraction = 0.12    # fraction of lifetime (using Bijan's empirical model)
         self.pol = 1.		        # Polarization losses
-        self.Nreads = 10			# number of reads for a frame
+        self.EMStats = True         # Calculate EM stats with Gamma function?
+        self.EMGain = 200.          # Gain of the EM stage
+        self.PCmode = True          # Photon counting mode?
+        self.PCbias = 60           # In order to allow the RN to be negative
+        self.threshold = 5        # if PCmode is True, this is photon detection threshold (sigmas)
+        self.Nreads = 3			# number of reads for a frame
         self.timeframe = 1000		# time in second for a frame (from file)
 
         ###################################################################### 

@@ -1,7 +1,11 @@
 
 crispy/SimResults/*
 
+!crispy/SimResults/.gitkeep
+
 crispy/unitTestsOutputs/*
+
+!crispy/unitTestsOutputs/.gitkeep
 
 *.pyc
 
@@ -42,3 +46,9 @@ crispy/ReferenceFiles/Calibra_170306.zip
 crispy/ReferenceFiles/VARIA_wavecal/*
 
 crispy/ReferenceFiles/Calibra_170407_data/*
+
+crispy/ReferenceFiles/Calibra_170407/Calibra*
+
+crispy/OS5/*
+
+!crispy/OS5/.gitkeep

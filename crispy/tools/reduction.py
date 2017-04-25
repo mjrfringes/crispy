@@ -471,26 +471,27 @@ def calculateWaveList(par,lam_list=None,Nspec=None):
     ----------
     par:        Parameter instance
             Contains all IFS parameters
-    lam_list:   list of wavelengths
+    lam_list:   list of floats
             Usually this is left to None. If so, we use the wavelengths used for wavelength
             calibration. Otherwise, we could decide to focus on a smaller/larger region of
             the spectrum to retrieve. The final processed cubes will have bins centered
             on lam_midpts
-            
+    Nspec: int
+            If specified, forces the number of bins in the final cube (uses np.linspace)
+              
     Returns
     -------
     lam_midpts: list of floats
             Wavelengths at the midpoint of each bin
     lam_endpts: list of floats
             Wavelengths at the edges of each bin
-            
     '''
     if lam_list is None:
         lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
     else:
         lamlist = lam_list
     if Nspec is None:
-        Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*par.npixperdlam+2)
+        Nspec = int(par.BW*par.R*par.npixperdlam+2)
     log.info('Reduced cube will have %d wavelength bins' % (Nspec-1))
 #     loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
 #     loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2

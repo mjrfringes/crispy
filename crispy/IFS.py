@@ -26,6 +26,8 @@ from tools.reduction import simpleReduction,densifiedSimpleReduction,testReducti
 import multiprocessing
 from tools.par_utils import Task, Consumer
 from tools.wavecal import get_sim_hires
+from scipy.interpolate import interp1d
+
 
 from tools.initLogger import getLogger
 log = getLogger('crispy')
@@ -97,7 +99,7 @@ def propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame,
     return True
 
 
-def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, wavelist_endpts=None,dlambda=None,lam_arr=None):
+def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, QE = True, wavelist_endpts=None,dlambda=None,lam_arr=None):
     '''
     Propagates an input cube through the Integral Field Spectrograph
     
@@ -105,11 +107,26 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, wav
     ----------
     par :   Parameter instance
             with at least the key IFS parameters, interlacing and scale
-    lamlist : list of floats
-            List of wavelengths in nm
+    wavelist : list of floats
+            List of wavelengths in nm corresponding to the center of each bin
     inputcube : Image
             or HDU. data is 3D ndarray with first dimension the same length as lamlist
             header needs to contain the 'PIXSIZE' and 'LAM_C' keywords
+    name: string
+            Name of the output file (without .fits extension)
+    parallel: boolean
+            Whether to use parallel computing for this (recommended)
+    QE: boolean
+            Whether to take into account wavelength-dependent detector QE (from file defined in par.QE)
+    wavelist_endpts: list of floats
+            List of the wavelengths in nm corresponding to the endpoints of the bins (array has to be one longer than wavelist)
+    dlambda: float
+            In case all the bins have the same size, use this parameter in nm. Replaces wavelist_endpts if set
+    lam_arr: list of floats
+            Temporary input vector of the wavelengths used to construct the polychrome. This is necessary in order to construct
+            the wavelength calibration files. If the bandpass changes, one needs to pass an array of wavelengths covering the 
+            new bandpass. Need to work on this.
+            
     Returns
     -------
     detectorFrame : 2D array
@@ -134,7 +151,7 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, wav
     ###################################################################### 
 
     par.pixperlenslet = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)
-    log.debug('The number of input pixels per lenslet is %f' % par.pixperlenslet)
+    log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)
     par.hdr.append(('SCALE',par.pixperlenslet,'Factor by which the input slice is rescaled'), end=True) 
 
     nframes = inputcube.data.shape[0]
@@ -146,7 +163,7 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, wav
     ###################################################################### 
     # Create cube that is interpolated to the correct level if necessary
     ###################################################################### 
-    waveList,interpolatedInputCube = prepareCube(par,wavelist,inputcube)
+    waveList,interpolatedInputCube = prepareCube(par,wavelist,inputcube,QE=QE)
 
     ###################################################################### 
     # Defines an array of times for performance monitoring
@@ -169,7 +186,7 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, wav
     # Determine wavelength endpoints
     ###################################################################### 
     if wavelist_endpts is None:
-        log.info('Assuming slices are evenly spread in wavelengths')
+        log.warning('Assuming slices are evenly spread in wavelengths')
         if len(waveList)>1:
             dlam = waveList[1]-waveList[0]
             wavelist_endpts = np.zeros(len(waveList)+1)
@@ -181,8 +198,8 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, wav
             else:
                 wavelist_endpts=np.array([waveList[0]-dlambda/2.,waveList[0]+dlambda/2.])
     else:
-        log.info('Assuming endpoints wavelist is given')
-    print wavelist_endpts
+        log.warning('Assuming endpoints wavelist is given')
+#     print wavelist_endpts
     
     ###################################################################### 
     # Load template PSFLets
@@ -192,7 +209,7 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, wav
         if lam_arr is None:
             lam_arr=np.arange(700.,845.,10.)  # hard coded for now, need to modify this
         for i in range(len(lam_arr)):
-            hiresarr = get_sim_hires(par, lam_arr[i])               
+            hiresarr = get_sim_hires(par, lam_arr[i])   
             hires_arrs += [hiresarr]
     else:
         log.error('Importing PSFLets is not yet implemented')
@@ -522,29 +539,31 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True):
 
 
 
-def prepareCube(par,wavelist,inputcube):
+def prepareCube(par,wavelist,inputcube,QE=True,adjustment=0.98898):
     '''
-    Takes an input cube and interpolates it down to the required
-    spectral resolution
-    For now, just returns the inputs with no modification
-    Watch out for energy conservation!!
+    Processes input cubes
     '''
-    
-    par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)
-    par.hdr.append(('comment', '*'*22 + ' Input info ' + '*'*25), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)    
-    par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('INSLICES',len(wavelist),'Number of wavelengths in input cube'), end=True) 
+    if not 'INSLICES' in par.hdr:
+        par.hdr.append(('INSLICES',len(wavelist),'Number of wavelengths in input cube'), end=True) 
+        par.hdr.append(('ADJUST',adjustment,'Adjustment factor for rebinning error'), end=True) 
 
-#    par.hdr.append(('INTERPSL',len(wavinterp),'Number of wavelengths in interpolated input cube'), end=True) 
+    if QE:
+        loadQE = np.loadtxt(par.codeRoot+"/"+par.QE)
+        QE = interp1d(loadQE[:,0],loadQE[:,1])
+        QEvals = QE(wavelist)
 
+        if not "APPLYQE" in par.hdr:
+            par.hdr.append(('APPLYQE',QE,'Applied quantum efficiency?'), end=True) 
+        for iwav in range(len(wavelist)):
+            inputcube.data[iwav] *= QEvals[iwav]
+    # adjust for small error in rebinning function
+    inputcube.data *= adjustment
     outcube = Image(data=inputcube.data,header=inputcube.header)
     return wavelist,outcube
 
 
 
-def createWavecalFiles(par,lamlist,lamc=770.,dlam=2.):
+def createWavecalFiles(par,lamlist,lamc=770.,dlam=1.):
     '''
     Creates a set of monochromatic IFS images to be used in wavelength calibration step
     '''
@@ -553,14 +572,14 @@ def createWavecalFiles(par,lamlist,lamc=770.,dlam=2.):
     inputCube = np.ones((1,512,512),dtype=float)
     inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))
     inCube[0].header['LAM_C'] = lamc/1000.
-    inCube[0].header['PIXSIZE'] = 0.1
+    inCube[0].header['PIXSIZE'] = 0.5
     filelist = []
     for wav in lamlist:
 #         detectorFrame = propagateIFS(par,[wav*1e-3],inCube[0])
         detectorFrame = polychromeIFS(par,[wav],inCube[0],dlambda=dlam,parallel=False)
         filename = par.wavecalDir+'det_%3d.fits' % (wav)
         filelist.append(filename)
-        Image(data=detectorFrame).write(filename)
+        Image(data=detectorFrame,header=par.hdr).write(filename)
     par.lamlist = lamlist
     par.filelist = filelist
 

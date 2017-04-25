@@ -24,85 +24,85 @@ from scipy.special import erf
 
 
 
-def computeWavecal(par,lamlist=None,filelist=None,order = 3):
-    '''
-    Computes a wavelength calibration from a set of fits files
-    Uses Tim Brandt's locate_PSFlets routine with an initial guess.
-    The consecutive solutions use information from previous solutions to improve the
-    initial guess.
-    The process can be optimized somewhat by reducing the number of lenslets within
-    the locatePSFlets function (could make this a parameter!)
-    lamlist and filelist can be defined in the parameters in which case they don't need to be set
-    
-    Parameters
-    ----------
-    par:        Parameter instance
-    lamlist:    list of floats
-            Wavelengths in nm
-    filelist:   list of filenames
-            List of fits files to open in corresponding order
-    order:      int
-            Order of 2d polynomial to be fitted to lenslets
-    
-    Notes
-    -----
-    Obsolete now
-    '''
-    # lamlist/filelist override
-    if (filelist!=None) and (lamlist!=None):
-        par.filelist = filelist
-        par.lamlist = lamlist
-    coef = None
-    allcoef = []    
-    xpos = []
-    ypos = []
-    good = []
-#     polyimage = np.zeros((len(par.lamlist), par.npix, par.npix))
-
-    for i in range(len(par.lamlist)):
-        inImage = Image(filename=par.filelist[i])
-        _x, _y, _good, coef = locatePSFlets(inImage, polyorder=order, coef=coef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
-#         polyimage[i] = inImage.data
-        xpos += [_x]
-        ypos += [_y]
-        good += [_good]
-        allcoef += [[par.lamlist[i]] + list(coef)]
-    log.info("Saving wavelength solution to " + par.wavecalDir + "lamsol.dat")
-    outkey = pyf.HDUList(pyf.PrimaryHDU(np.asarray(par.lamlist)))
-    outkey.append(pyf.PrimaryHDU(np.asarray(xpos)))
-    outkey.append(pyf.PrimaryHDU(np.asarray(ypos)))
-    outkey.append(pyf.PrimaryHDU(np.asarray(good).astype(np.uint8)))
-    outkey.writeto(par.wavecalDir + par.wavecalName, clobber=True)
-    
+# def computeWavecal(par,lamlist=None,filelist=None,order = 3):
+#     '''
+#     Computes a wavelength calibration from a set of fits files
+#     Uses Tim Brandt's locate_PSFlets routine with an initial guess.
+#     The consecutive solutions use information from previous solutions to improve the
+#     initial guess.
+#     The process can be optimized somewhat by reducing the number of lenslets within
+#     the locatePSFlets function (could make this a parameter!)
+#     lamlist and filelist can be defined in the parameters in which case they don't need to be set
+#     
+#     Parameters
+#     ----------
+#     par:        Parameter instance
+#     lamlist:    list of floats
+#             Wavelengths in nm
+#     filelist:   list of filenames
+#             List of fits files to open in corresponding order
+#     order:      int
+#             Order of 2d polynomial to be fitted to lenslets
+#     
+#     Notes
+#     -----
+#     Obsolete now
+#     '''
+#     # lamlist/filelist override
+#     if (filelist!=None) and (lamlist!=None):
+#         par.filelist = filelist
+#         par.lamlist = lamlist
+#     coef = None
+#     allcoef = []    
+#     xpos = []
+#     ypos = []
+#     good = []
+# #     polyimage = np.zeros((len(par.lamlist), par.npix, par.npix))
+# 
+#     for i in range(len(par.lamlist)):
+#         inImage = Image(filename=par.filelist[i])
+#         _x, _y, _good, coef = locatePSFlets(inImage, polyorder=order, coef=coef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
+# #         polyimage[i] = inImage.data
+#         xpos += [_x]
+#         ypos += [_y]
+#         good += [_good]
+#         allcoef += [[par.lamlist[i]] + list(coef)]
+#     log.info("Saving wavelength solution to " + par.wavecalDir + "lamsol.dat")
+#     outkey = pyf.HDUList(pyf.PrimaryHDU(np.asarray(par.lamlist)))
+#     outkey.append(pyf.PrimaryHDU(np.asarray(xpos)))
+#     outkey.append(pyf.PrimaryHDU(np.asarray(ypos)))
+#     outkey.append(pyf.PrimaryHDU(np.asarray(good).astype(np.uint8)))
+#     outkey.writeto(par.wavecalDir + par.wavecalName, clobber=True)
+#     
 #     out = pyf.HDUList(pyf.PrimaryHDU(polyimage.astype(np.float32)))
 #     out.writeto(par.wavecalDir + 'polychromeR%d.fits' % (par.R), clobber=True)
 
-    allcoef = np.asarray(allcoef)
-    np.savetxt(par.wavecalDir + "lamsol.dat", allcoef)
+#     allcoef = np.asarray(allcoef)
+#     np.savetxt(par.wavecalDir + "lamsol.dat", allcoef)
 
-def createPolychrome(par):
-    '''
-    To be run after generating a wavelength calibration set.
-    This function constructs a cube of (lam_max-lam_min)/par.dlam depth,
-    in which each slice is a monochromatic map at that wavelength.
-    If the wavelength calibration doesn't contain all the required wavelengths,
-    interpolate between wavelengths using map_coordinates.
-    In the end, one should be able to make a cutout at a given location and get a cube
-    with all the psflets for that lenslet.
-    
-    For now, this only works with simulated, noiseless data in order to get
-    almost perfect PSFs. In practice, we will have to create this cube from data.
-    For now, already assumes that all wavelengths are available (need to compute these)
-    '''
-    
-    polyimage = np.zeros((len(par.lamlist), par.npix, par.npix))
-
-    # simply put all the ideal images into a cube (will need to develop this further)
-    for i in range(len(par.lamlist)):
-        inImage = Image(filename=par.filelist[i])
-        polyimage[i] = inImage.data
-    out = pyf.HDUList(pyf.PrimaryHDU(polyimage.astype(np.float32)))
-    out.writeto(par.wavecalDir + 'polychromeR%d.fits' % (par.R), clobber=True)
+# def createPolychrome(par):
+#     '''
+#     To be run after generating a wavelength calibration set.
+#     This function constructs a cube of (lam_max-lam_min)/par.dlam depth,
+#     in which each slice is a monochromatic map at that wavelength.
+#     If the wavelength calibration doesn't contain all the required wavelengths,
+#     interpolate between wavelengths using map_coordinates.
+#     In the end, one should be able to make a cutout at a given location and get a cube
+#     with all the psflets for that lenslet.
+#     
+#     For now, this only works with simulated, noiseless data in order to get
+#     almost perfect PSFs. In practice, we will have to create this cube from data.
+#     For now, already assumes that all wavelengths are available (need to compute these)
+#     '''
+#     
+#     polyimage = np.zeros((len(par.lamlist), par.npix, par.npix))
+# 
+#     # simply put all the ideal images into a cube (will need to develop this further)
+#     for i in range(len(par.lamlist)):
+#         inImage = Image(filename=par.filelist[i])
+#         polyimage[i] = inImage.data
+#     out = pyf.HDUList(pyf.PrimaryHDU(polyimage.astype(np.float32)))
+#     out.writeto(par.wavecalDir + 'polychromeR%d.fits' % (par.R), clobber=True)
 
 # def inspectWaveCal(par,slice=0,name='inspectWavecal'):
 #     '''

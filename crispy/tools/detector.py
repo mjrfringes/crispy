@@ -45,54 +45,84 @@ def rebinDetector(par,finalFrame,clip=False):
 
 
 
-def readDetector(par,IFSimage,inttime=100,append_header=False):
+def readDetector(par,IFSimage,inttime=100,nonoise=False):
     '''
     Read noise, CIC, dark current; NO TRAPS
     Input is IFSimage in average photons per second
     Quantum efficiency considerations are already taken care of when
     generating IFSimage images
     '''
-    if append_header and not 'RN' in par.hdr:
-#         par.hdr.append(('comment', ''), end=True)
-#         par.hdr.append(('comment', '*'*60), end=True)
-#         par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
-#         par.hdr.append(('comment', '*'*60), end=True)    
-#         par.hdr.append(('comment', ''), end=True)
+    if not 'RN' in par.hdr:
+        par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)
+        par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
+        par.hdr.append(('comment', '*'*60), end=True)    
+        par.hdr.append(('comment', ''), end=True)
         par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
         par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
         par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
         par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
         par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
-        par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
-        par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
         par.hdr.append(('PHCTEFF',par.PhCountEff,'Photon counting efficiency'),end=True)
-        par.hdr.append(('CTE',par.CTE,'Charge transfer efficiency'),end=True)
+        par.hdr.append(('EMSTATS',par.EMStats,'EM statistics?'),end=True)
+        par.hdr.append(('EMGAIN',par.EMGain,'Gain of the EM stage'),end=True)
+        par.hdr.append(('PCBIAS',par.PCbias,'To make RN zero-mean '),end=True)
+        par.hdr.append(('PCMODE',par.PCmode,'Photon counting mode?'),end=True)
+        if par.PCmode:
+            par.hdr.append(('THRESH',par.threshold,'Photon counting threshold'),end=True)
+        par.hdr.append(('LIFEFRAC',par.lifefraction,'Mission life fraction (changes CTE if >0)'),end=True)
         par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
         par.hdr.append(('POL',par.pol,'Polarization losses'),end=True)
         par.hdr.append(('INTTIME',inttime,'Integration time per frame'),end=True)
+                
         
-        
-#     par.hdr.append(('INTTIME',inttime,'Integration time'), end=True)
-    ### thoughts on implementing the EMGain:
-    # This requires an inverse cumulative probability density which depends
-    # on the number of incoming electrons in the well, with a max of 32.
-    # Suggestion is to pre-compute the 32 required functions, save them
-    # then apply them to the array, for example using np.vectorize
-    # Another way would be to make lists of coordinates for all pixels with the same
-    # values, and call this icdf a maximum of 32 times; after the random numbers
-    # are generated, put them back in their right place on the detector.
-    ###
-    eff = par.QE*par.losses*par.PhCountEff*par.CTE*par.pol
+    eff = par.losses*par.PhCountEff*par.pol
     
-    if not par.poisson:
-        return IFSimage.data*eff*inttime+par.dark*inttime+par.CIC
+    photoelectrons = IFSimage.data*eff*inttime
+    
+    if nonoise:
+        return photoelectrons
     else:
-        detector = np.random.poisson(IFSimage.data*eff*inttime+par.dark*inttime+par.CIC)
-        if par.RN>0:
-            detector += np.random.normal(0.0,par.RN,IFSimage.data.shape)
-        return detector
+    
+        # verify with Bijan that the CIC/dark doesn't contribute to this formula
+        if par.lifefraction>0.0:
+            photoelectrons[photoelectrons>0] *= np.minimum(np.ones(photoelectrons[photoelectrons>0].shape),1+par.lifefraction*0.51296*(np.log10(photoelectrons[photoelectrons>0])+0.0147233))    
 
-def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False,factor=1.0):
+        average = photoelectrons+par.dark*inttime+par.CIC
+    
+        # calculate electron generation in the CCD frame
+        if par.poisson:
+            atEMRegister = np.random.poisson(average)
+        else:
+            atEMRegister = average
+        
+    
+        # calculate the number of electrons after the EM register
+        if par.EMStats:
+            EMmask = atEMRegister>0
+            afterEMRegister = np.zeros(atEMRegister.shape)
+            afterEMRegister[EMmask] = np.random.gamma(atEMRegister[EMmask],par.EMGain,atEMRegister[EMmask].shape)
+        else:
+            afterEMRegister = par.EMGain*atEMRegister
+        
+        # add read noise
+        if par.RN>0:
+            afterRN = afterEMRegister+np.random.normal(par.PCbias,par.RN,afterEMRegister.shape)
+        else:
+            afterRN = afterEMRegister+par.PCbias
+
+        # add photon counting thresholding
+        if par.PCmode:
+            PCmask = afterRN>par.PCbias+par.threshold*par.RN
+            afterRN[PCmask]=1.0 #(afterRN[PCmask]-par.PCbias)/par.EMGain
+            afterRN[~PCmask]=0.
+        else:
+            afterRN -= par.PCbias
+            afterRN /= par.EMGain
+    
+        return afterRN
+
+def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False,factor=1.0,zodi=None):
     '''	
     Process a list of files and creates individual detector readouts
     If we want only one file, we can just make a list of 1
@@ -106,29 +136,11 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
             off = Image(offaxis)
             img.data*=factor # Multiplies by post-processing factor
             img.data+=off.data
+        if zodi is not None:
+            z = Image(zodi)
+            img.data+=z.data
         inttime = par.timeframe/par.Nreads
-        #img.data*=par.QE*par.losses*par.PhCountEff*par.CTE*par.pol
-        #refreshes parameter header
-        par.makeHeader()
-        par.hdr.append(('comment', ''), end=True)
-        par.hdr.append(('comment', '*'*60), end=True)
-        par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
-        par.hdr.append(('comment', '*'*60), end=True)    
-        par.hdr.append(('comment', ''), end=True)
-#         par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
-#         par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
-#         par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
-#         par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
-#         par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
-#         par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
-#         par.hdr.append(('PHCTEFF',par.PhCountEff,'Photon counting efficiency'),end=True)
-#         par.hdr.append(('CTE',par.CTE,'Charge transfer efficiency'),end=True)
-#         par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
-#         par.hdr.append(('POL',par.pol,'Polarization losses'),end=True)
-#         par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
-        par.hdr.append(('NREADS',par.Nreads,'Number of frames averaged'),end=True)
-        par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time'),end=True)
-        
+        par.makeHeader()        
 
         frame = np.zeros(img.data.shape)
         varframe = np.zeros(img.data.shape)
@@ -141,6 +153,8 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
             frame /= par.Nreads
             varframe /= par.Nreads
             varframe -= frame**2
+        par.hdr.append(('NREADS',par.Nreads,'Number of frames averaged'),end=True)
+        par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time for number of frames'),end=True)
         outimg = Image(data=frame,ivar=1./varframe,header=par.hdr)
         # append '_suffix' to the file name
         outimg.write(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits',clobber=True)
@@ -148,43 +162,3 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
     return det_outlist
 
 
-def noiselessDetector(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None):
-    '''	
-    Process a list of files and creates individual detector readouts
-    If we want only one file, we can just make a list of 1
-    '''
-    det_outlist = []
-	
-    for reffile in filelist:
-        log.info('Apply noiseless detector readout on '+reffile.split('/')[-1])
-        img = Image(filename=reffile)
-        if offaxis is not None:
-            off = Image(offaxis)
-            img.data+=off.data
-        inttime = par.timeframe/par.Nreads
-        img.data*=par.QE*par.losses
-        #refreshes parameter header
-        par.makeHeader()
-        par.hdr.append(('comment', ''), end=True)
-        par.hdr.append(('comment', '*'*60), end=True)
-        par.hdr.append(('comment', '*'*22 + ' Noiseless detector readout ' + '*'*20), end=True)
-        par.hdr.append(('comment', '*'*60), end=True)    
-        par.hdr.append(('comment', ''), end=True)
-        par.hdr.append(('RN',0,'Read noise (electrons/read)'), end=True) 
-        par.hdr.append(('CIC',0,'Clock-induced charge'), end=True) 
-        par.hdr.append(('DARK',0,'Dark current'), end=True) 
-        par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
-        par.hdr.append(('QE',par.QE,'Quantum efficiency of the detector'),end=True)
-        par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
-        par.hdr.append(('INTTIME',inttime,'Time for each infividual frame'),end=True)
-        par.hdr.append(('NREADS',1,'Number of frames averaged'),end=True)
-        par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time'),end=True)
-
-        frame = np.zeros(img.data.shape)
-        # averaging reads
-        frame = img.data*par.timeframe
-        outimg = Image(data=frame,header=par.hdr)
-        # append '_suffix' to the file name
-        outimg.write(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits',clobber=True)
-        det_outlist.append(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits')
-    return det_outlist

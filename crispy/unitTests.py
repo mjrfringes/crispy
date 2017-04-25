@@ -16,6 +16,8 @@ from IFS import propagateIFS,polychromeIFS
 from tools.spectrograph import selectKernel,loadKernels
 from tools.plotting import plotKernels
 from scipy import ndimage
+from scipy.interpolate import interp1d
+
 
 
 def testLoadKernels(par):
@@ -100,9 +102,6 @@ def testFitCutout(par,fname,lensnum, mode='lstsq',ivar=False):
     return fit_cutout(subim, psflet_subarr, mode=mode)
 
 
-#def testIntPixSol(par,fname)
-
-
 def testGenPixSol(par):
     psftool = PSFLets()
     lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
@@ -112,7 +111,8 @@ def testGenPixSol(par):
     psftool.genpixsol(lamlist,allcoef)
     psftool.savepixsol(outdir = par.exportDir)
 
-def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outname='flatfield.fits'):
+
+def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outname='flatfield.fits',useQE=False):
     '''
     Creates a polychromatic flatfield
     
@@ -126,23 +126,35 @@ def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outn
         Each input frame has a pixel size npix x npix
     pixval: float
         Each input frame has a unform value pixval in photons per second per nm of bandwidth
+    Nspec: float
+        Optional input forcing the number of wavelengths bins used
+    outname: string
+        Name of flatfield image
+    useQE: boolean 
+        Whether to take into account the wavelength-dependent QE of the detector
     
     '''
     
     lam_midpts,lam_endpts = calculateWaveList(par,Nspec=Nspec)
     inputCube = np.ones((len(lam_midpts),npix,npix),dtype=np.float32)
+    
+#     if useQE:
+#         # load QE
+#         log.info('Using QE file '+par.QE)
+#         loadQE = np.loadtxt(par.codeRoot+"/"+par.QE)
+#         QE = interp1d(loadQE[:,0],loadQE[:,1])
+#         QEvals = QE(lam_midpts)
+
     for i in range(len(lam_midpts)):
         inputCube[i,:,:]*=pixval #/lam_midpts[i]
+#         if useQE:
+#             inputCube[i,:,:]*=QEvals[i]
     
     par.saveDetector=False
     inCube = fits.HDUList(fits.PrimaryHDU(inputCube.astype(np.float32)))
     inCube[0].header['LAM_C'] = np.median(lam_midpts)/1000.
     inCube[0].header['PIXSIZE'] = pixsize
-#     Image(data=inCube[0].data,header=inCube[0].header).write(par.unitTestsOutputs+'/inputcube.fits',clobber=True)
-    #inCube.writeto(par.unitTestsOutputs+'/inputcube.fits', clobber=True)
-
-#     detectorFrame = propagateIFS(par,lamlist/1000.,inCube[0])
-    detectorFrame = polychromeIFS(par,lam_midpts,inCube[0],parallel=True,wavelist_endpts=lam_endpts)
+    detectorFrame = polychromeIFS(par,lam_midpts,inCube[0],parallel=True,wavelist_endpts=lam_endpts,QE=True)
     Image(data=detectorFrame,header=par.hdr).write(par.unitTestsOutputs+'/'+outname,clobber=True)
     
     

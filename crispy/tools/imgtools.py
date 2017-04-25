@@ -107,3 +107,30 @@ def bowtie(image,xc,yc,openingAngle,clocking,IWApix,OWApix,export='bowtie',twoma
     
     
     
+def scale2imgs(img1,img2,mask=None,returndiff = True):
+    '''
+    Finds the slice-by-slice best-fit scale factor between two images.
+    Optionally returns the difference between the two. 
+    Images can be cubes.
+    
+    
+    '''
+    # make local copies of data
+    c1 = img1.data.copy()
+    c2 = img2.data.copy()
+    c1[np.isnan(c1)]=0.0
+    c2[np.isnan(c2)]=0.0
+    
+    res = []
+    for i in range(c1.shape[0]):
+        if mask is not None:
+            c1[i] *= mask
+            c2[i] *= mask
+        refslice = np.reshape(c1[i], (1, -1))
+        targetslice = np.reshape(c2[i],-1)
+        res.append(np.linalg.lstsq(refslice.T,targetslice)[0])
+    res = np.array(res).flatten()
+    if returndiff:
+        return res, c1*res[:,np.newaxis,np.newaxis]-c2
+    else:
+        return res
