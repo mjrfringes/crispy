@@ -71,7 +71,14 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "1.425832e+08\n"
+      "Telescope area: 3.6836E+00 m2\n",
+      "Photons from the target star over entire band: Us: 5.135e+08; Bijan: 5.083e+08\n",
+      "Photons from the reference star over entire band: Us: 3.935e+09; Bijan: 3.941e+09\n",
+      "Planet contrast at maximum of the spectrum: 7.9584E-09\n",
+      "Planet flux within band: Us: 3.4565E+00; Bijan: 3.9415E+00\n",
+      "This makes sense since we use a real spectrum, that contains absorption lines and such\n",
+      "Planet flux within single spectral channel (lossless case): 0.1920 assuming 18 spectral channels\n",
+      "Planet flux within single pixel (lossless case): 0.0960 assuming 2 pixels per spectral channel\n"
      ]
     }
    ],
@@ -79,7 +86,7 @@
     "import glob\n",
     "\n",
     "# load first filelist to get its shape\n",
-    "fileshape = (45,4,4)\n",
+    "fileshape = (45,150,150)\n",
     "\n",
     "\n",
     "import astropy.units as u\n",
@@ -98,26 +105,83 @@
     "n_ref_star_imgs=30\n",
     "Nlam = 45\n",
     "lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)*u.nm\n",
+    "npixperdlam = 2\n",
+    "PSFLetWidth = 2\n",
     "\n",
-    "#tel_pupil_area=np.pi*(2.37/2.*u.m)**2\n",
-    "tel_pupil_area = 1\n",
+    "tel_pupil_area=np.pi*(2.37/2.*u.m)**2*0.835\n",
     "\n",
     "from crispy.tools.inputScene import convert_krist_cube,calc_contrast_Bijan\n",
     "target_star_cube = convert_krist_cube(fileshape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)\n",
-    "\n",
-    "print(\"%e\" % np.sum(target_star_cube[:,0,0]))"
+    "ref_star_cube = convert_krist_cube(fileshape,lamlist,ref_star_T,ref_star_Vmag,tel_pupil_area)\n",
+    "print(\"Telescope area: {:.4E}\".format(tel_pupil_area))\n",
+    "print(\"Photons from the target star over entire band: Us: %.3e; Bijan: %.3e\" % (np.mean(target_star_cube[:,0,0]/45*0.18*770),1.38e8*tel_pupil_area.value))\n",
+    "print(\"Photons from the reference star over entire band: Us: %.3e; Bijan: %.3e\" % (np.mean(ref_star_cube[:,0,0]/45*0.18*770),1.07e9*tel_pupil_area.value))\n",
+    "print(\"Planet contrast at maximum of the spectrum: {:.4E}\".format(np.amax(calc_contrast_Bijan(lamlist))))\n",
+    "print(\"Planet flux within band: Us: {:.4E}\".format(np.sum(target_star_cube[:,0,0]/45*0.18*770./45.*calc_contrast_Bijan(lamlist)))+\"; Bijan: {:.4E}\".format(1.07*tel_pupil_area.value))\n",
+    "print('This makes sense since we use a real spectrum, that contains absorption lines and such')\n",
+    "print(\"Planet flux within single spectral channel (lossless case): {:.4f}\".format(np.sum(target_star_cube[:,0,0]/45*0.18*770./45.*calc_contrast_Bijan(lamlist))/(npixperdlam*BW*R))+\" assuming %d spectral channels\"% (npixperdlam*BW*R))\n",
+    "print(\"Planet flux within single pixel (lossless case): {:.4f}\".format(np.sum(target_star_cube[:,0,0]/45*0.18*770./45.*calc_contrast_Bijan(lamlist))/(npixperdlam*BW*R*PSFLetWidth))+\" assuming %d pixels per spectral channel\"% (PSFLetWidth))\n"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### this is the equivalent of convert_krist_cube but for the entire band"
+    "### Test zodi calculations"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 14,
+   "metadata": {
+    "collapsed": false,
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Total ph/sec/as2/m2 1.08600751672 1 / m2\n",
+      "Total ph/sec/pix/m2 4.82670007431e-05 1 / m2\n",
+      "Total ph/sec/lenslets/m2 0.00120667501858 1 / m2\n",
+      "Total ph/sec/lenslet 0.0044449140814\n",
+      "Total ph/sec/lenslet/nm 3.20700871674e-05\n",
+      "Total ph/sec/lenslet/channel 0.000493879342378\n",
+      "Total ph/fr/lenslet/channel 0.0493879342378\n",
+      "Total ph/fr/ifspix/channel 0.0123469835595\n"
+     ]
+    }
+   ],
+   "source": [
+    "from crispy.tools.inputScene import zodi_cube\n",
+    "local_zodi_mag = 23\n",
+    "exozodi_mag = 22\n",
+    "D = 2.37\n",
+    "pixarea = (0.1*770*1e-9/D/4.848e-6)**2\n",
+    "dist=14.1\n",
+    "absmag = target_star_Vmag-5*np.log10(dist/10.)\n",
+    "\n",
+    "zodicube = zodi_cube(target_star_cube,\n",
+    "                     area_per_pixel=pixarea,\n",
+    "                     absmag=absmag,\n",
+    "                     Vstarmag = target_star_Vmag,\n",
+    "                     zodi_surfmag=local_zodi_mag,\n",
+    "                     exozodi_surfmag=exozodi_mag,\n",
+    "                     distAU=3.6,t_zodi=0.09)\n",
+    "print \"Total ph/sec/as2/m2\",np.mean(np.sum(np.sum(zodicube,axis=2),axis=1),axis=0)*0.18*770./tel_pupil_area\n",
+    "print \"Total ph/sec/pix/m2\",np.mean(np.sum(np.sum(zodicube,axis=2),axis=1),axis=0)*0.18*770./tel_pupil_area/150**2\n",
+    "print \"Total ph/sec/lenslets/m2\",np.mean(np.sum(np.sum(zodicube,axis=2),axis=1),axis=0)*0.18*770./tel_pupil_area/150**2*25\n",
+    "print \"Total ph/sec/lenslet\",np.mean(np.sum(np.sum(zodicube,axis=2),axis=1),axis=0)*0.18*770./150**2*25\n",
+    "print \"Total ph/sec/lenslet/nm\",np.mean(np.sum(np.sum(zodicube,axis=2),axis=1),axis=0)/150**2*25\n",
+    "print \"Total ph/sec/lenslet/channel\",np.mean(np.sum(np.sum(zodicube,axis=2),axis=1),axis=0)*0.18*770./150**2*25/9\n",
+    "print \"Total ph/fr/lenslet/channel\",np.mean(np.sum(np.sum(zodicube,axis=2),axis=1),axis=0)*0.18*770./150**2*25*100/9\n",
+    "print \"Total ph/fr/ifspix/channel\",np.mean(np.sum(np.sum(zodicube,axis=2),axis=1),axis=0)*0.18*770./150**2*25*100/9/4\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
    "metadata": {
     "collapsed": false
    },
@@ -126,84 +190,25 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Photon flux within band per m2: 1.3975E+08 1 / (m2 s)\n",
-      "Planet contrast: 7.9584E-09\n",
-      "Planet flux within band per m2: 1.1122E+00 1 / (m2 s)\n"
+      "14332059498.5 1 / m2\n",
+      "149.217662338\n",
+      "[ 0.42391789  0.42314038  0.42234089  0.42151999  0.4206783   0.41981638\n",
+      "  0.41893481  0.41803414  0.41711494  0.41617773  0.41522305  0.41425142\n",
+      "  0.41326336  0.41225936  0.41123991  0.41020551  0.40915662  0.40809371\n",
+      "  0.40701724  0.40592765  0.40482538  0.40371087  0.40258454  0.40144679\n",
+      "  0.40029804  0.39913868  0.39796909  0.39678967  0.39560078  0.39440279\n",
+      "  0.39319606  0.39198094  0.39075777  0.38952688  0.38828861  0.38704327\n",
+      "  0.38579119  0.38453267  0.383268    0.3819975   0.38072143  0.37944009\n",
+      "  0.37815375  0.37686268  0.37556715]\n",
+      "9.04291820213 1 / m2\n"
      ]
     }
    ],
    "source": [
-    "# We need to determine the coefficient of proportionality between a blackbody source and the\n",
-    "# actualy flux received (depends on size of the star, distance, etc)\n",
-    "# define Vband\n",
-    "lambda_cent = 550*u.nanometer\n",
-    "\n",
-    "# this is the flux density per steradian (specific intensity) you would expect from Vband\n",
-    "flux_bb_F550 = af.blackbody_lambda(lambda_cent, target_star_T).to(u.Watt/u.m**2/u.um/u.sr)\n",
-    "\n",
-    "# this is the actual flux density received in Vband\n",
-    "Vband_zero_pt = (3953*u.Jansky).to(u.Watt/u.m**2/u.Hertz)\n",
-    "Vband_zero_pt *= (c.c/lambda_cent**2)\n",
-    "flux_star_Vband = Vband_zero_pt*10**(-0.4*target_star_Vmag)\n",
-    "\n",
-    "# the ratio is coefficient we seek; this will multiply a blackbody function to yield flux densities\n",
-    "# at all wavelengths\n",
-    "ratio_star = (flux_star_Vband/flux_bb_F550)\n",
-    "\n",
-    "# this is the ratio which we want to multiply phot_Uma_Vband for the other bands\n",
-    "#print(\"Ratio of blackbodies is %f\" % ratio_Uma)\n",
-    "\n",
-    "# Now convert each slice to photons per second per square meter\n",
-    "dlam = lamlist[-1]-lamlist[0]\n",
-    "#         high = c.c/(lamlist[i]-dlam/2.)\n",
-    "#         low = c.c/(lamlist[i]+dlam/2.)\n",
-    "#         mid = 0.5*(low+high) # middle frequency\n",
-    "#         dnu = high-low\n",
-    "#         E_ph = (c.h*mid).to(u.J) # photon energy at middle frequency\n",
-    "#         BBlam = af.blackbody_nu(lamlist[i], star_T).to(u.Watt/u.m**2/u.Hertz/u.sr)\n",
-    "#         flux = (BBlam*ratio_star*dnu).to(u.W/u.m**2) # this is Watts per m2\n",
-    "#         photon_flux = flux/E_ph # This is in Photons per second per m2\n",
-    "#         newcube[i,:,:] += photon_flux.to(1./u.s/u.m**2)\n",
-    "E_ph = (c.h*c.c/lamlist[Nlam//2]).to(u.J) # photon energy at middle frequency\n",
-    "BBlam = af.blackbody_lambda(lamlist[Nlam//2], target_star_T).to(u.Watt/u.m**2/u.um/u.sr)\n",
-    "flux = (BBlam*ratio_star*dlam).to(u.W/u.m**2) # this is Watts per m2\n",
-    "photon_flux = flux/E_ph # This is in Photons per second per m2\n",
-    "print(\"Photon flux within band per m2: {:.4E}\".format(photon_flux.to(1./u.s/u.m**2)))\n",
-    "print(\"Planet contrast: {:.4E}\".format(calc_contrast_Bijan(lamlist,folder=None)[0]))\n",
-    "print(\"Planet flux within band per m2: {:.4E}\".format(photon_flux.to(1/u.s/u.m**2)*calc_contrast_Bijan(lamlist,folder=None)[0]))"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### Electrons"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 4,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Planet electron conversion rate: 2.3726E-03 1 / s\n",
-      "Planet signal rate: 1.7652E-03 1 / s\n"
-     ]
-    }
-   ],
-   "source": [
-    "t_pl = 0.0064 # total planet transmission\n",
-    "Atot = np.pi*(2.37*u.m/2.)**2\n",
-    "QE = 0.68\n",
-    "signalQE = 0.93*0.8*QE\n",
-    "single_bin_frac = 1./R/BW\n",
-    "print(\"Planet electron conversion rate: {:.4E}\".format(single_bin_frac*t_pl*Atot*QE*photon_flux.to(1/u.s/u.m**2)*calc_contrast_Bijan(lamlist,folder=None)[0]))\n",
-    "print(\"Planet signal rate: {:.4E}\".format(single_bin_frac*t_pl*Atot*signalQE*photon_flux.to(1/u.s/u.m**2)*calc_contrast_Bijan(lamlist,folder=None)[0]))"
+    "print np.mean(target_star_cube[:,0,0]/45*0.18*770*10**(0.4*target_star_Vmag))/tel_pupil_area\n",
+    "print(1/np.sqrt(pixarea))\n",
+    "print(np.sum(np.sum(zodicube,axis=2),axis=1))\n",
+    "print np.mean(target_star_cube[:,0,0]/45*0.18*770*10**(0.4*target_star_Vmag-0.4*(local_zodi_mag)))/tel_pupil_area"
    ]
   },
   {
@@ -2041,8 +2046,7 @@
    "cell_type": "code",
    "execution_count": 13,
    "metadata": {
-    "collapsed": false,
-    "scrolled": true
+    "collapsed": true
    },
    "outputs": [
     {
@@ -2718,6 +2722,71 @@
    "source": [
     "print(np.sum(sum_rotated)*0.11)\n",
     "print(np.sum(offaxis.data*0.11))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import glob\n",
+    "import matplotlib\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "matplotlib.rcParams['image.origin'] = 'lower'\n",
+    "matplotlib.rcParams['image.interpolation'] = 'nearest'\n",
+    "import sys\n",
+    "codefolder = '../../../../crispy'\n",
+    "if codefolder not in sys.path: sys.path.append(codefolder)\n",
+    "from crispy.tools.initLogger import getLogger\n",
+    "log = getLogger('crispy')\n",
+    "from crispy.params import Params\n",
+    "codefolder = '../../../crispy'\n",
+    "par = Params(codefolder)\n",
+    "from astropy.io import fits as pyf\n",
+    "from crispy.IFS import polychromeIFS\n",
+    "from crispy.tools.image import Image"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "crispy - INFO - The number of input pixels per lenslet is 4.285714\n",
+      "crispy - INFO - Using PSFlet gaussian approximation\n",
+      "crispy - WARNING - Assuming slices are evenly spread in wavelengths\n",
+      "crispy - INFO - Writing data to ../../../crispy/SimResults/imagePlaneRot.fits\n",
+      "crispy - INFO - Number of detector pixels per lenslet: 13.384615\n",
+      "crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024\n",
+      "crispy - INFO - Writing data to ../../../crispy/SimResults/detectorFrame.fits\n",
+      "crispy - INFO - Done.\n",
+      "crispy - INFO - Performance: 4 seconds total\n",
+      "crispy - INFO - Writing data to ../../../crispy/SimResults/det_660.fits\n"
+     ]
+    }
+   ],
+   "source": [
+    "inputCube = np.ones((1,512,512),dtype=float)\n",
+    "inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))\n",
+    "inCube[0].header['LAM_C'] = 770./1000.\n",
+    "inCube[0].header['PIXSIZE'] = 0.1\n",
+    "dlam=1.\n",
+    "par.saveRotatedInput=True\n",
+    "\n",
+    "detectorFrame = polychromeIFS(par,[770.],inCube[0],dlambda=dlam,parallel=False)\n",
+    "filename = par.exportDir+'/det_660.fits'\n",
+    "Image(data=detectorFrame,header=par.hdr).write(filename)\n"
    ]
   }
  ],
