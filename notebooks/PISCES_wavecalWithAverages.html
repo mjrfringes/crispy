@@ -696,7 +696,7 @@ SMOOTHED=                    F / Cube NOT smoothed over bad lenslets
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [5]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -730,17 +730,15 @@ crispy - INFO - Reduced cube will have 22 wavelength bins
 </pre></div></div>
 </div>
 </div>
-</div>
 <div class="section" id="Monochromatic-updates">
-<h1>Monochromatic updates<a class="headerlink" href="#Monochromatic-updates" title="Permalink to this headline">¶</a></h1>
+<h2>Monochromatic updates<a class="headerlink" href="#Monochromatic-updates" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">crispy.tools.locate_psflets</span> <span class="kn">import</span> <span class="n">locatePSFlets</span><span class="p">,</span><span class="n">PSFLets</span>
-<span class="kn">from</span> <span class="nn">crispy.tools.wavecal</span> <span class="kn">import</span> <span class="n">monochromatic_update</span>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.wavecal</span> <span class="kn">import</span> <span class="n">monochromatic_update</span>
 <span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
 <span class="c1"># let&#39;s pretend that we got a new file at 655nm</span>
 <span class="n">inImage</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s2">&quot;ave_cal_655nm.fits&quot;</span><span class="p">)</span>
@@ -769,6 +767,7 @@ crispy - INFO - Overwriting old wavecal
 </pre></div></div>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -780,9 +779,9 @@ crispy - INFO - Overwriting old wavecal
 <li><a class="reference internal" href="#">PISCES wavelength calibration</a><ul>
 <li><a class="reference internal" href="#Import-files-and-subtract-darks">Import files and subtract darks</a></li>
 <li><a class="reference internal" href="#Build-wavelength-calibration-files">Build wavelength calibration files</a></li>
+<li><a class="reference internal" href="#Monochromatic-updates">Monochromatic updates</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#Monochromatic-updates">Monochromatic updates</a></li>
 </ul>
 
 
