@@ -16,7 +16,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 2,
    "metadata": {
     "collapsed": false
    },
@@ -62,7 +62,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 20,
    "metadata": {
     "collapsed": false
    },
@@ -71,14 +71,14 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Telescope area: 3.6836E+00 m2\n",
-      "Photons from the target star over entire band: Us: 5.135e+08; Bijan: 5.083e+08\n",
-      "Photons from the reference star over entire band: Us: 3.935e+09; Bijan: 3.941e+09\n",
+      "Telescope area: 1.0000E+00 m2\n",
+      "Photons from the target star over entire band: Us: 1.315e+10; Bijan: 1.380e+08\n",
+      "Photons from the reference star over entire band: Us: 1.022e+10; Bijan: 1.070e+09\n",
       "Planet contrast at maximum of the spectrum: 7.9584E-09\n",
-      "Planet flux within band: Us: 3.4565E+00; Bijan: 3.9415E+00\n",
+      "Planet flux within band: Us: 9.9603E+01; Bijan: 1.0700E+00\n",
       "This makes sense since we use a real spectrum, that contains absorption lines and such\n",
-      "Planet flux within single spectral channel (lossless case): 0.1920 assuming 18 spectral channels\n",
-      "Planet flux within single pixel (lossless case): 0.0960 assuming 2 pixels per spectral channel\n"
+      "Planet flux within single spectral channel (lossless case): 5.5335 assuming 18 spectral channels\n",
+      "Planet flux within single pixel (lossless case): 2.7667 assuming 2 pixels per spectral channel\n"
      ]
     }
    ],
@@ -94,12 +94,12 @@
     "import astropy.analytic_functions as af\n",
     "\n",
     "planet_radius = 1.27*c.R_jup\n",
-    "ref_star_T=9377*u.K\n",
-    "ref_star_Vmag=2.37\n",
+    "ref_star_T=9600#9377*u.K\n",
+    "ref_star_Vmag=0\n",
     "target_star_T=5887*u.K\n",
-    "target_star_Vmag=5.03\n",
+    "target_star_Vmag=0\n",
     "\n",
-    "lamc=770.\n",
+    "lamc=660.\n",
     "BW=0.18\n",
     "R=50\n",
     "n_ref_star_imgs=30\n",
@@ -108,19 +108,19 @@
     "npixperdlam = 2\n",
     "PSFLetWidth = 2\n",
     "\n",
-    "tel_pupil_area=np.pi*(2.37/2.*u.m)**2*0.835\n",
+    "tel_pupil_area=1*u.m**2#np.pi*(2.37/2.*u.m)**2*0.835\n",
     "\n",
     "from crispy.tools.inputScene import convert_krist_cube,calc_contrast_Bijan\n",
     "target_star_cube = convert_krist_cube(fileshape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)\n",
     "ref_star_cube = convert_krist_cube(fileshape,lamlist,ref_star_T,ref_star_Vmag,tel_pupil_area)\n",
     "print(\"Telescope area: {:.4E}\".format(tel_pupil_area))\n",
-    "print(\"Photons from the target star over entire band: Us: %.3e; Bijan: %.3e\" % (np.mean(target_star_cube[:,0,0]/45*0.18*770),1.38e8*tel_pupil_area.value))\n",
-    "print(\"Photons from the reference star over entire band: Us: %.3e; Bijan: %.3e\" % (np.mean(ref_star_cube[:,0,0]/45*0.18*770),1.07e9*tel_pupil_area.value))\n",
+    "print(\"Photons from the target star over entire band: Us: %.3e; Bijan: %.3e\" % (np.mean(target_star_cube[:,0,0]/45*0.18*lamc),1.38e8*tel_pupil_area.value))\n",
+    "print(\"Photons from the reference star over entire band: Us: %.3e; Bijan: %.3e\" % (np.mean(ref_star_cube[:,0,0]/45*0.18*lamc),1.07e9*tel_pupil_area.value))\n",
     "print(\"Planet contrast at maximum of the spectrum: {:.4E}\".format(np.amax(calc_contrast_Bijan(lamlist))))\n",
-    "print(\"Planet flux within band: Us: {:.4E}\".format(np.sum(target_star_cube[:,0,0]/45*0.18*770./45.*calc_contrast_Bijan(lamlist)))+\"; Bijan: {:.4E}\".format(1.07*tel_pupil_area.value))\n",
+    "print(\"Planet flux within band: Us: {:.4E}\".format(np.sum(target_star_cube[:,0,0]/45*0.18*lamc/45.*calc_contrast_Bijan(lamlist)))+\"; Bijan: {:.4E}\".format(1.07*tel_pupil_area.value))\n",
     "print('This makes sense since we use a real spectrum, that contains absorption lines and such')\n",
-    "print(\"Planet flux within single spectral channel (lossless case): {:.4f}\".format(np.sum(target_star_cube[:,0,0]/45*0.18*770./45.*calc_contrast_Bijan(lamlist))/(npixperdlam*BW*R))+\" assuming %d spectral channels\"% (npixperdlam*BW*R))\n",
-    "print(\"Planet flux within single pixel (lossless case): {:.4f}\".format(np.sum(target_star_cube[:,0,0]/45*0.18*770./45.*calc_contrast_Bijan(lamlist))/(npixperdlam*BW*R*PSFLetWidth))+\" assuming %d pixels per spectral channel\"% (PSFLetWidth))\n"
+    "print(\"Planet flux within single spectral channel (lossless case): {:.4f}\".format(np.sum(target_star_cube[:,0,0]/45*0.18*lamc/45.*calc_contrast_Bijan(lamlist))/(npixperdlam*BW*R))+\" assuming %d spectral channels\"% (npixperdlam*BW*R))\n",
+    "print(\"Planet flux within single pixel (lossless case): {:.4f}\".format(np.sum(target_star_cube[:,0,0]/45*0.18*lamc/45.*calc_contrast_Bijan(lamlist))/(npixperdlam*BW*R*PSFLetWidth))+\" assuming %d pixels per spectral channel\"% (PSFLetWidth))\n"
    ]
   },
   {
