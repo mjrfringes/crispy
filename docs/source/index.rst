@@ -22,7 +22,7 @@ PISCES
 .. toctree::
    :maxdepth: 2
    
-   notebooks/PISCES_wavecal
+   notebooks/PISCES_wavecalWithAverages
    notebooks/PISCES_Reduce
    notebooks/MultiProcExample
    

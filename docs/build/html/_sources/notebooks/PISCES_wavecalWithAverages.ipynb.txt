@@ -234,7 +234,7 @@
     }
    ],
    "source": [
-    "allfiles = glob.glob(par.wavecalDir+\"Calibra_170407*.fits\")\n",
+    "allfiles = glob.glob(\"/Users/mrizzo/IFS/Calibra_170407_data/Calibra_170407*.fits\")\n",
     "print allfiles\n",
     "darks= [f for f in allfiles if \"dark\" in f]\n",
     "dark = np.zeros(Image(darks[0]).data.shape)\n",
@@ -487,7 +487,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 11,
+   "execution_count": 5,
    "metadata": {
     "collapsed": false
    },
@@ -513,10 +513,54 @@
     }
    ],
    "source": [
+    "par.lamlist = np.arange(615.,720.,10)\n",
+    "\n",
     "from crispy.tools.reduction import calculateWaveList\n",
     "lam_midpts,lam_endpts = calculateWaveList(par)\n",
     "print('Wavelengths at midpoints (nm): ',lam_midpts)\n",
     "print('Wavelengths at endpoints (nm): ',lam_endpts)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Monochromatic updates"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_655nm.fits\n",
+      "crispy - INFO - Making copies of wavelength solution from ../../../crispy/ReferenceFiles/Calibra_170407//lamsol.dat\n",
+      "crispy - INFO - Generating new wavelength solution\n",
+      "crispy - INFO - Initializing transformation coefficients with previous values\n",
+      "crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170407/ave_cal_655nm.fits\n",
+      "crispy - INFO - -2.17: x-shift from archival spot positions (pixels)\n",
+      "crispy - INFO - -0.00: y-shift from archival spot positions (pixels)\n",
+      "crispy - INFO - 0.00: rotation from archival spot positions (degrees)\n",
+      "crispy - INFO - Overwriting old wavecal\n"
+     ]
+    }
+   ],
+   "source": [
+    "from crispy.tools.locate_psflets import locatePSFlets,PSFLets\n",
+    "from crispy.tools.wavecal import monochromatic_update\n",
+    "from crispy.tools.image import Image\n",
+    "# let's pretend that we got a new file at 655nm\n",
+    "inImage = Image(par.wavecalDir+\"ave_cal_655nm.fits\")\n",
+    "inLam = 655.\n",
+    "\n",
+    "# this does everything you want\n",
+    "monochromatic_update(par,inImage,inLam)\n"
    ]
   }
  ],
@@ -537,18 +581,6 @@
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython2",
    "version": "2.7.13"
-  },
-  "widgets": {
-   "state": {
-    "aaa420b4ca08491eb22d3658843a32fe": {
-     "views": [
-      {
-       "cell_index": 13
-      }
-     ]
-    }
-   },
-   "version": "1.2.0"
   }
  },
  "nbformat": 4,
