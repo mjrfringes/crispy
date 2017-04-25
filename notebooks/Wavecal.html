@@ -281,10 +281,9 @@ div.nboutput div.output_area.stderr {
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="c1"># Suppose we create a folder in crispy/ReferenceFiles/ called wavecalR50_770_test</span>
-<span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;/wavecalR50_770_test/&#39;</span>
+<span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;/wavecalR50_770/&#39;</span>
 <span class="c1"># construct monochromatic wavelengths, doesn&#39;t really matter which wavelengths</span>
 <span class="n">lamlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">700</span><span class="p">,</span><span class="mi">845</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -315,24 +314,7 @@ div.nboutput div.output_area.stderr {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 699.  701.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_700.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 709.  711.]
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="stderr output_area docutils container">
-<div class="highlight"><pre>
-WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -340,115 +322,35 @@ WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_710.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 719.  721.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_720.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 729.  731.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_730.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 739.  741.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_740.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 749.  751.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_750.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 759.  761.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_760.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 769.  771.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_770.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 779.  781.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_780.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 789.  791.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_790.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 799.  801.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_800.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 809.  811.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_810.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 819.  821.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_820.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 829.  831.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_830.fits
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - INFO - Assuming slices are evenly spread in wavelengths
-[ 839.  841.]
-crispy - INFO - Number of detector pixels per lenslet: 13.384615
-crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_840.fits
+<span class="ansi-red-fg">---------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyboardInterrupt</span>                   Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-4-3cd12dbf13fe&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># construct images for each wavelength</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> <span class="ansi-green-fg">from</span> crispy<span class="ansi-blue-fg">.</span>IFS <span class="ansi-green-fg">import</span> createWavecalFiles
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span>createWavecalFiles<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">,</span>lamlist<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/IFS/crispy/crispy/IFS.py</span> in <span class="ansi-cyan-fg">createWavecalFiles</span><span class="ansi-blue-fg">(par, lamlist, lamc, dlam)</span>
+<span class="ansi-green-intense-fg ansi-bold">    559</span>     <span class="ansi-green-fg">for</span> wav <span class="ansi-green-fg">in</span> lamlist<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    560</span> <span class="ansi-red-fg">#         detectorFrame = propagateIFS(par,[wav*1e-3],inCube[0])</span>
+<span class="ansi-green-fg">--&gt; 561</span><span class="ansi-red-fg">         </span>detectorFrame <span class="ansi-blue-fg">=</span> polychromeIFS<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">[</span>wav<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span>inCube<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span>dlambda<span class="ansi-blue-fg">=</span>dlam<span class="ansi-blue-fg">,</span>parallel<span class="ansi-blue-fg">=</span>False<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    562</span>         filename <span class="ansi-blue-fg">=</span> par<span class="ansi-blue-fg">.</span>wavecalDir<span class="ansi-blue-fg">+</span><span class="ansi-blue-fg">&#39;det_%3d.fits&#39;</span> <span class="ansi-blue-fg">%</span> <span class="ansi-blue-fg">(</span>wav<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    563</span>         filelist<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>filename<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/IFS/crispy/crispy/IFS.py</span> in <span class="ansi-cyan-fg">polychromeIFS</span><span class="ansi-blue-fg">(par, wavelist, inputcube, name, parallel, QE, wavelist_endpts, dlambda, lam_arr)</span>
+<span class="ansi-green-intense-fg ansi-bold">    207</span>             polyimage[i] = propagateLenslets(par,imagePlaneRot,
+<span class="ansi-green-intense-fg ansi-bold">    208</span>                             wavelist_endpts<span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> wavelist_endpts<span class="ansi-blue-fg">[</span>i <span class="ansi-blue-fg">+</span> <span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-green-fg">--&gt; 209</span><span class="ansi-red-fg">                             hires_arrs,lam_arr,10)
+</span><span class="ansi-green-intense-fg ansi-bold">    210</span>     <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    211</span>         tasks <span class="ansi-blue-fg">=</span> multiprocessing<span class="ansi-blue-fg">.</span>Queue<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/IFS/crispy/crispy/tools/lenslet.pyc</span> in <span class="ansi-cyan-fg">propagateLenslets</span><span class="ansi-blue-fg">(par, imageplane, lam1, lam2, hires_arrs, lam_arr, upsample, nlam, npix)</span>
+<span class="ansi-green-intense-fg ansi-bold">    143</span>         ycen <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>reshape<span class="ansi-blue-fg">(</span>ycen<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    144</span>         <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>xcen<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 145</span><span class="ansi-red-fg">             if not (xcen[i] &gt; npix//2 and xcen[i] &lt; image.shape[0] - npix//2 and
+</span><span class="ansi-green-intense-fg ansi-bold">    146</span>                     ycen[i] &gt; npix//2 and ycen[i] &lt; image.shape[0] - npix//2):
+<span class="ansi-green-intense-fg ansi-bold">    147</span>                 <span class="ansi-green-fg">continue</span>
+
+<span class="ansi-red-fg">KeyboardInterrupt</span>:
 </pre></div></div>
 </div>
 </div>
@@ -501,63 +403,63 @@ crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/wavecalR50_770_te
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Building calibration files, placing results in ../../../crispy/ReferenceFiles/wavecalR50_770_test/
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_700.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_700.fits
+crispy - INFO - Building calibration files, placing results in ../../../crispy/ReferenceFiles/wavecalR50_770/
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_700.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_700.fits
 crispy - INFO - Initializing PSFlet location transformation coefficients
-crispy - INFO - Performing initial optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_700.fits
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_700.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_710.fits
+crispy - INFO - Performing initial optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_700.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_700.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_710.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_710.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_720.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_710.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_720.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_720.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_730.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_720.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_730.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_730.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_740.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_730.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_740.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_740.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_750.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_740.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_750.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_750.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_760.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_750.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_760.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_760.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_770.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_760.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_770.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_770.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_780.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_770.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_780.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_780.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_790.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_780.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_790.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_790.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_800.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_790.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_800.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_800.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_810.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_800.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_810.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_810.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_820.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_810.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_820.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_820.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_830.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_820.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_830.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_830.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_840.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_830.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/wavecalR50_770/det_840.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770_test/det_840.fits
-crispy - INFO - Saving wavelength solution to ../../../crispy/ReferenceFiles/wavecalR50_770_test/lamsol.dat
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/wavecalR50_770/det_840.fits
+crispy - INFO - Saving wavelength solution to ../../../crispy/ReferenceFiles/wavecalR50_770/lamsol.dat
 crispy - INFO - Computing wavelength values at pixel centers
 crispy - INFO - Making high-resolution PSFLet models
 crispy - INFO - Starting parallel computation
-crispy - INFO - Reduced cube will have 10 wavelength bins
+crispy - INFO - Reduced cube will have 19 wavelength bins
 crispy - INFO - Making polychrome cube
 crispy - INFO - Saving polychrome cube
 crispy - INFO - Saving wavelength calibration cube
-crispy - INFO - Total time elapsed: 314 s
+crispy - INFO - Total time elapsed: 307 s
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -569,7 +471,7 @@ crispy - INFO - Total time elapsed: 314 s
 <span></span><span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
 <span class="n">lam_mid</span><span class="p">,</span><span class="n">lam_end</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">lam_mid</span><span class="p">,</span><span class="n">lam_end</span>
-<span class="k">print</span> <span class="mf">725.99610254</span><span class="o">-</span><span class="mf">712.8795633</span>
+
 </pre></div>
 </div>
 </div>
@@ -578,8 +480,14 @@ crispy - INFO - Total time elapsed: 314 s
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Reduced cube will have 10 wavelength bins
-[ 707.  721.  735.  749.  763.  777.  791.  805.  819.  833.] [ 700.  714.  728.  742.  756.  770.  784.  798.  812.  826.  840.]
+crispy - INFO - Reduced cube will have 19 wavelength bins
+[ 703.68421053  711.05263158  718.42105263  725.78947368  733.15789474
+  740.52631579  747.89473684  755.26315789  762.63157895  770.
+  777.36842105  784.73684211  792.10526316  799.47368421  806.84210526
+  814.21052632  821.57894737  828.94736842  836.31578947] [ 700.          707.36842105  714.73684211  722.10526316  729.47368421
+  736.84210526  744.21052632  751.57894737  758.94736842  766.31578947
+  773.68421053  781.05263158  788.42105263  795.78947368  803.15789474
+  810.52631579  817.89473684  825.26315789  832.63157895  840.        ]
 13.11653924
 </pre></div></div>
 </div>
@@ -615,7 +523,7 @@ crispy - INFO - Reduced cube will have 10 wavelength bins
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 11 Apr 2017. <br/>
+    Last built 25 Apr 2017. <br/>
   </p>
 </footer>
   </body>

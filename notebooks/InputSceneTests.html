@@ -285,7 +285,7 @@ Populating the interactive namespace from numpy and matplotlib
 <span></span><span class="kn">import</span> <span class="nn">glob</span>
 
 <span class="c1"># load first filelist to get its shape</span>
-<span class="n">fileshape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">45</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">fileshape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">45</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">150</span><span class="p">)</span>
 
 
 <span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
@@ -304,14 +304,23 @@ Populating the interactive namespace from numpy and matplotlib
 <span class="n">n_ref_star_imgs</span><span class="o">=</span><span class="mi">30</span>
 <span class="n">Nlam</span> <span class="o">=</span> <span class="mi">45</span>
 <span class="n">lamlist</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="o">+</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">Nlam</span><span class="p">)</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span>
+<span class="n">npixperdlam</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">PSFLetWidth</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="c1">#tel_pupil_area=np.pi*(2.37/2.*u.m)**2</span>
-<span class="n">tel_pupil_area</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">tel_pupil_area</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="mf">2.37</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mf">0.835</span>
 
 <span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">convert_krist_cube</span><span class="p">,</span><span class="n">calc_contrast_Bijan</span>
 <span class="n">target_star_cube</span> <span class="o">=</span> <span class="n">convert_krist_cube</span><span class="p">(</span><span class="n">fileshape</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">target_star_T</span><span class="p">,</span><span class="n">target_star_Vmag</span><span class="p">,</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+<span class="n">ref_star_cube</span> <span class="o">=</span> <span class="n">convert_krist_cube</span><span class="p">(</span><span class="n">fileshape</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">ref_star_T</span><span class="p">,</span><span class="n">ref_star_Vmag</span><span class="p">,</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Telescope area: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tel_pupil_area</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Photons from the target star over entire band: Us: </span><span class="si">%.3e</span><span class="s2">; Bijan: </span><span class="si">%.3e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mi">770</span><span class="p">),</span><span class="mf">1.38e8</span><span class="o">*</span><span class="n">tel_pupil_area</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Photons from the reference star over entire band: Us: </span><span class="si">%.3e</span><span class="s2">; Bijan: </span><span class="si">%.3e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ref_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mi">770</span><span class="p">),</span><span class="mf">1.07e9</span><span class="o">*</span><span class="n">tel_pupil_area</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet contrast at maximum of the spectrum: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">))))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet flux within band: Us: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="mf">45.</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)))</span><span class="o">+</span><span class="s2">&quot;; Bijan: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">1.07</span><span class="o">*</span><span class="n">tel_pupil_area</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;This makes sense since we use a real spectrum, that contains absorption lines and such&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet flux within single spectral channel (lossless case): {:.4f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="mf">45.</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">npixperdlam</span><span class="o">*</span><span class="n">BW</span><span class="o">*</span><span class="n">R</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; assuming </span><span class="si">%d</span><span class="s2"> spectral channels&quot;</span><span class="o">%</span> <span class="p">(</span><span class="n">npixperdlam</span><span class="o">*</span><span class="n">BW</span><span class="o">*</span><span class="n">R</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet flux within single pixel (lossless case): {:.4f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="mf">45.</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">npixperdlam</span><span class="o">*</span><span class="n">BW</span><span class="o">*</span><span class="n">R</span><span class="o">*</span><span class="n">PSFLetWidth</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; assuming </span><span class="si">%d</span><span class="s2"> pixels per spectral channel&quot;</span><span class="o">%</span> <span class="p">(</span><span class="n">PSFLetWidth</span><span class="p">))</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
@@ -320,56 +329,49 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-1.425832e+08
+Telescope area: 3.6836E+00 m2
+Photons from the target star over entire band: Us: 5.135e+08; Bijan: 5.083e+08
+Photons from the reference star over entire band: Us: 3.935e+09; Bijan: 3.941e+09
+Planet contrast at maximum of the spectrum: 7.9584E-09
+Planet flux within band: Us: 3.4565E+00; Bijan: 3.9415E+00
+This makes sense since we use a real spectrum, that contains absorption lines and such
+Planet flux within single spectral channel (lossless case): 0.1920 assuming 18 spectral channels
+Planet flux within single pixel (lossless case): 0.0960 assuming 2 pixels per spectral channel
 </pre></div></div>
 </div>
 </div>
-<div class="section" id="this-is-the-equivalent-of-convert_krist_cube-but-for-the-entire-band">
-<h3>this is the equivalent of convert_krist_cube but for the entire band<a class="headerlink" href="#this-is-the-equivalent-of-convert_krist_cube-but-for-the-entire-band" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="Test-zodi-calculations">
+<h3>Test zodi calculations<a class="headerlink" href="#Test-zodi-calculations" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [3]:
+<span></span>In [14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="c1"># We need to determine the coefficient of proportionality between a blackbody source and the</span>
-<span class="c1"># actualy flux received (depends on size of the star, distance, etc)</span>
-<span class="c1"># define Vband</span>
-<span class="n">lambda_cent</span> <span class="o">=</span> <span class="mi">550</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nanometer</span>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">zodi_cube</span>
+<span class="n">local_zodi_mag</span> <span class="o">=</span> <span class="mi">23</span>
+<span class="n">exozodi_mag</span> <span class="o">=</span> <span class="mi">22</span>
+<span class="n">D</span> <span class="o">=</span> <span class="mf">2.37</span>
+<span class="n">pixarea</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.1</span><span class="o">*</span><span class="mi">770</span><span class="o">*</span><span class="mf">1e-9</span><span class="o">/</span><span class="n">D</span><span class="o">/</span><span class="mf">4.848e-6</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">dist</span><span class="o">=</span><span class="mf">14.1</span>
+<span class="n">absmag</span> <span class="o">=</span> <span class="n">target_star_Vmag</span><span class="o">-</span><span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">dist</span><span class="o">/</span><span class="mf">10.</span><span class="p">)</span>
 
-<span class="c1"># this is the flux density per steradian (specific intensity) you would expect from Vband</span>
-<span class="n">flux_bb_F550</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">blackbody_lambda</span><span class="p">(</span><span class="n">lambda_cent</span><span class="p">,</span> <span class="n">target_star_T</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">sr</span><span class="p">)</span>
+<span class="n">zodicube</span> <span class="o">=</span> <span class="n">zodi_cube</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">,</span>
+                     <span class="n">area_per_pixel</span><span class="o">=</span><span class="n">pixarea</span><span class="p">,</span>
+                     <span class="n">absmag</span><span class="o">=</span><span class="n">absmag</span><span class="p">,</span>
+                     <span class="n">Vstarmag</span> <span class="o">=</span> <span class="n">target_star_Vmag</span><span class="p">,</span>
+                     <span class="n">zodi_surfmag</span><span class="o">=</span><span class="n">local_zodi_mag</span><span class="p">,</span>
+                     <span class="n">exozodi_surfmag</span><span class="o">=</span><span class="n">exozodi_mag</span><span class="p">,</span>
+                     <span class="n">distAU</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span><span class="n">t_zodi</span><span class="o">=</span><span class="mf">0.09</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/as2/m2&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="n">tel_pupil_area</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/pix/m2&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="n">tel_pupil_area</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/lenslets/m2&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="n">tel_pupil_area</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/lenslet&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/lenslet/nm&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/lenslet/channel&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span><span class="o">/</span><span class="mi">9</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/fr/lenslet/channel&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span><span class="o">*</span><span class="mi">100</span><span class="o">/</span><span class="mi">9</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/fr/ifspix/channel&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mf">770.</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span><span class="o">*</span><span class="mi">100</span><span class="o">/</span><span class="mi">9</span><span class="o">/</span><span class="mi">4</span>
 
-<span class="c1"># this is the actual flux density received in Vband</span>
-<span class="n">Vband_zero_pt</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3953</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Jansky</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="p">)</span>
-<span class="n">Vband_zero_pt</span> <span class="o">*=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">lambda_cent</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">flux_star_Vband</span> <span class="o">=</span> <span class="n">Vband_zero_pt</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">target_star_Vmag</span><span class="p">)</span>
-
-<span class="c1"># the ratio is coefficient we seek; this will multiply a blackbody function to yield flux densities</span>
-<span class="c1"># at all wavelengths</span>
-<span class="n">ratio_star</span> <span class="o">=</span> <span class="p">(</span><span class="n">flux_star_Vband</span><span class="o">/</span><span class="n">flux_bb_F550</span><span class="p">)</span>
-
-<span class="c1"># this is the ratio which we want to multiply phot_Uma_Vband for the other bands</span>
-<span class="c1">#print(&quot;Ratio of blackbodies is %f&quot; % ratio_Uma)</span>
-
-<span class="c1"># Now convert each slice to photons per second per square meter</span>
-<span class="n">dlam</span> <span class="o">=</span> <span class="n">lamlist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">lamlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="c1">#         high = c.c/(lamlist[i]-dlam/2.)</span>
-<span class="c1">#         low = c.c/(lamlist[i]+dlam/2.)</span>
-<span class="c1">#         mid = 0.5*(low+high) # middle frequency</span>
-<span class="c1">#         dnu = high-low</span>
-<span class="c1">#         E_ph = (c.h*mid).to(u.J) # photon energy at middle frequency</span>
-<span class="c1">#         BBlam = af.blackbody_nu(lamlist[i], star_T).to(u.Watt/u.m**2/u.Hertz/u.sr)</span>
-<span class="c1">#         flux = (BBlam*ratio_star*dnu).to(u.W/u.m**2) # this is Watts per m2</span>
-<span class="c1">#         photon_flux = flux/E_ph # This is in Photons per second per m2</span>
-<span class="c1">#         newcube[i,:,:] += photon_flux.to(1./u.s/u.m**2)</span>
-<span class="n">E_ph</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">lamlist</span><span class="p">[</span><span class="n">Nlam</span><span class="o">//</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">J</span><span class="p">)</span> <span class="c1"># photon energy at middle frequency</span>
-<span class="n">BBlam</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">blackbody_lambda</span><span class="p">(</span><span class="n">lamlist</span><span class="p">[</span><span class="n">Nlam</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="n">target_star_T</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">sr</span><span class="p">)</span>
-<span class="n">flux</span> <span class="o">=</span> <span class="p">(</span><span class="n">BBlam</span><span class="o">*</span><span class="n">ratio_star</span><span class="o">*</span><span class="n">dlam</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">W</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># this is Watts per m2</span>
-<span class="n">photon_flux</span> <span class="o">=</span> <span class="n">flux</span><span class="o">/</span><span class="n">E_ph</span> <span class="c1"># This is in Photons per second per m2</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Photon flux within band per m2: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">photon_flux</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet contrast: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">folder</span><span class="o">=</span><span class="bp">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet flux within band per m2: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">photon_flux</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">folder</span><span class="o">=</span><span class="bp">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
@@ -378,27 +380,26 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Photon flux within band per m2: 1.3975E+08 1 / (m2 s)
-Planet contrast: 7.9584E-09
-Planet flux within band per m2: 1.1122E+00 1 / (m2 s)
+Total ph/sec/as2/m2 1.08600751672 1 / m2
+Total ph/sec/pix/m2 4.82670007431e-05 1 / m2
+Total ph/sec/lenslets/m2 0.00120667501858 1 / m2
+Total ph/sec/lenslet 0.0044449140814
+Total ph/sec/lenslet/nm 3.20700871674e-05
+Total ph/sec/lenslet/channel 0.000493879342378
+Total ph/fr/lenslet/channel 0.0493879342378
+Total ph/fr/ifspix/channel 0.0123469835595
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Electrons">
-<h3>Electrons<a class="headerlink" href="#Electrons" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [4]:
+<span></span>In [10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">t_pl</span> <span class="o">=</span> <span class="mf">0.0064</span> <span class="c1"># total planet transmission</span>
-<span class="n">Atot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="mf">2.37</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-<span class="n">QE</span> <span class="o">=</span> <span class="mf">0.68</span>
-<span class="n">signalQE</span> <span class="o">=</span> <span class="mf">0.93</span><span class="o">*</span><span class="mf">0.8</span><span class="o">*</span><span class="n">QE</span>
-<span class="n">single_bin_frac</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">R</span><span class="o">/</span><span class="n">BW</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet electron conversion rate: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">single_bin_frac</span><span class="o">*</span><span class="n">t_pl</span><span class="o">*</span><span class="n">Atot</span><span class="o">*</span><span class="n">QE</span><span class="o">*</span><span class="n">photon_flux</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">folder</span><span class="o">=</span><span class="bp">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet signal rate: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">single_bin_frac</span><span class="o">*</span><span class="n">t_pl</span><span class="o">*</span><span class="n">Atot</span><span class="o">*</span><span class="n">signalQE</span><span class="o">*</span><span class="n">photon_flux</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">folder</span><span class="o">=</span><span class="bp">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+<span></span><span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mi">770</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">target_star_Vmag</span><span class="p">))</span><span class="o">/</span><span class="n">tel_pupil_area</span>
+<span class="k">print</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">pixarea</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mi">770</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">target_star_Vmag</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">local_zodi_mag</span><span class="p">)))</span><span class="o">/</span><span class="n">tel_pupil_area</span>
 </pre></div>
 </div>
 </div>
@@ -407,8 +408,17 @@ Planet flux within band per m2: 1.1122E+00 1 / (m2 s)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Planet electron conversion rate: 2.3726E-03 1 / s
-Planet signal rate: 1.7652E-03 1 / s
+14332059498.5 1 / m2
+149.217662338
+[ 0.42391789  0.42314038  0.42234089  0.42151999  0.4206783   0.41981638
+  0.41893481  0.41803414  0.41711494  0.41617773  0.41522305  0.41425142
+  0.41326336  0.41225936  0.41123991  0.41020551  0.40915662  0.40809371
+  0.40701724  0.40592765  0.40482538  0.40371087  0.40258454  0.40144679
+  0.40029804  0.39913868  0.39796909  0.39678967  0.39560078  0.39440279
+  0.39319606  0.39198094  0.39075777  0.38952688  0.38828861  0.38704327
+  0.38579119  0.38453267  0.383268    0.3819975   0.38072143  0.37944009
+  0.37815375  0.37686268  0.37556715]
+9.04291820213 1 / m2
 </pre></div></div>
 </div>
 </div>
@@ -477,7 +487,7 @@ Planet signal rate: 1.7652E-03 1 / s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_InputScene_11_1.png" src="../_images/notebooks_InputScene_11_1.png" />
+<img alt="../_images/notebooks_InputSceneTests_10_1.png" src="../_images/notebooks_InputSceneTests_10_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -516,7 +526,7 @@ Planet signal rate: 1.7652E-03 1 / s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_InputScene_12_1.png" src="../_images/notebooks_InputScene_12_1.png" />
+<img alt="../_images/notebooks_InputSceneTests_11_1.png" src="../_images/notebooks_InputSceneTests_11_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -552,7 +562,7 @@ Planet signal rate: 1.7652E-03 1 / s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_InputScene_13_1.png" src="../_images/notebooks_InputScene_13_1.png" />
+<img alt="../_images/notebooks_InputSceneTests_12_1.png" src="../_images/notebooks_InputSceneTests_12_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -720,7 +730,7 @@ Planet raw throughput (no reflections/transmissions): 1.467561e-01
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_InputScene_19_2.png" src="../_images/notebooks_InputScene_19_2.png" />
+<img alt="../_images/notebooks_InputSceneTests_18_2.png" src="../_images/notebooks_InputSceneTests_18_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -3173,6 +3183,70 @@ INFO:crispy:Read data from HDU 1 of ../../../crispy/SimResults/imagePlaneRot_766
 0.00492692267897
 </pre></div></div>
 </div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../../crispy&#39;</span>
+<span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../crispy&#39;</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">polychromeIFS</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">inputCube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">512</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">inCube</span> <span class="o">=</span> <span class="n">pyf</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">pyf</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">inputCube</span><span class="p">))</span>
+<span class="n">inCube</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">770.</span><span class="o">/</span><span class="mf">1000.</span>
+<span class="n">inCube</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PIXSIZE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">dlam</span><span class="o">=</span><span class="mf">1.</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveRotatedInput</span><span class="o">=</span><span class="bp">True</span>
+
+<span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">polychromeIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,[</span><span class="mf">770.</span><span class="p">],</span><span class="n">inCube</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">dlambda</span><span class="o">=</span><span class="n">dlam</span><span class="p">,</span><span class="n">parallel</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/det_660.fits&#39;</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">detectorFrame</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Writing data to ../../../crispy/SimResults/imagePlaneRot.fits
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Writing data to ../../../crispy/SimResults/detectorFrame.fits
+crispy - INFO - Done.
+crispy - INFO - Performance: 4 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/det_660.fits
+</pre></div></div>
+</div>
 </div>
 
 
@@ -3185,8 +3259,7 @@ INFO:crispy:Read data from HDU 1 of ../../../crispy/SimResults/imagePlaneRot_766
 <li><a class="reference internal" href="#">Processing time series</a><ul>
 <li><a class="reference internal" href="#Calculate-photon-fluxes">Calculate photon fluxes</a><ul>
 <li><a class="reference internal" href="#Calculate-star-rates">Calculate star rates</a></li>
-<li><a class="reference internal" href="#this-is-the-equivalent-of-convert_krist_cube-but-for-the-entire-band">this is the equivalent of convert_krist_cube but for the entire band</a></li>
-<li><a class="reference internal" href="#Electrons">Electrons</a></li>
+<li><a class="reference internal" href="#Test-zodi-calculations">Test zodi calculations</a></li>
 <li><a class="reference internal" href="#Compare-directly-to-Bijan's-fluxtable">Compare directly to Bijan&#8217;s fluxtable</a></li>
 </ul>
 </li>
@@ -3202,13 +3275,13 @@ INFO:crispy:Read data from HDU 1 of ../../../crispy/SimResults/imagePlaneRot_766
     </div>
 <footer class="footer">
   <p class="pull-right">
-    <a href="../_sources/notebooks/InputScene.ipynb.txt"
+    <a href="../_sources/notebooks/InputSceneTests.ipynb.txt"
        rel="nofollow">Page Source</a> &nbsp;
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 11 Apr 2017. <br/>
+    Last built 25 Apr 2017. <br/>
   </p>
 </footer>
   </body>

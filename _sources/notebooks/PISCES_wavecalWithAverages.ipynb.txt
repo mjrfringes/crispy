@@ -66,7 +66,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 5,
    "metadata": {
     "collapsed": false
    },
@@ -86,10 +86,7 @@
       "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_0_615nm.fits\n",
       "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_1_615nm.fits\n",
       "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_2_615nm.fits\n",
-      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_615nm.fits\n",
-      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_615nm.fits\n",
-      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_615nm.fits\n",
-      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_615nm.fits\n"
+      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_3_615nm.fits\n"
      ]
     },
     {
@@ -103,6 +100,9 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
+      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_4_615nm.fits\n",
+      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_5_615nm.fits\n",
+      "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_6_615nm.fits\n",
       "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_7_615nm.fits\n",
       "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_8_615nm.fits\n",
       "crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170407/Calibra_170407_9_615nm.fits\n",
@@ -380,7 +380,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 6,
    "metadata": {
     "collapsed": false
    },
@@ -406,7 +406,7 @@
      "output_type": "stream",
      "text": [
       "crispy - INFO - Writing data to ../../../crispy/SimResults/ave_cal_655nm_red_optext.fits\n",
-      "crispy - INFO - Elapsed time: 14.132913s\n"
+      "crispy - INFO - Elapsed time: 16.078610s\n"
      ]
     }
    ],
@@ -513,7 +513,6 @@
     }
    ],
    "source": [
-    "from crispy.tools.reduction import calculateWaveList\n",
     "from crispy.tools.reduction import calculateWaveList\n",
     "lam_midpts,lam_endpts = calculateWaveList(par)\n",
     "print('Wavelengths at midpoints (nm): ',lam_midpts)\n",
