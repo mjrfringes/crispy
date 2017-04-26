@@ -499,7 +499,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
 
     if parallel:
         log.info('Starting parallel computation')
-        if not par.gaussian:
+        if not par.gaussian_hires:
             for i in range(len(lam)):
 
                 xpos, ypos = psftool.return_locations(lam[i], allcoef, xindx, yindx)
@@ -507,7 +507,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
                 ypos = np.reshape(ypos, -1)
                 allxpos += [xpos]
                 allypos += [ypos]
-
+        print(len(allxpos),len(imlist))
         tasks = multiprocessing.Queue()
         results = multiprocessing.Queue()
         ncpus = multiprocessing.cpu_count()
@@ -796,12 +796,12 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
         out.writeto(outdir + 'polychromeR%dstack.fits' % (par.R), clobber=True)
     
     else:
-        lam_midpts = lam
+        
         xpos = []
         ypos = []
         good = []
 
-        for i in range(len(lam)):
+        for i in range(len(lam_midpts)):
             _x, _y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
             _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
             xpos += [_x]

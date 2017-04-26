@@ -24,7 +24,7 @@ class Params():
         self.exportDir = self.codeRoot+'/SimResults'
         self.unitTestsOutputs = self.codeRoot+'/unitTestsOutputs'
 #         self.wavecalDir = self.prefix+'/VARIAwavecal/'
-        self.wavecalDir = self.prefix+'/Calibra_170407/'
+        self.wavecalDir = self.prefix+'/Calibra_170425/'
 #         self.wavecalDir = self.prefix+'/HighSNRWavecal/'
 #         self.wavecalDir = self.prefix+'/wavecal/'
 #         self.wavecalDir = self.prefix+'/wavecalR50_660/'
@@ -77,7 +77,7 @@ class Params():
         
         self.distortPISCES=False    # If True, use measured PISCES distortion/dispersion
         self.BW = 0.18              # Spectral bandwidth (if distortPISCES==False)
-        self.npixperdlam = 2        # Number of pixels per spectral resolution element
+        self.npixperdlam = 1        # Number of pixels per spectral resolution element
         self.R = 70                 # Spectral resolving power (extracted cubes have twice)
 
         self.makeHeader()

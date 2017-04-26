@@ -502,7 +502,7 @@ def calculateWaveList(par,lam_list=None,Nspec=None):
     lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
     return lam_midpts,lam_endpts
 
-def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=False,smoothandmask=False):
+def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=False):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -530,6 +530,8 @@ def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=False,smoothandmask=Fa
     # lam in nm
     psftool.geninterparray(lamlist, allcoef)
     
+    lams = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))[0].data
+    
     if ivar:
         if ifsimage.ivar is None:
             ifsimage.ivar = np.ones(ifsimage.data.shape)
@@ -548,7 +550,7 @@ def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=False,smoothandmask=Fa
             xlist = []
             ylist = []
             good = True
-            for lam in lamlist:
+            for lam in lams:
                 _x,_y = psftool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
                 good *= (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
                 xlist += [_x]    
@@ -557,8 +559,6 @@ def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=False,smoothandmask=Fa
             if good:
                 subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xlist,ylist,psflets,dy)
                 cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
-#                 for ilam in range(psflet_subarr.shape[0]):
-#                     resid[y0:y1, x0:x1] -= cube[ilam,j,i]*psflet_subarr[ilam]
             else:
                 cube[:,j,i] = np.NaN
     
@@ -607,27 +607,27 @@ def lstsqExtract(par,name,ifsimage,ivar=False,dy=3,refine=False,smoothandmask=Fa
 
     if 'cubemode' not in par.hdr:
         par.hdr.append(('cubemode','Least squares', 'Method used to extract data cube'), end=True)
-        par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum mid wavelength of extracted cube'), end=True)
-        par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum mid wavelength of extracted cube'), end=True)
-        par.hdr.append(('dlam',(np.amax(lamlist)-np.amin(lamlist))/nlam, 'Spacing of extracted wavelength bins'), end=True)
-        par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
+        par.hdr.append(('lam_min',np.amin(lams), 'Minimum mid wavelength of extracted cube'), end=True)
+        par.hdr.append(('lam_max',np.amax(lams), 'Maximum mid wavelength of extracted cube'), end=True)
+        par.hdr.append(('dlam',(np.amax(lams)-np.amin(lams))/lams.shape[0], 'Spacing of extracted wavelength bins'), end=True)
+        par.hdr.append(('nlam',lams.shape[0], 'Number of extracted wavelengths'), end=True)
     
     if smoothandmask:
         par.hdr.append(('SMOOTHED',True, 'Cube smoothed over bad lenslets'), end=True)
-        cube = Image(data=cube,ivar=ivarcube)
+        cube = Image(data=cube,ivar=None)
         good = np.any(cube.data != 0, axis=0)
         cube = _smoothandmask(cube, good)
     else:
         par.hdr.append(('SMOOTHED',False, 'Cube NOT smoothed over bad lenslets'), end=True)
-        cube = Image(data=cube,ivar=ivarcube)
+        cube = Image(data=cube,ivar=None)
 
-    cube = Image(data=cube.data,ivar=cube.ivar,header=par.hdr,extraheader=im.extraheader)
+    #cube = Image(data=cube.data,ivar=cube.ivar,header=par.hdr,extraheader=ifsimage.extraheader)
 
 
     #pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
     #pyf.PrimaryHDU(resid).writeto(name+'_resid.fits',clobber=True)
-    Image(data=cube,header=par.hdr,extraheader=im.extraheader).write(name+'.fits',clobber=True)
-    Image(data=resid,header=par.hdr,extraheader=im.extraheader).write(name+'_resid.fits',clobber=True)
+    Image(data=cube.data,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'.fits',clobber=True)
+    Image(data=resid,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_resid.fits',clobber=True)
 #     pyf.PrimaryHDU(newresid).writeto(name+'_newresid.fits',clobber=True)
     return cube
 
@@ -728,14 +728,14 @@ def fit_cutout(subim, psflets, mode='lstsq'):
         subim_flat = np.reshape(subim, -1)
         psflets_flat = np.reshape(psflets, (psflets.shape[0], -1))
         coef = np.linalg.lstsq(psflets_flat.T, subim_flat)[0]
-    elif mode == 'ext':
-        coef = np.zeros(psflets.shape[0])
-        for i in range(psflets.shape[0]):
-            coef[i] = np.sum(psflets[i]*subim)/np.sum(psflets[i])
-    elif mode == 'apphot':
-        coef = np.zeros((subim.shape[1]))
-        for i in range(subim.shape[1]):
-            coef[i] = np.sum(subim[:,i])
+#     elif mode == 'ext':
+#         coef = np.zeros(psflets.shape[0])
+#         for i in range(psflets.shape[0]):
+#             coef[i] = np.sum(psflets[i]*subim)/np.sum(psflets[i])
+#     elif mode == 'apphot':
+#         coef = np.zeros((subim.shape[1]))
+#         for i in range(subim.shape[1]):
+#             coef[i] = np.sum(subim[:,i])
     else:
         raise ValueError("mode " + mode + " to fit microspectra is not currently implemented.")
 
