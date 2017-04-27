@@ -530,7 +530,17 @@ def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=Fal
     # lam in nm
     psftool.geninterparray(lamlist, allcoef)
     
-    lams = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))[0].data
+#     n_add = 1
+#     psflets = _add_row(psflets, n=n_add, dtype=np.float64)
+#     psflets[-n_add:] = 0
+#     psflets[-1, 4:-4, 4:-4] = 1
+
+    
+    polychromekey = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
+    lams = polychromekey[0].data
+    xindx = polychromekey[1].data
+    yindx = polychromekey[2].data
+    good = polychromekey[3].data
     
     if ivar:
         if ifsimage.ivar is None:
@@ -547,17 +557,17 @@ def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=Fal
     ydim,xdim = ifsimage.data.shape
     for i in range(par.nlens):
         for j in range(par.nlens):
-            xlist = []
-            ylist = []
-            good = True
-            for lam in lams:
-                _x,_y = psftool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
-                good *= (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
-                xlist += [_x]    
-                ylist += [_y]   
-                
-            if good:
-                subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xlist,ylist,psflets,dy)
+#             xlist = []
+#             ylist = []
+#             good = True
+#             for lam in lams:
+#                 _x,_y = psftool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
+#                 good *= (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
+#                 xlist += [_x]    
+#                 ylist += [_y]   
+            
+            if np.prod(good[:,i,j],axis=0):
+                subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xindx[:,i,j],yindx[:,i,j],psflets,dy)
                 cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
             else:
                 cube[:,j,i] = np.NaN
@@ -630,6 +640,28 @@ def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=Fal
     Image(data=resid,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_resid.fits',clobber=True)
 #     pyf.PrimaryHDU(newresid).writeto(name+'_newresid.fits',clobber=True)
     return cube
+
+
+def _add_row(arr, n=1, dtype=None):
+    """
+
+    """
+
+    if n < 1:
+        return arr
+    newshape = list(arr.shape)
+    newshape[0] += n
+    if dtype is None:
+        outarr = np.zeros(tuple(newshape), arr.dtype)
+    else:
+        outarr = np.zeros(tuple(newshape), dtype)
+    outarr[:-n] = arr
+    meanval = (arr[0] + arr[-1])/2
+    for i in range(1, n + 1):
+        outarr[-i] = meanval
+    return outarr
+
+
 
 def get_cutout(im, x, y, psflets, dy=3):
     
@@ -838,6 +870,7 @@ def intOptimalExtract(par,name,IFSimage):
     loc = PSFLets(load=True, infiledir=par.wavecalDir)
     #Nspec = int(par.BW*par.npixperdlam*par.R)
     lam_midpts,scratch = calculateWaveList(par)
+
     
     datacube = fitspec_intpix_np(par,IFSimage, loc, lam_midpts)
     datacube.write(name+'.fits',clobber=True)
@@ -892,8 +925,6 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
 
     data = np.zeros(im.data.shape)
     data[:] = im.data
-    ivar = np.zeros(im.ivar.shape)
-    ivar[:] = im.ivar
     lamsol = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
     allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
 
@@ -915,7 +946,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
                 iy = np.nanmean(y)
                 if ~np.isnan(iy):
                     lams = PSFlet_tool.lam_indx[i,j,:PSFlet_tool.nlam[i, j]]
-                    i1 = int(iy) + 1 - delt_y/2.
+                    i1 = int(iy) - delt_y/2.
                     arr = np.arange(i1,i1 + delt_y)
                     dy = arr-iy
                     if mode=='sum':
@@ -1000,6 +1031,13 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
     allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
     PSFlet_tool.geninterparray(lamsol, allcoef)
     
+    #polychromekey = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
+#     lams = polychromekey[0].data
+#     xindx = polychromekey[1].data+0.5
+#     yindx = polychromekey[2].data+0.5
+    #good = polychromekey[3].data
+
+    
     for i in range(xindx.shape[0]):
         for j in range(yindx.shape[1]):
             good = True
@@ -1013,13 +1051,14 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
                 _lam = PSFlet_tool.lam_indx[i, j, :PSFlet_tool.nlam[i, j]]
                 iy = np.nanmean(_y)
                 if ~np.isnan(iy):
-                    i1 = int(iy - delt_y/2.)+1
+                    i1 = int(iy - delt_y/2.)
                     dy = _y[xarr[:,:len(_lam)]] - y[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
-                    #var = _var[yarr[:len(_lam)]] - x[_y[0]:_y[-1] + 1, i1:i1 + delt_x]
                     lams,tmp = np.meshgrid(_lam,np.arange(delt_y))
+                    
                     sig = par.FWHM/2.35*lams/par.FWHMlam
                     weight = np.exp(-dy**2/2./sig**2)/sig/np.sqrt(2.*np.pi)
                     data = im.data[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
+                    
                     if im.ivar is not None:
                         ivar = im.ivar[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
                     else:

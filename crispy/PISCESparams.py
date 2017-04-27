@@ -77,7 +77,7 @@ class Params():
         
         self.distortPISCES=False    # If True, use measured PISCES distortion/dispersion
         self.BW = 0.18              # Spectral bandwidth (if distortPISCES==False)
-        self.npixperdlam = 1        # Number of pixels per spectral resolution element
+        self.npixperdlam = 0.8        # Number of pixels per spectral resolution element
         self.R = 70                 # Spectral resolving power (extracted cubes have twice)
 
         self.makeHeader()

@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 from reduction import calculateWaveList
 from scipy.special import erf
 from shutil import copy2
-
+import glob
 
 
 
@@ -507,7 +507,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
                 ypos = np.reshape(ypos, -1)
                 allxpos += [xpos]
                 allypos += [ypos]
-        print(len(allxpos),len(imlist))
+        #print(len(allxpos),len(imlist))
         tasks = multiprocessing.Queue()
         results = multiprocessing.Queue()
         ncpus = multiprocessing.cpu_count()
@@ -560,7 +560,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
 
     return hires_arrs
 
-def monochromatic_update(par,inImage,inLam,order=3):
+def monochromatic_update(par,inImage,inLam,order=3,borderpix=4):
     '''
     TODO: also update polychrome when specified
     '''
@@ -579,7 +579,7 @@ def monochromatic_update(par,inImage,inLam,order=3):
 
     indx = np.asarray([0, 1, 4, 10, 11, 14])
     psftool.interp_arr[0][indx] += dcoef[indx]    
-    psftool.genpixsol(par,lam, allcoef, order=order, lam1=min(lam)/1.04, lam2=max(lam)*1.03)
+    psftool.genpixsol(par,lam, allcoef, order=order, lam1=min(lam)/1.05, lam2=max(lam)*1.05)
     psftool.savepixsol(outdir=par.wavecalDir)
     
     #################################################################
@@ -606,11 +606,38 @@ def monochromatic_update(par,inImage,inLam,order=3):
     log.info("Overwriting old wavecal")
     np.savetxt(par.wavecalDir + "lamsol.dat", lamsol)
     
+    
+    xindx = np.arange(-par.nlens//2, par.nlens//2)
+    xindx, yindx = np.meshgrid(xindx, xindx)
+
+    lam_midpts,lam_endpts=calculateWaveList(par,lam)
+    
+    x,y = psftool.return_locations(inLam, allcoef, xindx, yindx)
+    do_inspection(par,inImage.data,x,y,inLam)
+
+#     xpos = []
+#     ypos = []
+#     good = []
+# 
+#     for i in range(len(lam_midpts)):
+#         _x, _y = psftool.return_locations(lam_midpts[i], lamsol[:, 1:], xindx, yindx)
+#         _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
+#         xpos += [_x]
+#         ypos += [_y]
+#         good += [_good]
+#     
+#     log.info('Saving wavelength calibration cube')
+#     outkey = pyf.HDUList(pyf.PrimaryHDU(lam_midpts))
+#     outkey.append(pyf.PrimaryHDU(np.asarray(xpos)))
+#     outkey.append(pyf.PrimaryHDU(np.asarray(ypos)))
+#     outkey.append(pyf.PrimaryHDU(np.asarray(good).astype(np.uint8)))
+#     outkey.writeto(outdir + 'polychromekeyR%d.fits' % (par.R), clobber=True)
 
 
 
 def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=True, makehiresPSFlets=True,
+                      makePolychrome=True,
                       savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
                       parallel=True,inspect_first=True):
     """
@@ -743,6 +770,11 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     if makehiresPSFlets:
 
         hires_arrs = makeHires(par,xindx,yindx,lam,allcoef, psftool,imlist, parallel,savehiresimages,upsample,nsubarr)
+    
+    if makePolychrome:
+        if not makehiresPSFlets:
+            hires_list = np.sort(glob.glob(par.wavecalDir + 'hires_psflets_lam???.fits'))
+            hires_arrs = [pyf.open(filename)[0].data for filename in hires_list]
 
         lam_midpts,lam_endpts=calculateWaveList(par,lam)
         Nspec = len(lam_endpts)
@@ -796,7 +828,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
         out.writeto(outdir + 'polychromeR%dstack.fits' % (par.R), clobber=True)
     
     else:
-        
+        lam_midpts,lam_endpts=calculateWaveList(par,lam)
         xpos = []
         ypos = []
         good = []
