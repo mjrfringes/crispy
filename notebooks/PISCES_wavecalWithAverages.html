@@ -253,7 +253,7 @@ div.nboutput div.output_area.stderr {
 to build a new wavelength calibration</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [1]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -279,7 +279,7 @@ to build a new wavelength calibration</p>
 <p>Import crispy-related stuff</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [2]:
+<span></span>In [4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -742,7 +742,7 @@ crispy - INFO - Reduced cube will have 22 wavelength bins
 <h2>High-resolution PSFLets<a class="headerlink" href="#High-resolution-PSFLets" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [14]:
+<span></span>In [6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -754,7 +754,7 @@ crispy - INFO - Reduced cube will have 22 wavelength bins
 <span class="n">par</span><span class="o">.</span><span class="n">npixperdlam</span><span class="o">=</span><span class="mf">0.8</span>
 <span class="n">buildcalibrations</span><span class="p">(</span><span class="n">par</span><span class="p">,</span>
                     <span class="n">inspect</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                    <span class="n">genwavelengthsol</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># Compute wavelength at the center of all pixels</span>
+                    <span class="n">genwavelengthsol</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="c1"># Compute wavelength at the center of all pixels</span>
                     <span class="n">makehiresPSFlets</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                     <span class="n">makePolychrome</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                     <span class="n">upsample</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
@@ -771,19 +771,46 @@ crispy - INFO - Reduced cube will have 22 wavelength bins
 crispy - INFO - Building calibration files, placing results in ../../../crispy/ReferenceFiles/Calibra_170425/
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det605.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det605.0.fits
+crispy - INFO - Initializing PSFlet location transformation coefficients
+crispy - INFO - Performing initial optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det605.0.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det605.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det615.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det615.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det625.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det625.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det635.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det635.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det645.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det645.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det655.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det655.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det665.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det665.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det675.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det675.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det685.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det685.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det695.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det695.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det705.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det705.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det715.0.fits
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det715.0.fits
 crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det725.0.fits
-crispy - INFO - Loading wavelength solution from ../../../crispy/ReferenceFiles/Calibra_170425/lamsol.dat
+crispy - INFO - Initializing transformation coefficients with previous values
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det725.0.fits
+crispy - INFO - Saving wavelength solution to ../../../crispy/ReferenceFiles/Calibra_170425/lamsol.dat
 crispy - INFO - Computing wavelength values at pixel centers
 crispy - INFO - Making high-resolution PSFLet models
 crispy - INFO - Starting parallel computation
@@ -821,12 +848,12 @@ crispy - INFO - Reduced cube will have 11 wavelength bins
 crispy - INFO - Making polychrome cube
 crispy - INFO - Saving polychrome cube
 crispy - INFO - Saving wavelength calibration cube
-crispy - INFO - Total time elapsed: 53 s
+crispy - INFO - Total time elapsed: 500 s
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [3]:
+<span></span>In [8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -851,6 +878,8 @@ crispy - INFO - Total time elapsed: 53 s
                     <span class="n">genwavelengthsol</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="c1"># already done before</span>
                     <span class="n">makehiresPSFlets</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="c1"># already done</span>
                     <span class="n">makePolychrome</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># update the polychrome with the new wavecal!</span>
+                    <span class="n">upsample</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                    <span class="n">nsubarr</span><span class="o">=</span><span class="mi">4</span>
                  <span class="p">)</span>
 
 
@@ -869,9 +898,9 @@ crispy - INFO - Making copies of wavelength solution from ../../../crispy/Refere
 crispy - INFO - Generating new wavelength solution
 crispy - INFO - Initializing transformation coefficients with previous values
 crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det685.0.fits
-crispy - INFO - -0.00: x-shift from archival spot positions (pixels)
+crispy - INFO - -0.02: x-shift from archival spot positions (pixels)
 crispy - INFO - 0.00: y-shift from archival spot positions (pixels)
-crispy - INFO - 0.00: rotation from archival spot positions (degrees)
+crispy - INFO - -0.00: rotation from archival spot positions (degrees)
 crispy - INFO - Overwriting old wavecal
 crispy - INFO - Don&#39;t forget to run buildcalibrations again with makePolychrome=True!
 crispy - INFO - Building calibration files, placing results in ../../../crispy/ReferenceFiles/Calibra_170425/
@@ -895,12 +924,12 @@ crispy - INFO - Reduced cube will have 11 wavelength bins
 crispy - INFO - Making polychrome cube
 crispy - INFO - Saving polychrome cube
 crispy - INFO - Saving wavelength calibration cube
-crispy - INFO - Total time elapsed: 20 s
+crispy - INFO - Total time elapsed: 38 s
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [3]:
+<span></span>In [9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -936,12 +965,12 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/Flat637.fits
 crispy - INFO - Reduced cube will have 11 wavelength bins
 crispy - INFO - Writing data to ../../../crispy/SimResults/Flat637_red_lstsq.fits
 crispy - INFO - Writing data to ../../../crispy/SimResults/Flat637_red_lstsq_resid.fits
-crispy - INFO - Elapsed time: 3.614852s
+crispy - INFO - Elapsed time: 3.489039s
 crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
 crispy - INFO - Reduced cube will have 11 wavelength bins
 crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq.fits
 crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_resid.fits
-crispy - INFO - Elapsed time: 3.633941s
+crispy - INFO - Elapsed time: 3.574654s
 </pre></div></div>
 </div>
 </div>

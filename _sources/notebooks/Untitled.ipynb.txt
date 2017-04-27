@@ -1,6 +1,56 @@
 {
- "cells": [],
- "metadata": {},
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0.521604938272 um2 / cm2\n",
+      "5.12084450672e-05 1 / s\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "import astropy.units as u\n",
+    "pixarea = (13*u.um)**2\n",
+    "distance = 18*u.cm\n",
+    "area_ratio = pixarea/distance**2\n",
+    "print \"Solid angle:\",area_ratio\n",
+    "\n",
+    "CaF2 = 100\n",
+    "CR_rate = 5/u.cm**2/u.s\n",
+    "optical_area =np.pi*(2.5*u.cm)**2\n",
+    "pix_rate = optical_area*CR_rate*CaF2*area_ratio\n",
+    "print pix_rate.to(1/u.s)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.13"
+  }
+ },
  "nbformat": 4,
  "nbformat_minor": 2
 }
