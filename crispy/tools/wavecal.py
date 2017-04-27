@@ -607,32 +607,6 @@ def monochromatic_update(par,inImage,inLam,order=3):
     np.savetxt(par.wavecalDir + "lamsol.dat", lamsol)
     log.info("Don't forget to run buildcalibrations again with makePolychrome=True!")
     
-    
-#     xindx = np.arange(-par.nlens//2, par.nlens//2)
-#     xindx, yindx = np.meshgrid(xindx, xindx)
-
-#     lam_midpts,lam_endpts=calculateWaveList(par,lam)
-#     
-#     x,y = psftool.return_locations(inLam, allcoef, xindx, yindx)
-#     do_inspection(par,inImage.data,x,y,inLam)
-
-#     xpos = []
-#     ypos = []
-#     good = []
-# 
-#     for i in range(len(lam_midpts)):
-#         _x, _y = psftool.return_locations(lam_midpts[i], lamsol[:, 1:], xindx, yindx)
-#         _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
-#         xpos += [_x]
-#         ypos += [_y]
-#         good += [_good]
-#     
-#     log.info('Saving wavelength calibration cube')
-#     outkey = pyf.HDUList(pyf.PrimaryHDU(lam_midpts))
-#     outkey.append(pyf.PrimaryHDU(np.asarray(xpos)))
-#     outkey.append(pyf.PrimaryHDU(np.asarray(ypos)))
-#     outkey.append(pyf.PrimaryHDU(np.asarray(good).astype(np.uint8)))
-#     outkey.writeto(outdir + 'polychromekeyR%d.fits' % (par.R), clobber=True)
 
 
 
