@@ -560,7 +560,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
 
     return hires_arrs
 
-def monochromatic_update(par,inImage,inLam,order=3,borderpix=4):
+def monochromatic_update(par,inImage,inLam,order=3):
     '''
     TODO: also update polychrome when specified
     '''
@@ -605,15 +605,16 @@ def monochromatic_update(par,inImage,inLam,order=3,borderpix=4):
     
     log.info("Overwriting old wavecal")
     np.savetxt(par.wavecalDir + "lamsol.dat", lamsol)
+    log.info("Don't forget to run buildcalibrations again with makePolychrome=True!")
     
     
-    xindx = np.arange(-par.nlens//2, par.nlens//2)
-    xindx, yindx = np.meshgrid(xindx, xindx)
+#     xindx = np.arange(-par.nlens//2, par.nlens//2)
+#     xindx, yindx = np.meshgrid(xindx, xindx)
 
-    lam_midpts,lam_endpts=calculateWaveList(par,lam)
-    
-    x,y = psftool.return_locations(inLam, allcoef, xindx, yindx)
-    do_inspection(par,inImage.data,x,y,inLam)
+#     lam_midpts,lam_endpts=calculateWaveList(par,lam)
+#     
+#     x,y = psftool.return_locations(inLam, allcoef, xindx, yindx)
+#     do_inspection(par,inImage.data,x,y,inLam)
 
 #     xpos = []
 #     ypos = []
@@ -636,7 +637,7 @@ def monochromatic_update(par,inImage,inLam,order=3,borderpix=4):
 
 
 def buildcalibrations(par,filelist=None, lamlist=None,order=3,
-                      inspect=False, genwavelengthsol=True, makehiresPSFlets=True,
+                      inspect=False, genwavelengthsol=False, makehiresPSFlets=False,
                       makePolychrome=True,
                       savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
                       parallel=True,inspect_first=True):
