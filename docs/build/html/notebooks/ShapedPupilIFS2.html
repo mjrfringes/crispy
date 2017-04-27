@@ -288,27 +288,20 @@ Populating the interactive namespace from numpy and matplotlib
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 crispy - INFO - Reduced cube will have 44 wavelength bins
+crispy - INFO - The number of input pixels per lenslet is 4.285714
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming endpoints wavelist is given
 crispy - INFO - Number of detector pixels per lenslet: 13.384615
 crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
 crispy - INFO - Done.
-crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Performance: 41 seconds total
 crispy - INFO - Writing data to ./unitTestsOutputs/flatfield.fits
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="stderr output_area docutils container">
-<div class="highlight"><pre>
-WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 1.3 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
 </pre></div></div>
 </div>
 <div class="section" id="reduce-flatfield">
@@ -346,20 +339,20 @@ crispy - INFO - Elapsed time: 12.971214s
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [6]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">par</span><span class="o">.</span>
-<span class="n">os5folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/OS5/with_lowfc&#39;</span>
+
+<span></span><span class="n">os5folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/OS5/with_lowfc&#39;</span>
 <span class="n">offaxispsf</span><span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span>
 <span class="n">signal</span><span class="p">,</span><span class="n">noise</span><span class="p">,</span><span class="n">noiseleft</span> <span class="o">=</span> <span class="n">process_SPC_IFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">os5folder</span><span class="p">,</span><span class="n">offaxispsf</span><span class="p">,</span>
-                <span class="n">outdir_time_series</span> <span class="o">=</span> <span class="s1">&#39;OS5&#39;</span><span class="p">,</span><span class="n">outdir_detector</span><span class="o">=</span><span class="s1">&#39;OS5/OS5_detector&#39;</span><span class="p">,</span>
-                <span class="n">outdir_average</span><span class="o">=</span><span class="s1">&#39;OS5/OS5_average&#39;</span><span class="p">,</span>
+                <span class="n">outdir_time_series</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/OS5/&#39;</span><span class="p">,</span><span class="n">outdir_detector</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/OS5_detector&#39;</span><span class="p">,</span>
+                <span class="n">outdir_average</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/OS5_average&#39;</span><span class="p">,</span>
                 <span class="n">pp_fact</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span>
                 <span class="n">t_zodi</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span>
                 <span class="n">subtract_ref_psf</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                <span class="n">process_cubes</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                <span class="n">process_cubes</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">process_offaxis</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">process_detector</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                 <span class="n">take_averages</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
@@ -370,930 +363,760 @@ crispy - INFO - Elapsed time: 12.971214s
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/with_lowfc/os5_spc_001.fits
-crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits
-Processing file /Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits
-crispy - ERROR - Unable to write FITS file OS5/OS5_average/offaxiscube_processed.fits
+crispy - INFO - Processing file os5_spc_001.fits
 crispy - INFO - The number of input pixels per lenslet is 4.285714
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Number of detector pixels per lenslet: 13.384615
 crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
 crispy - INFO - Done.
-crispy - INFO - Performance: 25 seconds total
-crispy - INFO - Writing data to OS5/OS5_average/offaxis.fits
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_001_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_002.fits
 crispy - INFO - The number of input pixels per lenslet is 4.285714
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Number of detector pixels per lenslet: 13.384615
 crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
 crispy - INFO - Done.
-crispy - INFO - Performance: 26 seconds total
-crispy - INFO - Writing data to OS5/OS5_average/offaxis_flipped.fits
+crispy - INFO - Performance: 42 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_002_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_003.fits
 crispy - INFO - The number of input pixels per lenslet is 4.285714
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Number of detector pixels per lenslet: 13.384615
 crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
 crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to OS5/OS5_average/zodicube.fits
-crispy - INFO - Apply detector readout on os5_spc_001_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_001_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_001_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_002_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_002_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_002_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_003_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_003_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_003_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_004_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_004_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_004_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_005_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_005_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_005_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_006_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_006_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_006_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_007_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_007_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_007_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_008_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_008_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_008_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_009_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_009_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_009_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_010_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_010_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_010_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_011_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_011_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_011_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_012_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_012_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_012_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_013_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_013_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_013_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_014_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_014_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_014_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_015_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_015_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_015_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_016_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_016_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_016_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_017_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_017_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_017_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_018_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_018_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_018_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_019_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_019_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_019_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_020_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_020_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_020_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_021_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_021_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_021_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_022_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_022_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_022_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_023_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_023_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_023_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_024_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_024_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_024_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_025_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_025_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_025_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_026_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_026_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_026_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_027_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_027_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_027_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_028_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_028_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_028_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_029_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_029_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_029_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_030_refstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_030_refstar_IFS.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_030_refstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_031_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_031_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_031_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_032_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_032_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_032_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_033_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_033_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_033_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_034_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_034_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_034_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_035_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_035_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_035_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_036_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_036_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_036_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_037_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_037_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_037_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_038_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_038_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_038_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_039_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_039_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_039_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_040_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_040_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_040_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_041_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_041_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_041_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_042_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_042_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_042_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_043_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_043_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_043_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_044_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_044_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_044_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_045_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_045_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_045_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_046_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_046_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_046_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_047_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_047_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_047_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_048_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_048_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_048_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_049_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_049_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_049_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_050_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_050_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_050_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_051_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_051_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_051_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_052_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_052_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_052_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_053_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_053_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_053_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_054_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_054_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_054_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_055_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_055_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_055_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_056_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_056_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_056_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_057_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_057_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_057_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_058_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_058_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_058_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_059_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_059_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_059_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_060_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_060_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_060_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_061_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_061_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_061_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_062_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_062_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_062_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_063_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_063_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_063_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_064_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_064_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_064_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_065_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_065_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_065_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_066_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_066_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_066_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_067_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_067_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_067_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_068_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_068_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_068_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_069_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_069_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_069_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_070_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_070_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_070_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_071_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_071_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_071_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_072_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_072_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_072_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_073_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_073_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_073_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_074_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_074_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_074_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_075_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_075_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_075_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_076_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_076_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_076_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_077_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_077_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_077_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_078_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_078_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_078_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_079_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_079_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_079_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_080_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_080_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_080_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_081_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_081_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_081_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_082_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_082_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_082_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_083_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_083_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_083_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_084_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_084_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_084_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_085_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_085_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_085_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_086_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_086_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_086_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_087_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_087_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_087_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_088_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_088_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_088_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_089_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_089_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_089_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_090_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_090_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_090_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_091_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_091_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_091_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_092_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_092_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_092_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_093_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_093_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_093_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_094_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_094_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_094_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_095_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_095_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_095_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_096_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_096_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_096_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_097_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_097_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_097_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_098_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_098_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_098_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_099_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_099_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_099_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_100_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_100_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_100_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_101_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_101_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_101_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_102_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_102_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_102_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_103_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_103_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_103_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_104_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_104_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_104_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_105_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_105_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_105_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_106_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_106_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_106_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_107_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_107_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_107_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_108_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_108_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_108_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_109_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_109_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_109_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_110_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_110_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_110_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_111_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_111_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_111_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_112_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_112_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_112_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_113_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_113_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_113_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_114_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_114_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_114_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_115_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_115_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_115_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_116_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_116_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_116_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_117_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_117_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_117_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_118_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_118_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_118_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_119_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_119_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_119_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_120_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_120_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_120_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_121_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_121_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_121_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_122_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_122_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_122_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_123_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_123_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_123_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_124_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_124_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_124_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_125_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_125_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_125_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_126_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_126_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_126_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_127_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_127_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_127_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_128_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_128_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_128_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_129_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_129_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_129_targetstar_IFS_detector.fits
-crispy - INFO - Apply detector readout on os5_spc_130_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of OS5/os5_spc_130_targetstar_IFS.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/zodicube.fits
-crispy - INFO - Writing data to OS5/OS5_detector/os5_spc_130_targetstar_IFS_detector.fits
-crispy - INFO - Taking averages
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_001_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_001_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_031_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_031_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_001_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_001_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_002_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_002_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_003_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_003_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_004_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_004_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_005_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_005_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_006_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_006_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_007_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_007_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_008_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_008_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_009_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_009_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_010_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_010_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_011_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_011_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_012_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_012_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_013_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_013_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_014_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_014_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_015_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_015_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_016_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_016_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_017_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_017_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_018_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_018_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_019_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_019_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_020_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_020_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_021_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_021_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_022_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_022_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_023_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_023_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_024_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_024_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_025_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_025_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_026_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_026_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_027_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_027_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_028_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_028_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_029_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_029_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_030_refstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_030_refstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_031_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_031_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_032_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_032_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_033_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_033_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_034_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_034_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_035_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_035_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_036_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_036_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_037_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_037_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_038_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_038_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_039_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_039_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_040_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_040_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_041_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_041_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_042_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_042_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_043_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_043_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_044_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_044_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_045_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_045_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_046_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_046_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_047_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_047_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_048_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_048_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_049_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_049_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_050_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_050_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_051_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_051_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_052_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_052_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_053_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_053_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_054_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_054_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_055_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_055_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_056_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_056_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_057_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_057_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_058_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_058_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_059_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_059_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_060_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_060_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_061_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_061_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_062_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_062_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_063_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_063_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_064_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_064_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_065_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_065_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_066_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_066_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_067_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_067_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_068_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_068_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_069_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_069_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_070_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_070_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_071_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_071_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_072_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_072_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_073_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_073_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_074_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_074_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_075_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_075_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_076_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_076_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_077_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_077_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_078_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_078_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_079_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_079_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_080_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_080_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_081_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_081_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_082_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_082_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_083_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_083_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_084_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_084_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_085_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_085_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_086_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_086_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_087_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_087_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_088_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_088_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_089_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_089_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_090_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_090_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_091_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_091_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_092_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_092_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_093_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_093_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_094_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_094_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_095_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_095_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_096_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_096_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_097_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_097_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_098_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_098_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_099_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_099_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_100_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_100_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_101_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_101_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_102_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_102_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_103_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_103_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_104_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_104_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_105_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_105_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_106_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_106_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_107_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_107_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_108_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_108_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_109_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_109_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_110_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_110_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_111_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_111_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_112_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_112_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_113_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_113_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_114_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_114_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_115_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_115_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_116_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_116_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_117_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_117_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_118_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_118_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_119_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_119_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_120_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_120_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_121_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_121_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_122_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_122_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_123_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_123_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_124_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_124_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_125_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_125_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_126_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_126_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_127_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_127_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_128_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_128_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_129_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_129_targetstar_IFS_detector.fits
-crispy - INFO - Read data from HDU 1 of OS5/OS5_detector/os5_spc_130_targetstar_IFS_detector.fits
-crispy - INFO - Read inverse variance from HDU 2 of OS5/OS5_detector/os5_spc_130_targetstar_IFS_detector.fits
-crispy - INFO - Writing data to OS5/OS5_average/average_ref_star_detector.fits
-crispy - INFO - Writing data to OS5/OS5_average/average_target_star_detector.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/average_ref_star_detector.fits
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/average_ref_star_detector.fits
-crispy - INFO - Reduced cube will have 19 wavelength bins
-crispy - INFO - Writing data to ./SimResults/average_ref_star_detector_red_optext.fits
-crispy - INFO - Elapsed time: 13.138231s
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/average_target_star_detector.fits
-crispy - INFO - Reduced cube will have 19 wavelength bins
-crispy - INFO - Writing data to ./SimResults/average_target_star_detector_red_optext.fits
-crispy - INFO - Elapsed time: 12.697466s
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis.fits
-crispy - INFO - Reduced cube will have 19 wavelength bins
-crispy - INFO - Writing data to ./SimResults/offaxis_red_optext.fits
-crispy - INFO - Elapsed time: 12.554700s
-crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/crispy/crispy/OS5/OS5_average/offaxis_flipped.fits
-crispy - INFO - Reduced cube will have 19 wavelength bins
-crispy - INFO - Writing data to ./SimResults/offaxis_flipped_red_optext.fits
-crispy - INFO - Elapsed time: 13.346982s
-crispy - INFO - Writing data to OS5/OS5_average/residual.fits
-crispy - INFO - Writing data to OS5/OS5_average/residual_stack.fits
-crispy - INFO - Read data from HDU 1 of ./SimResults/flatfield_red_optext.fits
-crispy - INFO - Read inverse variance from HDU 2 of ./SimResults/flatfield_red_optext.fits
-crispy - INFO - Writing data to OS5/OS5_average/residual_flatfielded.fits
-crispy - INFO - Writing data to OS5/OS5_average/residual_flatfielded_stack.fits
-crispy - INFO - Writing data to OS5/OS5_average/matched_filter.fits
-crispy - INFO - Writing data to OS5/OS5_average/matched_filter_flipped.fits
-crispy - INFO - Cube conversion: 58.642
-crispy - INFO - Process cubes through IFS: -57.915
-crispy - INFO - Process off-axis PSF through IFS: 57.944
-crispy - INFO - Construct IFS detector: 48.999
-crispy - INFO - Taking averages: 3.223
-crispy - INFO - Process average cubes: 51.751
-crispy - INFO - Normalize and subtract reference PSF: 0.030
-crispy - INFO - Computed signal and noise arrays: 0.095
-crispy - INFO - Total time: 162.770
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_003_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_004.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_004_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_005.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 39 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_005_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_006.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_006_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_007.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_007_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_008.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 42 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_008_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_009.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_009_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_010.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 42 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_010_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_011.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 39 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_011_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_012.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_012_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_013.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_013_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_014.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_014_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_015.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_015_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_016.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_016_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_017.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_017_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_018.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 41 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_018_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_019.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 39 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_019_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_020.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_020_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_021.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 43 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_021_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_022.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 41 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_022_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_023.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_023_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_024.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 36 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_024_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_025.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_025_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_026.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 36 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_026_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_027.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 43 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_027_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_028.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 39 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_028_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_029.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_029_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_030.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_030_refstar_IFS.fits
+crispy - INFO - Processing file os5_spc_031.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 42 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_031_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_032.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_032_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_033.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 41 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_033_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_034.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_034_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_035.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_035_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_036.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_036_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_037.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_037_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_038.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 42 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_038_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_039.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_039_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_040.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_040_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_041.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 41 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_041_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_042.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 39 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_042_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_043.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_043_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_044.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_044_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_045.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 44 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_045_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_046.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 41 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_046_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_047.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 43 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_047_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_048.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 41 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_048_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_049.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 41 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_049_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_050.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 39 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_050_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_051.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_051_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_052.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_052_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_053.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_053_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_054.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_054_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_055.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_055_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_056.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_056_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_057.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_057_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_058.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_058_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_059.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 39 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_059_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_060.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_060_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_061.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_061_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_062.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 41 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_062_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_063.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_063_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_064.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_064_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_065.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_065_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_066.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 39 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_066_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_067.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 40 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_067_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_068.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 39 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_068_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_069.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Number of detector pixels per lenslet: 13.384615
+crispy - INFO - Rebinning final detector. Image has dimensions 1024x1024
+crispy - INFO - Done.
+crispy - INFO - Performance: 38 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/OS5//os5_spc_069_targetstar_IFS.fits
+crispy - INFO - Processing file os5_spc_070.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+Process Consumer-562:
+Process Consumer-564:
+Process Consumer-566:
+Process Consumer-563:
+Process Consumer-568:
+Process Consumer-567:
+Process Consumer-565:
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/multiprocessing/process.py&#34;, line 258, in _bootstrap
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/multiprocessing/process.py&#34;, line 258, in _bootstrap
+Traceback (most recent call last):
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/multiprocessing/process.py&#34;, line 258, in _bootstrap
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/multiprocessing/process.py&#34;, line 258, in _bootstrap
+    self.run()
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/multiprocessing/process.py&#34;, line 258, in _bootstrap
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/multiprocessing/process.py&#34;, line 258, in _bootstrap
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/multiprocessing/process.py&#34;, line 258, in _bootstrap
+    self.run()
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 22, in run
+    self.run()
+    self.run()
+    self.run()
+    self.run()
+    self.run()
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 22, in run
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 22, in run
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 22, in run
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 22, in run
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 31, in __call__
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 22, in run
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 31, in __call__
+Process Consumer-561:
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 22, in run
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 31, in __call__
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 31, in __call__
+  File &#34;../../../../crispy/crispy/tools/lenslet.py&#34;, line 174, in propagateLenslets
+  File &#34;../../../../crispy/crispy/tools/lenslet.py&#34;, line 174, in propagateLenslets
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 31, in __call__
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 31, in __call__
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/scipy/ndimage/interpolation.py&#34;, line 325, in map_coordinates
+  File &#34;../../../../crispy/crispy/tools/lenslet.py&#34;, line 169, in propagateLenslets
+  File &#34;../../../../crispy/crispy/tools/lenslet.py&#34;, line 174, in propagateLenslets
+    output, order, mode, cval, None, None)
+  File &#34;../../../../crispy/crispy/tools/lenslet.py&#34;, line 174, in propagateLenslets
+KeyboardInterrupt
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 31, in __call__
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/scipy/ndimage/interpolation.py&#34;, line 309, in map_coordinates
+Traceback (most recent call last):
+  File &#34;../../../../crispy/crispy/tools/lenslet.py&#34;, line 174, in propagateLenslets
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/scipy/ndimage/interpolation.py&#34;, line 132, in _geometric_transform
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/scipy/ndimage/interpolation.py&#34;, line 309, in map_coordinates
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/scipy/ndimage/interpolation.py&#34;, line 307, in map_coordinates
+    order, mode, cval, extra_arguments, extra_keywords)
+    coordinates = numpy.asarray(coordinates)
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/scipy/ndimage/interpolation.py&#34;, line 325, in map_coordinates
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/multiprocessing/process.py&#34;, line 258, in _bootstrap
+  File &#34;../../../../crispy/crispy/tools/lenslet.py&#34;, line 174, in propagateLenslets
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/scipy/ndimage/interpolation.py&#34;, line 310, in map_coordinates
+    output, order, mode, cval, None, None)
+    self.run()
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/numpy/core/numeric.py&#34;, line 482, in asarray
+    if numpy.iscomplexobj(input):
+    if numpy.iscomplexobj(coordinates):
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 22, in run
+KeyboardInterrupt
+    coordinates = numpy.asarray(coordinates)
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/scipy/ndimage/interpolation.py&#34;, line 132, in _geometric_transform
+  File &#34;../../../../crispy/crispy/tools/par_utils.py&#34;, line 31, in __call__
+    order, mode, cval, extra_arguments, extra_keywords)
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/numpy/lib/type_check.py&#34;, line 269, in iscomplexobj
+    return array(a, dtype, copy=False, order=order)
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/numpy/core/numeric.py&#34;, line 482, in asarray
+  File &#34;/Users/mrizzo/anaconda/lib/python2.7/site-packages/numpy/lib/type_check.py&#34;, line 269, in iscomplexobj
+KeyboardInterrupt
+    return issubclass(asarray(x).dtype.type, _nx.complexfloating)
+    return issubclass(asarray(x).dtype.type, _nx.complexfloating)
+KeyboardInterrupt
+    return array(a, dtype, copy=False, order=order)
+  File &#34;../../../../crispy/crispy/tools/lenslet.py&#34;, line 170, in propagateLenslets
+KeyboardInterrupt
+KeyboardInterrupt
+KeyboardInterrupt
+KeyboardInterrupt
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-3-b54d5ab690c5&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">     12</span>                 process_detector<span class="ansi-blue-fg">=</span>True<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">     13</span>                 take_averages<span class="ansi-blue-fg">=</span>True<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-fg">---&gt; 14</span><span class="ansi-red-fg">                 parallel=False)
+</span><span class="ansi-green-intense-fg ansi-bold">     15</span> np<span class="ansi-blue-fg">.</span>savetxt<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">.</span>exportDir<span class="ansi-blue-fg">+</span><span class="ansi-blue-fg">&#34;/signal.txt&#34;</span><span class="ansi-blue-fg">,</span>signal<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     16</span> np<span class="ansi-blue-fg">.</span>savetxt<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">.</span>exportDir<span class="ansi-blue-fg">+</span><span class="ansi-blue-fg">&#34;/noise.txt&#34;</span><span class="ansi-blue-fg">,</span>noise<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">../../../../crispy/crispy/tools/postprocessing.pyc</span> in <span class="ansi-cyan-fg">process_SPC_IFS</span><span class="ansi-blue-fg">(par, psf_time_series_folder, offaxis_psf_filename, planet_radius, planet_AU, planet_dist_pc, ref_star_T, ref_star_Vmag, target_star_T, target_star_Vmag, lamc, BW, n_ref_star_imgs, tel_pupil_area, pp_fact, t_zodi, useQE, subtract_ref_psf, outdir_time_series, outdir_detector, outdir_average, process_cubes, process_offaxis, process_detector, process_noiseless, take_averages, parallel)</span>
+
+<span class="ansi-green-fg">../../../../crispy/crispy/IFS.py</span> in <span class="ansi-cyan-fg">polychromeIFS</span><span class="ansi-blue-fg">(par, wavelist, inputcube, name, parallel, QE, wavelist_endpts, dlambda, lam_arr)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda/lib/python2.7/multiprocessing/queues.pyc</span> in <span class="ansi-cyan-fg">get</span><span class="ansi-blue-fg">(self, block, timeout)</span>
+<span class="ansi-green-intense-fg ansi-bold">    115</span>             self<span class="ansi-blue-fg">.</span>_rlock<span class="ansi-blue-fg">.</span>acquire<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    116</span>             <span class="ansi-green-fg">try</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 117</span><span class="ansi-red-fg">                 </span>res <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_recv<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    118</span>                 self<span class="ansi-blue-fg">.</span>_sem<span class="ansi-blue-fg">.</span>release<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    119</span>                 <span class="ansi-green-fg">return</span> res
+
+<span class="ansi-red-fg">KeyboardInterrupt</span>:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">

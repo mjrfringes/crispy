@@ -685,13 +685,19 @@ within the brightest pixels</p>
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="Function-that-offsets-an-entire-cube">
+<h1>Function that offsets an entire cube<a class="headerlink" href="#Function-that-offsets-an-entire-cube" title="Permalink to this headline">¶</a></h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="mf">0.15</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">0.005</span><span class="p">)</span><span class="o">+</span><span class="mf">0.0147</span><span class="p">)</span>
+<span></span><span class="n">origcube</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo//IFS/crispy/crispy/OS5/OS5_average/offaxis.fits&quot;</span><span class="p">)</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">dy</span> <span class="o">=</span> <span class="mi">2</span>
+
 </pre></div>
 </div>
 </div>
@@ -710,6 +716,7 @@ within the brightest pixels</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#Least-squares-slice-by-slice-scaling-between-2-cubes">Least-squares slice-by-slice scaling between 2 cubes</a></li>
+<li><a class="reference internal" href="#Function-that-offsets-an-entire-cube">Function that offsets an entire cube</a></li>
 </ul>
 
 
