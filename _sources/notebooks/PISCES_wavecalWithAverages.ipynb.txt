@@ -627,7 +627,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 3,
    "metadata": {
     "collapsed": false
    },
@@ -642,23 +642,33 @@
       "crispy - INFO - Generating new wavelength solution\n",
       "crispy - INFO - Initializing transformation coefficients with previous values\n",
       "crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det685.0.fits\n",
-      "crispy - INFO - 0.35: x-shift from archival spot positions (pixels)\n",
-      "crispy - INFO - -0.59: y-shift from archival spot positions (pixels)\n",
-      "crispy - INFO - -0.00: rotation from archival spot positions (degrees)\n",
+      "crispy - INFO - -0.00: x-shift from archival spot positions (pixels)\n",
+      "crispy - INFO - 0.00: y-shift from archival spot positions (pixels)\n",
+      "crispy - INFO - 0.00: rotation from archival spot positions (degrees)\n",
       "crispy - INFO - Overwriting old wavecal\n",
-      "crispy - INFO - Reduced cube will have 13 wavelength bins\n"
-     ]
-    },
-    {
-     "ename": "NameError",
-     "evalue": "global name 'xsize' is not defined",
-     "output_type": "error",
-     "traceback": [
-      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
-      "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
-      "\u001b[0;32m<ipython-input-4-17bc861f6aec>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      8\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      9\u001b[0m \u001b[0;31m# this does everything you want\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 10\u001b[0;31m \u001b[0mmonochromatic_update\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpar\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0minImage\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0minLam\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
-      "\u001b[0;32m/Users/mrizzo/IFS/crispy/crispy/tools/wavecal.pyc\u001b[0m in \u001b[0;36mmonochromatic_update\u001b[0;34m(par, inImage, inLam, order, borderpix)\u001b[0m\n\u001b[1;32m    622\u001b[0m     \u001b[0;32mfor\u001b[0m \u001b[0mi\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mrange\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mlen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mlam_midpts\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    623\u001b[0m         \u001b[0m_x\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0m_y\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mpsftool\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mreturn_locations\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mlam_midpts\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mi\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlamsol\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m1\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mxindx\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0myindx\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 624\u001b[0;31m         \u001b[0m_good\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0m_x\u001b[0m \u001b[0;34m>\u001b[0m \u001b[0mborderpix\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_x\u001b[0m \u001b[0;34m<\u001b[0m \u001b[0mxsize\u001b[0m\u001b[0;34m-\u001b[0m\u001b[0mborderpix\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_y\u001b[0m \u001b[0;34m>\u001b[0m \u001b[0mborderpix\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_y\u001b[0m \u001b[0;34m<\u001b[0m \u001b[0mysize\u001b[0m\u001b[0;34m-\u001b[0m\u001b[0mborderpix\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    625\u001b[0m         \u001b[0mxpos\u001b[0m \u001b[0;34m+=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0m_x\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    626\u001b[0m         \u001b[0mypos\u001b[0m \u001b[0;34m+=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0m_y\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-      "\u001b[0;31mNameError\u001b[0m: global name 'xsize' is not defined"
+      "crispy - INFO - Don't forget to run buildcalibrations again with makePolychrome=True!\n",
+      "crispy - INFO - Building calibration files, placing results in ../../../crispy/ReferenceFiles/Calibra_170425/\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det605.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det605.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det615.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det625.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det635.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det645.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det655.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det665.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det675.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det685.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det695.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det705.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det715.0.fits\n",
+      "crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det725.0.fits\n",
+      "crispy - INFO - Loading wavelength solution from ../../../crispy/ReferenceFiles/Calibra_170425/lamsol.dat\n",
+      "crispy - INFO - Computing wavelength values at pixel centers\n",
+      "crispy - INFO - Reduced cube will have 11 wavelength bins\n",
+      "crispy - INFO - Making polychrome cube\n",
+      "crispy - INFO - Saving polychrome cube\n",
+      "crispy - INFO - Saving wavelength calibration cube\n",
+      "crispy - INFO - Total time elapsed: 20 s\n"
      ]
     }
    ],
@@ -691,7 +701,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 15,
+   "execution_count": 3,
    "metadata": {
     "collapsed": false
    },
@@ -705,12 +715,12 @@
       "crispy - INFO - Reduced cube will have 11 wavelength bins\n",
       "crispy - INFO - Writing data to ../../../crispy/SimResults/Flat637_red_lstsq.fits\n",
       "crispy - INFO - Writing data to ../../../crispy/SimResults/Flat637_red_lstsq_resid.fits\n",
-      "crispy - INFO - Elapsed time: 3.379326s\n",
+      "crispy - INFO - Elapsed time: 3.614852s\n",
       "crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits\n",
       "crispy - INFO - Reduced cube will have 11 wavelength bins\n",
       "crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq.fits\n",
       "crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_resid.fits\n",
-      "crispy - INFO - Elapsed time: 3.515273s\n"
+      "crispy - INFO - Elapsed time: 3.633941s\n"
      ]
     }
    ],
@@ -753,18 +763,6 @@
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython2",
    "version": "2.7.13"
-  },
-  "widgets": {
-   "state": {
-    "0336e902751d48a88d7b83410b0e9420": {
-     "views": [
-      {
-       "cell_index": 13
-      }
-     ]
-    }
-   },
-   "version": "1.2.0"
   }
  },
  "nbformat": 4,

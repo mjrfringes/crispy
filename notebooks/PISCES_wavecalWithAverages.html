@@ -826,7 +826,7 @@ crispy - INFO - Total time elapsed: 53 s
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [4]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -858,7 +858,7 @@ crispy - INFO - Total time elapsed: 53 s
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -869,38 +869,38 @@ crispy - INFO - Making copies of wavelength solution from ../../../crispy/Refere
 crispy - INFO - Generating new wavelength solution
 crispy - INFO - Initializing transformation coefficients with previous values
 crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ../../../crispy/ReferenceFiles/Calibra_170425/det685.0.fits
-crispy - INFO - 0.35: x-shift from archival spot positions (pixels)
-crispy - INFO - -0.59: y-shift from archival spot positions (pixels)
-crispy - INFO - -0.00: rotation from archival spot positions (degrees)
+crispy - INFO - -0.00: x-shift from archival spot positions (pixels)
+crispy - INFO - 0.00: y-shift from archival spot positions (pixels)
+crispy - INFO - 0.00: rotation from archival spot positions (degrees)
 crispy - INFO - Overwriting old wavecal
-crispy - INFO - Reduced cube will have 13 wavelength bins
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-4-17bc861f6aec&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      8</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span> <span class="ansi-red-fg"># this does everything you want</span>
-<span class="ansi-green-fg">---&gt; 10</span><span class="ansi-red-fg"> </span>monochromatic_update<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">,</span>inImage<span class="ansi-blue-fg">,</span>inLam<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">/Users/mrizzo/IFS/crispy/crispy/tools/wavecal.pyc</span> in <span class="ansi-cyan-fg">monochromatic_update</span><span class="ansi-blue-fg">(par, inImage, inLam, order, borderpix)</span>
-<span class="ansi-green-intense-fg ansi-bold">    622</span>     <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>len<span class="ansi-blue-fg">(</span>lam_midpts<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    623</span>         _x<span class="ansi-blue-fg">,</span> _y <span class="ansi-blue-fg">=</span> psftool<span class="ansi-blue-fg">.</span>return_locations<span class="ansi-blue-fg">(</span>lam_midpts<span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> lamsol<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> xindx<span class="ansi-blue-fg">,</span> yindx<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">--&gt; 624</span><span class="ansi-red-fg">         </span>_good <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">(</span>_x <span class="ansi-blue-fg">&gt;</span> borderpix<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>_x <span class="ansi-blue-fg">&lt;</span> xsize<span class="ansi-blue-fg">-</span>borderpix<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>_y <span class="ansi-blue-fg">&gt;</span> borderpix<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span>_y <span class="ansi-blue-fg">&lt;</span> ysize<span class="ansi-blue-fg">-</span>borderpix<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    625</span>         xpos <span class="ansi-blue-fg">+=</span> <span class="ansi-blue-fg">[</span>_x<span class="ansi-blue-fg">]</span>
-<span class="ansi-green-intense-fg ansi-bold">    626</span>         ypos <span class="ansi-blue-fg">+=</span> <span class="ansi-blue-fg">[</span>_y<span class="ansi-blue-fg">]</span>
-
-<span class="ansi-red-fg">NameError</span>: global name &#39;xsize&#39; is not defined
+crispy - INFO - Don&#39;t forget to run buildcalibrations again with makePolychrome=True!
+crispy - INFO - Building calibration files, placing results in ../../../crispy/ReferenceFiles/Calibra_170425/
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det605.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det605.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det615.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det625.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det635.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det645.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det655.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det665.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det675.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det685.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det695.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det705.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det715.0.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/ReferenceFiles/Calibra_170425/det725.0.fits
+crispy - INFO - Loading wavelength solution from ../../../crispy/ReferenceFiles/Calibra_170425/lamsol.dat
+crispy - INFO - Computing wavelength values at pixel centers
+crispy - INFO - Reduced cube will have 11 wavelength bins
+crispy - INFO - Making polychrome cube
+crispy - INFO - Saving polychrome cube
+crispy - INFO - Saving wavelength calibration cube
+crispy - INFO - Total time elapsed: 20 s
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [15]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -936,12 +936,12 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/Flat637.fits
 crispy - INFO - Reduced cube will have 11 wavelength bins
 crispy - INFO - Writing data to ../../../crispy/SimResults/Flat637_red_lstsq.fits
 crispy - INFO - Writing data to ../../../crispy/SimResults/Flat637_red_lstsq_resid.fits
-crispy - INFO - Elapsed time: 3.379326s
+crispy - INFO - Elapsed time: 3.614852s
 crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
 crispy - INFO - Reduced cube will have 11 wavelength bins
 crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq.fits
 crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_resid.fits
-crispy - INFO - Elapsed time: 3.515273s
+crispy - INFO - Elapsed time: 3.633941s
 </pre></div></div>
 </div>
 </div>
