@@ -549,8 +549,8 @@ def prepareCube(par,wavelist,inputcube,QE=True,adjustment=0.98898):
 
     if QE:
         loadQE = np.loadtxt(par.codeRoot+"/"+par.QE)
-        QE = interp1d(loadQE[:,0],loadQE[:,1])
-        QEvals = QE(wavelist)
+        QEinterp = interp1d(loadQE[:,0],loadQE[:,1])
+        QEvals = QEinterp(wavelist)
 
         if not "APPLYQE" in par.hdr:
             par.hdr.append(('APPLYQE',QE,'Applied quantum efficiency?'), end=True) 
