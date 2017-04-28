@@ -34,6 +34,35 @@ def gen_bad_pix_mask(image, filsize=3, threshold=5.0, return_smoothed_image=Fals
     return (goodpix, image_sm) if return_smoothed_image else goodpix
 
 
+def gen_lenslet_flat(BBcube, nsig=5):
+
+    lenslet_flat=np.nansum(BBcube.data,axis=0)
+    
+    mask = (lenslet_flat.data!=0)
+
+    x = np.arange(lenslet_flat.data.shape[0])
+    
+    # select only central region
+    med_n = np.median(x)
+    x -= int(med_n)	
+    x, y = np.meshgrid(x, x)
+    r = np.sqrt(x**2 + y**2)
+    stdmask = mask*(r<20)
+    
+    sig = np.std(lenslet_flat.data[stdmask])
+    ave = np.mean(lenslet_flat.data[stdmask])
+    print("Mean, sig in central 20 lenelsets:",ave,sig)
+
+    mask *= (lenslet_flat.data<ave+nsig*sig)*(lenslet_flat.data>ave-nsig*sig)
+
+    fullave = np.mean(lenslet_flat.data[mask])
+    norm_lenslet_flat = lenslet_flat.data/fullave
+    norm_lenslet_flat[norm_lenslet_flat==0] = np.NaN
+
+    
+    return 1./norm_lenslet_flat, mask
+
+
 
 def bowtie(image,xc,yc,openingAngle,clocking,IWApix,OWApix,export='bowtie',twomasks=False):
     '''

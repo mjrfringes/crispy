@@ -90,6 +90,8 @@ class Params():
         self.BW = 0.18              # Spectral bandwidth (if distortPISCES==False)
         self.npixperdlam = 2        # Number of pixels per spectral resolution element
         self.R = 50                 # Spectral resolving power (extracted cubes have twice)
+        
+        
 
         self.makeHeader()
 

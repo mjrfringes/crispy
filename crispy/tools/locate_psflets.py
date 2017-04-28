@@ -333,6 +333,11 @@ class PSFLets:
         nlam = np.zeros(xindx.shape, np.int)
         lam_out = np.zeros(y.shape)
         good = np.ones(xindx.shape)
+        
+        if hasattr(par, 'lenslet_mask'):
+            lenslet_mask = Image(par.lenslet_mask).data
+        else:
+            lenslet_mask = np.ones(xindx.shape)
 
         for ix in range(xindx.shape[0]):
             for iy in range(xindx.shape[1]):
@@ -343,6 +348,9 @@ class PSFLets:
                 pix_x = interp_y[:, ix, iy]
 #                 if ix==par.nlens/2 and iy==par.nlens/2:
 #                     print pix_y,pix_x
+                
+                good[ix,iy] = lenslet_mask[iy,ix]
+
                 if np.any(pix_x < borderpix) or np.any(pix_x > par.npix-borderpix) or np.any(pix_y < borderpix) or np.any(pix_y > par.npix-borderpix):
                     good[ix,iy] = 0
                     continue
@@ -536,7 +544,7 @@ def corrval(coef, x, y, filtered, order, trimfrac=0.1):
     return score
 
 
-def locatePSFlets(inImage, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
+def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
                   phi=np.arctan2(1.926,-1), scale=15.02,nlens=108):
     """
     function locatePSFlets takes an Image class, assumed to be a

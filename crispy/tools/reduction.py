@@ -502,7 +502,7 @@ def calculateWaveList(par,lam_list=None,Nspec=None):
     lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
     return lam_midpts,lam_endpts
 
-def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=False):
+def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=True):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -549,6 +549,7 @@ def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=Fal
         ifsimage.ivar = None
         
     cube = np.zeros((psflets.shape[0],par.nlens,par.nlens))
+    ivarcube = np.zeros((psflets.shape[0],par.nlens,par.nlens))
 
     resid = np.empty(ifsimage.data.shape)
     resid = ifsimage.data.copy()
@@ -569,8 +570,10 @@ def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=Fal
             if np.prod(good[:,i,j],axis=0):
                 subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xindx[:,i,j],yindx[:,i,j],psflets,dy)
                 cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
+                ivarcube[:,i,j] = 1.
             else:
                 cube[:,j,i] = np.NaN
+                ivarcube[:,i,j] = 0.
     
     xindx = np.arange(-par.nlens/2, par.nlens/2)
     xindx, yindx = np.meshgrid(xindx, xindx)
@@ -582,38 +585,6 @@ def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=Fal
         psflet_indx = _tag_psflets(ifsimage.data.shape, _x, _y, good,dy=10)
         coefs_flat = np.reshape(cube[i].transpose(), -1)
         resid -= psflets[i]*coefs_flat[psflet_indx]
-#         Image(data=psflets[i]*coefs_flat[psflet_indx]).write(par.exportDir+'/test_%d.fits' % i)
-#     for i in range(len(psflets)):
-#         _x,_y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
-#         good = (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
-#         psflet_indx = _tag_psflets(ifsimage.data.shape, _x, _y, good,dy=10)
-#         #psflet_indx = _tag_psflets(psflets[i].shape, x[i], y[i], good[i],
-#         #                           dx[i], dy[i])
-#         coefs_flat = np.reshape(cube[i].transpose(), -1)
-#         resid -= psflets[i]*coefs_flat[psflet_indx]
-                
-#     resid_img = Image(data=resid)    
-#     newresid = np.empty(resid.shape)
-#     newresid = resid.copy()
-#     if refine:
-#         for i in range(par.nlens):
-#             for j in range(par.nlens):
-#                 xlist = []
-#                 ylist = []
-#                 good = True
-#                 for lam in lamlist:
-#                     _x,_y = psftool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
-#                     good *= (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
-#                     xlist += [_x]    
-#                     ylist += [_y]   
-#                 
-#                 if good:
-#                     subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(resid_img,xlist,ylist,psflets,dy)
-#                     cube[:,j,i] += fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
-#                     for ilam in range(psflet_subarr.shape[0]):
-#                         newresid[y0:y1, x0:x1] -= cube[ilam,j,i]*psflet_subarr[ilam]
-#                 else:
-#                     cube[:,j,i] = np.NaN
 
     if 'cubemode' not in par.hdr:
         par.hdr.append(('cubemode','Least squares', 'Method used to extract data cube'), end=True)
@@ -621,22 +592,51 @@ def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=Fal
         par.hdr.append(('lam_max',np.amax(lams), 'Maximum mid wavelength of extracted cube'), end=True)
         par.hdr.append(('dlam',(np.amax(lams)-np.amin(lams))/lams.shape[0], 'Spacing of extracted wavelength bins'), end=True)
         par.hdr.append(('nlam',lams.shape[0], 'Number of extracted wavelengths'), end=True)
-    
-    if smoothandmask:
-        par.hdr.append(('SMOOTHED',True, 'Cube smoothed over bad lenslets'), end=True)
-        cube = Image(data=cube,ivar=None)
-        good = np.any(cube.data != 0, axis=0)
-        cube = _smoothandmask(cube, good)
+
+    if hasattr(par,'lenslet_flat'):
+        lenslet_flat = pyf.open(par.lenslet_flat)[1].data
+        lenslet_flat = lenslet_flat[np.newaxis,:]
+        if "FLAT" not in par.hdr:
+            par.hdr.append(('FLAT',True, 'Applied lenslet flatfield'), end=True)
+        cube *= lenslet_flat
+        ivarcube /= lenslet_flat**2
     else:
-        par.hdr.append(('SMOOTHED',False, 'Cube NOT smoothed over bad lenslets'), end=True)
-        cube = Image(data=cube,ivar=None)
+        lenslet_flat = np.ones(cube.shape)
+    if hasattr(par,'lenslet_mask'):
+        if "MASK" not in par.hdr:
+            par.hdr.append(('MASK',True, 'Applied lenslet mask'), end=True)
+        lenslet_mask = pyf.open(par.lenslet_mask)[1].data
+        lenslet_mask = lenslet_mask[np.newaxis,:]
+        ivarcube *= lenslet_mask
+    else:
+        lenslet_mask = np.ones(cube.shape)
+    
+    
+    if 'SMOOTHED' not in par.hdr:
+        par.hdr.append(('SMOOTHED',smoothandmask, 'Cube smoothed over bad lenslets'), end=True)
+    if smoothandmask:
+        cube = Image(data=cube*lenslet_mask,ivar=ivarcube)
+        #good = np.any(cube.data != 0, axis=0)
+        cube = _smoothandmask(cube, np.ones(good.shape))
+    else:
+        cube = Image(data=cube,ivar=ivarcube)
+
+
+#     if smoothandmask:
+#         par.hdr.append(('SMOOTHED',True, 'Cube smoothed over bad lenslets'), end=True)
+#         cube = Image(data=cube,ivar=None)
+#         good = np.any(cube.data != 0, axis=0)
+#         cube = _smoothandmask(cube, good)
+#     else:
+#         par.hdr.append(('SMOOTHED',False, 'Cube NOT smoothed over bad lenslets'), end=True)
+#         cube = Image(data=cube,ivar=None)
 
     #cube = Image(data=cube.data,ivar=cube.ivar,header=par.hdr,extraheader=ifsimage.extraheader)
 
 
     #pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
     #pyf.PrimaryHDU(resid).writeto(name+'_resid.fits',clobber=True)
-    Image(data=cube.data,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'.fits',clobber=True)
+    Image(data=cube.data,ivar=ivarcube,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'.fits',clobber=True)
     Image(data=resid,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_resid.fits',clobber=True)
 #     pyf.PrimaryHDU(newresid).writeto(name+'_newresid.fits',clobber=True)
     return cube
@@ -988,7 +988,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
 
 
 
-def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False):
+def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=True):
     """
     Original optimal extraction routine in Numpy from T. Brand
     
@@ -1086,13 +1086,34 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
         par.hdr.append(('dlam',lamlist[1]-lamlist[0], 'Spacing of extracted wavelength bins'), end=True)
         par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
     
-    if smoothandmask:
-        par.hdr.append(('SMOOTHED',True, 'Cube smoothed over bad lenslets'), end=True)
-        cube = Image(data=cube,ivar=ivarcube)
-        good = np.any(cube.data != 0, axis=0)
-        cube = _smoothandmask(cube, good)
+    if hasattr(par,'lenslet_flat'):
+        lenslet_flat = pyf.open(par.lenslet_flat)[1].data
+        lenslet_flat = lenslet_flat[np.newaxis,:]
+        if "FLAT" not in par.hdr:
+            par.hdr.append(('FLAT',True, 'Applied lenslet flatfield'), end=True)
+        cube *= lenslet_flat
+        ivarcube /= lenslet_flat**2
     else:
-        par.hdr.append(('SMOOTHED',False, 'Cube NOT smoothed over bad lenslets'), end=True)
+        lenslet_flat = np.ones(cube.shape)
+    if hasattr(par,'lenslet_mask'):
+        if "MASK" not in par.hdr:
+            par.hdr.append(('MASK',True, 'Applied lenslet mask'), end=True)
+        lenslet_mask = pyf.open(par.lenslet_mask)[1].data
+        lenslet_mask = lenslet_mask[np.newaxis,:]
+        ivarcube *= lenslet_mask
+    else:
+        lenslet_mask = np.ones(cube.shape)
+    
+    
+    if smoothandmask:
+        if 'SMOOTHED' not in par.hdr:
+            par.hdr.append(('SMOOTHED',True, 'Cube smoothed over bad lenslets'), end=True)
+        cube = Image(data=cube*lenslet_mask,ivar=ivarcube)
+        #good = np.any(cube.data != 0, axis=0)
+        cube = _smoothandmask(cube, np.ones(good.shape))
+    else:
+        if 'SMOOTHED' not in par.hdr:
+            par.hdr.append(('SMOOTHED',False, 'Cube NOT smoothed over bad lenslets'), end=True)
         cube = Image(data=cube,ivar=ivarcube)
 
     cube = Image(data=cube.data,ivar=cube.ivar,header=par.hdr,extraheader=im.extraheader)

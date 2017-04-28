@@ -320,7 +320,7 @@ def get_sim_hires(par,lam, upsample=10, nsubarr=1, npix=13, renorm=True):
 
 
 
-def gethires(x, y, image, upsample=5, nsubarr=5, npix=13, renorm=True):
+def gethires(x, y, good, image, upsample=5, nsubarr=5, npix=13, renorm=True):
     """
     Build high resolution images of the undersampled PSF using the
     monochromatic frames.
@@ -379,7 +379,7 @@ def gethires(x, y, image, upsample=5, nsubarr=5, npix=13, renorm=True):
             ############################################################
 
             for i in range(x.shape[0]):
-                if x[i] > j1 and x[i] < j2 and y[i] > i1 and y[i] < i2:
+                if x[i] > j1 and x[i] < j2 and y[i] > i1 and y[i] < i2 and good[i]:
                     xval = x[i] - 0.5/upsample
                     yval = y[i] - 0.5/upsample
 
@@ -494,6 +494,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
     hires_arrs = []
     allxpos = []
     allypos = []
+    allgood = []
 
     log.info('Making high-resolution PSFLet models')
 
@@ -503,10 +504,12 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
             for i in range(len(lam)):
 
                 xpos, ypos = psftool.return_locations(lam[i], allcoef, xindx, yindx)
+                good = np.reshape(psftool.good,-1)
                 xpos = np.reshape(xpos, -1)
                 ypos = np.reshape(ypos, -1)
                 allxpos += [xpos]
                 allypos += [ypos]
+                allgood += [good]
         #print(len(allxpos),len(imlist))
         tasks = multiprocessing.Queue()
         results = multiprocessing.Queue()
@@ -520,7 +523,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
             if par.gaussian_hires:
                 tasks.put(Task(i, get_sim_hires, (par, lam[i], upsample,nsubarr)))                    
             else:
-                tasks.put(Task(i, gethires, (allxpos[i], allypos[i],
+                tasks.put(Task(i, gethires, (allxpos[i], allypos[i],allgood[i],
                                                             imlist[i], upsample,nsubarr)))
     
         for i in range(ncpus):
@@ -544,9 +547,10 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
                 hiresarr = get_sim_hires(par, lam[i], upsample,nsubarr)               
             else:    
                 xpos, ypos = psftool.return_locations(lam[i], allcoef, xindx, yindx)
+                good = np.reshape(PSFtool.good,-1)
                 xpos = np.reshape(xpos, -1)
                 ypos = np.reshape(ypos, -1)
-                hiresarr = gethires(xpos, ypos, imlist[i],upsample,nsubarr)
+                hiresarr = gethires(xpos, ypos, good, imlist[i],upsample,nsubarr)
             hires_arrs += [hiresarr]
 
             if savehiresimages:
@@ -560,7 +564,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
 
     return hires_arrs
 
-def monochromatic_update(par,inImage,inLam,order=3):
+def monochromatic_update(par,inImage,inLam,order=3,apodize=True):
     '''
     TODO: also update polychrome when specified
     '''
@@ -573,7 +577,18 @@ def monochromatic_update(par,inImage,inLam,order=3):
     oldcoef = psftool.monochrome_coef(inLam, lam, allcoef, order=order)
 
     log.info('Generating new wavelength solution')
-    x, y, good, newcoef = locatePSFlets(inImage, polyorder=order, sig=par.FWHM/2.35,coef=oldcoef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
+    ysize,xsize = inImage.data.shape
+    mask=np.ones((ysize,xsize))    
+    if apodize:
+        x = np.arange(ysize)
+        med_n = np.median(x)
+        x -= int(med_n)	
+        x, y = np.meshgrid(x, x)
+
+        r = np.sqrt(x**2 + y**2)
+        mask = (r<ysize//2)
+
+    x, y, good, newcoef = locatePSFlets(inImage, polyorder=order, mask=mask,sig=par.FWHM/2.35,coef=oldcoef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
     psftool.geninterparray(lam, allcoef, order=order)
     dcoef = newcoef - oldcoef
 
@@ -614,7 +629,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=False, makehiresPSFlets=False,
                       makePolychrome=True,
                       savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
-                      parallel=True,inspect_first=True):
+                      parallel=True,inspect_first=True,apodize=True):
     """
     Master wavelength calibration function
     
@@ -655,6 +670,12 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
             Whether or not to parallelize the computation for the high-resolution PSFLet and
             polychrome computation. The wavelength calibration step cannot be parallelized since
             each wavelength uses the previous wavelength solution as a guess input.
+    lenslet_flat: Boolean
+            Whether to use the lenslet flat and mask labeled lenslet_flat.fits and lenslet_bad.fits
+            in wavecalDir
+    apodize: Boolean
+            Whether to fit the spots only using lenslets within a circle, ignoring the corners of
+            the detector
     
     
     Notes
@@ -708,14 +729,27 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     coef = None
     allcoef = []
     imlist = []
+
     ysize,xsize = Image(filename=filelist[0]).data.shape
+    mask=np.ones((ysize,xsize))    
+    if apodize:
+        x = np.arange(ysize)
+        med_n = np.median(x)
+        x -= int(med_n)	
+        x, y = np.meshgrid(x, x)
+
+        r = np.sqrt(x**2 + y**2)
+        mask = (r<ysize//2)
+
     for i, ifile in enumerate(filelist):
         im = Image(filename=ifile)
+        # sets the inverse variance to be the mask
+        im.ivar = mask
         # this is just to keep while we use noiseless images. Remove when real images are used.
         im.data+=1e-9
         imlist += [im]
         if genwavelengthsol:
-            x, y, good, coef = locatePSFlets(im, polyorder=order, sig=par.FWHM/2.35,coef=coef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
+            x, y, good, coef = locatePSFlets(im, polyorder=order, mask = mask,sig=par.FWHM/2.35,coef=coef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
             allcoef += [[lamlist[i]] + list(coef)]
             if inspect:
                 do_inspection(par,im.data,x,y,lamlist[i])
@@ -766,7 +800,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                                                           hires_arrs, lam, psftool, 
                                                           allcoef, xindx, yindx,ysize,xsize,upsample=upsample)
                 _x, _y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
-                _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
+                _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)*PSFtool.good
                 xpos += [_x]
                 ypos += [_y]
                 good += [_good]
@@ -790,7 +824,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                 index, poly = results.get()
                 polyimage[index] = poly*(lam_endpts[index + 1]-lam_endpts[index])
                 _x, _y = psftool.return_locations(lam_midpts[index], allcoef, xindx, yindx)
-                _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
+                _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)*PSFtool.good
                 xpos += [_x]
                 ypos += [_y]
                 good += [_good]
@@ -810,7 +844,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
 
         for i in range(len(lam_midpts)):
             _x, _y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
-            _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
+            _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)*PSFtool.good
             xpos += [_x]
             ypos += [_y]
             good += [_good]
