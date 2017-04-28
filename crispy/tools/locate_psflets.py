@@ -334,10 +334,10 @@ class PSFLets:
         lam_out = np.zeros(y.shape)
         good = np.ones(xindx.shape)
         
-        if hasattr(par, 'lenslet_mask'):
-            lenslet_mask = Image(par.lenslet_mask).data
-        else:
-            lenslet_mask = np.ones(xindx.shape)
+#         if hasattr(par, 'lenslet_mask'):
+#             lenslet_mask = Image(par.lenslet_mask).data
+#         else:
+#             lenslet_mask = np.ones(xindx.shape)
 
         for ix in range(xindx.shape[0]):
             for iy in range(xindx.shape[1]):
@@ -349,7 +349,7 @@ class PSFLets:
 #                 if ix==par.nlens/2 and iy==par.nlens/2:
 #                     print pix_y,pix_x
                 
-                good[ix,iy] = lenslet_mask[iy,ix]
+                #good[ix,iy] = lenslet_mask[iy,ix]
 
                 if np.any(pix_x < borderpix) or np.any(pix_x > par.npix-borderpix) or np.any(pix_y < borderpix) or np.any(pix_y > par.npix-borderpix):
                     good[ix,iy] = 0

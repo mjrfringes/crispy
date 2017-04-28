@@ -547,7 +547,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
                 hiresarr = get_sim_hires(par, lam[i], upsample,nsubarr)               
             else:    
                 xpos, ypos = psftool.return_locations(lam[i], allcoef, xindx, yindx)
-                good = np.reshape(PSFtool.good,-1)
+                good = np.reshape(psftool.good,-1)
                 xpos = np.reshape(xpos, -1)
                 ypos = np.reshape(ypos, -1)
                 hiresarr = gethires(xpos, ypos, good, imlist[i],upsample,nsubarr)
@@ -733,13 +733,14 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     ysize,xsize = Image(filename=filelist[0]).data.shape
     mask=np.ones((ysize,xsize))    
     if apodize:
-        x = np.arange(ysize)
-        med_n = np.median(x)
-        x -= int(med_n)	
-        x, y = np.meshgrid(x, x)
+        y = np.arange(ysize)
+        x = np.arange(xsize)
+        x -= xsize//2	
+        y -= ysize//2	
+        x, y = np.meshgrid(x, y)
 
         r = np.sqrt(x**2 + y**2)
-        mask = (r<ysize//2)
+        mask = (r<min(ysize,xsize)//2)
 
     for i, ifile in enumerate(filelist):
         im = Image(filename=ifile)
@@ -770,7 +771,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
 
     log.info("Computing wavelength values at pixel centers")
     psftool = PSFLets()
-    psftool.genpixsol(par,lam, allcoef, order=order,lam1=lam1/1.04, lam2=lam2*1.03)
+    psftool.genpixsol(par,lam, allcoef, order=order,lam1=lam1/1.05, lam2=lam2*1.05)
     psftool.savepixsol(outdir=outdir)
 
     xindx = np.arange(-par.nlens/2, par.nlens/2)
@@ -800,7 +801,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                                                           hires_arrs, lam, psftool, 
                                                           allcoef, xindx, yindx,ysize,xsize,upsample=upsample)
                 _x, _y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
-                _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)*PSFtool.good
+                _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
                 xpos += [_x]
                 ypos += [_y]
                 good += [_good]
@@ -824,7 +825,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                 index, poly = results.get()
                 polyimage[index] = poly*(lam_endpts[index + 1]-lam_endpts[index])
                 _x, _y = psftool.return_locations(lam_midpts[index], allcoef, xindx, yindx)
-                _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)*PSFtool.good
+                _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
                 xpos += [_x]
                 ypos += [_y]
                 good += [_good]
@@ -844,7 +845,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
 
         for i in range(len(lam_midpts)):
             _x, _y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
-            _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)*PSFtool.good
+            _good = (_x > borderpix)*(_x < xsize-borderpix)*(_y > borderpix)*(_y < ysize-borderpix)
             xpos += [_x]
             ypos += [_y]
             good += [_good]

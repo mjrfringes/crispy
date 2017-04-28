@@ -403,7 +403,7 @@ def main():
     log.shutdown()
 
     
-def reduceIFSMap(par,IFSimageName,method='optext'):
+def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True):
     '''
     Main reduction function
     
@@ -446,10 +446,10 @@ def reduceIFSMap(par,IFSimageName,method='optext'):
     reducedName = IFSimageName.split('/')[-1].split('.')[0]
     if method == 'lstsq':
         reducedName += '_red_lstsq'
-        cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage)
+        cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad)
     elif method == 'optext':
         reducedName += '_red_optext'
-        cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage)
+        cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad)
     else:
         log.info("Method not found")
         
@@ -458,7 +458,7 @@ def reduceIFSMap(par,IFSimageName,method='optext'):
     return cube
 
 
-def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True):
+def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True,smoothbad=True):
     '''
     Main reduction function
     
@@ -509,10 +509,10 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True):
             reducedName = IFSimageNameList[i].split('/')[-1].split('.')[0]
             if method == 'lstsq':
                 reducedName += '_red_lstsq'
-                tasks.put(Task(i, lstsqExtract, (par, par.exportDir+'/'+reducedName,IFSimage)))
+                tasks.put(Task(i, lstsqExtract, (par, par.exportDir+'/'+reducedName,IFSimage,smoothbad)))
             elif method == 'optext':
                 reducedName += '_red_optext'
-                tasks.put(Task(i, intOptimalExtract, (par, par.exportDir+'/'+reducedName,IFSimage)))
+                tasks.put(Task(i, intOptimalExtract, (par, par.exportDir+'/'+reducedName,IFSimage,smoothbad)))
             else:
                 log.info("Method not found")
     
@@ -528,10 +528,10 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True):
             reducedName = IFSimageNameList[i].split('/')[-1].split('.')[0]
             if method == 'lstsq':
                 reducedName += '_red_lstsq'
-                cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage)
+                cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothbad)
             elif method == 'optext':
                 reducedName += '_red_optext'
-                cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage)
+                cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothbad)
             else:
                 log.info("Method not found")
 

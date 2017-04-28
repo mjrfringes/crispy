@@ -12,6 +12,8 @@ from scipy import ndimage
 from locate_psflets import PSFLets
 from image import Image
 from scipy import interpolate
+# import warnings
+# warnings.filterwarnings("ignore")
 
 def _smoothandmask(datacube, good):
     """
@@ -502,7 +504,7 @@ def calculateWaveList(par,lam_list=None,Nspec=None):
     lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
     return lam_midpts,lam_endpts
 
-def lstsqExtract(par,name,ifsimage,ivar=True,dy=3,refine=False,smoothandmask=True):
+def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=False):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -773,7 +775,7 @@ def fit_cutout(subim, psflets, mode='lstsq'):
 
     return coef
 
-def _tag_psflets(shape, x, y, good, dx=6, dy=6):
+def _tag_psflets(shape, x, y, good, dx=10, dy=10):
     """
     Create an array with the index of each lenslet at a given
     wavelength.  This will make it very easy to remove the best-fit
@@ -842,7 +844,7 @@ def _tag_psflets(shape, x, y, good, dx=6, dy=6):
 
 
 
-def intOptimalExtract(par,name,IFSimage):
+def intOptimalExtract(par,name,IFSimage,smoothandmask=True):
     """
     Calls the optimal extraction routine
     
@@ -872,12 +874,12 @@ def intOptimalExtract(par,name,IFSimage):
     lam_midpts,scratch = calculateWaveList(par)
 
     
-    datacube = fitspec_intpix_np(par,IFSimage, loc, lam_midpts)
+    datacube = fitspec_intpix_np(par,IFSimage, loc, lam_midpts,smoothandmask=smoothandmask)
     datacube.write(name+'.fits',clobber=True)
     return datacube
 
-def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None, 
-                   smoothandmask=False,mode = 'gaussvar'):
+def fitspec_intpix(par,im, PSFlet_tool, lamlist,  delt_y=6, flat=None, 
+                   mode = 'gaussvar'):
     """
     Optimal extraction routine
     
@@ -988,7 +990,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist, delt_y=6, flat=None,
 
 
 
-def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=True):
+def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=6):
     """
     Original optimal extraction routine in Numpy from T. Brand
     
