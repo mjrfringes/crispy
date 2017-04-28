@@ -40,7 +40,7 @@ def gen_lenslet_flat(BBcube, nsig=5):
     
     mask = (lenslet_flat.data!=0)
 
-    x = np.arange(lenslet_flat.data.shape[0])
+    x = np.arange(lenslet_flat.shape[0])
     
     # select only central region
     med_n = np.median(x)
@@ -49,14 +49,14 @@ def gen_lenslet_flat(BBcube, nsig=5):
     r = np.sqrt(x**2 + y**2)
     stdmask = mask*(r<20)
     
-    sig = np.std(lenslet_flat.data[stdmask])
-    ave = np.mean(lenslet_flat.data[stdmask])
-    print("Mean, sig in central 20 lenelsets:",ave,sig)
+    sig = np.std(lenslet_flat[stdmask])
+    ave = np.mean(lenslet_flat[stdmask])
+    print("Mean, sig in central 20 lenslets:",ave,sig)
 
-    mask *= (lenslet_flat.data<ave+nsig*sig)*(lenslet_flat.data>ave-nsig*sig)
+    mask *= (lenslet_flat<ave+nsig*sig)*(lenslet_flat>ave-nsig*sig)
 
-    fullave = np.mean(lenslet_flat.data[mask])
-    norm_lenslet_flat = lenslet_flat.data/fullave
+    fullave = np.mean(lenslet_flat[mask])
+    norm_lenslet_flat = lenslet_flat/fullave
     norm_lenslet_flat[norm_lenslet_flat==0] = np.NaN
 
     

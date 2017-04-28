@@ -12,8 +12,8 @@ from scipy import ndimage
 from locate_psflets import PSFLets
 from image import Image
 from scipy import interpolate
-# import warnings
-# warnings.filterwarnings("ignore")
+import warnings
+warnings.filterwarnings("ignore")
 
 def _smoothandmask(datacube, good):
     """
@@ -462,7 +462,7 @@ def testReduction(par,name,ifsimage):
     pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
     return cube
 
-def calculateWaveList(par,lam_list=None,Nspec=None):
+def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
 
     '''
     Computes the wavelength lists corresponding to the center and endpoints of each
@@ -493,13 +493,11 @@ def calculateWaveList(par,lam_list=None,Nspec=None):
     else:
         lamlist = lam_list
     if Nspec is None:
-        
-        Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*par.npixperdlam+2)
+        if method=='lstsq':
+            Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*par.npixperdlam+2)
+        else:
+            Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*2+2)
     log.info('Reduced cube will have %d wavelength bins' % (Nspec-1))
-#     loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
-#     loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
-#     lam_endpts = np.exp(loglam_endpts)
-#     lam_midpts = np.exp(loglam_midpts)
     lam_endpts = np.linspace(min(lamlist), max(lamlist), Nspec)
     lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
     return lam_midpts,lam_endpts
@@ -871,7 +869,7 @@ def intOptimalExtract(par,name,IFSimage,smoothandmask=True):
 
     loc = PSFLets(load=True, infiledir=par.wavecalDir)
     #Nspec = int(par.BW*par.npixperdlam*par.R)
-    lam_midpts,scratch = calculateWaveList(par)
+    lam_midpts,scratch = calculateWaveList(par,method='optext')
 
     
     datacube = fitspec_intpix_np(par,IFSimage, loc, lam_midpts,smoothandmask=smoothandmask)

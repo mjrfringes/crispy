@@ -20,126 +20,12 @@ from reduction import calculateWaveList
 from scipy.special import erf
 from shutil import copy2
 import glob
+import warnings
+warnings.filterwarnings("ignore")
 
 
 
 
-# def computeWavecal(par,lamlist=None,filelist=None,order = 3):
-#     '''
-#     Computes a wavelength calibration from a set of fits files
-#     Uses Tim Brandt's locate_PSFlets routine with an initial guess.
-#     The consecutive solutions use information from previous solutions to improve the
-#     initial guess.
-#     The process can be optimized somewhat by reducing the number of lenslets within
-#     the locatePSFlets function (could make this a parameter!)
-#     lamlist and filelist can be defined in the parameters in which case they don't need to be set
-#     
-#     Parameters
-#     ----------
-#     par:        Parameter instance
-#     lamlist:    list of floats
-#             Wavelengths in nm
-#     filelist:   list of filenames
-#             List of fits files to open in corresponding order
-#     order:      int
-#             Order of 2d polynomial to be fitted to lenslets
-#     
-#     Notes
-#     -----
-#     Obsolete now
-#     '''
-#     # lamlist/filelist override
-#     if (filelist!=None) and (lamlist!=None):
-#         par.filelist = filelist
-#         par.lamlist = lamlist
-#     coef = None
-#     allcoef = []    
-#     xpos = []
-#     ypos = []
-#     good = []
-# #     polyimage = np.zeros((len(par.lamlist), par.npix, par.npix))
-# 
-#     for i in range(len(par.lamlist)):
-#         inImage = Image(filename=par.filelist[i])
-#         _x, _y, _good, coef = locatePSFlets(inImage, polyorder=order, coef=coef,phi=par.philens,scale=par.pitch/par.pixsize,nlens=par.nlens)
-# #         polyimage[i] = inImage.data
-#         xpos += [_x]
-#         ypos += [_y]
-#         good += [_good]
-#         allcoef += [[par.lamlist[i]] + list(coef)]
-#     log.info("Saving wavelength solution to " + par.wavecalDir + "lamsol.dat")
-#     outkey = pyf.HDUList(pyf.PrimaryHDU(np.asarray(par.lamlist)))
-#     outkey.append(pyf.PrimaryHDU(np.asarray(xpos)))
-#     outkey.append(pyf.PrimaryHDU(np.asarray(ypos)))
-#     outkey.append(pyf.PrimaryHDU(np.asarray(good).astype(np.uint8)))
-#     outkey.writeto(par.wavecalDir + par.wavecalName, clobber=True)
-#     
-#     out = pyf.HDUList(pyf.PrimaryHDU(polyimage.astype(np.float32)))
-#     out.writeto(par.wavecalDir + 'polychromeR%d.fits' % (par.R), clobber=True)
-
-#     allcoef = np.asarray(allcoef)
-#     np.savetxt(par.wavecalDir + "lamsol.dat", allcoef)
-
-# def createPolychrome(par):
-#     '''
-#     To be run after generating a wavelength calibration set.
-#     This function constructs a cube of (lam_max-lam_min)/par.dlam depth,
-#     in which each slice is a monochromatic map at that wavelength.
-#     If the wavelength calibration doesn't contain all the required wavelengths,
-#     interpolate between wavelengths using map_coordinates.
-#     In the end, one should be able to make a cutout at a given location and get a cube
-#     with all the psflets for that lenslet.
-#     
-#     For now, this only works with simulated, noiseless data in order to get
-#     almost perfect PSFs. In practice, we will have to create this cube from data.
-#     For now, already assumes that all wavelengths are available (need to compute these)
-#     '''
-#     
-#     polyimage = np.zeros((len(par.lamlist), par.npix, par.npix))
-# 
-#     # simply put all the ideal images into a cube (will need to develop this further)
-#     for i in range(len(par.lamlist)):
-#         inImage = Image(filename=par.filelist[i])
-#         polyimage[i] = inImage.data
-#     out = pyf.HDUList(pyf.PrimaryHDU(polyimage.astype(np.float32)))
-#     out.writeto(par.wavecalDir + 'polychromeR%d.fits' % (par.R), clobber=True)
-
-# def inspectWaveCal(par,slice=0,name='inspectWavecal'):
-#     '''
-#     Inspects a wavecal solution by overplotting apertures on top of the image
-#     
-#     Inputs:
-#     1. par          Parameter instance
-#     2. slice        which slice of the wavelength calibration to look at
-#     3. save         whether to save the figure or not
-#     
-#     '''
-#     calCube = pyf.open(par.wavecalDir+'polychromekeyR%d.fits' % (par.R))
-#     waveCalArray = calCube[0].data
-#     i = slice
-#     log.info('Displaying PSF centroid fits for wavelength %3d' % (waveCalArray[i]))
-#     xorig = calCube[1].data[i,:,:]
-#     yorig = calCube[2].data[i,:,:]
-#     xdim,ydim = yorig.shape
-# 
-#     xg,yg = xorig.shape
-#     vals = np.array([(xorig[m,n],yorig[m,n]) for m in range(xg) for n in range(yg)])
-#     pos = (vals[:,0],vals[:,1])
-#     #aps = CircularAperture(pos, r=3)
-#     fig,ax = plt.subplots(figsize=(15,15))
-#     hdulist = pyf.open(par.filelist[i],ignore_missing_end=True)
-#     if hdulist[0].header['NAXIS']!=2:
-#         image = pyf.open(par.filelist[i],ignore_missing_end=True)[1].data
-#     else:
-#         image = pyf.open(par.filelist[i],ignore_missing_end=True)[0].data
-#     mean = np.mean(image)
-#     std = np.std(image)
-#     norm = mpl.colors.Normalize(vmin=mean,vmax=mean+5*std)
-#     ax.imshow(image, cmap='Greys',norm=norm,interpolation='nearest',origin='lower')
-#     #aps.plot(ax=ax,color='blue', lw=1, alpha=0.5)
-#     fig.savefig(par.wavecalDir+name+'_%3d.png' % (waveCalArray[i]),dpi=300)
-
-#from photutils import CircularAperture
 def do_inspection(par,image,xpos,ypos,lam):
     
     xg,yg = xpos.shape
@@ -156,13 +42,6 @@ def do_inspection(par,image,xpos,ypos,lam):
         ax.add_artist(circle)
     #aps.plot(ax=ax,color='blue', lw=1, alpha=0.5)
     fig.savefig(par.wavecalDir+'inspection_%3d.png' % (lam),dpi=300)
-    
-# def inspectAllWavecal(par,slice_list = None):
-#     
-#     
-#     # load up polychrome key cube
-#     polychromekey = pyf.open(par.wavecalDir+'polychromekeyR%d.fits' % (par.R))
-#     if slice_list is None:
         
     
 
@@ -670,9 +549,6 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
             Whether or not to parallelize the computation for the high-resolution PSFLet and
             polychrome computation. The wavelength calibration step cannot be parallelized since
             each wavelength uses the previous wavelength solution as a guess input.
-    lenslet_flat: Boolean
-            Whether to use the lenslet flat and mask labeled lenslet_flat.fits and lenslet_bad.fits
-            in wavecalDir
     apodize: Boolean
             Whether to fit the spots only using lenslets within a circle, ignoring the corners of
             the detector
