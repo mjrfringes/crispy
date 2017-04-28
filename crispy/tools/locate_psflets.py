@@ -66,6 +66,7 @@ class PSFLets:
             self.xindx = hdulist[1].data
             self.yindx = hdulist[2].data
             self.nlam = hdulist[3].data.astype(int)
+            self.good = hdulist[4].data.astype(int)
         except:
             raise RuntimeError("File " + infile + " does not appear to contain a CHARIS wavelength solution in the appropriate format.")
         self.nlam_max = np.amax(self.nlam)
@@ -92,6 +93,7 @@ class PSFLets:
         out.append(fits.PrimaryHDU(self.xindx))
         out.append(fits.PrimaryHDU(self.yindx))
         out.append(fits.PrimaryHDU(self.nlam.astype(int)))
+        out.append(fits.PrimaryHDU(self.good.astype(int)))
         try:
             out.writeto(outfile, clobber=True)
         except:
@@ -267,7 +269,7 @@ class PSFLets:
 
         return interp_x, interp_y
 
-    def genpixsol(self, par, lam, allcoef, order=3, lam1=None, lam2=None):
+    def genpixsol(self, par, lam, allcoef, order=3, lam1=None, lam2=None,borderpix =4):
         """
         Calculates the wavelength at the center of each pixel within a microspectrum
         
@@ -330,7 +332,7 @@ class PSFLets:
         y = np.zeros(x.shape)
         nlam = np.zeros(xindx.shape, np.int)
         lam_out = np.zeros(y.shape)
-        good = np.zeros(xindx.shape)
+        good = np.ones(xindx.shape)
 
         for ix in range(xindx.shape[0]):
             for iy in range(xindx.shape[1]):
@@ -341,13 +343,15 @@ class PSFLets:
                 pix_x = interp_y[:, ix, iy]
 #                 if ix==par.nlens/2 and iy==par.nlens/2:
 #                     print pix_y,pix_x
-                if np.all(pix_x < 0) or np.all(pix_x > par.npix) or np.all(pix_y < 0) or np.all(pix_y > par.npix):
+                if np.any(pix_x < borderpix) or np.any(pix_x > par.npix-borderpix) or np.any(pix_y < borderpix) or np.any(pix_y > par.npix-borderpix):
+                    good[ix,iy] = 0
                     continue
 
                 if pix_y[-1] < pix_y[0]:
                     try:
                         tck_y = interpolate.splrep(pix_y[::-1], interp_lam[::-1], k=1, s=0)
                     except:
+                        good[ix,iy] = 0
                         raise
                 else:
                     tck_y = interpolate.splrep(pix_y, interp_lam, k=1, s=0)
@@ -372,6 +376,7 @@ class PSFLets:
         self.nlam = nlam
         self.lam_indx = lam_out[:, :, :nlam_max]
         self.nlam_max = np.amax(nlam)
+        self.good = good
 
 
 

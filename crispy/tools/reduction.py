@@ -1035,17 +1035,19 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist, delt_y=6,smoothandmask=False
 #     lams = polychromekey[0].data
 #     xindx = polychromekey[1].data+0.5
 #     yindx = polychromekey[2].data+0.5
-    #good = polychromekey[3].data
+#     good = polychromekey[3].data
+    good = PSFlet_tool.good
 
     
     for i in range(xindx.shape[0]):
         for j in range(yindx.shape[1]):
-            good = True
-            for lam in lamlist:
-                _x,_y = PSFlet_tool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
-                good *= (_x > delt_y)*(_x < xdim-delt_y)*(_y > delt_y)*(_y < ydim-delt_y)
-                 
-            if good:
+#             good = True
+#             for lam in lamlist:
+#                 _x,_y = PSFlet_tool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
+#                 good *= (_x > delt_y)*(_x < xdim-delt_y)*(_y > delt_y)*(_y < ydim-delt_y)
+#                  
+#             if good:
+            if good[i,j]:
                 _x = xindx[i, j, :PSFlet_tool.nlam[i, j]]
                 _y = yindx[i, j, :PSFlet_tool.nlam[i, j]]
                 _lam = PSFlet_tool.lam_indx[i, j, :PSFlet_tool.nlam[i, j]]
