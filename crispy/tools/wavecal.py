@@ -443,7 +443,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
 
     return hires_arrs
 
-def monochromatic_update(par,inImage,inLam,order=3,apodize=True):
+def monochromatic_update(par,inImage,inLam,order=3,apodize=False):
     '''
     TODO: also update polychrome when specified
     '''
@@ -508,7 +508,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=False, makehiresPSFlets=False,
                       makePolychrome=True,
                       savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
-                      parallel=True,inspect_first=True,apodize=True):
+                      parallel=True,inspect_first=True,apodize=True,lamsol=None):
     """
     Master wavelength calibration function
     
@@ -552,7 +552,9 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     apodize: Boolean
             Whether to fit the spots only using lenslets within a circle, ignoring the corners of
             the detector
-    
+    lamsol: 2D array
+            Optional argument that, if not None and if genwavelengthsol==False, will take the argument
+            and use it as the current wavelength calibration to build the polychrome.
     
     Notes
     -----
@@ -640,10 +642,13 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
         lam = allcoef[:, 0]
         allcoef = allcoef[:, 1:]
         
-    else:
+    elif lamsol is None:
         log.info("Loading wavelength solution from " + outdir + "lamsol.dat")
         lam = np.loadtxt(outdir + "lamsol.dat")[:, 0]
         allcoef = np.loadtxt(outdir + "lamsol.dat")[:, 1:]
+    else:
+        lam = lamsol[:, 0]
+        allcoef = lamsol[:, 1:]
 
     log.info("Computing wavelength values at pixel centers")
     psftool = PSFLets()

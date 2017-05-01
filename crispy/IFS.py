@@ -403,7 +403,7 @@ def main():
     log.shutdown()
 
     
-def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True):
+def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None):
     '''
     Main reduction function
     
@@ -413,8 +413,8 @@ def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True):
     ----------
     par :   Parameter instance
             Contains all IFS parameters
-    IFSimageName : string
-            Path of image file
+    IFSimageName : string or 2D ndarray
+            Path of image file, of 2D ndarray. 
     method : 'lstsq', 'optext'
             Method used for reduction.
             'lstsq': use the knowledge of the PSFs at each location and each wavelength and fits
@@ -442,8 +442,16 @@ def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True):
         par.hdr.append(('R',par.R,'Spectral resolution of final cube'), end=True) 
         par.hdr.append(('CALDIR',par.wavecalDir.split('/')[-2],'Directory of wavelength solution'), end=True) 
 
-    IFSimage = Image(filename = IFSimageName)
-    reducedName = IFSimageName.split('/')[-1].split('.')[0]
+    if isinstance(IFSimageName,basestring):
+        IFSimage = Image(filename = IFSimageName)
+        reducedName = IFSimageName.split('/')[-1].split('.')[0]
+    else:
+        IFSimage = Image(data=IFSimageName)
+        if name is None:
+            reducedName = time.strftime("%Y%m%d-%H%M%S")
+        else:
+            reducedName = name
+
     if method == 'lstsq':
         reducedName += '_red_lstsq'
         cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad)
