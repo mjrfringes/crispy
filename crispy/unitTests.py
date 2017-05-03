@@ -112,7 +112,7 @@ def testGenPixSol(par):
     psftool.savepixsol(outdir = par.exportDir)
 
 
-def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outname='flatfield.fits',useQE=False):
+def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outname='flatfield.fits',useQE=False,method='optext'):
     '''
     Creates a polychromatic flatfield
     
@@ -135,7 +135,7 @@ def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outn
     
     '''
     
-    lam_midpts,lam_endpts = calculateWaveList(par,Nspec=Nspec)
+    lam_midpts,lam_endpts = calculateWaveList(par,Nspec=Nspec,method=method)
     inputCube = np.ones((len(lam_midpts),npix,npix),dtype=np.float32)
     
 #     if useQE:

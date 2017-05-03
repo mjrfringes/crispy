@@ -9,7 +9,7 @@ except:
     import pyfits as fits
 
 
-class Params():
+class Params(object):
 
     def __init__(self,codeRoot='.'):
         '''
@@ -79,7 +79,8 @@ class Params():
         
         self.distortPISCES=False    # If True, use measured PISCES distortion/dispersion
         self.BW = 0.18              # Spectral bandwidth (if distortPISCES==False)
-        self.npixperdlam = 0.8        # Number of pixels per spectral resolution element
+        self.npixperdlam = 2        # Number of pixels per spectral resolution element
+        self.nspecperpix_lstsq = 0.8 # Nspec per pixel for least squares 
         self.R = 70                 # Spectral resolving power (extracted cubes have twice)
 
         self.makeHeader()

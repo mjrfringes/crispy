@@ -9,7 +9,6 @@ Originally inspired by T. Brandt's code for CHARIS
 
 
 import numpy as np
-from params import Params
 try:
     from astropy.io import fits as pyf
 except:
@@ -248,9 +247,10 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, QE 
     if par.saveRotatedInput: Image(data=np.array(inputCube),header=par.hdr).write(par.exportDir+'/imagePlaneRot.fits')
     if par.savePoly: Image(data=polyimage,header=par.hdr).write(par.exportDir+'/'+name+'poly.fits') 
     
-    finalFrame = np.sum(polyimage,axis=0)
+    detectorFrame = np.sum(polyimage,axis=0)
     
-    detectorFrame = rebinDetector(par,finalFrame,clip=False)
+    if par.pxperdetpix != 1.:
+        detectorFrame = rebinDetector(par,detectorFrame,clip=False)
     if par.saveDetector: Image(data=detectorFrame,header=par.hdr).write(par.exportDir+'/'+name+'.fits') 
     log.info('Done.')
     t['End'] = time.time()
@@ -547,7 +547,7 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True,smoothba
 
 
 
-def prepareCube(par,wavelist,inputcube,QE=True,adjustment=0.98898):
+def prepareCube(par,wavelist,incube,QE=True,adjustment=0.98898):
     '''
     Processes input cubes
     '''
@@ -555,6 +555,7 @@ def prepareCube(par,wavelist,inputcube,QE=True,adjustment=0.98898):
         par.hdr.append(('INSLICES',len(wavelist),'Number of wavelengths in input cube'), end=True) 
         par.hdr.append(('ADJUST',adjustment,'Adjustment factor for rebinning error'), end=True) 
 
+    inputcube = Image(data=incube.data.copy(),header=incube.header)
     if QE:
         loadQE = np.loadtxt(par.codeRoot+"/"+par.QE)
         QEinterp = interp1d(loadQE[:,0],loadQE[:,1])
@@ -564,6 +565,7 @@ def prepareCube(par,wavelist,inputcube,QE=True,adjustment=0.98898):
             par.hdr.append(('APPLYQE',QE,'Applied quantum efficiency?'), end=True) 
         for iwav in range(len(wavelist)):
             inputcube.data[iwav] *= QEvals[iwav]
+        #print(QEvals)
     # adjust for small error in rebinning function
     inputcube.data *= adjustment
     outcube = Image(data=inputcube.data,header=inputcube.header)
@@ -580,7 +582,7 @@ def createWavecalFiles(par,lamlist,lamc=770.,dlam=1.):
     inputCube = np.ones((1,512,512),dtype=float)
     inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))
     inCube[0].header['LAM_C'] = lamc/1000.
-    inCube[0].header['PIXSIZE'] = 0.5
+    inCube[0].header['PIXSIZE'] = 0.1
     filelist = []
     for wav in lamlist:
 #         detectorFrame = propagateIFS(par,[wav*1e-3],inCube[0])

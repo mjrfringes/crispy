@@ -21,6 +21,8 @@ from crispy.tools.par_utils import Task, Consumer
 import seaborn as sns
 from crispy.tools.inputScene import calc_contrast
 from crispy.tools.reduction import calculateWaveList
+from crispy.tools.imgtools import bowtie
+from crispy.tools.rotate import shiftCube
 from scipy import ndimage
 from scipy.interpolate import interp1d
 from crispy.params import Params
@@ -313,29 +315,29 @@ def process_SPC_IFS(par,
         detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube_flipped,QE=useQE)
         Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/offaxis_flipped.fits',clobber=True)
 
-        ###################################################################################
-        # Add the zodi and exozodi, uniform for now as opposed to decreasing
-        # as a function of separation from the star; over the full FOV instead of just the bowtie
-        ###################################################################################
+    ###################################################################################
+    # Add the zodi and exozodi, uniform for now as opposed to decreasing
+    # as a function of separation from the star; over the full FOV instead of just the bowtie
+    ###################################################################################
 
-        local_zodi_mag = 23
-        exozodi_mag = 22
-        D = 2.37
-        pixarea = kristfile.header['PIXSIZE']*lamc*1e-9/D/4.848e-6
-        absmag = target_star_Vmag-5*np.log10(planet_dist_pc/10.)
-        zodicube = zodi_cube(target_star_cube,
-                            area_per_pixel=pixarea,
-                            absmag=absmag,
-                            Vstarmag=target_star_Vmag,
-                            zodi_surfmag=23,exozodi_surfmag=22,
-                            distAU=planet_AU,t_zodi=t_zodi)
-        
-        zodicube = Image(data=zodicube,header=kristfile.header)
-        detectorFrame = polychromeIFS(par,lamlist.value,zodicube,QE=useQE)
+    local_zodi_mag = 23
+    exozodi_mag = 22
+    D = 2.37
+    pixarea = kristfile.header['PIXSIZE']*lamc*1e-9/D/4.848e-6
+    absmag = target_star_Vmag-5*np.log10(planet_dist_pc/10.)
+    zodicube = zodi_cube(target_star_cube,
+                        area_per_pixel=pixarea,
+                        absmag=absmag,
+                        Vstarmag=target_star_Vmag,
+                        zodi_surfmag=23,exozodi_surfmag=22,
+                        distAU=planet_AU,t_zodi=t_zodi)
     
-        times['Cube conversion'] = time()
+    zodicube = Image(data=zodicube,header=kristfile.header)
+    detectorFrame = polychromeIFS(par,lamlist.value,zodicube,QE=useQE)
 
-        Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/zodicube.fits',clobber=True)
+    times['Cube conversion'] = time()
+
+    Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/zodicube.fits',clobber=True)
 
     times['Process off-axis PSF through IFS'] = time()
 
@@ -366,8 +368,11 @@ def process_SPC_IFS(par,
     par.hdr.append(('comment', '*'*22 + ' Scene ' + '*'*20), end=True)
     par.hdr.append(('comment', '*'*60), end=True)    
     par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('TZODI',t_zodi,'Zodi throughput'),end=True)
-    par.hdr.append(('ABSMAG',absmag,'Target star absolute magnitude'),end=True)
+    try:
+        par.hdr.append(('TZODI',t_zodi,'Zodi throughput'),end=True)
+        par.hdr.append(('ABSMAG',absmag,'Target star absolute magnitude'),end=True)
+    except:
+        pass
     
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('comment', '*'*60), end=True)
@@ -469,10 +474,11 @@ def process_SPC_IFS(par,
     ###################################################################################
     # Step 9: Determine the pixel noise in the dark hole
     ###################################################################################
-    from tools.imgtools import bowtie
     ydim,xdim = residual[0].shape
+    IWA = 3
+    OWA = 9
     maskleft,maskright = bowtie(residual[0],ydim//2,xdim//2,openingAngle=65,
-                clocking=-par.philens*180./np.pi,IWApix=6*0.77/0.6,OWApix=18*0.77/0.6,
+                clocking=-par.philens*180./np.pi,IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
                 export=None,twomasks=True)
     # PSF is in the right mask
     pixstd = [np.nanstd(residual[i,:,:]*maskright) for i in range(residual.shape[0])]
@@ -527,3 +533,137 @@ def SNR_spectrum(lam_midpts,signal, noise,
     return (chisq/len(signal[edges:-edges]))
 
 
+def mf(cube,mask,threshold):
+    '''
+    Matched filter function
+    
+    Parameters
+    ----------
+    cube: 3D ndarray
+        An IFS cube from which to compute the matched filter
+    mask: 2D ndarray
+        This is typically the coronagraphic mask
+    threshold: float
+        Value below which we crop the matched filter
+    
+    Returns
+    -------
+    matched_filter: 3D ndarray
+        Matched filter with the same dimensions as input cube
+    
+    '''
+    matched_filter = np.zeros(cube.data.shape)
+    
+    for slicenum in range(cube.data.shape[0]):
+        nanmask = np.isnan(cube.data[slicenum])
+        cube_norm = cube.data[slicenum]/np.nansum(cube.data[slicenum])
+        this_slice = cube_norm/np.nansum((cube_norm)**2)
+        # calculate correction factor since we are going to crop only the top the of the hat
+        # this is the inverse ratio of the contribution of the brightest pixels over the rest
+        msk = mask*(this_slice>threshold)
+        aper_phot = np.nansum(this_slice)/np.nansum(this_slice[msk])
+        # Set all low-contributing pixels and pixels outside of mask to 0.0
+        this_slice[~msk] = 0.0
+        this_slice[nanmask] = np.NaN  # put NaNs where they belong
+        matched_filter[slicenum,:,:] = this_slice
+        # Multiply what is left by that aperture correction factor
+        matched_filter[slicenum,:,:]*=aper_phot
+    return matched_filter
+
+
+def recenter_offaxis(offaxis_file,threshold,outname='centered_offaxis.fits'):
+
+    '''
+    Example: recenter_offaxis('/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits',0.01,par.exportDir+'/centered_offaxis.fits')
+
+    '''
+    offaxis = Image(offaxis_file)
+    offsetpx = offaxis.header['OFFSET']/offaxis.header['PIXSIZE']
+    centered_offaxis = Image(data=shiftCube(offaxis.data,dx=offsetpx,dy=0))
+    maxi = np.nanmax(np.nanmax(centered_offaxis.data,axis=2),axis=1)
+    total = np.nansum(np.nansum(centered_offaxis.data,axis=2),axis=1)
+    centered_offaxis.data/=maxi[:,np.newaxis,np.newaxis]
+
+    centered_offaxis.data[centered_offaxis.data<threshold] = 0.0
+    newsum = np.nansum(np.nansum(centered_offaxis.data,axis=2),axis=1)
+    centered_offaxis.data *= maxi[:,np.newaxis,np.newaxis]#total[:,np.newaxis,np.newaxis]/newsum[:,np.newaxis,np.newaxis]
+    outkey = fits.HDUList(fits.PrimaryHDU(centered_offaxis.data,offaxis.header))
+    outkey.writeto(outname,clobber=True)
+    return outkey
+
+def construct_mflib_old(par,psf,IWA,OWA,lamc,threshold):
+    '''
+    Construct a library of matched filters for all points within the bowtie mask
+    For now, this uses the already-reduced, ideal offaxis psf already in cube space.
+    We could also build a function that offsets the original, before transformation.
+    '''
+    mflib = np.zeros(list(psf.data[0].shape)+list(psf.data.shape))
+    ydim,xdim = psf.data[0].shape
+    mask,junk = bowtie(psf.data[0],ydim//2,xdim//2,openingAngle=65,
+                clocking=-par.philens*180./np.pi,IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
+                export=None,twomasks=False)
+
+    ic = mflib.shape[0]//2 # i or x axis is horizontal
+    jc = mflib.shape[1]//2 # j or y axis is vertical
+    for i in range(mflib.shape[0]):
+        for j in range(mflib.shape[1]):
+            if ~np.isnan(mask[i,j]):
+                decentered = Image(data=shiftCube(psf.data,dx=i-ic,dy=j-jc))
+                mflib[i,j] = mf(decentered,mask,threshold)
+
+
+def construct_mflib(par,psf,IWA,OWA,lamc,threshold,trim=30):
+    '''
+    Construct a library of matched filters for all points within the bowtie mask
+    For now, this uses the already-reduced, ideal offaxis psf already in cube space.
+    We could also build a function that offsets the original, before transformation.
+    
+    This particular function saves memory and time by only recording the relevant pixels
+    '''
+    ydim,xdim = psf.data[0].shape
+    mask,junk = bowtie(psf.data[0],ydim//2,xdim//2,openingAngle=65,
+                clocking=-par.philens*180./np.pi,IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
+                export=None,twomasks=False)
+
+    x = np.arange(mask.shape[1])
+    y = np.arange(mask.shape[0])
+    x,y = np.meshgrid(x,y)
+    xlist= x[mask]
+    ylist= y[mask]
+    psftrim = psf.data[:,trim:-trim,trim:-trim]
+    masktrim = mask[trim:-trim,trim:-trim]
+    mflib = np.zeros(list(xlist.shape)+list(psftrim.shape))
+    
+    ic = mask.shape[0]//2 # i or x axis is horizontal
+    jc = mask.shape[1]//2 # j or y axis is vertical
+    for ii in range(len(xlist)):
+        i = xlist[ii]
+        j = ylist[ii]
+        decentered = Image(data=shiftCube(psftrim,dx=i-ic,dy=j-jc))
+        mflib[ii] = mf(decentered,masktrim,threshold)
+        
+    outkey = fits.HDUList(fits.PrimaryHDU(mflib))
+    outkey.append(fits.PrimaryHDU(mask.astype(np.int)))
+    outkey.append(fits.PrimaryHDU(xlist.astype(np.int)))
+    outkey.append(fits.PrimaryHDU(ylist.astype(np.int)))
+    outkey.writeto(par.exportDir+'/mflib.fits.gz',clobber=True)
+
+
+def convolved_mf(incube, mflibname,trim=30,):
+    
+    '''
+    Generates a pseudo-convolution of the image by the matched filter library
+    '''
+    mflibHDUlist = fits.open(mflibname)
+    mflib = mflibHDUlist[0].data
+    mask = mflibHDUlist[1].data
+    xlist = mflibHDUlist[2].data
+    ylist = mflibHDUlist[3].data
+    
+    convolvedmap = np.zeros(incube.shape)
+    for i in range(len(xlist)):
+        ix = xlist[i]
+        iy = ylist[i]
+        convolvedmap[:,iy,ix] = np.nansum(np.nansum(incube[:,trim:-trim,trim:-trim] * mflib[i],axis=2),axis=1)
+    
+    return convolvedmap

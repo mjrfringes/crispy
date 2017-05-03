@@ -678,7 +678,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     
         if parallel==False:
             for i in range(Nspec - 1):
-                polyimage[i] = (lam_endpts[index + 1]-lam_endpts[index])*make_polychrome(lam_endpts[i], lam_endpts[i + 1],
+                polyimage[i] = (lam_endpts[i + 1]-lam_endpts[i])*make_polychrome(lam_endpts[i], lam_endpts[i + 1],
                                                           hires_arrs, lam, psftool, 
                                                           allcoef, xindx, yindx,ysize,xsize,upsample=upsample)
                 _x, _y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)

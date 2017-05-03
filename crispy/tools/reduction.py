@@ -494,9 +494,9 @@ def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
         lamlist = lam_list
     if Nspec is None:
         if method=='lstsq':
-            Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*par.npixperdlam+2)
+            Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*par.nspecperpix_lstsq+2)
         else:
-            Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*2+2)
+            Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*par.npixperdlam+2)
     log.info('Reduced cube will have %d wavelength bins' % (Nspec-1))
     lam_endpts = np.linspace(min(lamlist), max(lamlist), Nspec)
     lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.

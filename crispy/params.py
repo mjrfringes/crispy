@@ -9,7 +9,7 @@ except:
     import pyfits as fits
 
 
-class Params():
+class Params(object):
 
     def __init__(self,codeRoot='.'):
         '''
@@ -63,13 +63,14 @@ class Params():
         self.gaussian_hires = True  # Use Gaussians for hires PSFLet matching, instead
                                     # of Lucy-Richardson deconvolution
 
+        self.QE = "QE_CCD201.txt"	# detector QE
+        self.nonoise=False           # whether to disable all the noises (except QE)
         self.poisson = True         # Use Poisson statistics?
         self.RN = 20.0              # Read noise (e/px/fr)
 #         self.CIC = 1.2e-2           # Clock-induced charge (e/px/fr)
         self.CIC = 1e-2           # Clock-induced charge (e/px/fr)
         self.dark = 1e-4            # Dark current noise (e/px/s)
-        self.Traps = False          # Use standard Gaussian kernels instead of library
-        self.QE = "QE_CCD201.txt"	# detector QE
+        self.Traps = False          # Use traps or not (not yet implemented)
         self.losses = 0.34			# total losses for on-axis PSF (given by J. Krist)
         self.PhCountEff = 1.0		# Photon counting efficiency
         self.lifefraction = 0.12    # fraction of lifetime (using Bijan's empirical model)
@@ -88,7 +89,8 @@ class Params():
         
         self.distortPISCES=False    # If True, use measured PISCES distortion/dispersion
         self.BW = 0.18              # Spectral bandwidth (if distortPISCES==False)
-        self.npixperdlam = 2        # Number of pixels per spectral resolution element
+        self.npixperdlam = 2.       # Number of pixels per spectral resolution element
+        self.nspecperpix_lstsq = 1. # Nspec per pixel for least squares 
         self.R = 50                 # Spectral resolving power (extracted cubes have twice)
         
         

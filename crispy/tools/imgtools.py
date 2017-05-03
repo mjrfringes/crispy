@@ -142,7 +142,12 @@ def scale2imgs(img1,img2,mask=None,returndiff = True):
     Optionally returns the difference between the two. 
     Images can be cubes.
     
-    
+    Returns
+    -------
+    coefs: float array
+        Coefficient(s) of the best fit between the two images or cubes
+    diff: ndarray
+        Same shape as input, residual difference img1*scale-img2.
     '''
     # make local copies of data
     c1 = img1.data.copy()

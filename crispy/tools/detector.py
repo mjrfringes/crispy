@@ -45,7 +45,7 @@ def rebinDetector(par,finalFrame,clip=False):
 
 
 
-def readDetector(par,IFSimage,inttime=100,nonoise=False):
+def readDetector(par,IFSimage,inttime=100):
     '''
     Read noise, CIC, dark current; NO TRAPS
     Input is IFSimage in average photons per second
@@ -58,6 +58,7 @@ def readDetector(par,IFSimage,inttime=100,nonoise=False):
         par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
         par.hdr.append(('comment', '*'*60), end=True)    
         par.hdr.append(('comment', ''), end=True)
+        par.hdr.append(('NONOISE',par.nonoise,'Ignore all noises?'), end=True) 
         par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
         par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
         par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
@@ -80,7 +81,7 @@ def readDetector(par,IFSimage,inttime=100,nonoise=False):
     
     photoelectrons = IFSimage.data*eff*inttime
     
-    if nonoise:
+    if par.nonoise:
         return photoelectrons
     else:
     
