@@ -235,17 +235,17 @@ def process_SPC_IFS(par,
     # Step 3: Process the off-axis PSF in the same way; also process a flipped version
     ###################################################################################
     
-    # first recenter the offaxis psf cube
-    recenter_offaxis(offaxis_psf_filename,threshold=0.01,outname=par.exportDir+'/centered_offaxis.fits')
-    
-    # now shift the cube to put it at the desired lambda/D
-    input_sampling = kristfile.header['PIXSIZE']
-    input_wav = kristfile.header['LAM_C']*1000.
-    par.pixperlenslet = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)
-    par.hdr['DX_OFFAX']=xshift*par.pixperlenslet
-    par.hdr['DY_OFFAX']=yshift*par.pixperlenslet
-
-    shifted_cube = shiftCube(cube,dx=sep*kristfile.header['PIXSIZE'],dy=0,order=1)
+#     first recenter the offaxis psf cube
+#     recenter_offaxis(offaxis_psf_filename,threshold=0.01,outname=par.exportDir+'/centered_offaxis.fits')
+#     
+#     now shift the cube to put it at the desired lambda/D
+#     input_sampling = kristfile.header['PIXSIZE']
+#     input_wav = kristfile.header['LAM_C']*1000.
+#     par.pixperlenslet = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)
+#     par.hdr['DX_OFFAX']=xshift*par.pixperlenslet
+#     par.hdr['DY_OFFAX']=yshift*par.pixperlenslet
+# 
+#     shifted_cube = shiftCube(cube,dx=sep*kristfile.header['PIXSIZE'],dy=0,order=1)
     
     
     if process_offaxis:
@@ -668,9 +668,11 @@ def RDI_noise(par,xshift,yshift,order=3,
                 outdir_average='OS5/OS5_average',
                 process_cubes=True,
                 countershift=True,
+                normalize_contrast=True,
                 psf_time_series_folder='/Users/mrizzo/IFS/OS5/with_lowfc',Nref=30,
                 offaxis_psf_filename='/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits',
                 ref_star_T=9377*u.K, ref_star_Vmag=2.37,
+                target_star_T=5887*u.K, target_star_Vmag=5.03,
                 nonoise=True,IWA=3,OWA=9,lamc=770.,BW = 0.18,
                 tel_pupil_area=3.650265060424805*u.m**2,
                 mflib='/mflib.fits.gz'):
@@ -687,7 +689,7 @@ def RDI_noise(par,xshift,yshift,order=3,
     # load the filenames
     filelist = glob.glob(psf_time_series_folder+'/*')
     filelist.sort()
-    filelist = filelist[:Nref]
+    
     
     # load first filelist to get its shape
     kristfile = Image(filename=filelist[0])
@@ -699,6 +701,7 @@ def RDI_noise(par,xshift,yshift,order=3,
 
     # reference and target star cube conversions
     ref_star_cube = convert_krist_cube(fileshape,lamlist,ref_star_T,ref_star_Vmag,tel_pupil_area)
+    target_star_cube = convert_krist_cube(fileshape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
 
     input_sampling = kristfile.header['PIXSIZE']
     input_wav = kristfile.header['LAM_C']*1000.
@@ -706,18 +709,30 @@ def RDI_noise(par,xshift,yshift,order=3,
     par.hdr['XSHIFT']=xshift*par.pixperlenslet
     par.hdr['YSHIFT']=yshift*par.pixperlenslet
     
-    
+    try:
+        target = Image(par.exportDir+"/target_average_detector_red_optext.fits")
+        # limit only to the reference files
+        filelist = filelist[:Nref]
+    except:
+        # also compute the target files
+        filelist = filelist
+
     ###################################################################################
     # simulate the IFS flux at the detector plane (no losses)
     ###################################################################################
     ref_outlist = []
+    target_outlist = []
     for i in range(len(filelist)):
         reffile = filelist[i]
         if process_cubes:
             log.info('Processing file '+reffile.split('/')[-1])
             cube = fits.open(reffile)[0]
             cube.data*=ref_star_cube
-            
+            if i<Nref:
+                cube.data*=ref_star_cube
+            else:
+                cube.data*=target_star_cube
+        
             # adjust headers for slightly different wavelength
             log.debug('Modifying cube header')
             adjust_krist_header(cube,lamc=lamc)
@@ -725,20 +740,57 @@ def RDI_noise(par,xshift,yshift,order=3,
             
             # shift the cube
 #             cube.data = shiftCube(cube.data,dx=xshift*par.pixperlenslet,dy=yshift*par.pixperlenslet,order=1)
+            if i<Nref:
             cube.data = ndimage.interpolation.shift(cube.data,
                              [0.0,yshift*par.pixperlenslet,xshift*par.pixperlenslet],order=order)
             detectorFrame = polychromeIFS(par,lamlist.value,cube,QE=True)
 
-            Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
-            ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
+            if i<Nref:
+                Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
+                ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
+            else:
+                Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits',clobber=True)
+                target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+
         else:
             ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
+        else:
+
+            if i<Nref:
+                ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
+            else:
+                target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+    
+    if normalize_contrast:
+        offaxiscube = Image(offaxis_psf_filename)
+        print('Processing file '+offaxis_psf_filename)
+
+        # Need to re-center the off-axis psf if it is not the right size
+        if offaxiscube.data.shape[1] < fileshape[1]:
+            diff = fileshape[1]-offaxiscube.data.shape[1]
+            offaxiscube_recentered = np.zeros(fileshape)
+            offaxiscube_recentered[:,diff//2:-diff//2,diff//2:-diff//2] += offaxiscube.data
+            offaxiscube = Image(data=offaxiscube_recentered,header = offaxiscube.header)
+        offaxis_star_cube = convert_krist_cube(offaxiscube.data.shape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
+
+        # adjust headers for slightly different wavelength
+        log.debug('Modifying cube header')
+        adjust_krist_header(offaxiscube,lamc=lamc)
+        par.saveDetector=False
+        Image(data=offaxiscube.data,header=offaxiscube.header).write(outdir_average+'/offaxiscube_processed.fits',clobber=True)
+        detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=True)
+        Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/offaxis.fits',clobber=True)
+        offaxis_reduced = reduceIFSMap(par,outdir_average+"/offaxis.fits")
+
 
     ###################################################################################
     # simulate the detector readout (including optical losses)
     ###################################################################################
     par.nonoise=nonoise
-    ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector)   
+    ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector)  
+    if len(target_outlist)>0:
+        target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector)  
+        
     
     ###################################################################################
     # Average all detector images and reduce IFS map
@@ -748,13 +800,22 @@ def RDI_noise(par,xshift,yshift,order=3,
         ave_ref += fits.open(targetfile)[1].data
     ref = Image(data = ave_ref)
     ref.write(outdir_average+"/ref_average_detector_"+rootname+".fits",clobber=True)
-    
     ref_reduced = reduceIFSMap(par,outdir_average+"/ref_average_detector_"+rootname+".fits")
     
-    # target_reduced is now the IFS cube from the shifted reference star
+    if len(target_outlist)>0:
+        target_star_average = np.zeros(Image(filename=target_det_outlist[0]).data.shape)
+        for reffile in target_det_outlist:
+            target_star_average += Image(filename=reffile).data
+        target = Image(data=target_star_average,header=par.hdr)
+        # write it out for the future iterations of this program
+        target.write(outdir_average+'/average_target_star_detector.fits',clobber=True)
+
+    
+    # ref_reduced is now the IFS cube from the shifted reference star
+    # target is the IFS cube from the target star
 
     ###################################################################################
-    # Counter-shift the  cube
+    # Counter-shift the reference cube
     ###################################################################################
     if countershift:
         c = np.cos(par.philens)
@@ -762,15 +823,11 @@ def RDI_noise(par,xshift,yshift,order=3,
         ref_reduced.data[np.isnan(ref_reduced.data)] = 0.0
         ref_reduced.data = ndimage.interpolation.shift(ref_reduced.data,
                                     [0.0,-yshift*c+xshift*s,-xshift*c-yshift*s],order=order)
- #        ref_reduced.data = shiftCube(ref_reduced.data,
-#                                     dx=-xshift*c-yshift*s,
-#                                     dy=-yshift*c+xshift*s,order=1)
         ref_reduced.write(par.exportDir+"/ref_average_detector_countershifted_"+rootname+"_red_optext.fits",clobber=True)
     
     ###################################################################################
     # Do basic least squares RDI, slice by slice; no mean subtraction for now
     ###################################################################################
-    target = Image(par.exportDir+"/target_average_detector_red_optext.fits")
     
     ydim,xdim = target.data[0].shape
     mask,scratch = bowtie(target.data[0],ydim//2,xdim//2,openingAngle=65,
@@ -805,6 +862,15 @@ def RDI_noise(par,xshift,yshift,order=3,
     
     # this will return an error if the library is not found
     convolved = convolved_mf(residual,par.exportDir+mflib)
+    
+    # this computes the convolution with an offaxis source as bright as the star
+    if normalize_contrast:
+        starmf = convolved_mf(offaxis,par.exportDir+mflib)
+        max_starmf = np.amax(np.amax(starmf,axis=2),axis=1)
+    else:
+        max_starmf = np.ones(starmf.shape[0])
+    
+    convolved /= max_starmf[:,np.newaxis,np.newaxis]
     
     outkey = fits.HDUList(fits.PrimaryHDU(convolved.astype(np.float)))
     outkey.writeto(par.exportDir+'/mflib'+rootname+'.fits',clobber=True)
