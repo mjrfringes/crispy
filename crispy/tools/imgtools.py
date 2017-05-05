@@ -168,3 +168,10 @@ def scale2imgs(img1,img2,mask=None,returndiff = True):
         return res, c1*res[:,np.newaxis,np.newaxis]-c2
     else:
         return res
+        
+
+def subtract_mean(cube):
+    '''
+    subtract the mean of the cube slice by slice
+    '''
+    return cube

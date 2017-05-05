@@ -51,7 +51,7 @@ def rotateCube(cube,phi,clip=True,order=1):
     return np.array(outcube)
         
 
-def Shift(image, dx, dy,order=1):
+def Shift(image, dx, dy,order=3):
     
     """
     Shifts the input image by dx, dy.  
@@ -85,13 +85,14 @@ def Shift(image, dx, dy,order=1):
     x, y = np.meshgrid(x, y)
     x+=image.shape[1]//2
     y+=image.shape[0]//2
-    
-    imageout = ndimage.map_coordinates(image, [y, x], order=order,mode="nearest")
+#     if order>1:
+#         img = ndimage.interpolation.spline_filter(image)
+    imageout = ndimage.map_coordinates(image, [y, x], order=order)
         
     return imageout
 
 
-def shiftCube(cube,dx,dy,order=1):
+def shiftCube(cube,dx,dy,order=3):
     outcube = [Shift(cube[i],dx,dy,order) for i in range(cube.shape[0])]
     return np.array(outcube)
 
