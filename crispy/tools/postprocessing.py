@@ -735,13 +735,11 @@ def convolved_mf(incube, mflibname,trim=30,):
     return convolvedmap
 
 
-def processCubes(par,xshift=0.0,yshift=0.0,order=3,
+def processReferenceCubes(par,xshift=0.0,yshift=0.0,order=3,
                 outdir_time_series = 'OS5',
-                psf_time_series_folder='/Users/mrizzo/IFS/OS5/with_lowfc',
-                Nref=30,ref_only=False,
+                ref_input_list=[],
                 process_cubes=True,
                 ref_star_T=9377*u.K, ref_star_Vmag=2.37,
-                target_star_T=5887*u.K, target_star_Vmag=5.03,
                 lamc=660.,BW = 0.18,
                 tel_pupil_area=3.650265060424805*u.m**2,
                 ):
@@ -761,20 +759,16 @@ def processCubes(par,xshift=0.0,yshift=0.0,order=3,
         The order of the spline transform used for shifting the cubes
     outdir_time_series: string
         Path to which we will export the IFS fluxes at the detector
-    psf_time_series_folder: string
-        Path to the folder where all the original files are located
+    ref_input_list: string
+        List of filenames with the reference cubes
     Nref: integer
         Out of the files in John Krist's folder, how many correspond to observations of the reference star
     ref_only: Boolean
         Whether to only process the reference files or also target files
     ref_star_T: 'u.K'
         Temperature of the reference star in u.K
-    target_star_T: 'u.K'
-        Temperature of the target star in u.K
     ref_star_Vmag: float
         V Magnitude of the reference star
-    target_star_Vmag: float
-        V Magnitude of the target star
     lamc: float
         Central wavelength of the band, in nm
     BW: float
@@ -800,11 +794,9 @@ def processCubes(par,xshift=0.0,yshift=0.0,order=3,
     ###################################################################################
     
     # load the filenames
-    filelist = glob.glob(psf_time_series_folder+'/*.fits')
-    filelist.sort()
         
     # load first filelist to get its shape
-    kristfile = Image(filename=filelist[0])
+    kristfile = Image(filename=ref_input_list[0])
     fileshape = kristfile.data.shape
     adjust_krist_header(kristfile,lamc=lamc)
     
@@ -813,7 +805,6 @@ def processCubes(par,xshift=0.0,yshift=0.0,order=3,
 
     # reference and target star cube conversions
     ref_star_cube = convert_krist_cube(fileshape,lamlist,ref_star_T,ref_star_Vmag,tel_pupil_area)
-    target_star_cube = convert_krist_cube(fileshape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
 
     # compute the amount to be shifted in the cubes from J. Krist
     input_sampling = kristfile.header['PIXSIZE']
@@ -825,52 +816,115 @@ def processCubes(par,xshift=0.0,yshift=0.0,order=3,
     # simulate the IFS flux at the detector plane (no losses other than QE)
     ###################################################################################
     ref_outlist = []
-    target_outlist = []
-    for i in range(len(filelist)):
-        reffile = filelist[i]
+    for i in range(len(ref_input_list)):
+        reffile = ref_input_list[i]
         if process_cubes:
             log.info('Processing file '+reffile.split('/')[-1])
             cube = fits.open(reffile)[0]
-            if i<Nref:
-                cube.data*=ref_star_cube
-            else:
-                cube.data*=target_star_cube
+            cube.data*=ref_star_cube
     
             # adjust headers for slightly different wavelength
             adjust_krist_header(cube,lamc=lamc)
             par.saveDetector=False  
         
             # shift the cube
-            if i<Nref:
-                log.info("Shifting input cube")
-                cube.data = ndimage.interpolation.shift(cube.data,
-                         [0.0,yshift*par.pixperlenslet,xshift*par.pixperlenslet],order=order)
-            if ref_only:
-                if i<Nref:
-                    detectorFrame = polychromeIFS(par,lamlist.value,cube,QE=True)
-            else:
-                detectorFrame = polychromeIFS(par,lamlist.value,cube,QE=True)
+            log.info("Shifting input cube")
+            cube.data = ndimage.interpolation.shift(cube.data,
+                     [0.0,yshift*par.pixperlenslet,xshift*par.pixperlenslet],order=order)
+            detectorFrame = polychromeIFS(par,lamlist.value,cube,QE=True)
                 
             par.hdr.append(('XSHIFT',xshift*par.pixperlenslet,'X Shift in px in original cubes'),end=True)
             par.hdr.append(('YSHIFT',yshift*par.pixperlenslet,'Y Shift in px in original cubes'),end=True)
 
-            if i<Nref:
-                Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
-                ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
-            elif ~ref_only:
-                Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits',clobber=True)
-                target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
-            else:
-                target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+            Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
+            ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
                 
         else:
-            if i<Nref:
-                ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
-            else:
-                target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+            ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
 
 
     return ref_outlist,target_outlist,fileshape
+    
+def processTargetCubes(par,target_file_list,
+                outdir_time_series = 'OS5',
+                process_cubes=True,
+                target_star_T=5887*u.K, target_star_Vmag=5.03,
+                lamc=660.,BW = 0.18,
+                tel_pupil_area=3.650265060424805*u.m**2,
+                ):
+    '''
+    Processes raw cubes from John Krist into IFS flux cubes just before the IFS.
+    Doesn't take into account the optical losses, but does take into account the detector QE.
+    
+    Parameters
+    ----------
+    par: Parameters instance
+        Crispy parameter instance
+    target_file_list: string
+        List of files
+    outdir_time_series: string
+        Path to which we will export the IFS fluxes at the detector
+    target_star_T: 'u.K'
+        Temperature of the target star in u.K
+    target_star_Vmag: float
+        V Magnitude of the target star
+    lamc: float
+        Central wavelength of the band, in nm
+    BW: float
+        Bandwidth
+    tel_pupil_area: 'u.m**2'
+        Collecting area of the telescope, minus obscurations, in u.m**2
+    
+    Returns
+    -------
+    target_outlist: list of strings
+        List of the filenames corresponding the target star
+    
+    
+    '''
+
+
+    ###################################################################################
+    # Load, shift and propagate all of the IFS images for the reference star
+    ###################################################################################
+    
+        
+    # load first filelist to get its shape
+    kristfile = Image(filename=target_file_list[0])
+    fileshape = kristfile.data.shape
+    adjust_krist_header(kristfile,lamc=lamc)
+    
+    Nlam = fileshape[0]
+    lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)*u.nm
+
+    # reference and target star cube conversions
+    target_star_cube = convert_krist_cube(fileshape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
+
+    ###################################################################################
+    # simulate the IFS flux at the detector plane (no losses other than QE)
+    ###################################################################################
+    target_outlist = []
+    for i in range(len(target_file_list)):
+        reffile = target_file_list[i]
+        if process_cubes:
+            log.info('Processing file '+reffile.split('/')[-1])
+            cube = fits.open(reffile)[0]
+            cube.data*=target_star_cube
+    
+            # adjust headers for slightly different wavelength
+            adjust_krist_header(cube,lamc=lamc)
+            par.saveDetector=False  
+        
+            detectorFrame = polychromeIFS(par,lamlist.value,cube,QE=True)
+
+            Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits',clobber=True)
+            target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+                
+        else:
+            target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+
+
+    return target_outlist
     
 
 def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_average,Nave=100,
@@ -1020,16 +1074,36 @@ def RDI_noise(par,xshift,yshift,order=3,
     pixstd: array
         List of slice-by-slice standard deviation of the RDI cube convolved with the matched filter
     '''
+
+    # load the filenames
+    filelist = glob.glob(psf_time_series_folder+'/*.fits')
+    filelist.sort()
+
+    reffiles = filelist[:Nref]
+    targetfiles =filelist[Nref:]
     
-    ref_outlist,target_outlist,fileshape = processCubes(par,xshift=xshift,yshift=yshift,order=order,
+    ref_outlist = processReferenceCubes(par,xshift=xshift,yshift=yshift,order=order,
                                                 outdir_time_series = outdir_time_series,
-                                                psf_time_series_folder=psf_time_series_folder,
-                                                Nref=Nref,ref_only=ref_only,
+                                                ref_inlist=reffiles,
                                                 process_cubes=process_cubes,
                                                 ref_star_T=ref_star_T, ref_star_Vmag=ref_star_Vmag,
-                                                target_star_T=target_star_T, target_star_Vmag=target_star_Vmag,
                                                 lamc=lamc,BW = BW,
                                                 tel_pupil_area=tel_pupil_area)
+    if ref_only:
+        target_outlist = processTargetCubes(par,targetfiles,
+                outdir_time_series = outdir_time_series,
+                process_cubes=False,
+                target_star_T=target_star_T, target_star_Vmag=target_star_Vmag,
+                lamc=lamc,BW = BW,
+                tel_pupil_area=tel_pupil_area)
+    else:
+        target_outlist = processTargetCubes(par,targetfiles,
+                outdir_time_series = outdir_time_series,
+                process_cubes=process_cubes,
+                target_star_T=target_star_T, target_star_Vmag=target_star_Vmag,
+                lamc=lamc,BW = BW,
+                tel_pupil_area=tel_pupil_area)
+        
                                                 
                                                 
     ###################################################################################
