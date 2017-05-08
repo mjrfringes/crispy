@@ -180,7 +180,6 @@ def get_sim_hires(par,lam, upsample=10, nsubarr=1, npix=13, renorm=True):
     _y = np.arange(size)-size//2
     _x, _y = np.meshgrid(_x, _y)
     sig = par.FWHM/2.35*upsample
-#     psflet = np.exp(-((_x)**2+(_y)**2)/(2.*(sig*lam/par.FWHMlam)**2))
     sigma = sig*lam/par.FWHMlam
     psflet = (erf((_x + 0.5) / (np.sqrt(2) * sigma)) - \
         erf((_x - 0.5) / (np.sqrt(2) * sigma))) * \

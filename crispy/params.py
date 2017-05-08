@@ -28,7 +28,7 @@ class Params(object):
 #         self.wavecalDir = self.prefix+'/HighSNRWavecal/'
 #         self.wavecalDir = self.prefix+'/wavecal/'
 #         self.wavecalDir = self.prefix+'/wavecalR50_660/'
-        self.wavecalDir = self.prefix+'/wavecalR50_770/'
+        self.wavecalDir = self.prefix+'/wavecalR50_660/'
 #         self.wavecalName = 'VARIAcalCube.fits'
 #         self.wavecalName = 'LLTFcalCube.fits'
 #         self.wavecalName = 'simCalCube.fits'

@@ -494,9 +494,10 @@ def process_SPC_IFS(par,
 
 def SNR_spectrum(lam_midpts,signal, noise, 
                 lam_contrast=None, plot=True,outname = 'SNR.png', outfolder = '',title='Planet+star',edges=1,FWHM=2):
-    #lam_midpts,junk = calculateWaveList(par)
-    # wavelist = np.arange(min(lam_midpts),max(lam_midpts),3)
-    #wavelist = 770*np.linspace(1.-0.18/2.,1.+0.18/2.,45)
+    '''
+    Plot the outputs of process_SPC_IFS
+    
+    '''
     if lam_contrast is not None:
         lams=lam_contrast
     else:
@@ -564,6 +565,19 @@ def recenter_offaxis(offaxis_file,threshold,outname='centered_offaxis.fits'):
     '''
     Example: recenter_offaxis('/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits',0.01,par.exportDir+'/centered_offaxis.fits')
 
+    Parameters
+    ----------
+    offaxis_file: string
+        Path to off-axis file from John Krist
+    threshold: float
+        Threshold under which we don't care about the values
+    outname: string
+        The path to the centered off axis cube
+        
+    Returns
+    -------
+    outkey: HDUList
+        HDU list of the recentered cube    
     '''
     offaxis = Image(offaxis_file)
     offsetpx = offaxis.header['OFFSET']/offaxis.header['PIXSIZE']
@@ -579,65 +593,105 @@ def recenter_offaxis(offaxis_file,threshold,outname='centered_offaxis.fits'):
     outkey.writeto(outname,clobber=True)
     return outkey
 
-def construct_mflib_old(par,psf,IWA,OWA,lamc,threshold):
+
+def construct_mflib(par,offaxis_psf_filename,threshold,lamc,BW,outdir,
+                    mask=None,IWA=None,OWA=None,trim=30,outname = 'mflib.fits.gz',order=3):
     '''
     Construct a library of matched filters for all points within the bowtie mask
-    For now, this uses the already-reduced, ideal offaxis psf already in cube space.
-    We could also build a function that offsets the original, before transformation.
-    '''
-    mflib = np.zeros(list(psf.data[0].shape)+list(psf.data.shape))
-    ydim,xdim = psf.data[0].shape
-    mask,junk = bowtie(psf.data[0],ydim//2,xdim//2,openingAngle=65,
-                clocking=-par.philens*180./np.pi,IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
-                export=None,twomasks=False)
-
-    ic = mflib.shape[0]//2 # i or x axis is horizontal
-    jc = mflib.shape[1]//2 # j or y axis is vertical
-    for i in range(mflib.shape[0]):
-        for j in range(mflib.shape[1]):
-            if ~np.isnan(mask[i,j]):
-                decentered = Image(data=shiftCube(psf.data,dx=i-ic,dy=j-jc))
-                mflib[i,j] = mf(decentered,mask,threshold)
-
-
-def construct_mflib(par,psf,threshold,mask=None,IWA=None,OWA=None,lamc=None,trim=30,outname = None):
-    '''
-    Construct a library of matched filters for all points within the bowtie mask
-    For now, this uses the already-reduced, ideal offaxis psf already in cube space.
-    We could also build a function that offsets the original, before transformation.
+    For now, this uses the reduced, ideal offaxis psf already in cube space.
+    We could also build a function that offsets the original file, before IFS transformation.
     
     This particular function saves memory and time by only recording the relevant pixels
+    
+    Parameters
+    ----------
+    par: Parameters instance
+        Crispy parameter instance
+    offaxis_psf_filename: string
+        Path to the off-axis cube from J. Krist
+    threshold: float
+        Value below which we zero out the matched filter pixels
+    lamc: float
+        Central wavelength in nm
+    BW: float
+        Spectral bandwidth
+    outdir: string
+        Export directory
+    mask: 2D ndarray
+        2D bowtie mask. If left to None, then the bowtie mask is calculated and IWA and OWA need to be specified
+    IWA: float
+        Inner working angle (in terms of lam/D
+    OWA: float
+        Outer working angle (in terms of lam/D
+    trim: integer
+        How much to trim the cubes on each side to save memory space (nominally 30)
+    outname: string
+        Name of the matched filter library file. Highly recommend to compress it to save space
+    order: int
+        Order at which we do the spline transformation to move offaxis PSF around.        
+    
+    
     '''
+    
+    # Recenter the offaxis PSF file so that it is nominally in the center of the IFS
+    recenter_offaxis(offaxis_psf_filename,0.01,par.exportDir+'/centered_offaxis.fits')
+    centered_offaxis_file = Image(par.exportDir+'/centered_offaxis.fits')
+    
+    # adjust the file header for correct IFS propagation
+    adjust_krist_header(centered_offaxis_file,lamc=lamc)
+    par.saveDetector=False  
+    Nlam = centered_offaxis_file.data.shape[0]
+    lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)
+
+    # propagate the offaxis PSF
+    detectorFrame = polychromeIFS(par,lamlist,centered_offaxis_file,QE=True)
+    Image(data = detectorFrame,header=par.hdr).write(outdir+"/offaxis_centered_detector.fits",clobber=True)
+
+    # reduce the offaxis PSF
+    offaxis_reduced = reduceIFSMap(par,outdir+"/offaxis_centered_detector.fits")
+    offaxis_reduced.write(outdir+"/offaxis_centered_detector_red_optext.fits")
+
+    psf = Image(outdir+"/offaxis_centered_detector_red_optext.fits")
+
+    # calculate mask if unspecified
     if mask is None:
         ydim,xdim = psf.data[0].shape
         mask,junk = bowtie(psf.data[0],ydim//2,xdim//2,openingAngle=65,
                     clocking=-par.philens*180./np.pi,IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
                     export=None,twomasks=False)
+    
     x = np.arange(mask.shape[1])
     y = np.arange(mask.shape[0])
     x,y = np.meshgrid(x,y)
+    
+    # only care about the coordinates of pixels within the mask
+    # pay attention to bookkeeping in the end
     xlist= x[mask]
     ylist= y[mask]
+    
+    # trim the data to save space
     psftrim = psf.data[:,trim:-trim,trim:-trim]
     masktrim = mask[trim:-trim,trim:-trim]
     mflib = np.zeros(list(xlist.shape)+list(psftrim.shape))
     
+    # Now loop on all the valid pixel coordinates
     ic = mask.shape[0]//2 # i or x axis is horizontal
     jc = mask.shape[1]//2 # j or y axis is vertical
     for ii in range(len(xlist)):
         i = xlist[ii]
         j = ylist[ii]
-        decentered = Image(data=shiftCube(psftrim,dx=i-ic,dy=j-jc))
+        # move the offaxis pixel to center it on that pixel
+        decentered = Image(data=ndimage.interpolation.shift(psftrim,
+                         [0.0,j-jc,i-ic],order=order))
+        # calculate the matched filter for that image with the desired threshold
         mflib[ii] = mf(decentered,masktrim,threshold)
         
+    # save the matched filter library but also the corresponding coordinates, necessary for unpacking
     outkey = fits.HDUList(fits.PrimaryHDU(mflib))
     outkey.append(fits.PrimaryHDU(mask.astype(np.int)))
     outkey.append(fits.PrimaryHDU(xlist.astype(np.int)))
     outkey.append(fits.PrimaryHDU(ylist.astype(np.int)))
-    if outname is None:
-        outkey.writeto(par.exportDir+'/mflib.fits.gz',clobber=True)
-    else:
-        outkey.writeto(outname,clobber=True)
+    outkey.writeto(outdir+'/'+outname,clobber=True)
         
 
 
@@ -645,7 +699,25 @@ def convolved_mf(incube, mflibname,trim=30,):
     
     '''
     Generates a pseudo-convolution of the image by the matched filter library
+    
+    Parameters
+    ----------
+    incube: 3D ndarray
+        Cube to convolve. Make sure all NaNs have been converted to zeros
+    mflibname: string
+        Path to the Matched Filter library, that was pre-computed
+    trim: integer
+        How much to trim the cubes on each side to save memory space (nominally 30)
+    
+    
+    Returns
+    -------
+    convolvedmap: 3D ndarray
+        Input cube multiplied in each non-zero pixel by the matched filter corresponding to that pixel
+    
     '''
+    
+    # load the matched filter library and all of its extensions
     mflibHDUlist = fits.open(mflibname)
     mflib = mflibHDUlist[0].data
     mask = mflibHDUlist[1].data
@@ -654,43 +726,83 @@ def convolved_mf(incube, mflibname,trim=30,):
     
     convolvedmap = np.zeros(incube.shape)
     for i in range(len(xlist)):
+        # this now allows us to match an entry of the library to the cube coordinates
         ix = xlist[i]
         iy = ylist[i]
+        # for each pixel, we do a 2D sum
         convolvedmap[:,iy,ix] = np.nansum(np.nansum(incube[:,trim:-trim,trim:-trim] * mflib[i],axis=2),axis=1)
     
     return convolvedmap
 
 
-def RDI_noise(par,xshift,yshift,order=3,
-                rootname = "mflib",
+def processCubes(par,xshift=0.0,yshift=0.0,order=3,
                 outdir_time_series = 'OS5',
-                outdir_detector='OS5/OS5_detector',
-                outdir_average='OS5/OS5_average',
+                psf_time_series_folder='/Users/mrizzo/IFS/OS5/with_lowfc',
+                Nref=30,ref_only=False,
                 process_cubes=True,
-                countershift=True,
-                normalize_contrast=True,
-                psf_time_series_folder='/Users/mrizzo/IFS/OS5/with_lowfc',Nref=30,
-                offaxis_psf_filename='/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits',
                 ref_star_T=9377*u.K, ref_star_Vmag=2.37,
                 target_star_T=5887*u.K, target_star_Vmag=5.03,
-                nonoise=True,IWA=3,OWA=9,lamc=770.,BW = 0.18,
+                lamc=660.,BW = 0.18,
                 tel_pupil_area=3.650265060424805*u.m**2,
-                mflib='/mflib.fits.gz'):
+                ):
+    '''
+    Processes raw cubes from John Krist into IFS flux cubes just before the IFS.
+    Doesn't take into account the optical losses, but does take into account the detector QE.
+    
+    Parameters
+    ----------
+    par: Parameters instance
+        Crispy parameter instance
+    xshift: float
+        The amount to shift the input in X (in final IFS cube pixels)
+    yshift: float
+        The amount to shift the input in Y (in final IFS cube pixels)
+    order: integer
+        The order of the spline transform used for shifting the cubes
+    outdir_time_series: string
+        Path to which we will export the IFS fluxes at the detector
+    psf_time_series_folder: string
+        Path to the folder where all the original files are located
+    Nref: integer
+        Out of the files in John Krist's folder, how many correspond to observations of the reference star
+    ref_only: Boolean
+        Whether to only process the reference files or also target files
+    ref_star_T: 'u.K'
+        Temperature of the reference star in u.K
+    target_star_T: 'u.K'
+        Temperature of the target star in u.K
+    ref_star_Vmag: float
+        V Magnitude of the reference star
+    target_star_Vmag: float
+        V Magnitude of the target star
+    lamc: float
+        Central wavelength of the band, in nm
+    BW: float
+        Bandwidth
+    tel_pupil_area: 'u.m**2'
+        Collecting area of the telescope, minus obscurations, in u.m**2
+    
+    Returns
+    -------
+    ref_outlist: list of strings
+        List of the filenames corresponding the reference star
+    target_outlist: list of strings
+        List of the filenames corresponding the target star
+    fileshape: tuple
+        Size of the original John Krist cube
+    
     
     '''
-    
-    Here we assume the target PSF time series is already in hand, and already in outdir_time_series.
-    '''
-    
+
+
     ###################################################################################
     # Load, shift and propagate all of the IFS images for the reference star
     ###################################################################################
     
     # load the filenames
-    filelist = glob.glob(psf_time_series_folder+'/*')
+    filelist = glob.glob(psf_time_series_folder+'/*.fits')
     filelist.sort()
-    
-    
+        
     # load first filelist to get its shape
     kristfile = Image(filename=filelist[0])
     fileshape = kristfile.data.shape
@@ -703,22 +815,14 @@ def RDI_noise(par,xshift,yshift,order=3,
     ref_star_cube = convert_krist_cube(fileshape,lamlist,ref_star_T,ref_star_Vmag,tel_pupil_area)
     target_star_cube = convert_krist_cube(fileshape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
 
+    # compute the amount to be shifted in the cubes from J. Krist
     input_sampling = kristfile.header['PIXSIZE']
     input_wav = kristfile.header['LAM_C']*1000.
     par.pixperlenslet = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)
-    par.hdr['XSHIFT']=xshift*par.pixperlenslet
-    par.hdr['YSHIFT']=yshift*par.pixperlenslet
-    
-    try:
-        target = Image(par.exportDir+"/target_average_detector_red_optext.fits")
-        # limit only to the reference files
-        filelist = filelist[:Nref]
-    except:
-        # also compute the target files
-        filelist = filelist
+    log.info('X,Y Shift in px in original cubes: %.2f, %.2f' % (xshift*par.pixperlenslet,yshift*par.pixperlenslet))
 
     ###################################################################################
-    # simulate the IFS flux at the detector plane (no losses)
+    # simulate the IFS flux at the detector plane (no losses other than QE)
     ###################################################################################
     ref_outlist = []
     target_outlist = []
@@ -727,92 +831,241 @@ def RDI_noise(par,xshift,yshift,order=3,
         if process_cubes:
             log.info('Processing file '+reffile.split('/')[-1])
             cube = fits.open(reffile)[0]
-            cube.data*=ref_star_cube
             if i<Nref:
                 cube.data*=ref_star_cube
             else:
                 cube.data*=target_star_cube
-        
+    
             # adjust headers for slightly different wavelength
-            log.debug('Modifying cube header')
             adjust_krist_header(cube,lamc=lamc)
             par.saveDetector=False  
-            
+        
             # shift the cube
-#             cube.data = shiftCube(cube.data,dx=xshift*par.pixperlenslet,dy=yshift*par.pixperlenslet,order=1)
             if i<Nref:
-            cube.data = ndimage.interpolation.shift(cube.data,
-                             [0.0,yshift*par.pixperlenslet,xshift*par.pixperlenslet],order=order)
-            detectorFrame = polychromeIFS(par,lamlist.value,cube,QE=True)
+                log.info("Shifting input cube")
+                cube.data = ndimage.interpolation.shift(cube.data,
+                         [0.0,yshift*par.pixperlenslet,xshift*par.pixperlenslet],order=order)
+            if ref_only:
+                if i<Nref:
+                    detectorFrame = polychromeIFS(par,lamlist.value,cube,QE=True)
+            else:
+                detectorFrame = polychromeIFS(par,lamlist.value,cube,QE=True)
+                
+            par.hdr.append(('XSHIFT',xshift*par.pixperlenslet,'X Shift in px in original cubes'),end=True)
+            par.hdr.append(('YSHIFT',yshift*par.pixperlenslet,'Y Shift in px in original cubes'),end=True)
 
             if i<Nref:
                 Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits',clobber=True)
                 ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
-            else:
+            elif ~ref_only:
                 Image(data = detectorFrame,header=par.hdr).write(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits',clobber=True)
                 target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
-
+            else:
+                target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+                
         else:
-            ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
-        else:
-
             if i<Nref:
                 ref_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_refstar_IFS.fits')
             else:
                 target_outlist.append(outdir_time_series+'/'+reffile.split('/')[-1].split('.')[0]+'_targetstar_IFS.fits')
+
+
+    return ref_outlist,target_outlist,fileshape
     
-    if normalize_contrast:
-        offaxiscube = Image(offaxis_psf_filename)
-        print('Processing file '+offaxis_psf_filename)
 
-        # Need to re-center the off-axis psf if it is not the right size
-        if offaxiscube.data.shape[1] < fileshape[1]:
-            diff = fileshape[1]-offaxiscube.data.shape[1]
-            offaxiscube_recentered = np.zeros(fileshape)
-            offaxiscube_recentered[:,diff//2:-diff//2,diff//2:-diff//2] += offaxiscube.data
-            offaxiscube = Image(data=offaxiscube_recentered,header = offaxiscube.header)
-        offaxis_star_cube = convert_krist_cube(offaxiscube.data.shape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
+def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_average,Nave=100,
+                    target_star_T=5887*u.K, target_star_Vmag=5.03,tel_pupil_area=3.650265060424805*u.m**2):
 
-        # adjust headers for slightly different wavelength
-        log.debug('Modifying cube header')
-        adjust_krist_header(offaxiscube,lamc=lamc)
-        par.saveDetector=False
-        Image(data=offaxiscube.data,header=offaxiscube.header).write(outdir_average+'/offaxiscube_processed.fits',clobber=True)
-        detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=True)
-        Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/offaxis.fits',clobber=True)
-        offaxis_reduced = reduceIFSMap(par,outdir_average+"/offaxis.fits")
+    '''
+    Processes an off-axis PSF cube from John Krist. This is used to normalized the cubes to contrast units
+    
+    Parameters
+    ----------
+    par: Parameters instance
+        Crispy parameter instance
+    offaxis_psf_filename: string
+        Path to the off-axis cube from J. Krist
+    fileshape: tuple
+        Size of the original John Krist cube
+    lamlist: list
+        List of wavelengths corresponding to each slice
+    lamc: float
+        Central wavelength
+    outdir_average: string
+        Path to which we will export the off-axis IFS flux maps at the detector
+    Nave: integer
+        Number of files to average. This needs to be the same number as the number of times the target is averaged (nominally 100)
+    target_star_T: 'u.K'
+        Temperature of the target star in u.K
+    target_star_Vmag: float
+        V Magnitude of the target star
+    tel_pupil_area: 'u.m**2'
+        Collecting area of the telescope, minus obscurations, in u.m**2
+    
+    Returns
+    -------
+    offaxis_reduced: 3D ndarray
+        Reduced cube
+    
+    
+    '''
+    offaxiscube = Image(offaxis_psf_filename)
+    print('Processing file '+offaxis_psf_filename)
+    
+    
+    # Need to re-center the off-axis psf if it is not the right size
+    if offaxiscube.data.shape[1] < fileshape[1]:
+        diff = fileshape[1]-offaxiscube.data.shape[1]
+        offaxiscube_recentered = np.zeros(fileshape)
+        offaxiscube_recentered[:,diff//2:-diff//2,diff//2:-diff//2] += offaxiscube.data
+        offaxiscube = Image(data=offaxiscube_recentered,header = offaxiscube.header)
+    offaxis_star_cube = convert_krist_cube(offaxiscube.data.shape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
+    offaxiscube.data*=offaxis_star_cube
+
+    # adjust headers for different wavelength
+    adjust_krist_header(offaxiscube,lamc=lamc)
+    par.saveDetector=False
+    Image(data=offaxiscube.data).write(outdir_average+'/offaxiscube_processed.fits',clobber=True)
+    detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=True)
+    det = Image(data = detectorFrame,header=par.hdr)
+    det.write(outdir_average+'/offaxis.fits',clobber=True)
+    
+    det_out = np.zeros(detectorFrame.shape)
+    inttime = par.timeframe/par.Nreads
+    for i in range(Nave*par.Nreads):
+        det_out+=readDetector(par,det,inttime=inttime)
+    
+    Image(data = det_out,header=par.hdr).write(outdir_average+'/offaxis_detector.fits',clobber=True)
+    
+    offaxis_reduced = reduceIFSMap(par,outdir_average+'/offaxis_detector.fits')
+    Image(data=offaxis_reduced.data).write(outdir_average+"/offaxis_detector_red_optext.fits")
+    
+    return offaxis_reduced
 
 
+def RDI_noise(par,xshift,yshift,order=3,
+                rootname = "mflib",
+                outdir_time_series = 'OS5',
+                outdir_detector='OS5/OS5_detector',
+                outdir_average='OS5/OS5_average',
+                process_cubes=True,
+                countershift=True,
+                normalize_contrast=True,
+                offaxis_reduced = "OS5/OS5_average/offaxis.fits",
+                psf_time_series_folder='/Users/mrizzo/IFS/OS5/with_lowfc',Nref=30,ref_only=True,
+                offaxis_psf_filename='/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits',
+                ref_star_T=9377*u.K, ref_star_Vmag=2.37,
+                target_star_T=5887*u.K, target_star_Vmag=5.03,
+                IWA=3,OWA=9,lamc=660.,BW = 0.18,
+                tel_pupil_area=3.650265060424805*u.m**2,
+                mflib='/mflib.fits.gz'):
+    
+    '''
+    Determines the SNR map of a simulation using RDI.
+    Here we assume the target PSF time series is already in hand, and already in outdir_time_series.
+    
+    Parameters
+    ----------
+    par: Parameters instance
+        Crispy parameter instance
+    xshift: float
+        The amount to shift the input in X (in final IFS cube pixels)
+    yshift: float
+        The amount to shift the input in Y (in final IFS cube pixels)
+    order: integer
+        The order of the spline transform used for shifting the cubes
+    rootname: string
+        The root name of the final SNR cube maps
+    outdir_time_series: string
+        Path to which we will export the IFS fluxes at the detector
+    outdir_detector: string
+        Path to the folder where we will put the detector maps
+    outdir_average: string
+        Path to the folder where we will put the final results and other byproducts of the function
+    process_cubes: Boolean
+        Whether or not to process the IFS cubes, or assume that they are already processed
+    countershift: Boolean
+        Whether to countershift the reference star or not
+    normalize_contrast: Boolean
+        Whether to normalize the SNR map to contrast units using off-axis PSF
+    offaxis_reduced: string
+        Path to the offaxis PSF that will be used for contrast normalization
+    psf_time_series_folder: string
+        Path to the folder where all the original files are located
+    Nref: integer
+        Out of the files in John Krist's folder, how many correspond to observations of the reference star
+    ref_only: Boolean
+        Whether to only process the reference files or also target files
+    ref_star_T: 'u.K'
+        Temperature of the reference star in u.K
+    target_star_T: 'u.K'
+        Temperature of the target star in u.K
+    ref_star_Vmag: float
+        V Magnitude of the reference star
+    target_star_Vmag: float
+        V Magnitude of the target star
+    lamc: float
+        Central wavelength of the band, in nm
+    BW: float
+        Bandwidth
+    tel_pupil_area: 'u.m**2'
+        Collecting area of the telescope, minus obscurations, in u.m**2
+    mflib: string
+        Name of the matched filter library file
+    
+    
+    
+    Returns
+    -------
+    pixstd: array
+        List of slice-by-slice standard deviation of the RDI cube convolved with the matched filter
+    '''
+    
+    ref_outlist,target_outlist,fileshape = processCubes(par,xshift=xshift,yshift=yshift,order=order,
+                                                outdir_time_series = outdir_time_series,
+                                                psf_time_series_folder=psf_time_series_folder,
+                                                Nref=Nref,ref_only=ref_only,
+                                                process_cubes=process_cubes,
+                                                ref_star_T=ref_star_T, ref_star_Vmag=ref_star_Vmag,
+                                                target_star_T=target_star_T, target_star_Vmag=target_star_Vmag,
+                                                lamc=lamc,BW = BW,
+                                                tel_pupil_area=tel_pupil_area)
+                                                
+                                                
     ###################################################################################
     # simulate the detector readout (including optical losses)
     ###################################################################################
-    par.nonoise=nonoise
+    log.info("Taking average of reference star")
     ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector)  
-    if len(target_outlist)>0:
-        target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector)  
+
+    log.info("Taking average of target star")
+    target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector)  
         
     
     ###################################################################################
-    # Average all detector images and reduce IFS map
+    # Average all detector images and reduce IFS maps
     ###################################################################################
     ave_ref = np.zeros(fits.open(ref_det_outlist[0])[1].data.shape)
-    for targetfile in ref_det_outlist:
-        ave_ref += fits.open(targetfile)[1].data
+    for reffile in ref_det_outlist:
+        ave_ref += fits.open(reffile)[1].data
     ref = Image(data = ave_ref)
     ref.write(outdir_average+"/ref_average_detector_"+rootname+".fits",clobber=True)
     ref_reduced = reduceIFSMap(par,outdir_average+"/ref_average_detector_"+rootname+".fits")
+    ref_reduced.write(outdir_average+"/ref_average_detector_"+rootname+"_red_optext.fits",clobber=True)
     
-    if len(target_outlist)>0:
-        target_star_average = np.zeros(Image(filename=target_det_outlist[0]).data.shape)
-        for reffile in target_det_outlist:
-            target_star_average += Image(filename=reffile).data
-        target = Image(data=target_star_average,header=par.hdr)
-        # write it out for the future iterations of this program
-        target.write(outdir_average+'/average_target_star_detector.fits',clobber=True)
+    # repeat for the target
+    target_star_average = np.zeros(Image(filename=target_det_outlist[0]).data.shape)
+    for targetfile in target_det_outlist:
+        target_star_average += fits.open(targetfile)[1].data
+    target = Image(data=target_star_average,header=par.hdr)
+    # write it out for the future iterations of this program
+    target.write(outdir_average+'/target_average_detector.fits',clobber=True)
+    target_reduced = reduceIFSMap(par,outdir_average+'/target_average_detector.fits')
+    target_reduced.write(outdir_average+"/target_average_detector_red_optext.fits",clobber=True)
 
     
     # ref_reduced is now the IFS cube from the shifted reference star
-    # target is the IFS cube from the target star
+    # target_reduced is the IFS cube from the target star
 
     ###################################################################################
     # Counter-shift the reference cube
@@ -823,56 +1076,43 @@ def RDI_noise(par,xshift,yshift,order=3,
         ref_reduced.data[np.isnan(ref_reduced.data)] = 0.0
         ref_reduced.data = ndimage.interpolation.shift(ref_reduced.data,
                                     [0.0,-yshift*c+xshift*s,-xshift*c-yshift*s],order=order)
-        ref_reduced.write(par.exportDir+"/ref_average_detector_countershifted_"+rootname+"_red_optext.fits",clobber=True)
+        ref_reduced.write(outdir_average+"/ref_average_detector_countershifted_"+rootname+"_red_optext.fits",clobber=True)
     
     ###################################################################################
     # Do basic least squares RDI, slice by slice; no mean subtraction for now
     ###################################################################################
-    
-    ydim,xdim = target.data[0].shape
-    mask,scratch = bowtie(target.data[0],ydim//2,xdim//2,openingAngle=65,
+    ydim,xdim = target_reduced.data[0].shape
+    mask,scratch = bowtie(target_reduced.data[0],ydim//2,xdim//2,openingAngle=65,
             clocking=-par.philens*180./np.pi,
             IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
             OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
             export=None,twomasks=False)    
-    coefs,residual = scale2imgs(target,ref_reduced,mask=mask,returndiff = True)
-    Image(data=residual).write(par.exportDir+"/lstsq_residual_"+rootname+".fits")
+    coefs,residual = scale2imgs(target_reduced,ref_reduced,mask=mask,returndiff = True)
+    Image(data=residual).write(outdir_average+"/lstsq_residual_"+rootname+".fits")
     
     ###################################################################################
     # Convolve with matched filter
     ###################################################################################
-    if mflib is None:
-        recenter_offaxis(offaxis_psf_filename,0.01,par.exportDir+'/centered_offaxis.fits')
-        centered_offaxis_file = Image(par.exportDir+'/centered_offaxis.fits')
-        adjust_krist_header(centered_offaxis_file,lamc=lamc)
-        par.saveDetector=False  
-        Nlam = centered_offaxis_file.data.shape[0]
-        lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)
-
-        # propagate the offaxis PSF
-        detectorFrame = polychromeIFS(par,lamlist,centered_offaxis_file,QE=True)
-        Image(data = detectorFrame,header=par.hdr).write(par.exportDir+"/offaxis_detector.fits",clobber=True)
-
-        # reduce the offaxis PSF
-        offaxis_reduced = reduceIFSMap(par,par.exportDir+"/offaxis_detector.fits")
-
-        # construct matched filter
-        psf = Image(par.exportDir+"/offaxis_detector_red_optext.fits")
-        construct_mflib(par,psf,threshold=0.5,mask=mask)
+    log.info("Convolving with matched filter")
+    convolved = convolved_mf(residual,mflib)
+    Image(data=convolved).write(outdir_average+'/convolved.fits')
     
-    # this will return an error if the library is not found
-    convolved = convolved_mf(residual,par.exportDir+mflib)
-    
+    ###################################################################################
     # this computes the convolution with an offaxis source as bright as the star
+    ###################################################################################
     if normalize_contrast:
-        starmf = convolved_mf(offaxis,par.exportDir+mflib)
+        log.info("Normalizing contrast")
+        offaxis = Image(offaxis_reduced)
+        starmf = convolved_mf(offaxis.data,mflib)
+        Image(data=starmf).write(outdir_average+'/starmf.fits')
         max_starmf = np.amax(np.amax(starmf,axis=2),axis=1)
+        log.info("Max star matched filter:%f" % np.amax(max_starmf))
     else:
-        max_starmf = np.ones(starmf.shape[0])
+        max_starmf = np.ones(convolved.shape[0])
     
     convolved /= max_starmf[:,np.newaxis,np.newaxis]
     
     outkey = fits.HDUList(fits.PrimaryHDU(convolved.astype(np.float)))
-    outkey.writeto(par.exportDir+'/mflib'+rootname+'.fits',clobber=True)
-    pixstd = [np.nanstd(convolved[i]) for i in range(residual.shape[0])]
+    outkey.writeto(outdir_average+'/mflib'+rootname+'.fits',clobber=True)
+    pixstd = [np.nanstd(convolved[i]) for i in range(convolved.shape[0])]
     return pixstd

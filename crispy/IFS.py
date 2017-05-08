@@ -206,7 +206,8 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, QE 
     if par.gaussian:
         hires_arrs = []
         if lam_arr is None:
-            lam_arr=np.arange(700.,845.,10.)  # hard coded for now, need to modify this
+#             lam_arr=np.arange(min(wavelist_endpts),max(wavelist_endpts),10.)
+            lam_arr = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
         for i in range(len(lam_arr)):
             hiresarr = get_sim_hires(par, lam_arr[i])   
             hires_arrs += [hiresarr]
@@ -585,8 +586,8 @@ def createWavecalFiles(par,lamlist,lamc=770.,dlam=1.):
     inCube[0].header['PIXSIZE'] = 0.1
     filelist = []
     for wav in lamlist:
-#         detectorFrame = propagateIFS(par,[wav*1e-3],inCube[0])
-        detectorFrame = polychromeIFS(par,[wav],inCube[0],dlambda=dlam,parallel=False)
+        # note the argument lam_arr, necessary when computing things for the first time
+        detectorFrame = polychromeIFS(par,[wav],inCube[0],dlambda=dlam,parallel=False,lam_arr=lamlist)
         filename = par.wavecalDir+'det_%3d.fits' % (wav)
         filelist.append(filename)
         Image(data=detectorFrame,header=par.hdr).write(filename)
