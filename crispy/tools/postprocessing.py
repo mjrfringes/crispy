@@ -1084,7 +1084,7 @@ def RDI_noise(par,xshift,yshift,order=3,
     
     ref_outlist = processReferenceCubes(par,xshift=xshift,yshift=yshift,order=order,
                                                 outdir_time_series = outdir_time_series,
-                                                ref_inlist=reffiles,
+                                                ref_input_list=reffiles,
                                                 process_cubes=process_cubes,
                                                 ref_star_T=ref_star_T, ref_star_Vmag=ref_star_Vmag,
                                                 lamc=lamc,BW = BW,
