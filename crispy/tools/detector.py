@@ -76,7 +76,9 @@ def readDetector(par,IFSimage,inttime=100):
         par.hdr.append(('POL',par.pol,'Polarization losses'),end=True)
         par.hdr.append(('INTTIME',inttime,'Integration time per frame'),end=True)
                 
-        
+    
+    IFSimage.data[IFSimage.data<0]=0.0
+    
     eff = par.losses*par.PhCountEff*par.pol
     
     photoelectrons = IFSimage.data*eff*inttime

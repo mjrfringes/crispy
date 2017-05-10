@@ -65,7 +65,7 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
                      upsample=5, nlam=10,npix=13):
     """
     """
-
+#     oldsum = np.sum(imageplane)
     padding = 10
     ydim,xdim = imageplane.shape
     
@@ -222,6 +222,7 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
                 image[iy1:iy2, ix1:ix2] += val*weight22*ndimage.map_coordinates(hires[j2, i2], [yinterp, xinterp], prefilter=False)
      
     image = image[padding:-padding, padding:-padding]
+#     image *= oldsum/np.sum(image)
     return image
 
 

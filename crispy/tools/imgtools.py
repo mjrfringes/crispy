@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.signal import medfilt
+import scipy
 try:
     from astropy.io import fits as pyf
 except:
@@ -62,7 +63,18 @@ def gen_lenslet_flat(BBcube, nsig=5):
     
     return 1./norm_lenslet_flat, mask
 
+def circularMask(image,radius):
 
+
+    x = np.arange(image.shape[0])
+    y = np.arange(image.shape[1])
+    x -= image.shape[0]//2
+    y -= image.shape[1]//2
+    x,y = np.meshgrid(x,y)
+    
+    r = np.sqrt(x**2 + y**2)
+    return r<radius
+    
 
 def bowtie(image,xc,yc,openingAngle,clocking,IWApix,OWApix,export='bowtie',twomasks=False):
     '''
@@ -136,32 +148,47 @@ def bowtie(image,xc,yc,openingAngle,clocking,IWApix,OWApix,export='bowtie',twoma
     
     
     
-def scale2imgs(img1,img2,mask=None,returndiff = True):
+def scale2imgs(img1,img2,mask,bowtie_mask=None,returndiff = True,propcut=None):
     '''
     Finds the slice-by-slice best-fit scale factor between two images.
     Optionally returns the difference between the two. 
     Images can be cubes.
     
+    Parameters
+    ----------
+    mask: 2D ndarray
+        Central circular mask encompassing the entire bowtie
     Returns
     -------
     coefs: float array
         Coefficient(s) of the best fit between the two images or cubes
     diff: ndarray
         Same shape as input, residual difference img1*scale-img2.
+    
     '''
     # make local copies of data
     c1 = img1.data.copy()
     c2 = img2.data.copy()
-    c1[np.isnan(c1)]=0.0
-    c2[np.isnan(c2)]=0.0
+    
+    # determine the pixels to use to subtract the average
+    # all NaNs
+    nanmask = ~((~np.isnan(c1))*(~np.isnan(c2)))
     
     res = []
     for i in range(c1.shape[0]):
-        if mask is not None:
-            c1[i] *= mask
-            c2[i] *= mask
-        refslice = np.reshape(c1[i], (1, -1))
-        targetslice = np.reshape(c2[i],-1)
+        refslice = c1[i]
+        targetslice = c2[i]
+        if propcut is not None:
+            refslice -= scipy.stats.trim_mean(refslice[(~mask)*(~nanmask[i])],propcut)
+            targetslice -= scipy.stats.trim_mean(targetslice[(~mask)*(~nanmask[i])],propcut)
+        if bowtie_mask is not None:
+            refslice *= bowtie_mask
+            targetslice *= bowtie_mask
+        # zero out NaNs for least squares
+        refslice[np.isnan(refslice)] = 0.0
+        targetslice[np.isnan(targetslice)] = 0.0
+        refslice = np.reshape(refslice, (1, -1))
+        targetslice = np.reshape(targetslice,-1)
         res.append(np.linalg.lstsq(refslice.T,targetslice)[0])
     res = np.array(res).flatten()
     if returndiff:
@@ -174,4 +201,8 @@ def subtract_mean(cube):
     '''
     subtract the mean of the cube slice by slice
     '''
+    cube[np.isnan(cube)]=0.0
+    for i in range(cube.shape[0]):
+        cube[i] -= scipy.stats.trim_mean(cube[i][cube[i]>0.0],propcut)
+        
     return cube

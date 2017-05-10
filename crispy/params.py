@@ -64,7 +64,7 @@ class Params(object):
                                     # of Lucy-Richardson deconvolution
 
         self.QE = "QE_CCD201.txt"	# detector QE
-        self.nonoise=False           # whether to disable all the noises (except QE)
+        self.nonoise=True           # whether to disable all the noises (except QE)
         self.poisson = True         # Use Poisson statistics?
         self.RN = 20.0              # Read noise (e/px/fr)
 #         self.CIC = 1.2e-2           # Clock-induced charge (e/px/fr)

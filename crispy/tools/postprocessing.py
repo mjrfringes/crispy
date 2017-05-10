@@ -21,11 +21,12 @@ from crispy.tools.par_utils import Task, Consumer
 import seaborn as sns
 from crispy.tools.inputScene import calc_contrast
 from crispy.tools.reduction import calculateWaveList
-from crispy.tools.imgtools import bowtie,scale2imgs
+from crispy.tools.imgtools import bowtie,scale2imgs,circularMask
 from crispy.tools.rotate import shiftCube
 from scipy import ndimage
 from scipy.interpolate import interp1d
 from crispy.params import Params
+import scipy
 
 
 
@@ -494,6 +495,7 @@ def process_SPC_IFS(par,
 def process_SPC_IFS2(par,
                     psf_time_series_folder,
                     offaxis_psf_filename,
+                    xshift=0.0,yshift=0.0,order=3,
                     planet_radius = 1.27*c.R_jup,
                     planet_AU = 3.6,planet_dist_pc=14.1,
                     ref_star_T=9377*u.K, ref_star_Vmag=2.37,
@@ -501,20 +503,20 @@ def process_SPC_IFS2(par,
                     lamc=770.,BW=0.18,n_ref_star_imgs=30,
                     tel_pupil_area=3.650265060424805*u.m**2,
                     IWA = 3,OWA = 9,
-                    xshift=0.0,yshift=0.0, ## need to tie this to planet distance
                     pp_fact = 0.05,
+                    RDI=True,
                     t_zodi = 0.09,
                     useQE=True,
+                    mflib='/mflib.fits.gz',
                     subtract_ref_psf=True,
                     outdir_time_series = 'OS5',
                     outdir_detector='OS5/OS5_detector',
                     outdir_average='OS5/OS5_average',
                     process_cubes=True,
-                    process_offaxis=True,
+                    process_offaxis_files=True,
                     process_detector=True,
-                    process_noiseless=False,
                     take_averages=True,
-                    parallel=True):
+                    normalize_contrast=True):
     '''
     Process SPC PSF cubes from J. Krist through the IFS
 
@@ -597,12 +599,13 @@ def process_SPC_IFS2(par,
     targetfiles =filelist[n_ref_star_imgs:]
     
     ref_outlist = processReferenceCubes(par,xshift=xshift,yshift=yshift,order=order,
-                                                outdir_time_series = outdir_time_series,
-                                                ref_input_list=reffiles,
-                                                process_cubes=process_cubes,
-                                                ref_star_T=ref_star_T, ref_star_Vmag=ref_star_Vmag,
-                                                lamc=lamc,BW = BW,
-                                                tel_pupil_area=tel_pupil_area)
+            outdir_time_series = outdir_time_series,
+            ref_input_list=reffiles,
+            process_cubes=process_cubes,
+            ref_star_T=ref_star_T, ref_star_Vmag=ref_star_Vmag,
+            lamc=lamc,BW = BW,
+            tel_pupil_area=tel_pupil_area)
+                                                
     target_outlist = processTargetCubes(par,targetfiles,
             outdir_time_series = outdir_time_series,
             process_cubes=process_cubes,
@@ -613,56 +616,31 @@ def process_SPC_IFS2(par,
     times['Process cubes through IFS'] = time()
 
     ###################################################################################
-    # Step 3: Process the off-axis PSF in the same way
-    ###################################################################################
+    # Process the off-axis PSF in the same way
+    ###################################################################################    
     
-#     first recenter the offaxis psf cube
-#     recenter_offaxis(offaxis_psf_filename,threshold=0.01,outname=par.exportDir+'/centered_offaxis.fits')
-#     
-#     now shift the cube to put it at the desired lambda/D
-#     input_sampling = kristfile.header['PIXSIZE']
-#     input_wav = kristfile.header['LAM_C']*1000.
-#     par.pixperlenslet = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)
-#     par.hdr['DX_OFFAX']=xshift*par.pixperlenslet
-#     par.hdr['DY_OFFAX']=yshift*par.pixperlenslet
-# 
-#     shifted_cube = shiftCube(cube,dx=sep*kristfile.header['PIXSIZE'],dy=0,order=1)
-    
-    
-    if process_offaxis:
-        log.info('Recentering off-axis cube')
-        offaxiscube = recenter_offaxis(offaxis_file,threshold,outname='centered_offaxis.fits')
-
-        log.info('Constructing off-axis cube at correct planet angle')
-        offaxiscube.data = ndimage.interpolation.shift(offaxiscube.data,
-                        [0.0,yshift*par.pixperlenslet,xshift*par.pixperlenslet],order=order)
+    if process_offaxis_files:
+        fileshape = fits.open(reffiles[0])[0].data.shape
+        lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,fileshape[0])*u.nm
         
-            
-
-        # Need to re-center the off-axis psf if it is not the right size
-        if offaxiscube.data.shape[1] < fileshape[1]:
-            diff = fileshape[1]-offaxiscube.data.shape[1]
-            offaxiscube_recentered = np.zeros(fileshape)
-            offaxiscube_recentered[:,diff//2:-diff//2,diff//2:-diff//2] += offaxiscube.data
-            offaxiscube = Image(data=offaxiscube_recentered,header = offaxiscube.header)
-        offaxis_star_cube = convert_krist_cube(offaxiscube.data.shape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
-        contrast = calc_contrast_Bijan(lamlist.value)
-
-        contrast_cube = np.zeros(offaxiscube.data.shape)
-        for i in range(offaxiscube.data.shape[0]):
-            contrast_cube[i,:,:] += contrast[i]
-        offaxiscube.data*=offaxis_star_cube*contrast_cube
-
+        # planetary off-axis source
+        process_planet(par,offaxis_psf_filename,fileshape=fileshape,
+                    lamlist=lamlist,
+                    lamc=lamc,
+                    outdir_average=outdir_average,
+                    planet_radius = planet_radius,
+                    planet_AU = planet_AU,planet_dist_pc=planet_dist_pc,
+                    target_star_T=target_star_T, target_star_Vmag=target_star_Vmag,
+                    tel_pupil_area=tel_pupil_area, order=order)
         
-        # adjust headers for slightly different wavelength
-        adjust_krist_header(offaxiscube,lamc=lamc)
-        par.saveDetector=False
-        Image(data=offaxiscube.data).write(outdir_average+'/offaxiscube_processed.fits',clobber=True)
-        detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=useQE)
-        par.hdr.append(('XSHIFT',xshift*par.pixperlenslet,'X Shift in px in offaxis cubes'),end=True)
-        par.hdr.append(('YSHIFT',yshift*par.pixperlenslet,'Y Shift in px in offaxis cubes'),end=True)
-
-        Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/offaxis.fits',clobber=True)
+        # stellar off-axis source for contrast normalization - watch out for the photon counting issues!
+        offaxis_reduced = process_offaxis(par,offaxis_psf_filename=offaxis_psf_filename,
+                fileshape=fileshape,
+                lamlist=lamlist,
+                lamc=lamc,
+                outdir_average=outdir_average,
+                target_star_T=target_star_T, target_star_Vmag=target_star_Vmag,
+                tel_pupil_area=tel_pupil_area)
 
     times['Cube conversion'] = time()
 
@@ -694,35 +672,38 @@ def process_SPC_IFS2(par,
     
 
     ###################################################################################
-    # Step 4: Add the off-axis PSF before reading on the detector
+    # Add the off-axis PSF before reading on the detector
     ###################################################################################
 
     if process_detector:
         # Apply detector for both reference star and target
         ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector)   
-        offaxis_filename = os.path.abspath(outdir_average+'/offaxis.fits')
+        offaxis_filename = os.path.abspath(outdir_average+'/offaxis_planet.fits')
         #zodi_filename = os.path.abspath(outdir_average+'/zodicube.fits')
+        target_nosource_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,suffix='nosource_detector')
         target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,offaxis = offaxis_filename,factor = pp_fact)
     else:
         ref_det_outlist = []
+        target_nosource_outlist = []
         target_det_outlist = []
         suffix='detector'
         for reffile in ref_outlist:
             ref_det_outlist.append(outdir_detector+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits')
         for reffile in target_outlist:
+            target_nosource_outlist.append(outdir_detector+'/'+reffile.split('/')[-1].split('.')[0]+'_nosource_detector.fits')
             target_det_outlist.append(outdir_detector+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits')
     times['Construct IFS detector'] = time()
 
-    par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)
-    par.hdr.append(('comment', '*'*22 + ' Scene ' + '*'*20), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)    
-    par.hdr.append(('comment', ''), end=True)
-    try:
-        par.hdr.append(('TZODI',t_zodi,'Zodi throughput'),end=True)
-        par.hdr.append(('ABSMAG',absmag,'Target star absolute magnitude'),end=True)
-    except:
-        pass
+#     par.hdr.append(('comment', ''), end=True)
+#     par.hdr.append(('comment', '*'*60), end=True)
+#     par.hdr.append(('comment', '*'*22 + ' Scene ' + '*'*20), end=True)
+#     par.hdr.append(('comment', '*'*60), end=True)    
+#     par.hdr.append(('comment', ''), end=True)
+#     try:
+#         par.hdr.append(('TZODI',t_zodi,'Zodi throughput'),end=True)
+#         par.hdr.append(('ABSMAG',absmag,'Target star absolute magnitude'),end=True)
+#     except:
+#         pass
     
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('comment', '*'*60), end=True)
@@ -732,87 +713,182 @@ def process_SPC_IFS2(par,
     par.hdr.append(('PPFACT',pp_fact,'Post-processing factor'),end=True)
 
     ###################################################################################
-    # Step 5: Take averages
+    # Take averages
     ###################################################################################
 
     if take_averages:
         log.info('Taking averages')
         ref_star_average = np.zeros(Image(filename=ref_det_outlist[0]).data.shape)
         target_star_average = np.zeros(Image(filename=target_det_outlist[0]).data.shape)
+        target_star_nosource_average = np.zeros(Image(filename=target_nosource_outlist[0]).data.shape)
         for reffile in ref_det_outlist:
             ref_star_average += Image(filename=reffile).data
-        #ref_star_average /= len(ref_det_outlist)
         for reffile in target_det_outlist:
             target_star_average += Image(filename=reffile).data
+        for reffile in target_nosource_outlist:
+            target_star_nosource_average += Image(filename=reffile).data
         Image(data=ref_star_average,header=par.hdr).write(outdir_average+'/average_ref_star_detector.fits',clobber=True)
         Image(data=target_star_average,header=par.hdr).write(outdir_average+'/average_target_star_detector.fits',clobber=True)
+        Image(data=target_star_nosource_average,header=par.hdr).write(outdir_average+'/average_target_star_nosource_detector.fits',clobber=True)
         par.hdr.append(('NIMGS',len(target_det_outlist),'Number of time series steps'),end=True)
         par.hdr.append(('TOTTIME',len(target_det_outlist)*par.timeframe,'Total integration time on source'),end=True)
 
     times['Taking averages'] = time()
 
     ###################################################################################
-    # Step 6: Process the cubes
+    # Reduce the cubes
     ###################################################################################
-    img = Image(filename=os.path.abspath(outdir_average+'/average_ref_star_detector.fits'))
-    ref_cube = reduceIFSMap(par,os.path.abspath(outdir_average+'/average_ref_star_detector.fits'))
-    target_cube = reduceIFSMap(par,os.path.abspath(outdir_average+'/average_target_star_detector.fits'))
-    offaxis_ideal = reduceIFSMap(par,os.path.abspath(outdir_average+'/offaxis.fits'))
-    offaxis_ideal_flipped = reduceIFSMap(par,os.path.abspath(outdir_average+'/offaxis_flipped.fits'))
+    img = Image(filename=outdir_average+'/average_ref_star_detector.fits')
+    ref_reduced = reduceIFSMap(par,outdir_average+'/average_ref_star_detector.fits')
+    target_reduced = reduceIFSMap(par,outdir_average+'/average_target_star_detector.fits')
+    target_nosource_reduced = reduceIFSMap(par,outdir_average+'/average_target_star_nosource_detector.fits')
+    
+    log.info("Flatfielding...")
+    flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
+    ref_reduced.data[~np.isnan(ref_reduced.data)] /= flatfield.data[~np.isnan(ref_reduced.data)]
+    target_reduced.data[~np.isnan(target_reduced.data)] /= flatfield.data[~np.isnan(target_reduced.data)]
+    target_nosource_reduced.data[~np.isnan(target_nosource_reduced.data)] /= flatfield.data[~np.isnan(target_nosource_reduced.data)]
+    par.hdr.append(('comment', 'Divided by lenslet flatfield'), end=True)
 
-    ###################################################################################
-    # Construct a bowtie mask
-    ###################################################################################
-    ydim,xdim = target_cube[0].shape
-    mask,scratch = bowtie(target_cube[0],ydim//2,xdim//2,openingAngle=65,
-                clocking=-par.philens*180./np.pi,IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
-                export=None,twomasks=False)    
+    Image(data = ref_reduced.data,header=par.hdr).write(outdir_average+'/average_ref_star_detector_red_optext_flatfielded.fits')
+    Image(data = target_reduced.data,header=par.hdr).write(outdir_average+'/average_target_star_detector_red_optext_flatfielded.fits')
+    Image(data = target_nosource_reduced.data,header=par.hdr).write(outdir_average+'/average_target_star_nosource_detector_red_optext_flatfielded.fits')
+
+
 
     times['Process average cubes'] = time()
-    ###################################################################################
-    # Step 7: Least-squares slice-by-slice subtraction
-    ###################################################################################
-    if subtract_ref_psf:
-#         ref_cube_stack = np.sum(ref_cube.data,axis=0)
-#         target_cube_stack = np.sum(target_cube.data,axis=0)
-#         ratio = np.sum(target_star_cube[:,0,0]) / np.sum(ref_star_cube[:,0,0])
-#         residual = target_cube.data - ratio*ref_cube.data
-#         residual[np.isnan(target_cube.data)] = np.NaN
-#         residual[(residual>1e10)*(residual<-1e10)] = np.NaN
 
-        # NEED TO subtract the mean of the cube slice by slice before the lstsq step
+    ###################################################################################
+    # Do basic least squares RDI, slice by slice with trimmed mean subtraction
+    ###################################################################################
+    ydim,xdim = target_reduced.data[0].shape
+    mask,scratch = bowtie(target_reduced.data[0],ydim//2,xdim//2,openingAngle=65,
+            clocking=-par.philens*180./np.pi,
+            IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
+            OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
+            export=None,twomasks=False)    
+#     maskleft,maskright = bowtie(target_reduced.data[0],ydim//2,xdim//2,openingAngle=65,
+#         clocking=-par.philens*180./np.pi,
+#         IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
+#         OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
+#         export=None,twomasks=True)    
+
+
+    # construct a circular mask that goes beyond the bowtie and block it off
+    circle_mask = circularMask(target_reduced.data[0],1.2*OWA*lamc/par.lenslet_wav/par.lenslet_sampling)
+    
+    # construct a mask with all the NaNs (assumes all slices have the same NaNs
+    nanmask = np.isnan(ref_reduced.data[0])
+    
+    # now the pixels that need to be taken into account for DC subtraction is 
+    mean_pixel_mask = (~circle_mask)*(~nanmask)
+    Image(data = mean_pixel_mask,header=par.hdr).write(outdir_average+'/mean_pixel_mask.fits')
+
+    if RDI:
         
-        # residual is target_cube-coefs*ref_cube
-        coefs,residual = scale2imgs(target_cube,ref_cube,mask=mask,returndiff=True)
-        par.hdr.append(('comment', 'Subtracted scaled mean of reference star PSF'), end=True)
+        # do least square subtraction on image without the source (Neil's idea)
+        coefs_nosource,residual_nosource = scale2imgs(target_nosource_reduced,
+                                                    ref_reduced,
+                                                    mask=circle_mask,
+                                                    bowtie_mask = mask,
+                                                    returndiff = True,
+                                                    propcut=0.4)
+        
+        # now subtract the means from the reduced image and the target image      
+        for i in range(ref_reduced.data.shape[0]):
+            ref_reduced.data[i] -= np.mean(ref_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(ref_reduced.data[i][ref_reduced.data[i]>0.0],0.4)
+        
+        for i in range(target_reduced.data.shape[0]):
+            target_reduced.data[i] -= np.mean(target_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(target_reduced.data[i][target_reduced.data[i]>0.0],0.4)
+
+        for i in range(target_nosource_reduced.data.shape[0]):
+            target_nosource_reduced.data[i] -= np.mean(target_nosource_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(target_reduced.data[i][target_reduced.data[i]>0.0],0.4)
+
+        Image(data = ref_reduced.data,header=par.hdr).write(outdir_average+'/average_ref_star_detector_red_optext_flatfielded_trimmean.fits')
+        Image(data = target_reduced.data,header=par.hdr).write(outdir_average+'/average_target_star_detector_red_optext_flatfielded_trimmean.fits')
+        Image(data = target_nosource_reduced.data,header=par.hdr).write(outdir_average+'/average_target_star_nosource_detector_red_optext_flatfielded_trimmean.fits')
+
+        # use the coefficients from the nosource lstsq to subtract ref from target (avoid bias by source)
+        #residual = target_reduced.data*coefs_nosource[:,np.newaxis,np.newaxis]-ref_reduced.data
+        residual = target_reduced.data-target_nosource_reduced.data
+        print (coefs_nosource)
+        par.hdr.append(('comment', 'Applied RDI'), end=True)
+        
     else:
-        residual = target_cube.data
-    Image(data=residual,header = par.hdr).write(outdir_average+'/residual.fits', clobber=True)
-    Image(data=np.sum(residual,axis=0),header = par.hdr).write(outdir_average+'/residual_stack.fits', clobber=True)
+        for i in range(target_reduced.data.shape[0]):
+            target_reduced.data[i] -= np.mean(target_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(target_reduced.data[i][target_reduced.data[i]>0.0],0.4)
+        for i in range(target_nosource_reduced.data.shape[0]):
+            target_nosource_reduced.data[i] -= np.mean(target_nosource_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(target_reduced.data[i][target_reduced.data[i]>0.0],0.4)
+        residual = target_reduced.data -target_nosource_reduced.data
+        residual_nosource = target_nosource_reduced.data
+    Image(data=residual,header=par.hdr).write(outdir_average+"/lstsq_residual.fits")
+    
+    #residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
+    #Image(data=residual*mask,header=par.hdr).write(outdir_average+"/lstsq_residual_flatfielded.fits")
+    Image(data=residual_nosource,header=par.hdr).write(outdir_average+"/lstsq_residual_nosource.fits")
+    
 
-    times['Normalize and subtract reference PSF'] = time()
+    ## matched filter attempt
+    offaxis_ideal = Image(outdir_average+'/offaxis_planet_red_optext.fits')
+    offaxis_ideal_flipped = Image(outdir_average+'/offaxis_flipped_planet_red_optext.fits')
+    matched_filter = mf(offaxis_ideal,mask,0.5)
+    Image(data=matched_filter,header=par.hdr).write(outdir_average+'/matched_filter.fits')
+    matched_filter_flipped = mf(offaxis_ideal_flipped,mask,0.5)
+    signal = np.nansum(np.nansum(matched_filter*residual,axis=2),axis=1) - np.nansum(np.nansum(matched_filter_flipped*residual,axis=2),axis=1)
+    test = np.nansum(np.nansum(matched_filter*offaxis_ideal.data,axis=2),axis=1)# - np.nansum(np.nansum(matched_filter_flipped*offaxis_ideal.data,axis=2),axis=1)
+    Image(data=test,header=par.hdr).write(outdir_average+'/test.fits')
+    
+    times['RDI'] = time()
+    ###################################################################################
+    # Convolve with matched filter
+    ###################################################################################
+    log.info("Convolving with matched filter")
+    convolved = convolved_mf(residual,mflib)
+    par.hdr.append(('comment', 'Convolved with matched filter'), end=True)
+    Image(data=convolved,header=par.hdr).write(outdir_average+'/convolved.fits')
+    convolved_nosource = convolved_mf(residual_nosource,mflib)
+    Image(data=convolved_nosource,header=par.hdr).write(outdir_average+'/convolved_nosource.fits')
+    
+    times['Convolve'] = time()
+    ###################################################################################
+    # this computes the convolution with an offaxis source as bright as the star
+    ###################################################################################
+    if normalize_contrast:
+        log.info("Normalizing contrast")
+        par.hdr.append(('comment', 'Normalized with offaxis PSF from star'), end=True)
+        offaxis_norm = Image(outdir_average+"/offaxis_detector_red_optext.fits")
+        offaxis_norm.data[~np.isnan(offaxis_norm.data)] /= flatfield.data[(~np.isnan(flatfield.data))]
+        starmf = convolved_mf(offaxis_norm.data,mflib)
+        Image(data=starmf,header=par.hdr).write(outdir_average+'/starmf.fits')
+        max_starmf = np.amax(np.amax(starmf,axis=2),axis=1)
+        log.info("Max star matched filter:%f" % np.amax(max_starmf))
+    else:
+        max_starmf = np.ones(convolved.shape[0])
+    
+    convolved /= max_starmf[:,np.newaxis,np.newaxis]
+    convolved_nosource /= max_starmf[:,np.newaxis,np.newaxis]
+    
+    outkey = fits.HDUList(fits.PrimaryHDU(convolved.astype(np.float)))
+    outkey.writeto(outdir_average+'/convolved_normalized.fits',clobber=True)
+    outkey = fits.HDUList(fits.PrimaryHDU(convolved_nosource.astype(np.float)))
+    outkey.writeto(outdir_average+'/convolved_nosource_normalized.fits',clobber=True)
+    
+    # for the noise, use the scene with no planet
+    noise = [np.nanstd(convolved_nosource[i]) for i in range(convolved_nosource.shape[0])]
+    
+    # for the signal, just pick where the planet is
+    procplanet = Image(outdir_average+'/offaxis_planet_red_optext.fits')
 
-    ###################################################################################
-    # Flatfielding, to account for small errors in wavelength calibration
-    ###################################################################################
 
-    flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
-    residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
-    residual[np.logical_or((residual>1e10),(residual<-1e10))] = np.NaN
-    par.hdr.append(('comment', 'Divided by lenslet flatfield'), end=True)
-    Image(data=residual,header=par.hdr).write(outdir_average+'/residual_flatfielded.fits',clobber=True)
-    Image(data=np.sum(residual,axis=0),header=par.hdr).write(outdir_average+'/residual_flatfielded_stack.fits',clobber=True)
+    planet_WA = planet_AU/planet_dist_pc/(lamc*1e-9/2.37/4.848e-6)
+    d = planet_WA*lamc/par.lenslet_wav/par.lenslet_sampling
+    xp = par.nlens//2-np.sin(par.philens)*d
+    yp = par.nlens//2+np.cos(par.philens)*d
+    log.info("Coordinates of the planet in lenslets: %.2f, %.2f" %(xp+1,yp+1))
+
+    #signal = convolved[:,int(xp+1),int(yp+1)]
     
-    ###################################################################################
-    # Construct a matched filter
-    ###################################################################################
-    
-    
-    
-    
-    Image(data=matched_filter).write(outdir_average+'/matched_filter.fits',clobber=True)
-    Image(data=matched_filter_flipped).write(outdir_average+'/matched_filter_flipped.fits',clobber=True)
-    
+        
     times['Computed signal and noise arrays'] = time()
     
     log.info('Cube conversion: %.3f' % (times['Cube conversion']-times['Start']))
@@ -821,14 +897,23 @@ def process_SPC_IFS2(par,
     log.info('Construct IFS detector: %.3f' % (times['Construct IFS detector']-times['Process off-axis PSF through IFS']))
     log.info('Taking averages: %.3f' % (times['Taking averages']-times['Construct IFS detector']))  
     log.info('Process average cubes: %.3f' % (times['Process average cubes']-times['Taking averages']))
-    log.info('Normalize and subtract reference PSF: %.3f' % (times['Normalize and subtract reference PSF']-times['Process average cubes']))
-    log.info('Computed signal and noise arrays: %.3f' % (times['Computed signal and noise arrays']-times['Normalize and subtract reference PSF']))
+    log.info('RDI: %.3f' % (times['RDI']-times['Process average cubes']))
+    log.info('Convolve: %.3f' % (times['Convolve']-times['RDI']))
+    log.info('Computed signal and noise arrays: %.3f' % (times['Computed signal and noise arrays']-times['Convolve']))
     log.info('Total time: %.3f' % (times['Computed signal and noise arrays']-times['Start']))
 
-    return signal-off,noiseright,noiseleft
+    return signal,noise
 
 def SNR_spectrum(lam_midpts,signal, noise, 
-                lam_contrast=None, plot=True,outname = 'SNR.png', outfolder = '',title='Planet+star',edges=1,FWHM=2):
+                lam_contrast=None, plot=True,
+                outname = 'SNR.png', outfolder = '',
+                title='Planet+star',
+                edges=1,
+                FWHM=2,
+                FWHMdata = 2.,
+                ymargin = 0.05, # in percent
+                ratio=None, # calibration ratio
+                ):
     '''
     Plot the outputs of process_SPC_IFS
     
@@ -838,8 +923,11 @@ def SNR_spectrum(lam_midpts,signal, noise,
     else:
         lams=lam_midpts
     real_vals=calc_contrast_Bijan(lams)
-    smooth = ndimage.filters.gaussian_filter1d(real_vals,FWHM/2.35,order=0,mode='constant')
+    smooth = ndimage.filters.gaussian_filter1d(real_vals,FWHM/2.35,order=0,mode='nearest')
     smoothfunc=interp1d(lams,smooth)
+    smoothdata = ndimage.filters.gaussian_filter1d(signal,FWHMdata/2.35,order=0,mode='nearest')
+    smoothdatafunc=interp1d(lam_midpts,smoothdata)
+    newlam = np.linspace(min(lam_midpts),max(lam_midpts),45)
 
     chisq = np.sum((signal[edges:-edges]*np.mean(real_vals)/np.mean(signal) - smoothfunc(lam_midpts[edges:-edges]))**2/(noise[edges:-edges]*np.mean(real_vals)/np.mean(signal))**2)
 
@@ -847,14 +935,22 @@ def SNR_spectrum(lam_midpts,signal, noise,
         sns.set_style("whitegrid")
         fig,ax = plt.subplots(figsize=(12,6))
         ax.plot(lams,real_vals,label='Original spectrum')
-        ax.errorbar(lam_midpts,signal*np.mean(real_vals)/np.mean(signal),yerr=noise*np.mean(real_vals)/np.mean(signal),label='Recovered spectrum',fmt='o')    
+        if ratio is not None:        
+            ax.errorbar(lam_midpts,signal*ratio*np.mean(real_vals)/np.mean(signal[edges:-edges]),yerr=noise*ratio*np.mean(real_vals)/np.mean(signal[edges:-edges]),label='Recovered spectrum',fmt='o')    
+        else:
+            ax.errorbar(lam_midpts,signal*np.mean(real_vals)/np.mean(signal[edges:-edges]),yerr=noise*np.mean(real_vals)/np.mean(signal[edges:-edges]),label='Recovered spectrum',fmt='o')    
         ax.plot(lams,smooth,'-',label='Gaussian-smoothed original spectrum w/ FWHM=%.0f bins' % FWHM)
+#         if ratio is not None:        
+#             ax.plot(newlam,smoothdatafunc(newlam)*ratio*np.mean(real_vals)/np.mean(signal[edges:-edges]),'-',label='Gaussian-smoothed data w/ FWHM=%.0f bins' % FWHMdata)
+        if ratio is None:
+            ax.plot(newlam,smoothdatafunc(newlam)*np.mean(real_vals)/np.mean(signal[edges:-edges]),'-',label='Gaussian-smoothed data w/ FWHM=%.0f bins' % FWHMdata)
         ax.set_xlabel('Wavelength (nm)')
         ax.set_ylabel('Contrast')
+        ax.set_ylim([(1.0-ymargin)*min(real_vals[edges:-edges]),(1.0+ymargin)*max(real_vals[edges:-edges])])
         ax.set_title(title+', chisq='+str(chisq/len(signal[edges:-edges])))
         plt.legend()
         fig.savefig(outfolder+outname)
-    return (chisq/len(signal[edges:-edges]))
+    return smoothfunc(lam_midpts)/(signal*np.mean(real_vals)/np.mean(signal[edges:-edges]))
 
 
 def mf(cube,mask,threshold):
@@ -915,15 +1011,13 @@ def recenter_offaxis(offaxis_file,threshold,outname='centered_offaxis.fits'):
         HDU list of the recentered cube    
     '''
     offaxis = Image(offaxis_file)
+#     log.info('Previous sum: %.3f'% np.sum(offaxis.data))
     offsetpx = offaxis.header['OFFSET']/offaxis.header['PIXSIZE']
     centered_offaxis = Image(data=shiftCube(offaxis.data,dx=-offsetpx,dy=0))
-    maxi = np.nanmax(np.nanmax(centered_offaxis.data,axis=2),axis=1)
-    total = np.nansum(np.nansum(centered_offaxis.data,axis=2),axis=1)
-    centered_offaxis.data/=maxi[:,np.newaxis,np.newaxis]
-
-    centered_offaxis.data[centered_offaxis.data<threshold] = 0.0
-    newsum = np.nansum(np.nansum(centered_offaxis.data,axis=2),axis=1)
-    centered_offaxis.data *= maxi[:,np.newaxis,np.newaxis]#total[:,np.newaxis,np.newaxis]/newsum[:,np.newaxis,np.newaxis]
+    oldsum = np.nansum(offaxis.data)
+    centered_offaxis.data[centered_offaxis.data<threshold*np.amax(centered_offaxis.data)] = 0.0
+    centered_offaxis.data *= oldsum/np.nansum(centered_offaxis.data)
+#     log.info('New sum: %.3f'% np.nansum(centered_offaxis.data))
     outkey = fits.HDUList(fits.PrimaryHDU(centered_offaxis.data,offaxis.header))
     outkey.writeto(outname,clobber=True)
     return outkey
@@ -1316,10 +1410,10 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     # adjust headers for different wavelength
     adjust_krist_header(offaxiscube,lamc=lamc)
     par.saveDetector=False
-    Image(data=offaxiscube.data).write(outdir_average+'/offaxiscube_processed.fits',clobber=True)
+    Image(data=offaxiscube.data).write(outdir_average+'/offaxiscube_star_processed.fits',clobber=True)
     detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=True)
     det = Image(data = detectorFrame,header=par.hdr)
-    det.write(outdir_average+'/offaxis.fits',clobber=True)
+    det.write(outdir_average+'/offaxis_star.fits',clobber=True)
     
     det_out = np.zeros(detectorFrame.shape)
     inttime = par.timeframe/par.Nreads
@@ -1333,6 +1427,112 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     
     return offaxis_reduced
 
+def process_planet(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_average,
+                    planet_radius = 1.27*c.R_jup,
+                    planet_AU = 3.6,planet_dist_pc=14.1,
+                    target_star_T=5887*u.K, target_star_Vmag=5.03,
+                    tel_pupil_area=3.650265060424805*u.m**2, order=3):
+
+    '''
+    Processes an off-axis PSF cube from John Krist. This is used to normalized the cubes to contrast units,
+    so the single image needs to be read by the detector model and averaged the same number of times that
+    the target image is being averaged.
+    
+    Parameters
+    ----------
+    par: Parameters instance
+        Crispy parameter instance
+    offaxis_psf_filename: string
+        Path to the off-axis cube from J. Krist
+    fileshape: tuple
+        Size of the original John Krist cube
+    lamlist: list
+        List of wavelengths corresponding to each slice
+    lamc: float
+        Central wavelength
+    outdir_average: string
+        Path to which we will export the off-axis IFS flux maps at the detector
+    Nave: integer
+        Number of files to average. This needs to be the same number as the number of times the target is averaged (nominally 100)
+    target_star_T: 'u.K'
+        Temperature of the target star in u.K
+    target_star_Vmag: float
+        V Magnitude of the target star
+    tel_pupil_area: 'u.m**2'
+        Collecting area of the telescope, minus obscurations, in u.m**2
+    
+    Returns
+    -------
+    offaxis_reduced: 3D ndarray
+        Reduced cube
+    
+    
+    '''
+    kristfile = fits.open(offaxis_psf_filename)[0]
+    adjust_krist_header(kristfile,lamc=lamc)
+    log.info('Recentering off-axis cube')
+    offaxiscube = recenter_offaxis(offaxis_psf_filename,0.01,outname=outdir_average+'/centered_offaxis.fits')[0]
+
+    # compute the amount to be shifted in the cubes from J. Krist
+    input_sampling = kristfile.header['PIXSIZE']
+    input_wav = kristfile.header['LAM_C']*1000.
+    par.pixperlenslet = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)
+    log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)
+    
+    # Need to re-center the off-axis psf if it is not the right size
+    if offaxiscube.data.shape[1] < fileshape[1]:
+        diff = fileshape[1]-offaxiscube.data.shape[1]
+        offaxiscube_recentered = np.zeros(fileshape)
+        offaxiscube_recentered[:,diff//2:-diff//2,diff//2:-diff//2] += offaxiscube.data
+        offaxiscube = Image(data=offaxiscube_recentered,header = offaxiscube.header)
+    Image(data=offaxiscube.data).write(outdir_average+'/offaxiscube.fits',clobber=True)
+    
+    # shift the planet to the correct position
+    planet_WA = planet_AU/planet_dist_pc/(lamc*1e-9/2.37/4.848e-6)
+    log.info('Constructing off-axis cube at planet separation: %.2f lam/D (%.2f arcsec, %.2f lenslets)' % (planet_WA,planet_AU/planet_dist_pc,planet_WA*lamc/par.lenslet_wav/par.lenslet_sampling) )
+    oldsum = np.nansum(offaxiscube.data)
+    offaxiscube.data = ndimage.interpolation.shift(offaxiscube.data,
+                    [0.0,0.0,planet_WA*par.pixperlenslet*lamc/par.lenslet_wav/par.lenslet_sampling],order=order)
+    offaxiscube.data *= oldsum/np.nansum(offaxiscube.data)
+    Image(data=offaxiscube.data).write(outdir_average+'/offaxiscube_shifted.fits',clobber=True)
+    
+    # this takes care of the photometry. This needs to be thoroughly checked.
+    offaxis_star_cube = convert_krist_cube(offaxiscube.data.shape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
+    contrast = calc_contrast_Bijan(lamlist.value)
+
+    contrast_cube = np.zeros(offaxiscube.data.shape)
+    for i in range(offaxiscube.data.shape[0]):
+        contrast_cube[i,:,:] += contrast[i]
+    offaxiscube.data*=offaxis_star_cube*contrast_cube
+
+    # adjust headers for slightly different wavelength
+    adjust_krist_header(offaxiscube,lamc=lamc)
+    par.saveDetector=False
+    Image(data=offaxiscube.data).write(outdir_average+'/offaxiscube_processed.fits',clobber=True)
+    detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=True)
+    par.hdr.append(('XSHIFT',planet_WA*par.pixperlenslet*lamc/par.lenslet_wav/par.lenslet_sampling,'X Shift in px in offaxis cubes'),end=True)
+
+    Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/offaxis_planet.fits',clobber=True)
+    
+    # reduce the IFS map
+    reduced = reduceIFSMap(par,outdir_average+'/offaxis_planet.fits')
+    reduced.write(outdir_average+'/offaxis_planet_red_optext.fits',clobber=True)
+    
+    # do flipped
+    offaxiscube.data = ndimage.interpolation.shift(offaxiscube.data,
+                    [0.0,0.0,-2*planet_WA*par.pixperlenslet*lamc/par.lenslet_wav/par.lenslet_sampling],order=order)
+                    
+    Image(data=offaxiscube.data).write(outdir_average+'/offaxis_flipped_processed.fits',clobber=True)
+    detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=True)
+    par.hdr.append(('XSHIFT',-2*planet_WA*par.pixperlenslet*lamc/par.lenslet_wav/par.lenslet_sampling,'X Shift in px in offaxis cubes'),end=True)
+
+    Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/offaxis_flipped_planet.fits',clobber=True)
+    
+    # reduce the IFS map
+    reduced = reduceIFSMap(par,outdir_average+'/offaxis_flipped_planet.fits')
+    reduced.write(outdir_average+'/offaxis_flipped_planet_red_optext.fits',clobber=True)
+    
+    return reduced
 
 def RDI_noise(par,xshift,yshift,order=3,
                 rootname = "mflib",

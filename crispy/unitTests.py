@@ -138,22 +138,14 @@ def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outn
     lam_midpts,lam_endpts = calculateWaveList(par,Nspec=Nspec,method=method)
     inputCube = np.ones((len(lam_midpts),npix,npix),dtype=np.float32)
     
-#     if useQE:
-#         # load QE
-#         log.info('Using QE file '+par.QE)
-#         loadQE = np.loadtxt(par.codeRoot+"/"+par.QE)
-#         QE = interp1d(loadQE[:,0],loadQE[:,1])
-#         QEvals = QE(lam_midpts)
-
     for i in range(len(lam_midpts)):
         inputCube[i,:,:]*=pixval #/lam_midpts[i]
-#         if useQE:
-#             inputCube[i,:,:]*=QEvals[i]
-    
+        
     par.saveDetector=False
     inCube = fits.HDUList(fits.PrimaryHDU(inputCube.astype(np.float32)))
     inCube[0].header['LAM_C'] = np.median(lam_midpts)/1000.
     inCube[0].header['PIXSIZE'] = pixsize
+    inCube.writeto(par.unitTestsOutputs+'/flatfield_input.fits',clobber=True)
     detectorFrame = polychromeIFS(par,lam_midpts,inCube[0],parallel=True,wavelist_endpts=lam_endpts,QE=useQE)
     Image(data=detectorFrame,header=par.hdr).write(par.unitTestsOutputs+'/'+outname,clobber=True)
     

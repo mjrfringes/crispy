@@ -549,6 +549,7 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True,smoothba
 
 
 def prepareCube(par,wavelist,incube,QE=True,adjustment=0.98898):
+# def prepareCube(par,wavelist,incube,QE=True,adjustment=1.0):
     '''
     Processes input cubes
     '''

@@ -3,7 +3,7 @@
 import numpy as np
 from scipy import ndimage
 
-def Rotate(image, phi, clip=True,order=1):
+def Rotate(image, phi, clip=True,order=3):
     
     """
     Rotate the input image by phi about its center.  Do not resize the 
