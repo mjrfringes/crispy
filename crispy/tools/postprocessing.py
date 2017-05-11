@@ -767,11 +767,11 @@ def process_SPC_IFS2(par,
             IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
             OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
             export=None,twomasks=False)    
-#     maskleft,maskright = bowtie(target_reduced.data[0],ydim//2,xdim//2,openingAngle=65,
-#         clocking=-par.philens*180./np.pi,
-#         IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
-#         OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
-#         export=None,twomasks=True)    
+    maskleft,maskright = bowtie(target_reduced.data[0],ydim//2,xdim//2,openingAngle=65,
+        clocking=-par.philens*180./np.pi,
+        IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
+        OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
+        export=None,twomasks=True)    
 
 
     # construct a circular mask that goes beyond the bowtie and block it off
@@ -782,7 +782,7 @@ def process_SPC_IFS2(par,
     
     # now the pixels that need to be taken into account for DC subtraction is 
     mean_pixel_mask = (~circle_mask)*(~nanmask)
-    Image(data = mean_pixel_mask,header=par.hdr).write(outdir_average+'/mean_pixel_mask.fits')
+#     Image(data = mean_pixel_mask,header=par.hdr).write(outdir_average+'/mean_pixel_mask.fits')
 
     if RDI:
         
@@ -792,7 +792,7 @@ def process_SPC_IFS2(par,
                                                     mask=circle_mask,
                                                     bowtie_mask = mask,
                                                     returndiff = True,
-                                                    propcut=0.4)
+                                                    propcut=0.2)
         
         # now subtract the means from the reduced image and the target image      
         for i in range(ref_reduced.data.shape[0]):
@@ -810,8 +810,20 @@ def process_SPC_IFS2(par,
 
         # use the coefficients from the nosource lstsq to subtract ref from target (avoid bias by source)
         #residual = target_reduced.data*coefs_nosource[:,np.newaxis,np.newaxis]-ref_reduced.data
-        residual = target_reduced.data-target_nosource_reduced.data
-        print (coefs_nosource)
+#         coefs,residual = scale2imgs(target_reduced,
+#                                             ref_reduced,
+#                                             mask=circle_mask,
+#                                             bowtie_mask = mask,
+#                                             returndiff = True,
+#                                             propcut=0.2)
+        coefs = scale2imgs(target_reduced,
+                                            ref_reduced,
+                                            mask=circle_mask,
+                                            bowtie_mask = ~mask,
+                                            returndiff = False,
+                                            propcut=0.2)
+        residual = target_reduced.data*coefs[:,np.newaxis,np.newaxis]-ref_reduced.data
+        #residual = target_reduced.data-target_nosource_reduced.data
         par.hdr.append(('comment', 'Applied RDI'), end=True)
         
     else:
@@ -821,6 +833,10 @@ def process_SPC_IFS2(par,
             target_nosource_reduced.data[i] -= np.mean(target_nosource_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(target_reduced.data[i][target_reduced.data[i]>0.0],0.4)
         residual = target_reduced.data -target_nosource_reduced.data
         residual_nosource = target_nosource_reduced.data
+        
+    # mask if this is not already done
+    residual *=mask
+    residual_nosource *=mask
     Image(data=residual,header=par.hdr).write(outdir_average+"/lstsq_residual.fits")
     
     #residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
@@ -831,12 +847,10 @@ def process_SPC_IFS2(par,
     ## matched filter attempt
     offaxis_ideal = Image(outdir_average+'/offaxis_planet_red_optext.fits')
     offaxis_ideal_flipped = Image(outdir_average+'/offaxis_flipped_planet_red_optext.fits')
-    matched_filter = mf(offaxis_ideal,mask,0.5)
+    matched_filter = mf(offaxis_ideal,mask,0.35)
     Image(data=matched_filter,header=par.hdr).write(outdir_average+'/matched_filter.fits')
-    matched_filter_flipped = mf(offaxis_ideal_flipped,mask,0.5)
-    signal = np.nansum(np.nansum(matched_filter*residual,axis=2),axis=1) - np.nansum(np.nansum(matched_filter_flipped*residual,axis=2),axis=1)
-    test = np.nansum(np.nansum(matched_filter*offaxis_ideal.data,axis=2),axis=1)# - np.nansum(np.nansum(matched_filter_flipped*offaxis_ideal.data,axis=2),axis=1)
-    Image(data=test,header=par.hdr).write(outdir_average+'/test.fits')
+    matched_filter_flipped = mf(offaxis_ideal_flipped,mask,0.35)
+    signal = np.nansum(np.nansum(matched_filter*residual,axis=2),axis=1)# - np.nansum(np.nansum(matched_filter_flipped*residual,axis=2),axis=1)
     
     times['RDI'] = time()
     ###################################################################################
@@ -886,7 +900,7 @@ def process_SPC_IFS2(par,
     yp = par.nlens//2+np.cos(par.philens)*d
     log.info("Coordinates of the planet in lenslets: %.2f, %.2f" %(xp+1,yp+1))
 
-    #signal = convolved[:,int(xp+1),int(yp+1)]
+#     signal = convolved[:,int(xp+1),int(yp+1)]
     
         
     times['Computed signal and noise arrays'] = time()
@@ -964,7 +978,7 @@ def mf(cube,mask,threshold):
     mask: 2D ndarray
         This is typically the coronagraphic mask
     threshold: float
-        Value below which we crop the matched filter
+        Value below which we crop the normalized PSF
     
     Returns
     -------
@@ -975,19 +989,19 @@ def mf(cube,mask,threshold):
     matched_filter = np.zeros(cube.data.shape)
     
     for slicenum in range(cube.data.shape[0]):
-        nanmask = np.isnan(cube.data[slicenum])
+#         nanmask = np.isnan(cube.data[slicenum])
         cube_norm = cube.data[slicenum]/np.nansum(cube.data[slicenum])
-        this_slice = cube_norm/np.nansum((cube_norm)**2)
+        msk = mask*(cube_norm>np.nanmax(cube_norm)*threshold)
         # calculate correction factor since we are going to crop only the top the of the hat
         # this is the inverse ratio of the contribution of the brightest pixels over the rest
-        msk = mask*(this_slice>threshold)
-        aper_phot = np.nansum(this_slice)/np.nansum(this_slice[msk])
-        # Set all low-contributing pixels and pixels outside of mask to 0.0
-        this_slice[~msk] = 0.0
-        this_slice[nanmask] = np.NaN  # put NaNs where they belong
-        matched_filter[slicenum,:,:] = this_slice
-        # Multiply what is left by that aperture correction factor
-        matched_filter[slicenum,:,:]*=aper_phot
+        
+        aper_phot = np.nansum(cube_norm)/np.nansum(cube_norm[msk])
+        cube_norm[~msk]=0.0
+        cube_norm /= np.nansum(cube_norm)
+        
+        # this is now the final matched coefficients before the aperture correction
+        this_slice = cube_norm/np.nansum((cube_norm)**2)
+        matched_filter[slicenum,:,:] = this_slice * aper_phot
     return matched_filter
 
 

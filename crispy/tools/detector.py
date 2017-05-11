@@ -58,23 +58,24 @@ def readDetector(par,IFSimage,inttime=100):
         par.hdr.append(('comment', '*'*22 + ' Detector readout ' + '*'*20), end=True)
         par.hdr.append(('comment', '*'*60), end=True)    
         par.hdr.append(('comment', ''), end=True)
-        par.hdr.append(('NONOISE',par.nonoise,'Ignore all noises?'), end=True) 
-        par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
-        par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
-        par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
-        par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
-        par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
-        par.hdr.append(('PHCTEFF',par.PhCountEff,'Photon counting efficiency'),end=True)
-        par.hdr.append(('EMSTATS',par.EMStats,'EM statistics?'),end=True)
-        par.hdr.append(('EMGAIN',par.EMGain,'Gain of the EM stage'),end=True)
-        par.hdr.append(('PCBIAS',par.PCbias,'To make RN zero-mean '),end=True)
-        par.hdr.append(('PCMODE',par.PCmode,'Photon counting mode?'),end=True)
-        if par.PCmode:
-            par.hdr.append(('THRESH',par.threshold,'Photon counting threshold'),end=True)
-        par.hdr.append(('LIFEFRAC',par.lifefraction,'Mission life fraction (changes CTE if >0)'),end=True)
         par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
         par.hdr.append(('POL',par.pol,'Polarization losses'),end=True)
+        par.hdr.append(('PHCTEFF',par.PhCountEff,'Photon counting efficiency'),end=True)
         par.hdr.append(('INTTIME',inttime,'Integration time per frame'),end=True)
+        par.hdr.append(('NONOISE',par.nonoise,'Ignore all noises?'), end=True) 
+        if ~par.nonoise:
+            par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
+            par.hdr.append(('RN',par.RN,'Read noise (electrons/read)'), end=True) 
+            par.hdr.append(('CIC',par.CIC,'Clock-induced charge'), end=True) 
+            par.hdr.append(('DARK',par.dark,'Dark current'), end=True) 
+            par.hdr.append(('Traps',par.Traps,'Use traps? T/F'), end=True) 
+            par.hdr.append(('EMSTATS',par.EMStats,'EM statistics?'),end=True)
+            par.hdr.append(('EMGAIN',par.EMGain,'Gain of the EM stage'),end=True)
+            par.hdr.append(('PCBIAS',par.PCbias,'To make RN zero-mean '),end=True)
+            par.hdr.append(('PCMODE',par.PCmode,'Photon counting mode?'),end=True)
+            if par.PCmode:
+                par.hdr.append(('THRESH',par.threshold,'Photon counting threshold'),end=True)
+            par.hdr.append(('LIFEFRAC',par.lifefraction,'Mission life fraction (changes CTE if >0)'),end=True)
                 
     
     IFSimage.data[IFSimage.data<0]=0.0

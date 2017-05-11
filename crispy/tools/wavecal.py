@@ -505,9 +505,9 @@ def monochromatic_update(par,inImage,inLam,order=3,apodize=False):
 
 def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=False, makehiresPSFlets=False,
-                      makePolychrome=True,
-                      savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
-                      parallel=True,inspect_first=True,apodize=True,lamsol=None):
+                      makePolychrome=False,
+                      savehiresimages=False,borderpix = 4, upsample=5,nsubarr=3,
+                      parallel=True,inspect_first=True,apodize=False,lamsol=None):
     """
     Master wavelength calibration function
     

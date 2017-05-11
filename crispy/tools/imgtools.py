@@ -110,8 +110,8 @@ def bowtie(image,xc,yc,openingAngle,clocking,IWApix,OWApix,export='bowtie',twoma
             If twomasks is True, mask and mask2 are the two sides of the bowtie.
     '''
     
-    x = np.arange(image.shape[0])
-    y = np.arange(image.shape[1])
+    x = np.arange(image.shape[0],dtype=np.float)
+    y = np.arange(image.shape[1],dtype=np.float)
     x -= xc
     y -= yc
     x,y = np.meshgrid(x,y)
