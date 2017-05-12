@@ -817,11 +817,11 @@ def process_SPC_IFS2(par,
 #                                             returndiff = True,
 #                                             propcut=0.2)
         coefs = scale2imgs(target_reduced,
-                                            ref_reduced,
-                                            mask=circle_mask,
-                                            bowtie_mask = ~mask,
-                                            returndiff = False,
-                                            propcut=0.2)
+                                    ref_reduced,
+                                    mask=circle_mask,
+                                    bowtie_mask = ~mask,
+                                    returndiff = False,
+                                    propcut=0.2)
         residual = target_reduced.data*coefs[:,np.newaxis,np.newaxis]-ref_reduced.data
         #residual = target_reduced.data-target_nosource_reduced.data
         par.hdr.append(('comment', 'Applied RDI'), end=True)
@@ -835,8 +835,8 @@ def process_SPC_IFS2(par,
         residual_nosource = target_nosource_reduced.data
         
     # mask if this is not already done
-    residual *=mask
-    residual_nosource *=mask
+#     residual *=mask
+#     residual_nosource *=mask
     Image(data=residual,header=par.hdr).write(outdir_average+"/lstsq_residual.fits")
     
     #residual[~np.isnan(residual)] /= flatfield.data[~np.isnan(residual)]
@@ -847,10 +847,10 @@ def process_SPC_IFS2(par,
     ## matched filter attempt
     offaxis_ideal = Image(outdir_average+'/offaxis_planet_red_optext.fits')
     offaxis_ideal_flipped = Image(outdir_average+'/offaxis_flipped_planet_red_optext.fits')
-    matched_filter = mf(offaxis_ideal,mask,0.35)
+    matched_filter = mf(offaxis_ideal,mask,0.20)
     Image(data=matched_filter,header=par.hdr).write(outdir_average+'/matched_filter.fits')
-    matched_filter_flipped = mf(offaxis_ideal_flipped,mask,0.35)
-    signal = np.nansum(np.nansum(matched_filter*residual,axis=2),axis=1)# - np.nansum(np.nansum(matched_filter_flipped*residual,axis=2),axis=1)
+    matched_filter_flipped = mf(offaxis_ideal_flipped,mask,0.20)
+    signal = np.nansum(np.nansum(matched_filter*residual,axis=2),axis=1) - np.nansum(np.nansum(matched_filter_flipped*residual,axis=2),axis=1)
     
     times['RDI'] = time()
     ###################################################################################
@@ -896,8 +896,8 @@ def process_SPC_IFS2(par,
 
     planet_WA = planet_AU/planet_dist_pc/(lamc*1e-9/2.37/4.848e-6)
     d = planet_WA*lamc/par.lenslet_wav/par.lenslet_sampling
-    xp = par.nlens//2-np.sin(par.philens)*d
-    yp = par.nlens//2+np.cos(par.philens)*d
+    xp = par.nlens//2+np.sin(par.philens)*d
+    yp = par.nlens//2-np.cos(par.philens)*d
     log.info("Coordinates of the planet in lenslets: %.2f, %.2f" %(xp+1,yp+1))
 
 #     signal = convolved[:,int(xp+1),int(yp+1)]
