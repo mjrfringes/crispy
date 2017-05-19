@@ -148,7 +148,7 @@ def bowtie(image,xc,yc,openingAngle,clocking,IWApix,OWApix,export='bowtie',twoma
     
     
     
-def scale2imgs(img1,img2,mask,bowtie_mask=None,returndiff = True,propcut=None):
+def scale2imgs(target,ref,bowtie_mask,returndiff = True):
     '''
     Finds the slice-by-slice best-fit scale factor between two images.
     Optionally returns the difference between the two. 
@@ -156,8 +156,8 @@ def scale2imgs(img1,img2,mask,bowtie_mask=None,returndiff = True,propcut=None):
     
     Parameters
     ----------
-    mask: 2D ndarray
-        Central circular mask encompassing the entire bowtie
+    bowtie_mask: 2D ndarray
+        Bowtie mask
     Returns
     -------
     coefs: float array
@@ -167,35 +167,49 @@ def scale2imgs(img1,img2,mask,bowtie_mask=None,returndiff = True,propcut=None):
     
     '''
     # make local copies of data
-    c1 = img1.data.copy()
-    c2 = img2.data.copy()
+    c1 = target.data.copy()
+    c2 = ref.data.copy()
     
     # determine the pixels to use to subtract the average
     # all NaNs
-    nanmask = ~((~np.isnan(c1))*(~np.isnan(c2)))
+#     nanmask = ~((~np.isnan(c1))*(~np.isnan(c2)))
     
-    res = []
-    for i in range(c1.shape[0]):
-        refslice = c1[i]
-        targetslice = c2[i]
-        if propcut is not None:
-            refslice -= scipy.stats.trim_mean(refslice[(~mask)*(~nanmask[i])],propcut)
-            targetslice -= scipy.stats.trim_mean(targetslice[(~mask)*(~nanmask[i])],propcut)
-        if bowtie_mask is not None:
-            refslice *= bowtie_mask
-            targetslice *= bowtie_mask
-        # zero out NaNs for least squares
-        refslice[np.isnan(refslice)] = 0.0
-        targetslice[np.isnan(targetslice)] = 0.0
-        refslice = np.reshape(refslice, (1, -1))
-        targetslice = np.reshape(targetslice,-1)
-        res.append(np.linalg.lstsq(refslice.T,targetslice)[0])
-    res = np.array(res).flatten()
-    if returndiff:
-        return res, c1*res[:,np.newaxis,np.newaxis]-c2
-    else:
-        return res
+#     lstsq_coeff = np.zeros(c1.shape[0])
+#     est_star = np.zeros(c1.shape)
+#     for i in range(c1.shape[0]):
+#         refslice = c1[i].copy()
+#         targetslice = c2[i].copy()
+#         refslice = np.reshape(refslice[bowtie_mask], (1, -1))
+#         targetslice = np.reshape(targetslice[bowtie_mask],-1)
+#         lstsq_coeff[i] = np.linalg.lstsq(refslice.T,targetslice)[0]
+#         est_star[i] = lstsq_coeff[i]*c2[i]
+#         res.append(np.linalg.lstsq(refslice.T,targetslice)[0])
+#     res = np.array(res).flatten()
+#     if returndiff:
+#         return lstsq_coeff, target.data-est_star
+#     else:
+#         return lstsq_coeff
         
+    linregress_coeff = np.zeros((c1.shape[0],2))
+    est_star = np.zeros(c1.shape)
+
+    for i in range(c1.shape[0]):
+        targetslice = c1[i].copy()
+        refslice = c2[i].copy()
+        refslice = np.reshape(refslice[bowtie_mask],-1)
+        targetslice = np.reshape(targetslice[bowtie_mask],-1)
+        b, a, _, _, _ = scipy.stats.linregress(refslice, targetslice)
+        linregress_coeff[i,0] = a
+        linregress_coeff[i,1] = b
+        est_star[i] = a+b*c2[i]
+    
+    if returndiff:
+        return linregress_coeff,target.data-est_star
+    else:
+        return linregress_coeff
+    
+
+
 
 def subtract_mean(cube):
     '''

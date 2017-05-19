@@ -52,6 +52,7 @@ def readDetector(par,IFSimage,inttime=100):
     Quantum efficiency considerations are already taken care of when
     generating IFSimage images
     '''
+        
     if not 'RN' in par.hdr:
         par.hdr.append(('comment', ''), end=True)
         par.hdr.append(('comment', '*'*60), end=True)
@@ -61,7 +62,6 @@ def readDetector(par,IFSimage,inttime=100):
         par.hdr.append(('TRANS',par.losses,'IFS Transmission factor'),end=True)
         par.hdr.append(('POL',par.pol,'Polarization losses'),end=True)
         par.hdr.append(('PHCTEFF',par.PhCountEff,'Photon counting efficiency'),end=True)
-        par.hdr.append(('INTTIME',inttime,'Integration time per frame'),end=True)
         par.hdr.append(('NONOISE',par.nonoise,'Ignore all noises?'), end=True) 
         if ~par.nonoise:
             par.hdr.append(('POISSON',par.poisson,'Poisson noise?'), end=True) 
@@ -76,8 +76,20 @@ def readDetector(par,IFSimage,inttime=100):
             if par.PCmode:
                 par.hdr.append(('THRESH',par.threshold,'Photon counting threshold'),end=True)
             par.hdr.append(('LIFEFRAC',par.lifefraction,'Mission life fraction (changes CTE if >0)'),end=True)
-                
-    
+    if not "NREADS" in par.hdr:
+        par.hdr.append(('NREADS',par.Nreads,'Number of subframes co-added per image'),end=True)
+        par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time for number of frames'),end=True)
+    else:
+        par.hdr['NREADS']=par.Nreads
+        par.hdr['EXPTIME']=par.timeframe
+        
+
+    if not 'INTTIME' in par.hdr:
+        par.hdr.append(('INTTIME',inttime,'Integration time per frame'),end=True)
+    else:
+        par.hdr['INTTIME']=inttime
+
+    # just to deal with small numerical errors - normally there is nothing theres
     IFSimage.data[IFSimage.data<0]=0.0
     
     eff = par.losses*par.PhCountEff*par.pol
@@ -112,6 +124,8 @@ def readDetector(par,IFSimage,inttime=100):
         # add read noise
         if par.RN>0:
             afterRN = afterEMRegister+np.random.normal(par.PCbias,par.RN,afterEMRegister.shape)
+            # clip at zero
+            afterRN[afterRN<0]=0
         else:
             afterRN = afterEMRegister+par.PCbias
 
@@ -126,7 +140,7 @@ def readDetector(par,IFSimage,inttime=100):
     
         return afterRN
 
-def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False,factor=1.0,zodi=None):
+def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False,factor=1.0,zodi=None,forced_inttime=None):
     '''	
     Process a list of files and creates individual detector readouts
     If we want only one file, we can just make a list of 1
@@ -143,8 +157,14 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         if zodi is not None:
             z = Image(zodi)
             img.data+=z.data
-        inttime = par.timeframe/par.Nreads
         par.makeHeader()        
+        
+        if forced_inttime is None:
+            inttime = par.timeframe/par.Nreads
+        else:  
+            inttime = forced_inttime
+            par.Nreads = int(par.timeframe/forced_inttime)
+        
 
         frame = np.zeros(img.data.shape)
         varframe = np.zeros(img.data.shape)
@@ -157,8 +177,13 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
             frame /= par.Nreads
             varframe /= par.Nreads
             varframe -= frame**2
-        par.hdr.append(('NREADS',par.Nreads,'Number of frames averaged'),end=True)
-        par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time for number of frames'),end=True)
+        if not "NREADS" in par.hdr:
+            par.hdr.append(('NREADS',par.Nreads,'Number of subframes co-added  per image'),end=True)
+            par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time for number of frames'),end=True)
+        else:
+            par.hdr['NREADS']=par.Nreads
+            par.hdr['EXPTIME']=par.timeframe
+            
         outimg = Image(data=frame,ivar=1./varframe,header=par.hdr)
         # append '_suffix' to the file name
         outimg.write(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits',clobber=True)
@@ -166,3 +191,16 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
     return det_outlist
 
 
+def calculateDark(par,filelist):
+    '''
+    Process a series of dark frames to get an estimate of the dark current frame that matches the exposures.
+    '''
+    
+    fileshape = Image(filename=filelist[0]).data.shape
+    darkframe = np.zeros(fileshape)
+    blankframe = Image(data=np.zeros(fileshape))
+    inttime = par.timeframe/par.Nreads
+    par.makeHeader()
+    for i in range(par.Nreads*len(filelist)):
+        darkframe += readDetector(par,blankframe,inttime=inttime)
+    return darkframe    

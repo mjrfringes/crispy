@@ -13,7 +13,7 @@ except:
     import pyfits as fits
 from time import time
 import os
-from crispy.tools.detector import averageDetectorReadout,readDetector
+from crispy.tools.detector import averageDetectorReadout,readDetector,calculateDark
 import matplotlib.pyplot as plt
 
 import multiprocessing
@@ -357,7 +357,7 @@ def process_SPC_IFS(par,
     par.hdr.append(('PPFACT',pp_fact,'Post-processing factor'),end=True)
 
     ###################################################################################
-    # Step 5: Take averages
+    # Take averages
     ###################################################################################
 
     if take_averages:
@@ -376,8 +376,9 @@ def process_SPC_IFS(par,
 
     times['Taking averages'] = time()
 
+    
     ###################################################################################
-    # Step 6: Process the cubes
+    # Process the cubes
     ###################################################################################
     img = Image(filename=os.path.abspath(outdir_average+'/average_ref_star_detector.fits'))
     ref_cube = reduceIFSMap(par,os.path.abspath(outdir_average+'/average_ref_star_detector.fits'))
@@ -395,7 +396,7 @@ def process_SPC_IFS(par,
 
     times['Process average cubes'] = time()
     ###################################################################################
-    # Step 7: Least-squares slice-by-slice subtraction
+    # Least-squares slice-by-slice subtraction
     ###################################################################################
     if subtract_ref_psf:
 #         ref_cube_stack = np.sum(ref_cube.data,axis=0)
@@ -503,8 +504,10 @@ def process_SPC_IFS2(par,
                     lamc=770.,BW=0.18,n_ref_star_imgs=30,
                     tel_pupil_area=3.650265060424805*u.m**2,
                     IWA = 3,OWA = 9,
+                    forced_inttime_ref=50.0,
                     pp_fact = 0.05,
                     RDI=True,
+                    subtract_dark=False,
                     t_zodi = 0.09,
                     useQE=True,
                     mflib='/mflib.fits.gz',
@@ -677,7 +680,7 @@ def process_SPC_IFS2(par,
 
     if process_detector:
         # Apply detector for both reference star and target
-        ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector)   
+        ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector,forced_inttime=forced_inttime_ref)   
         offaxis_filename = os.path.abspath(outdir_average+'/offaxis_planet.fits')
         #zodi_filename = os.path.abspath(outdir_average+'/zodicube.fits')
         target_nosource_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,suffix='nosource_detector')
@@ -730,18 +733,41 @@ def process_SPC_IFS2(par,
         Image(data=ref_star_average,header=par.hdr).write(outdir_average+'/average_ref_star_detector.fits',clobber=True)
         Image(data=target_star_average,header=par.hdr).write(outdir_average+'/average_target_star_detector.fits',clobber=True)
         Image(data=target_star_nosource_average,header=par.hdr).write(outdir_average+'/average_target_star_nosource_detector.fits',clobber=True)
-        par.hdr.append(('NIMGS',len(target_det_outlist),'Number of time series steps'),end=True)
-        par.hdr.append(('TOTTIME',len(target_det_outlist)*par.timeframe,'Total integration time on source'),end=True)
+    else:
+        ref_star_average = Image(outdir_average+'/average_ref_star_detector.fits').data
+        target_star_average = Image(outdir_average+'/average_target_star_detector.fits').data
+        target_star_nosource_average = Image(outdir_average+'/average_target_star_nosource_detector.fits').data
+        
+    if not "NREADS" in par.hdr:
+        par.hdr.append(('NREADS',par.Nreads,'Number of subframes co-added per image'),end=True)
+        par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time for number of frames'),end=True)
+    par.hdr.append(('NIMGS',len(target_det_outlist),'Number of time series steps'),end=True)
+    par.hdr.append(('TOTTIME',len(target_det_outlist)*par.timeframe,'Total integration time on source'),end=True)
+        
+    
+    if subtract_dark:
+        # calculate and subtract darks
+        ref_dark = calculateDark(par,ref_det_outlist)
+        target_dark = calculateDark(par,target_det_outlist)
+        Image(data=ref_dark,header=par.hdr).write(outdir_average+'/ref_dark.fits',clobber=True)
+        Image(data=target_dark,header=par.hdr).write(outdir_average+'/target_dark.fits',clobber=True)
+        ref_star_average -= ref_dark
+        target_star_average -= target_dark
+        target_star_nosource_average -= target_dark
+        
+        Image(data=ref_star_average,header=par.hdr).write(outdir_average+'/average_ref_star_detector_darksub.fits',clobber=True)
+        Image(data=target_star_average,header=par.hdr).write(outdir_average+'/average_target_star_detector_darksub.fits',clobber=True)
+        Image(data=target_star_nosource_average,header=par.hdr).write(outdir_average+'/average_target_star_nosource_detector_darksub.fits',clobber=True)
+    par.hdr.append(('SUBDARK',subtract_dark,'Subtract dark frame?'),end=True)
 
     times['Taking averages'] = time()
 
     ###################################################################################
     # Reduce the cubes
     ###################################################################################
-    img = Image(filename=outdir_average+'/average_ref_star_detector.fits')
-    ref_reduced = reduceIFSMap(par,outdir_average+'/average_ref_star_detector.fits')
-    target_reduced = reduceIFSMap(par,outdir_average+'/average_target_star_detector.fits')
-    target_nosource_reduced = reduceIFSMap(par,outdir_average+'/average_target_star_nosource_detector.fits')
+    ref_reduced = reduceIFSMap(par,ref_star_average)
+    target_reduced = reduceIFSMap(par,target_star_average)
+    target_nosource_reduced = reduceIFSMap(par,target_star_nosource_average)
     
     log.info("Flatfielding...")
     flatfield = Image(par.exportDir+'/flatfield_red_optext.fits')
@@ -762,7 +788,7 @@ def process_SPC_IFS2(par,
     # Do basic least squares RDI, slice by slice with trimmed mean subtraction
     ###################################################################################
     ydim,xdim = target_reduced.data[0].shape
-    mask,scratch = bowtie(target_reduced.data[0],ydim//2,xdim//2,openingAngle=65,
+    mask,scratch = bowtie(target_reduced.data[0],ydim//2-1,xdim//2,openingAngle=60,
             clocking=-par.philens*180./np.pi,
             IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
             OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
@@ -773,56 +799,21 @@ def process_SPC_IFS2(par,
         OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
         export=None,twomasks=True)    
 
-
-    # construct a circular mask that goes beyond the bowtie and block it off
-    circle_mask = circularMask(target_reduced.data[0],1.2*OWA*lamc/par.lenslet_wav/par.lenslet_sampling)
-    
-    # construct a mask with all the NaNs (assumes all slices have the same NaNs
-    nanmask = np.isnan(ref_reduced.data[0])
-    
-    # now the pixels that need to be taken into account for DC subtraction is 
-    mean_pixel_mask = (~circle_mask)*(~nanmask)
-#     Image(data = mean_pixel_mask,header=par.hdr).write(outdir_average+'/mean_pixel_mask.fits')
-
     if RDI:
         
-        # do least square subtraction on image without the source (Neil's idea)
-        coefs_nosource,residual_nosource = scale2imgs(target_nosource_reduced,
-                                                    ref_reduced,
-                                                    mask=circle_mask,
-                                                    bowtie_mask = mask,
-                                                    returndiff = True,
-                                                    propcut=0.2)
-        
-        # now subtract the means from the reduced image and the target image      
-        for i in range(ref_reduced.data.shape[0]):
-            ref_reduced.data[i] -= np.mean(ref_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(ref_reduced.data[i][ref_reduced.data[i]>0.0],0.4)
-        
-        for i in range(target_reduced.data.shape[0]):
-            target_reduced.data[i] -= np.mean(target_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(target_reduced.data[i][target_reduced.data[i]>0.0],0.4)
-
-        for i in range(target_nosource_reduced.data.shape[0]):
-            target_nosource_reduced.data[i] -= np.mean(target_nosource_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(target_reduced.data[i][target_reduced.data[i]>0.0],0.4)
-
-        Image(data = ref_reduced.data,header=par.hdr).write(outdir_average+'/average_ref_star_detector_red_optext_flatfielded_trimmean.fits')
-        Image(data = target_reduced.data,header=par.hdr).write(outdir_average+'/average_target_star_detector_red_optext_flatfielded_trimmean.fits')
-        Image(data = target_nosource_reduced.data,header=par.hdr).write(outdir_average+'/average_target_star_nosource_detector_red_optext_flatfielded_trimmean.fits')
-
-        # use the coefficients from the nosource lstsq to subtract ref from target (avoid bias by source)
-        #residual = target_reduced.data*coefs_nosource[:,np.newaxis,np.newaxis]-ref_reduced.data
-#         coefs,residual = scale2imgs(target_reduced,
-#                                             ref_reduced,
-#                                             mask=circle_mask,
-#                                             bowtie_mask = mask,
-#                                             returndiff = True,
-#                                             propcut=0.2)
-        coefs = scale2imgs(target_reduced,
+        # do least square subtraction on image without the source (Neil's idea)        
+        coefs_scratch,residual_nosource = scale2imgs(target_nosource_reduced,
                                     ref_reduced,
-                                    mask=circle_mask,
-                                    bowtie_mask = ~mask,
-                                    returndiff = False,
-                                    propcut=0.2)
-        residual = target_reduced.data*coefs[:,np.newaxis,np.newaxis]-ref_reduced.data
+#                                     target_nosource_reduced,
+                                    bowtie_mask = mask,
+                                    returndiff = True)
+        coefs,residual = scale2imgs(target_reduced,
+                                    ref_reduced,
+#                                     target_nosource_reduced,
+                                    bowtie_mask = mask,
+                                    returndiff = True)
+#                                     propcut=0.2)
+#         residual = target_reduced.data*coefs[:,np.newaxis,np.newaxis]-ref_reduced.data
         #residual = target_reduced.data-target_nosource_reduced.data
         par.hdr.append(('comment', 'Applied RDI'), end=True)
         
@@ -850,18 +841,33 @@ def process_SPC_IFS2(par,
     matched_filter = mf(offaxis_ideal,mask,0.20)
     Image(data=matched_filter,header=par.hdr).write(outdir_average+'/matched_filter.fits')
     matched_filter_flipped = mf(offaxis_ideal_flipped,mask,0.20)
-    signal = np.nansum(np.nansum(matched_filter*residual,axis=2),axis=1) - np.nansum(np.nansum(matched_filter_flipped*residual,axis=2),axis=1)
+    signal = np.nansum(np.nansum(matched_filter*residual,axis=2),axis=1)# - np.nansum(np.nansum(matched_filter_flipped*residual,axis=2),axis=1)
     
     times['RDI'] = time()
     ###################################################################################
     # Convolve with matched filter
     ###################################################################################
+    if mflib=='':
+        # re-build the matched filter library
+        construct_mflib(par,planet_cube=outdir_average+'/offaxis_planet_red_optext.fits',
+                        threshold=0.2,
+                        lamc=lamc,
+                        BW=BW,
+                        outdir=outdir_average,
+                        mask=mask,
+                        trim=30,
+                        outname = 'mflib.fits.gz',
+                        order=3)
+        mflib = outdir_average+'/mflib.fits.gz'
+    
     log.info("Convolving with matched filter")
     convolved = convolved_mf(residual,mflib)
     par.hdr.append(('comment', 'Convolved with matched filter'), end=True)
     Image(data=convolved,header=par.hdr).write(outdir_average+'/convolved.fits')
     convolved_nosource = convolved_mf(residual_nosource,mflib)
     Image(data=convolved_nosource,header=par.hdr).write(outdir_average+'/convolved_nosource.fits')
+    convolved_target = convolved_mf(target_reduced.data,mflib)
+    Image(data=convolved_target,header=par.hdr).write(outdir_average+'/convolved_target_reduced.fits')
     
     times['Convolve'] = time()
     ###################################################################################
@@ -881,26 +887,28 @@ def process_SPC_IFS2(par,
     
     convolved /= max_starmf[:,np.newaxis,np.newaxis]
     convolved_nosource /= max_starmf[:,np.newaxis,np.newaxis]
+    convolved_target /= max_starmf[:,np.newaxis,np.newaxis]
     
     outkey = fits.HDUList(fits.PrimaryHDU(convolved.astype(np.float)))
     outkey.writeto(outdir_average+'/convolved_normalized.fits',clobber=True)
     outkey = fits.HDUList(fits.PrimaryHDU(convolved_nosource.astype(np.float)))
     outkey.writeto(outdir_average+'/convolved_nosource_normalized.fits',clobber=True)
+    outkey = fits.HDUList(fits.PrimaryHDU(convolved_target.astype(np.float)))
+    outkey.writeto(outdir_average+'/convolved_no_rdi_normalized.fits',clobber=True)
     
     # for the noise, use the scene with no planet
-    noise = [np.nanstd(convolved_nosource[i]) for i in range(convolved_nosource.shape[0])]
+    noise = [np.nanstd(convolved[i]) for i in range(convolved.shape[0])]
+    noise_no_source = [np.nanstd(convolved_nosource[i]) for i in range(convolved_nosource.shape[0])]
+    noise_no_rdi = [np.nanstd(convolved_target[i]) for i in range(convolved_target.shape[0])]
     
     # for the signal, just pick where the planet is
     procplanet = Image(outdir_average+'/offaxis_planet_red_optext.fits')
 
 
-    planet_WA = planet_AU/planet_dist_pc/(lamc*1e-9/2.37/4.848e-6)
-    d = planet_WA*lamc/par.lenslet_wav/par.lenslet_sampling
-    xp = par.nlens//2+np.sin(par.philens)*d
-    yp = par.nlens//2-np.cos(par.philens)*d
-    log.info("Coordinates of the planet in lenslets: %.2f, %.2f" %(xp+1,yp+1))
-
-#     signal = convolved[:,int(xp+1),int(yp+1)]
+    yp,xp = np.unravel_index(np.nanargmax(procplanet.data[procplanet.data.shape[0]//2]), procplanet.data[procplanet.data.shape[0]//2].shape)
+    log.info("Coordinates of the planet in lenslets: %.2f, %.2f" %(xp,yp))
+    
+    signal = convolved[:,yp,xp]
     
         
     times['Computed signal and noise arrays'] = time()
@@ -916,7 +924,7 @@ def process_SPC_IFS2(par,
     log.info('Computed signal and noise arrays: %.3f' % (times['Computed signal and noise arrays']-times['Convolve']))
     log.info('Total time: %.3f' % (times['Computed signal and noise arrays']-times['Start']))
 
-    return signal,noise
+    return signal,noise,noise_no_source,noise_no_rdi
 
 def SNR_spectrum(lam_midpts,signal, noise, 
                 lam_contrast=None, plot=True,
@@ -956,8 +964,8 @@ def SNR_spectrum(lam_midpts,signal, noise,
         ax.plot(lams,smooth,'-',label='Gaussian-smoothed original spectrum w/ FWHM=%.0f bins' % FWHM)
 #         if ratio is not None:        
 #             ax.plot(newlam,smoothdatafunc(newlam)*ratio*np.mean(real_vals)/np.mean(signal[edges:-edges]),'-',label='Gaussian-smoothed data w/ FWHM=%.0f bins' % FWHMdata)
-        if ratio is None:
-            ax.plot(newlam,smoothdatafunc(newlam)*np.mean(real_vals)/np.mean(signal[edges:-edges]),'-',label='Gaussian-smoothed data w/ FWHM=%.0f bins' % FWHMdata)
+#         if ratio is None:
+#             ax.plot(newlam,smoothdatafunc(newlam)*np.mean(real_vals)/np.mean(signal[edges:-edges]),'-',label='Gaussian-smoothed data w/ FWHM=%.0f bins' % FWHMdata)
         ax.set_xlabel('Wavelength (nm)')
         ax.set_ylabel('Contrast')
         ax.set_ylim([(1.0-ymargin)*min(real_vals[edges:-edges]),(1.0+ymargin)*max(real_vals[edges:-edges])])
@@ -978,7 +986,7 @@ def mf(cube,mask,threshold):
     mask: 2D ndarray
         This is typically the coronagraphic mask
     threshold: float
-        Value below which we crop the normalized PSF
+        Fraction of max below which we crop the normalized PSF
     
     Returns
     -------
@@ -993,14 +1001,18 @@ def mf(cube,mask,threshold):
         cube_norm = cube.data[slicenum]/np.nansum(cube.data[slicenum])
         msk = mask*(cube_norm>np.nanmax(cube_norm)*threshold)
         # calculate correction factor since we are going to crop only the top the of the hat
-        # this is the inverse ratio of the contribution of the brightest pixels over the rest
-        
         aper_phot = np.nansum(cube_norm)/np.nansum(cube_norm[msk])
+        
+        # zero out all pixels outside of the thresholded area
         cube_norm[~msk]=0.0
+        
+        # normalize
         cube_norm /= np.nansum(cube_norm)
         
-        # this is now the final matched coefficients before the aperture correction
+        # this is now the final matched filter coefficients before the aperture correction
         this_slice = cube_norm/np.nansum((cube_norm)**2)
+        
+        # apply aperture correction
         matched_filter[slicenum,:,:] = this_slice * aper_phot
     return matched_filter
 
@@ -1037,8 +1049,108 @@ def recenter_offaxis(offaxis_file,threshold,outname='centered_offaxis.fits'):
     return outkey
 
 
-def construct_mflib(par,offaxis_psf_filename,threshold,lamc,BW,outdir,
-                    mask=None,IWA=None,OWA=None,trim=30,outname = 'mflib.fits.gz',order=3):
+# def construct_mflib(par,offaxis_psf_filename,threshold,lamc,BW,outdir,
+#                     mask=None,IWA=None,OWA=None,trim=30,outname = 'mflib.fits.gz',order=3):
+#     '''
+#     Construct a library of matched filters for all points within the bowtie mask
+#     For now, this uses the reduced, ideal offaxis psf already in cube space.
+#     We could also build a function that offsets the original file, before IFS transformation.
+#     
+#     This particular function saves memory and time by only recording the relevant pixels
+#     
+#     Parameters
+#     ----------
+#     par: Parameters instance
+#         Crispy parameter instance
+#     offaxis_psf_filename: string
+#         Path to the off-axis cube from J. Krist
+#     threshold: float
+#         Value below which we zero out the matched filter pixels
+#     lamc: float
+#         Central wavelength in nm
+#     BW: float
+#         Spectral bandwidth
+#     outdir: string
+#         Export directory
+#     mask: 2D ndarray
+#         2D bowtie mask. If left to None, then the bowtie mask is calculated and IWA and OWA need to be specified
+#     IWA: float
+#         Inner working angle (in terms of lam/D
+#     OWA: float
+#         Outer working angle (in terms of lam/D
+#     trim: integer
+#         How much to trim the cubes on each side to save memory space (nominally 30)
+#     outname: string
+#         Name of the matched filter library file. Highly recommend to compress it to save space
+#     order: int
+#         Order at which we do the spline transformation to move offaxis PSF around.        
+#     
+#     
+#     '''
+#     
+#     # Recenter the offaxis PSF file so that it is nominally in the center of the IFS
+#     recenter_offaxis(offaxis_psf_filename,0.01,par.exportDir+'/centered_offaxis.fits')
+#     centered_offaxis_file = Image(par.exportDir+'/centered_offaxis.fits')
+#     
+#     # adjust the file header for correct IFS propagation
+#     adjust_krist_header(centered_offaxis_file,lamc=lamc)
+#     par.saveDetector=False  
+#     Nlam = centered_offaxis_file.data.shape[0]
+#     lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)
+# 
+#     # propagate the offaxis PSF
+#     detectorFrame = polychromeIFS(par,lamlist,centered_offaxis_file,QE=True)
+#     Image(data = detectorFrame,header=par.hdr).write(outdir+"/offaxis_centered_detector.fits",clobber=True)
+# 
+#     # reduce the offaxis PSF
+#     offaxis_reduced = reduceIFSMap(par,outdir+"/offaxis_centered_detector.fits")
+#     offaxis_reduced.write(outdir+"/offaxis_centered_detector_red_optext.fits")
+# 
+#     psf = Image(outdir+"/offaxis_centered_detector_red_optext.fits")
+# 
+#     # calculate mask if unspecified
+#     if mask is None:
+#         ydim,xdim = psf.data[0].shape
+#         mask,junk = bowtie(psf.data[0],ydim//2,xdim//2,openingAngle=65,
+#                     clocking=-par.philens*180./np.pi,IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
+#                     export=None,twomasks=False)
+#     
+#     x = np.arange(mask.shape[1])
+#     y = np.arange(mask.shape[0])
+#     x,y = np.meshgrid(x,y)
+#     
+#     # only care about the coordinates of pixels within the mask
+#     # pay attention to bookkeeping in the end
+#     xlist= x[mask]
+#     ylist= y[mask]
+#     
+#     # trim the data to save space
+#     psftrim = psf.data[:,trim:-trim,trim:-trim]
+#     masktrim = mask[trim:-trim,trim:-trim]
+#     mflib = np.zeros(list(xlist.shape)+list(psftrim.shape))
+#     
+#     # Now loop on all the valid pixel coordinates
+#     ic = mask.shape[0]//2 # i or x axis is horizontal
+#     jc = mask.shape[1]//2 # j or y axis is vertical
+#     for ii in range(len(xlist)):
+#         i = xlist[ii]
+#         j = ylist[ii]
+#         # move the offaxis pixel to center it on that pixel
+#         decentered = Image(data=ndimage.interpolation.shift(psftrim,
+#                          [0.0,j-jc,i-ic],order=order))
+#         # calculate the matched filter for that image with the desired threshold
+#         mflib[ii] = mf(decentered,masktrim,threshold)
+#         
+#     # save the matched filter library but also the corresponding coordinates, necessary for unpacking
+#     outkey = fits.HDUList(fits.PrimaryHDU(mflib))
+#     outkey.append(fits.PrimaryHDU(mask.astype(np.int)))
+#     outkey.append(fits.PrimaryHDU(xlist.astype(np.int)))
+#     outkey.append(fits.PrimaryHDU(ylist.astype(np.int)))
+#     outkey.writeto(outdir+'/'+outname,clobber=True)
+
+
+def construct_mflib(par,planet_cube,threshold,lamc,BW,outdir,mask,
+                    trim=30,outname = 'mflib.fits.gz',order=3):
     '''
     Construct a library of matched filters for all points within the bowtie mask
     For now, this uses the reduced, ideal offaxis psf already in cube space.
@@ -1050,8 +1162,8 @@ def construct_mflib(par,offaxis_psf_filename,threshold,lamc,BW,outdir,
     ----------
     par: Parameters instance
         Crispy parameter instance
-    offaxis_psf_filename: string
-        Path to the off-axis cube from J. Krist
+    planet_cube: string
+        Path to the off-axis planet IFS cube
     threshold: float
         Value below which we zero out the matched filter pixels
     lamc: float
@@ -1076,33 +1188,13 @@ def construct_mflib(par,offaxis_psf_filename,threshold,lamc,BW,outdir,
     
     '''
     
-    # Recenter the offaxis PSF file so that it is nominally in the center of the IFS
-    recenter_offaxis(offaxis_psf_filename,0.01,par.exportDir+'/centered_offaxis.fits')
-    centered_offaxis_file = Image(par.exportDir+'/centered_offaxis.fits')
+    # load PSF
+    psf = Image(planet_cube)
     
-    # adjust the file header for correct IFS propagation
-    adjust_krist_header(centered_offaxis_file,lamc=lamc)
-    par.saveDetector=False  
-    Nlam = centered_offaxis_file.data.shape[0]
-    lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)
-
-    # propagate the offaxis PSF
-    detectorFrame = polychromeIFS(par,lamlist,centered_offaxis_file,QE=True)
-    Image(data = detectorFrame,header=par.hdr).write(outdir+"/offaxis_centered_detector.fits",clobber=True)
-
-    # reduce the offaxis PSF
-    offaxis_reduced = reduceIFSMap(par,outdir+"/offaxis_centered_detector.fits")
-    offaxis_reduced.write(outdir+"/offaxis_centered_detector_red_optext.fits")
-
-    psf = Image(outdir+"/offaxis_centered_detector_red_optext.fits")
-
-    # calculate mask if unspecified
-    if mask is None:
-        ydim,xdim = psf.data[0].shape
-        mask,junk = bowtie(psf.data[0],ydim//2,xdim//2,openingAngle=65,
-                    clocking=-par.philens*180./np.pi,IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
-                    export=None,twomasks=False)
-    
+    # coordinates
+    jc,ic = np.unravel_index(np.nanargmax(psf.data[psf.data.shape[0]//2]), psf.data[psf.data.shape[0]//2].shape)
+    log.info("Coordinates of the planet in lenslets: %.2f, %.2f" %(ic,jc))
+        
     x = np.arange(mask.shape[1])
     y = np.arange(mask.shape[0])
     x,y = np.meshgrid(x,y)
@@ -1118,8 +1210,6 @@ def construct_mflib(par,offaxis_psf_filename,threshold,lamc,BW,outdir,
     mflib = np.zeros(list(xlist.shape)+list(psftrim.shape))
     
     # Now loop on all the valid pixel coordinates
-    ic = mask.shape[0]//2 # i or x axis is horizontal
-    jc = mask.shape[1]//2 # j or y axis is vertical
     for ii in range(len(xlist)):
         i = xlist[ii]
         j = ylist[ii]
@@ -1448,9 +1538,7 @@ def process_planet(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_averag
                     tel_pupil_area=3.650265060424805*u.m**2, order=3):
 
     '''
-    Processes an off-axis PSF cube from John Krist. This is used to normalized the cubes to contrast units,
-    so the single image needs to be read by the detector model and averaged the same number of times that
-    the target image is being averaged.
+    Processes an off-axis PSF cube from John Krist. This is used to to construct an ideal cube of the planet
     
     Parameters
     ----------
@@ -1663,7 +1751,7 @@ def RDI_noise(par,xshift,yshift,order=3,
     log.info("Taking average of reference star")
     ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector)  
 
-    log.info("Taking average of target star")
+    log.info("Taking average of target star without planet")
     target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector)  
         
     
@@ -1673,6 +1761,7 @@ def RDI_noise(par,xshift,yshift,order=3,
     ave_ref = np.zeros(fits.open(ref_det_outlist[0])[1].data.shape)
     for reffile in ref_det_outlist:
         ave_ref += fits.open(reffile)[1].data
+    ave_ref /= par.hdr['EXPTIME'] * len(ref_det_outlist)
     ref = Image(data = ave_ref)
     ref.write(outdir_average+"/ref_average_detector_"+rootname+".fits",clobber=True)
     ref_reduced = reduceIFSMap(par,outdir_average+"/ref_average_detector_"+rootname+".fits")
@@ -1682,11 +1771,13 @@ def RDI_noise(par,xshift,yshift,order=3,
     target_star_average = np.zeros(Image(filename=target_det_outlist[0]).data.shape)
     for targetfile in target_det_outlist:
         target_star_average += fits.open(targetfile)[1].data
+    target_star_average /= par.hdr['EXPTIME'] * len(target_det_outlist)
     target = Image(data=target_star_average,header=par.hdr)
     # write it out for the future iterations of this program
     target.write(outdir_average+'/target_average_detector.fits',clobber=True)
     target_reduced = reduceIFSMap(par,outdir_average+'/target_average_detector.fits')
     target_reduced.write(outdir_average+"/target_average_detector_red_optext.fits",clobber=True)
+
 
     
     # ref_reduced is now the IFS cube from the shifted reference star
@@ -1707,20 +1798,23 @@ def RDI_noise(par,xshift,yshift,order=3,
     # Do basic least squares RDI, slice by slice; no mean subtraction for now
     ###################################################################################
     ydim,xdim = target_reduced.data[0].shape
-    mask,scratch = bowtie(target_reduced.data[0],ydim//2,xdim//2,openingAngle=65,
+    bowtie_mask,scratch = bowtie(target_reduced.data[0],ydim//2-1,xdim//2,openingAngle=60,
             clocking=-par.philens*180./np.pi,
             IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
             OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
-            export=None,twomasks=False)    
-    coefs,residual = scale2imgs(target_reduced,ref_reduced,mask=mask,returndiff = True)
-    Image(data=residual).write(outdir_average+"/lstsq_residual_"+rootname+".fits")
+            export=outdir_average+'/bowtie',twomasks=False)    
+
+    coefs,residual = scale2imgs(target_reduced,ref_reduced,bowtie_mask,returndiff = True)
+    Image(data=residual,header=par.hdr).write(outdir_average+"/lstsq_residual_"+rootname+".fits")
     
     ###################################################################################
     # Convolve with matched filter
     ###################################################################################
     log.info("Convolving with matched filter")
-    convolved = convolved_mf(residual,mflib)
-    Image(data=convolved).write(outdir_average+'/convolved.fits')
+    convolvedwRDI = convolved_mf(residual,mflib)
+    Image(data=convolvedwRDI,header=par.hdr).write(outdir_average+'/convolved_with_RDI.fits')
+    convolvedwoRDI = convolved_mf(target_reduced.data,mflib)
+    Image(data=convolvedwoRDI,header=par.hdr).write(outdir_average+'/convolved_without_RDI.fits')
     
     ###################################################################################
     # this computes the convolution with an offaxis source as bright as the star
@@ -1728,16 +1822,20 @@ def RDI_noise(par,xshift,yshift,order=3,
     if normalize_contrast:
         log.info("Normalizing contrast")
         offaxis = Image(offaxis_reduced)
+        offaxis.data/=par.hdr['EXPTIME'] * len(target_det_outlist)
         starmf = convolved_mf(offaxis.data,mflib)
-        Image(data=starmf).write(outdir_average+'/starmf.fits')
+        Image(data=starmf,header=par.hdr).write(outdir_average+'/starmf.fits')
         max_starmf = np.amax(np.amax(starmf,axis=2),axis=1)
         log.info("Max star matched filter:%f" % np.amax(max_starmf))
     else:
         max_starmf = np.ones(convolved.shape[0])
     
-    convolved /= max_starmf[:,np.newaxis,np.newaxis]
+    convolvedwRDI /= max_starmf[:,np.newaxis,np.newaxis]
+    convolvedwoRDI /= max_starmf[:,np.newaxis,np.newaxis]
     
-    outkey = fits.HDUList(fits.PrimaryHDU(convolved.astype(np.float)))
+    outkey = fits.HDUList(fits.PrimaryHDU(convolvedwRDI.astype(np.float)))
+    outkey.append(fits.PrimaryHDU(convolvedwoRDI.astype(np.float)))
     outkey.writeto(outdir_average+'/mflib'+rootname+'.fits',clobber=True)
-    pixstd = [np.nanstd(convolved[i]) for i in range(convolved.shape[0])]
+    pixstd = np.array([np.nanstd(convolvedwoRDI[i]) for i in range(convolvedwoRDI.shape[0])])
+    pixstd /= np.array([np.nanstd(convolvedwRDI[i]) for i in range(convolvedwRDI.shape[0])])
     return pixstd

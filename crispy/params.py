@@ -78,9 +78,9 @@ class Params(object):
         self.EMStats = True         # Calculate EM stats with Gamma function?
         self.EMGain = 200.          # Gain of the EM stage
         self.PCmode = True          # Photon counting mode?
-        self.PCbias = 60           # In order to allow the RN to be negative
+        self.PCbias = 200           # In order to allow the RN to be negative
         self.threshold = 5        # if PCmode is True, this is photon detection threshold (sigmas)
-        self.Nreads = 3			# number of reads for a frame
+        self.Nreads = 3			# number of reads for a target frame
         self.timeframe = 1000		# time in second for a frame (from file)
 
         ###################################################################### 
