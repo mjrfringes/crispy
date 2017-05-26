@@ -595,3 +595,15 @@ def createWavecalFiles(par,lamlist,lamc=770.,dlam=1.):
     par.lamlist = lamlist
     par.filelist = filelist
 
+
+# def createNormalizationCube():
+#     '''
+#     This function constructs a cube which is used to normalize the recovered cubes to photons.s-1.nm-1.
+#     This depends on the 
+#     
+#     '''
+
+
+
+
+

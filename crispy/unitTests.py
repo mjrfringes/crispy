@@ -46,7 +46,7 @@ def testCutout(par,fname,lensnum = 0):
     '''
     
     # first load polychrome
-    polychromeR = pyf.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
+    polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
     psflets = polychromeR[0].data
     
     psftool = PSFLets()
@@ -63,12 +63,16 @@ def testCutout(par,fname,lensnum = 0):
         xlist += [_x]    
         ylist += [_y]    
     
-    im = Image(filename=fname)
+    if isinstance(fname,basestring):
+        im = Image(filename = fname)
+    else:
+        im = Image(data=fname)
     subim, psflet_subarr, [x0, x1, y0, y1] = get_cutout(im,xlist,ylist,psflets)
     print [x0, x1, y0, y1]
     Image(data=subim).write(par.unitTestsOutputs+'/cutout.fits')
-    out = pyf.HDUList(pyf.PrimaryHDU(psflet_subarr.astype(np.float32)))
-    out.writeto(par.unitTestsOutputs + '/psflet_cutout.fits', clobber=True)
+    out = fits.HDUList(fits.PrimaryHDU(subim.astype(np.float32)))
+    out.writeto(par.unitTestsOutputs + '/subim.fits', clobber=True)
+    return subim
 
 
 def testFitCutout(par,fname,lensnum, mode='lstsq',ivar=False):
@@ -77,7 +81,7 @@ def testFitCutout(par,fname,lensnum, mode='lstsq',ivar=False):
     
     '''
     # first load polychrome
-    polychromeR = pyf.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
+    polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
     psflets = polychromeR[0].data
     
     psftool = PSFLets()
@@ -94,7 +98,10 @@ def testFitCutout(par,fname,lensnum, mode='lstsq',ivar=False):
         xlist += [_x]    
         ylist += [_y]    
     
-    im = Image(filename=fname)
+    if isinstance(fname,basestring):
+        im = Image(filename = fname)
+    else:
+        im = Image(data=fname)
     if ivar:
         im.ivar = im.data.copy()
         im.ivar = 1./im.ivar
@@ -112,7 +119,7 @@ def testGenPixSol(par):
     psftool.savepixsol(outdir = par.exportDir)
 
 
-def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outname='flatfield.fits',useQE=False,method='optext'):
+def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outname='flatfield.fits',useQE=True,method='optext'):
     '''
     Creates a polychromatic flatfield
     

@@ -471,7 +471,7 @@ def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
     
     Parameters
     ----------
-    par:        Parameter instance
+    par:    Parameter instance
             Contains all IFS parameters
     lam_list:   list of floats
             Usually this is left to None. If so, we use the wavelengths used for wavelength
@@ -512,7 +512,8 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
             Contains all IFS parameters
     name: string
             Name that will be given to final image, without fits extension
-    ifsimage: Image instance of IFS detector map, with optional inverse variance
+    ifsimage: Image
+            Image instance of IFS detector map, with optional inverse variance
                     
     Returns
     -------

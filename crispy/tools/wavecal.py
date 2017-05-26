@@ -499,7 +499,7 @@ def monochromatic_update(par,inImage,inLam,order=3,apodize=False):
     log.info("Overwriting old wavecal")
     np.savetxt(par.wavecalDir + "lamsol.dat", lamsol)
     log.info("Don't forget to run buildcalibrations again with makePolychrome=True!")
-    
+    return dx,dy,dphi
 
 
 
