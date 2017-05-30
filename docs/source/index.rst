@@ -15,6 +15,14 @@ IFS Simulator
    :maxdepth: 2
 
    notebooks/Introduction
+   
+Post-Processing
+===============
+
+..toctree::
+    :maxdepth: 2
+    
+    Coming soon!
 
 PISCES
 ======
@@ -25,6 +33,8 @@ PISCES
    notebooks/PISCES_wavecalWithAverages
    notebooks/PISCES_Reduce
    notebooks/MultiProcExample
+   notebooks/SPIE_Images
+
    
 API
 ===

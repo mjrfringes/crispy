@@ -1006,8 +1006,6 @@ def mf(cube,mask,threshold):
     matched_filter = np.zeros(cube.data.shape)
     
     for slicenum in range(cube.data.shape[0]):
-#         cube_norm = cube.data[slicenum]/np.nanmax(cube.data[slicenum])
-#         msk = mask*(cube_norm>threshold)
         cube_norm = cube.data[slicenum]/np.nansum(cube.data[slicenum])
         msk = mask*(cube_norm>np.nanmax(cube_norm)*threshold)
         # calculate correction factor since we are going to crop only the top the of the hat
@@ -1916,7 +1914,8 @@ def RDI_noise(par,xshift,yshift,order=3,
         offaxis_star_cube = Image(outdir_average+"/offaxis_star_red_optext.fits")
         lam_midpts,waveList = calculateWaveList(par,method='optext')
         dlam = (waveList[-1]-waveList[0])/(len(waveList)-1)
-        ratio = 1./np.nansum(np.nansum(offaxis_star_cube.data,axis=2),axis=1)
+#         ratio = 1./np.nansum(np.nansum(offaxis_star_cube.data,axis=2),axis=1)
+        ratio = 1./np.nanmax(np.nanmax(offaxis_star_cube.data,axis=2),axis=1)
         ref_reduced.data *= ratio[:,np.newaxis,np.newaxis]
         target_reduced.data *= ratio[:,np.newaxis,np.newaxis]
         target_nosource_reduced.data *= ratio[:,np.newaxis,np.newaxis]
