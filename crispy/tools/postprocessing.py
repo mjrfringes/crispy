@@ -512,7 +512,6 @@ def process_SPC_IFS2(par,
                     t_zodi = 0.09,
                     useQE=True,
                     mflib='/mflib.fits.gz',
-                    subtract_ref_psf=True,
                     outdir_time_series = 'OS5',
                     outdir_detector='OS5/OS5_detector',
                     outdir_average='OS5/OS5_average',
@@ -723,12 +722,18 @@ def process_SPC_IFS2(par,
         for reffile in ref_det_outlist:
             ref_star_average += Image(filename=reffile).data
         ref_star_average/=par.timeframe*len(ref_det_outlist)
+        if par.PCmode:
+            ref_star_average*=np.exp(par.RN*par.threshold/par.EMGain)
         for reffile in target_det_outlist:
             target_star_average += Image(filename=reffile).data
         target_star_average/=par.timeframe*len(target_det_outlist)
+        if par.PCmode:
+            target_star_average*=np.exp(par.RN*par.threshold/par.EMGain)
         for reffile in target_nosource_outlist:
             target_star_nosource_average += Image(filename=reffile).data
         target_star_nosource_average/=par.timeframe*len(target_nosource_outlist)
+        if par.PCmode:
+            target_star_nosource_average*=np.exp(par.RN*par.threshold/par.EMGain)
         Image(data=ref_star_average,header=par.hdr).write(outdir_average+'/average_ref_star_detector.fits',clobber=True)
         Image(data=target_star_average,header=par.hdr).write(outdir_average+'/average_target_star_detector.fits',clobber=True)
         Image(data=target_star_nosource_average,header=par.hdr).write(outdir_average+'/average_target_star_nosource_detector.fits',clobber=True)
@@ -745,22 +750,19 @@ def process_SPC_IFS2(par,
         
     
     ###################################################################################
-    # Subtract average dark and CIC, supposed known
+    # Subtract average, supposed known
     ###################################################################################
     if subtract_dark:
-        # calculate and subtract darks
-#         ref_dark = calculateDark(par,ref_det_outlist)
-#         target_dark = calculateDark(par,target_det_outlist)
-#         Image(data=ref_dark,header=par.hdr).write(outdir_average+'/ref_dark.fits',clobber=True)
-#         Image(data=target_dark,header=par.hdr).write(outdir_average+'/target_dark.fits',clobber=True)
-        ref_star_average -= par.dark+par.CIC*np.sqrt(forced_inttime_ref/(par.timeframe*len(ref_det_outlist)))
-        target_star_average -= par.dark+par.CIC*np.sqrt(1./(par.Nreads*len(target_det_outlist)))
-        target_star_nosource_average -= par.dark+par.CIC*np.sqrt(1./(par.Nreads*len(target_nosource_outlist)))
-        
+        log.info("Mean of average reference map: %f" % np.mean(ref_star_average[:100,:]))
+        ref_star_average -= np.mean(ref_star_average[:100,:])
+        log.info("Mean of average target map: %f" % np.mean(target_star_average[:100,:]))
+        target_star_average -= np.mean(target_star_average[:100,:])
+        target_star_nosource_average -= np.mean(target_star_nosource_average[:100,:])
+        par.hdr.append(('SUBDARK',subtract_dark,'Subtract dark frame?'),end=True)
         Image(data=ref_star_average,header=par.hdr).write(outdir_average+'/average_ref_star_detector_darksub.fits',clobber=True)
         Image(data=target_star_average,header=par.hdr).write(outdir_average+'/average_target_star_detector_darksub.fits',clobber=True)
         Image(data=target_star_nosource_average,header=par.hdr).write(outdir_average+'/average_target_star_nosource_detector_darksub.fits',clobber=True)
-    par.hdr.append(('SUBDARK',subtract_dark,'Subtract dark frame?'),end=True)
+    
 
     times['Taking averages'] = time()
 
@@ -804,12 +806,12 @@ def process_SPC_IFS2(par,
     # Do basic least squares RDI, slice by slice with trimmed mean subtraction
     ###################################################################################
     ydim,xdim = target_reduced.data[0].shape
-    mask,scratch = bowtie(target_reduced.data[0],ydim//2-1,xdim//2,openingAngle=60,
+    mask,scratch = bowtie(target_reduced.data[0],ydim//2-1,xdim//2,openingAngle=65,
             clocking=-par.philens*180./np.pi,
             IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
             OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
             export=None,twomasks=False)    
-    maskleft,maskright = bowtie(target_reduced.data[0],ydim//2-1,xdim//2,openingAngle=60,
+    maskleft,maskright = bowtie(target_reduced.data[0],ydim//2-1,xdim//2,openingAngle=65,
         clocking=-par.philens*180./np.pi,
         IWApix=IWA*lamc/par.lenslet_wav/par.lenslet_sampling,
         OWApix=OWA*lamc/par.lenslet_wav/par.lenslet_sampling,
@@ -818,22 +820,26 @@ def process_SPC_IFS2(par,
     if RDI:
         
         # do least square subtraction on image without the source (Neil's idea)        
-        coefs_scratch,residual_nosource = scale2imgs(target_nosource_reduced,
+        coefs_scratch,est_nosource = scale2imgs(target_nosource_reduced,
+                                    ref_reduced,
+                                    bowtie_mask = mask,
+                                    returndiff = False,
+                                    returnest = True)
+        coefs,est = scale2imgs(target_reduced,
                                     ref_reduced,
                                     bowtie_mask = maskleft,
-                                    returndiff = True)
-        coefs,residual = scale2imgs(target_reduced,
-                                    ref_reduced,
-                                    bowtie_mask = maskleft,
-                                    returndiff = True)
+                                    returndiff = False,
+                                    returnest = True)
         par.hdr.append(('comment', 'Applied RDI'), end=True)
+        residual = target_reduced.data - est_nosource
+        residual_nosource = target_reduced.data - est_nosource
         
     else:
 #         for i in range(target_reduced.data.shape[0]):
 #             target_reduced.data[i] -= np.mean(target_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(target_reduced.data[i][target_reduced.data[i]>0.0],0.4)
 #         for i in range(target_nosource_reduced.data.shape[0]):
 #             target_nosource_reduced.data[i] -= np.mean(target_nosource_reduced.data[i][mean_pixel_mask])#scipy.stats.trim_mean(target_reduced.data[i][target_reduced.data[i]>0.0],0.4)
-        residual = target_reduced.data -target_nosource_reduced.data
+        residual = target_reduced.data # - target_nosource_reduced.data
         residual_nosource = target_nosource_reduced.data
         
     # mask if this is not already done
@@ -879,6 +885,8 @@ def process_SPC_IFS2(par,
     Image(data=convolved_nosource,header=par.hdr).write(outdir_average+'/convolved_nosource.fits')
     convolved_target = convolved_mf(target_reduced.data,mflib)
     Image(data=convolved_target,header=par.hdr).write(outdir_average+'/convolved_target_reduced.fits')
+    convolved_ref = convolved_mf(ref_reduced.data,mflib)
+    Image(data=convolved_ref,header=par.hdr).write(outdir_average+'/convolved_ref_reduced.fits')
     
     times['Convolve'] = time()
     ###################################################################################
@@ -978,7 +986,7 @@ def SNR_spectrum(lam_midpts,signal, noise,
         ax.set_xlabel('Wavelength (nm)')
         ax.set_ylabel('Contrast')
         ax.set_ylim([(1.0-ymargin)*min(real_vals[edges:-edges]),(1.0+ymargin)*max(real_vals[edges:-edges])])
-        ax.set_title(title+', chisq='+str(chisq/len(signal[edges:-edges])))
+        #ax.set_title(title+', chisq='+str(chisq/len(signal[edges:-edges])))
         plt.legend()
         fig.savefig(outfolder+outname)
     return smoothfunc(lam_midpts)/signal
@@ -991,7 +999,7 @@ def mf(cube,mask,threshold):
     Parameters
     ----------
     cube: 3D ndarray
-        An IFS cube from which to compute the matched filter
+        An IFS cube representing the offaxis PSF, from which to compute the matched filter
     mask: 2D ndarray
         This is typically the coronagraphic mask
     threshold: float
@@ -1921,7 +1929,9 @@ def RDI_noise(par,xshift,yshift,order=3,
         target_nosource_reduced.data *= ratio[:,np.newaxis,np.newaxis]
         par.hdr.append(('comment', 'Normalized cubes to photons per sec per nm'), end=True)
 
-    
+    ref_reduced.write(outdir_average+"/ref_average_detector_red_optext_normalized.fits",clobber=True)
+    target_reduced.write(outdir_average+"/target_average_detector_red_optext_normalized.fits",clobber=True)
+    target_nosource_reduced.write(outdir_average+"/target_star_nosource_average_red_optext_normalized.fits",clobber=True)
     # ref_reduced is now the IFS cube from the shifted reference star
     # target_reduced is the IFS cube from the target star
 

@@ -89,7 +89,7 @@ def readDetector(par,IFSimage,inttime=100):
     else:
         par.hdr['INTTIME']=inttime
 
-    # just to deal with small numerical errors - normally there is nothing theres
+    # just to deal with small numerical errors - normally there is nothing there
     IFSimage.data[IFSimage.data<0]=0.0
     
     eff = par.losses*par.PhCountEff*par.pol
@@ -122,7 +122,7 @@ def readDetector(par,IFSimage,inttime=100):
             afterEMRegister = par.EMGain*atEMRegister
         
         # add read noise
-        if par.RN>0:
+        if par.EMStats and par.RN>0:
             afterRN = afterEMRegister+np.random.normal(par.PCbias,par.RN,afterEMRegister.shape)
             # clip at zero
             afterRN[afterRN<0]=0
@@ -131,6 +131,8 @@ def readDetector(par,IFSimage,inttime=100):
 
         # add photon counting thresholding
         if par.PCmode:
+#           PCmask = afterRN>par.PCbias+par.threshold*par.RN
+#             PCmask = afterRN>np.mean(afterRN)+par.threshold*np.std(afterRN)
             PCmask = afterRN>par.PCbias+par.threshold*par.RN
             afterRN[PCmask]=1.0 #(afterRN[PCmask]-par.PCbias)/par.EMGain
             afterRN[~PCmask]=0.

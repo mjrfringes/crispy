@@ -148,7 +148,7 @@ def bowtie(image,xc,yc,openingAngle,clocking,IWApix,OWApix,export='bowtie',twoma
     
     
     
-def scale2imgs(target,ref,bowtie_mask,returndiff = True):
+def scale2imgs(target,ref,bowtie_mask,returndiff = True,returnest=False):
     '''
     Finds the slice-by-slice best-fit scale factor between two images.
     Optionally returns the difference between the two. 
@@ -172,23 +172,6 @@ def scale2imgs(target,ref,bowtie_mask,returndiff = True):
     
     # determine the pixels to use to subtract the average
     # all NaNs
-#     nanmask = ~((~np.isnan(c1))*(~np.isnan(c2)))
-    
-#     lstsq_coeff = np.zeros(c1.shape[0])
-#     est_star = np.zeros(c1.shape)
-#     for i in range(c1.shape[0]):
-#         refslice = c1[i].copy()
-#         targetslice = c2[i].copy()
-#         refslice = np.reshape(refslice[bowtie_mask], (1, -1))
-#         targetslice = np.reshape(targetslice[bowtie_mask],-1)
-#         lstsq_coeff[i] = np.linalg.lstsq(refslice.T,targetslice)[0]
-#         est_star[i] = lstsq_coeff[i]*c2[i]
-#         res.append(np.linalg.lstsq(refslice.T,targetslice)[0])
-#     res = np.array(res).flatten()
-#     if returndiff:
-#         return lstsq_coeff, target.data-est_star
-#     else:
-#         return lstsq_coeff
         
     linregress_coeff = np.zeros((c1.shape[0],2))
     est_star = np.zeros(c1.shape)
@@ -205,6 +188,8 @@ def scale2imgs(target,ref,bowtie_mask,returndiff = True):
     
     if returndiff:
         return linregress_coeff,target.data-est_star
+    elif returnest:
+        return linregress_coeff,est_star
     else:
         return linregress_coeff
     
