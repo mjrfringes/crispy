@@ -76,18 +76,18 @@ def readDetector(par,IFSimage,inttime=100):
             if par.PCmode:
                 par.hdr.append(('THRESH',par.threshold,'Photon counting threshold'),end=True)
             par.hdr.append(('LIFEFRAC',par.lifefraction,'Mission life fraction (changes CTE if >0)'),end=True)
-    if not "NREADS" in par.hdr:
-        par.hdr.append(('NREADS',par.Nreads,'Number of subframes co-added per image'),end=True)
-        par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time for number of frames'),end=True)
-    else:
-        par.hdr['NREADS']=par.Nreads
-        par.hdr['EXPTIME']=par.timeframe
+#     if not "NREADS" in par.hdr:
+#         par.hdr.append(('NREADS',par.Nreads,'Number of subframes co-added per image'),end=True)
+#         par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time for number of frames'),end=True)
+#     else:
+#         par.hdr['NREADS']=par.Nreads
+#         par.hdr['EXPTIME']=par.timeframe
         
 
-    if not 'INTTIME' in par.hdr:
-        par.hdr.append(('INTTIME',inttime,'Integration time per frame'),end=True)
-    else:
-        par.hdr['INTTIME']=inttime
+#     if not 'INTTIME' in par.hdr:
+#         par.hdr.append(('INTTIME',inttime,'Integration time per frame'),end=True)
+#     else:
+    par.hdr['INTTIME']=inttime
 
     # just to deal with small numerical errors - normally there is nothing there
     IFSimage.data[IFSimage.data<0]=0.0
@@ -142,7 +142,7 @@ def readDetector(par,IFSimage,inttime=100):
     
         return afterRN
 
-def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False,factor=1.0,zodi=None,forced_inttime=None):
+def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False,factor=1.0,zodi=None,forced_inttime=None,forced_tottime=None):
     '''	
     Process a list of files and creates individual detector readouts
     If we want only one file, we can just make a list of 1
@@ -163,28 +163,30 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         
         if forced_inttime is None:
             inttime = par.timeframe/par.Nreads
+            nreads = int(par.Nreads)
+            exptime = int(par.timeframe)
         else:  
             inttime = forced_inttime
-            par.Nreads = int(par.timeframe/forced_inttime)
-        
+            nreads = int(forced_tottime/forced_inttime)
+            exptime = int(forced_tottime)
+        log.info("Nreads: %d" % nreads)
 
         frame = np.zeros(img.data.shape)
         varframe = np.zeros(img.data.shape)
         # averaging reads
-        for i in range(par.Nreads):
+        for i in range(nreads):
             newread = readDetector(par,img,inttime=inttime)
             frame += newread
             varframe += newread**2
         if averageDivide:
-            frame /= par.Nreads
-            varframe /= par.Nreads
+            frame /= nreads
+            varframe /= nreads
             varframe -= frame**2
         if not "NREADS" in par.hdr:
-            par.hdr.append(('NREADS',par.Nreads,'Number of subframes co-added  per image'),end=True)
-            par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time for number of frames'),end=True)
-        else:
-            par.hdr['NREADS']=par.Nreads
-            par.hdr['EXPTIME']=par.timeframe
+            par.hdr.append(('NREADS',nreads,'Number of subframes co-added  per image'),end=True)
+            par.hdr.append(('EXPTIME',exptime,'Total exposure time for number of frames'),end=True)
+        par.hdr['NREADS']=nreads
+        par.hdr['EXPTIME']=exptime
             
         outimg = Image(data=frame,ivar=1./varframe,header=par.hdr)
         # append '_suffix' to the file name

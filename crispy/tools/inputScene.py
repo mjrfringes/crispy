@@ -88,20 +88,20 @@ def zodi_cube(krist_cube,area_per_pixel,absmag,Vstarmag,zodi_surfmag,exozodi_sur
     
 
 
-def calc_contrast(wavelist,star_T=6000*u.K,planet_type='Jupiter',abundance=1,distance = 5,phase=90,mean_contrast = 1e-8,
-                    folder= '/Users/mrizzo/Science/Haystacks/Cahoy_Spectra/albedo_spectra/'):
-    '''
-    Calculates the contrast curve for a list of wavelengths
-    '''
-    # load corresponding file
-    
-    filename = folder+planet_type+'_'+str(abundance)+'x_'+str(distance)+'AU_'+str(phase)+'deg.dat'
-    spectrum = np.loadtxt(filename)
-    spec_func = interp1d(spectrum[:,0]*1000.,spectrum[:,1])
-    vals = spec_func(wavelist)
-    vals /= np.mean(vals)
-    vals *= mean_contrast
-    return vals 
+# def calc_contrast(wavelist,star_T=6000*u.K,planet_type='Jupiter',abundance=1,distance = 5,phase=90,mean_contrast = 1e-8,
+#                     folder= '/Users/mrizzo/Science/Haystacks/Cahoy_Spectra/albedo_spectra/'):
+#     '''
+#     Calculates the contrast curve for a list of wavelengths
+#     '''
+#     # load corresponding file
+#     
+#     filename = folder+planet_type+'_'+str(abundance)+'x_'+str(distance)+'AU_'+str(phase)+'deg.dat'
+#     spectrum = np.loadtxt(filename)
+#     spec_func = interp1d(spectrum[:,0]*1000.,spectrum[:,1])
+#     vals = spec_func(wavelist)
+#     vals /= np.mean(vals)
+#     vals *= mean_contrast
+#     return vals 
 
 def calc_contrast_Bijan(wavelist,
     # default values are for 47 Uma c
@@ -129,3 +129,14 @@ def calc_contrast_Bijan(wavelist,
     vals *= (radius*c.R_jup.to(u.m)/(dist*u.AU).to(u.m))**2
     return vals
             
+def calc_contrast(wavelist,distance,filename,albedo=None):
+
+    spectrum = np.loadtxt(filename)
+    spec_func = interp1d(spectrum[:,0]*1000.,spectrum[:,1])
+    vals = spec_func(wavelist)
+    if albedo!=None:
+        vals /= np.amax(vals)
+        vals *= albedo
+    
+    vals *= (radius*c.R_jup.to(u.m)/(dist*u.AU).to(u.m))**2
+    return vals
