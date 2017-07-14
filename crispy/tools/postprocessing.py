@@ -1001,7 +1001,7 @@ def SNR_spectrum(lam_midpts,signal, noise,
     smoothdata = ndimage.filters.gaussian_filter1d(signal,FWHMdata/2.35,order=0,mode='nearest')
     smoothdatafunc=interp1d(lam_midpts,smoothdata)
 
-    chisq = np.sum((signal[edges:-edges] - smoothfunc(lam_midpts[edges:-edges]))**2/(noise[edges:-edges])**2)
+#     chisq = np.sum((signal[edges:-edges] - smoothfunc(lam_midpts[edges:-edges]))**2/(noise[edges:-edges])**2)
 
     if plot:
         sns.set_style("whitegrid")
@@ -1009,7 +1009,7 @@ def SNR_spectrum(lam_midpts,signal, noise,
         ax.plot(lams,real_vals,label='Original spectrum')
         ax.fill_between(lams, 0.9*real_vals, 1.1*real_vals,alpha=0.3,facecolor='Gray')
         ax.errorbar(lam_midpts,signal,yerr=noise,label='Recovered spectrum',fmt='o')    
-        ax.plot(lams,smooth,'-',label='Gaussian-smoothed original spectrum w/ FWHM=%.0f bins' % FWHM)
+        ax.plot(lams,smooth,'-',label='Original spectrum convolved w/ R=50 spectrograph')
 #         if ratio is not None:        
 #             ax.plot(newlam,smoothdatafunc(newlam)*ratio*np.mean(real_vals)/np.mean(signal[edges:-edges]),'-',label='Gaussian-smoothed data w/ FWHM=%.0f bins' % FWHMdata)
 #         if ratio is None:
