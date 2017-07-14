@@ -63,15 +63,16 @@ class Params(object):
         self.gaussian_hires = True  # Use Gaussians for hires PSFLet matching, instead
                                     # of Lucy-Richardson deconvolution
 
-        self.QE = "QE_CCD201.txt"	# detector QE
+        self.QE = "QE_CCD201_wl.txt"	# detector QE, including wavelength-dependent losses
+                                    # to not include the losses, use simply "QE_CCD201.txt" and set
+                                    # self.losses parameters below
         self.nonoise=True           # whether to disable all the noises (except QE)
         self.poisson = True         # Use Poisson statistics?
-        self.RN = 100.0              # Read noise (e/px/fr)
-#         self.CIC = 1.2e-2           # Clock-induced charge (e/px/fr)
-        self.CIC = 1e-2           # Clock-induced charge (e/px/fr)
+        self.RN = 100.0             # Gain register read noise (e/px/fr)
+        self.CIC = 1e-2             # Clock-induced charge (e/px/fr)
         self.dark = 1e-4            # Dark current noise (e/px/s)
         self.Traps = False          # Use traps or not (not yet implemented)
-        self.losses = 0.34			# total losses for on-axis PSF (given by J. Krist)
+        self.losses = 1.			# total losses for on-axis PSF (given by J. Krist)
         self.PhCountEff = 1.0		# Photon counting efficiency
         self.lifefraction = 0.0    # fraction of lifetime (using Bijan's empirical model)
         self.pol = 1.		        # Polarization losses

@@ -78,11 +78,10 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
     x = np.arange(image.shape[0])
     x, y = np.meshgrid(x, x)
 
-#     dloglam = (np.log(lam2) - np.log(lam1))/nlam
-#     loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
-# 
-#     for lam in np.exp(loglam):
-    for lam in np.linspace(lam1,lam2,nlam):
+    dloglam = (np.log(lam2) - np.log(lam1))/nlam
+    loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
+
+    for lam in np.exp(loglam):
 
 
 #         if not par.gaussian:
@@ -129,7 +128,8 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
         # and introduce distortions
         ################################################################
         order = 3
-        dispersion = par.npixperdlam*par.R*(lam-par.FWHMlam)/par.FWHMlam
+#         dispersion = par.npixperdlam*par.R*(lam-par.FWHMlam)/par.FWHMlam
+        dispersion = par.npixperdlam*par.R*np.log(lam/par.FWHMlam)
         coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=0, y0=dispersion)
         ycen, xcen = transform(xindx, yindx, order, coef)
         xcen+=par.npix//2

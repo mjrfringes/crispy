@@ -56,11 +56,11 @@ def make_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
     x, y = np.meshgrid(x, x)
     npix = hires_arrs[0].shape[2]//upsample
 
-#     dloglam = (np.log(lam2) - np.log(lam1))/nlam
-#     loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
-# 
-#     for lam in np.exp(loglam):
-    for lam in np.linspace(lam1,lam2,nlam):
+    dloglam = (np.log(lam2) - np.log(lam1))/nlam
+    loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
+
+    for lam in np.exp(loglam):
+#     for lam in np.linspace(lam1,lam2,nlam):
 
         ################################################################
         # Build the appropriate average hires image by averaging over

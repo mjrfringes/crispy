@@ -497,8 +497,10 @@ def process_SPC_IFS2(par,
                     psf_time_series_folder,
                     offaxis_psf_filename,
                     xshift=0.0,yshift=0.0,order=3,
-                    planet_radius = 1.27*c.R_jup,
+                    albedo_filename='Jupiter_1x_5AU_90deg.dat',
+                    planet_radius = 1.27,
                     planet_AU = 3.6,planet_dist_pc=14.1,
+                    albedo=0.28,
                     ref_star_T=9377*u.K, ref_star_Vmag=2.37,
                     target_star_T=5887*u.K, target_star_Vmag=5.03,
                     lamc=770.,BW=0.18,n_ref_star_imgs=30,
@@ -643,6 +645,10 @@ def process_SPC_IFS2(par,
                 fileshape=fileshape,
                 lamlist=lamlist,
                 lamc=lamc,
+                filename = par.codeRoot+'/Inputs/'+albedo_filename,
+                albedo=albedo,
+                planet_radius=planet_radius,
+                planet_AU = planet_AU,planet_dist_pc=planet_dist_pc,
                 inttime=1,
                 Nreads=1,
                 Nave=1,
@@ -968,7 +974,11 @@ def process_SPC_IFS2(par,
     
     return signal,noise,noise_no_source,noise_no_rdi,signal_planet,signal_star,signal_no_rdi,signal_no_source
 
-def SNR_spectrum(lam_midpts,signal, noise, 
+def SNR_spectrum(lam_midpts,signal, noise,
+                filename='Jupiter_1x_5AU_90deg.dat',
+                planet_radius = 1.27,
+                planet_AU = 3.6,
+                albedo=0.28,
                 lam_contrast=None, plot=True,
                 outname = 'SNR.png', outfolder = '',
                 title='Planet+star',
@@ -985,12 +995,11 @@ def SNR_spectrum(lam_midpts,signal, noise,
         lams=lam_contrast
     else:
         lams=lam_midpts
-    real_vals=calc_contrast_Bijan(lams)
+    real_vals=calc_contrast(lams,distance=planet_AU, radius=planet_radius,filename=filename,albedo=albedo)
     smooth = ndimage.filters.gaussian_filter1d(real_vals,FWHM/2.35,order=0,mode='nearest')
     smoothfunc=interp1d(lams,smooth)
     smoothdata = ndimage.filters.gaussian_filter1d(signal,FWHMdata/2.35,order=0,mode='nearest')
     smoothdatafunc=interp1d(lam_midpts,smoothdata)
-    newlam = np.linspace(min(lam_midpts),max(lam_midpts),45)
 
     chisq = np.sum((signal[edges:-edges] - smoothfunc(lam_midpts[edges:-edges]))**2/(noise[edges:-edges])**2)
 
@@ -998,6 +1007,7 @@ def SNR_spectrum(lam_midpts,signal, noise,
         sns.set_style("whitegrid")
         fig,ax = plt.subplots(figsize=(12,6))
         ax.plot(lams,real_vals,label='Original spectrum')
+        ax.fill_between(lams, 0.9*real_vals, 1.1*real_vals,alpha=0.3,facecolor='Gray')
         ax.errorbar(lam_midpts,signal,yerr=noise,label='Recovered spectrum',fmt='o')    
         ax.plot(lams,smooth,'-',label='Gaussian-smoothed original spectrum w/ FWHM=%.0f bins' % FWHM)
 #         if ratio is not None:        
@@ -1574,8 +1584,10 @@ def processTargetCubes(par,target_file_list,
 #     return offaxis_reduced
 
 def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_average,Nave=1,inttime=1,Nreads=1,
-                    planet_radius = 1.27*c.R_jup,
+                    filename='Jupiter_1x_5AU_90deg.dat',
+                    planet_radius = 1.27, # in R_jup
                     planet_AU = 3.6,planet_dist_pc=14.1,
+                    albedo=0.28,
                     target_star_T=5887*u.K, target_star_Vmag=5.03,
                     ref_star_T=9377*u.K, ref_star_Vmag=2.37,
                     tel_pupil_area=3.650265060424805*u.m**2, order=3):
@@ -1635,6 +1647,8 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     # shift the planet to the correct position
     planet_WA = planet_AU/planet_dist_pc/(lamc*1e-9/2.37/4.848e-6)
     log.info('Constructing off-axis cube at planet separation: %.2f lam/D (%.2f arcsec, %.2f lenslets)' % (planet_WA,planet_AU/planet_dist_pc,planet_WA*lamc/par.lenslet_wav/par.lenslet_sampling) )
+    
+    # ensure correct normalization after shifting, for extra safety
     oldsum = np.nansum(offaxiscube.data)
     offaxiscube.data = ndimage.interpolation.shift(offaxiscube.data,
                     [0.0,0.0,planet_WA*par.pixperlenslet*lamc/par.lenslet_wav/par.lenslet_sampling],order=order)
@@ -1646,7 +1660,7 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     # Propagate the target star
     ###################################################################################
 
-    # this takes care of the photometry. This needs to be thoroughly checked.
+    # this takes care of the photometry
     offaxis_star_cube = convert_krist_cube(offaxiscube.data.shape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
     
     offtarget=Image(data=offaxiscube.data*offaxis_star_cube,header=offaxiscube.header)
@@ -1677,7 +1691,7 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     # Propagate the ref star
     ###################################################################################
 
-    # this takes care of the photometry. This needs to be thoroughly checked.
+    # this takes care of the photometry
     offaxis_ref_star_cube = convert_krist_cube(offaxiscube.data.shape,lamlist,ref_star_T,ref_star_Vmag,tel_pupil_area)
     
     offref=Image(data=offaxiscube.data*offaxis_ref_star_cube,header=offaxiscube.header)
@@ -1707,7 +1721,8 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     ###################################################################################
     # Propagate the planet
     ###################################################################################
-    contrast = calc_contrast_Bijan(lamlist.value)
+#     contrast = calc_contrast_Bijan(lamlist.value)
+    contrast = calc_contrast(lamlist.value,distance=planet_AU, radius=planet_radius,filename=filename,albedo=albedo)
 
 #     contrast_cube = np.zeros(offaxiscube.data.shape)
 #     for i in range(offaxiscube.data.shape[0]):

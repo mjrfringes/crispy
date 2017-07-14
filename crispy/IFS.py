@@ -565,6 +565,7 @@ def prepareCube(par,wavelist,incube,QE=True,adjustment=0.98898):
 
         if not "APPLYQE" in par.hdr:
             par.hdr.append(('APPLYQE',QE,'Applied quantum efficiency?'), end=True) 
+            par.hdr.append(('QEFILE',par.QE,'QE file used'), end=True) 
         for iwav in range(len(wavelist)):
             inputcube.data[iwav] *= QEvals[iwav]
         #print(QEvals)

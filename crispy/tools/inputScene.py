@@ -129,7 +129,7 @@ def calc_contrast_Bijan(wavelist,
     vals *= (radius*c.R_jup.to(u.m)/(dist*u.AU).to(u.m))**2
     return vals
             
-def calc_contrast(wavelist,distance,filename,albedo=None):
+def calc_contrast(wavelist,distance,radius,filename,albedo=None):
 
     spectrum = np.loadtxt(filename)
     spec_func = interp1d(spectrum[:,0]*1000.,spectrum[:,1])
@@ -138,5 +138,5 @@ def calc_contrast(wavelist,distance,filename,albedo=None):
         vals /= np.amax(vals)
         vals *= albedo
     
-    vals *= (radius*c.R_jup.to(u.m)/(dist*u.AU).to(u.m))**2
+    vals *= (radius*c.R_jup.to(u.m)/(distance*u.AU).to(u.m))**2
     return vals
