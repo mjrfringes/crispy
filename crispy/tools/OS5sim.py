@@ -37,7 +37,7 @@ lamc=660.
 BW = 0.18
 par.nonoise=False
 sampling=2.0
-par.timeframe=1000
+par.timeframe=10000
 par.Nreads = par.timeframe/100.
 par.PCmode=True
 par.EMStats=True
@@ -76,18 +76,18 @@ signal, noise,noise_no_source,noise_no_rdi,signal_planet,signal_star,signal_no_r
 #                     target_star_T=5887*u.K, target_star_Vmag=5.03,   # 47 Uma
                     target_star_T=5778*u.K, target_star_Vmag=4.83,     # fiducial Sun at 10 pc
                     forced_inttime_ref = 10., # forced integration time for reference star individual frame
-                    forced_tottime_ref = 10., # forced integration time for reference star frame group
-                    pp_fact = 0.00,
-                    RDI=False,
+                    forced_tottime_ref = 1000., # forced integration time for reference star frame group
+                    pp_fact = 1.00,
+                    RDI=True,
                     mflib='',
                     outdir_time_series = folder,
                     outdir_detector=folder+'/detector',
                     outdir_average=folder+'/average',
                     process_cubes=False, # this only needs to be turned to True once
-                    process_offaxis_files=False, # Construct planet and off-axis star files
-                    process_detector=False, # Construct IFS detector maps
-                    take_averages=False,   # Take averages of these detector maps
-                    subtract_dark=False,
+                    process_offaxis_files=True, # Construct planet and off-axis star files
+                    process_detector=True, # Construct IFS detector maps
+                    take_averages=True,   # Take averages of these detector maps
+                    subtract_dark=True,
                     normalize_cubes=True,
                     nosource=False)
 
@@ -121,7 +121,7 @@ ratio_out = SNR_spectrum(lam_midpts,signal,noise,filename=par.codeRoot+"/Inputs/
 plt.savefig(folder+'/average/SNR.png',dpi=300)
 
 
-Ntrials=2
+Ntrials=100
 final_signal_cube = np.zeros((Ntrials,len(signal)))
 final_signal_no_rdi_cube = np.zeros((Ntrials,len(signal)))
 final_signal_star_cube = np.zeros((Ntrials,len(signal)))
@@ -133,7 +133,9 @@ import time
 start = time.time()
 
 for i in range(Ntrials):
-    print "iteration",i
+    log.info("iteration"+str(i))
+    log.info("Reseeding random number generator")
+    np.random.seed()
     signal, _,_,_,signal_planet,signal_star,signal_no_rdi,_ = process_SPC_IFS2(par,
                     psf_time_series_folder=OS5_files,
                     offaxis_psf_filename=offaxis_psf_filename,
@@ -151,9 +153,9 @@ for i in range(Ntrials):
 #                     target_star_T=5887*u.K, target_star_Vmag=5.03,   # 47 Uma
                     target_star_T=5778*u.K, target_star_Vmag=4.83,     # fiducial Sun at 10 pc
                     forced_inttime_ref = 10., # forced integration time for reference star individual frame
-                    forced_tottime_ref = 10., # forced integration time for reference star frame group
-                    pp_fact = 0.00,
-                    RDI=False,
+                    forced_tottime_ref = 1000., # forced integration time for reference star frame group
+                    pp_fact = 1.00,
+                    RDI=True,
                     mflib='',
                     outdir_time_series = folder,
                     outdir_detector=folder+'/detector',

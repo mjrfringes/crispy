@@ -13,7 +13,7 @@ except:
     import pyfits as fits
 from time import time
 import os
-from crispy.tools.detector import averageDetectorReadout,readDetector,calculateDark
+from crispy.tools.detector import averageDetectorReadout,averageDetectorReadoutParallel,readDetector,calculateDark
 import matplotlib.pyplot as plt
 
 import multiprocessing
@@ -522,6 +522,7 @@ def process_SPC_IFS2(par,
                     process_offaxis_files=True,
                     process_detector=True,
                     take_averages=True,
+                    take_ref_average=True,
                     normalize_contrast=True,
                     nosource = True):
     '''
@@ -691,13 +692,13 @@ def process_SPC_IFS2(par,
 
     if process_detector:
         log.info("Taking average of reference star")
-        ref_det_outlist = averageDetectorReadout(par,ref_outlist,outdir_detector,forced_inttime=forced_inttime_ref,forced_tottime=forced_tottime_ref)   
+        ref_det_outlist = averageDetectorReadoutParallel(par,ref_outlist,outdir_detector,forced_inttime=forced_inttime_ref,forced_tottime=forced_tottime_ref)   
         offaxis_filename = os.path.abspath(outdir_average+'/offaxis_planet.fits')
         if nosource:
             log.info("Taking average of target star without planet")
             target_nosource_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,suffix='nosource_detector',factor = pp_fact)
         log.info("Taking average of target star with planet")
-        target_det_outlist = averageDetectorReadout(par,target_outlist,outdir_detector,offaxis = offaxis_filename,factor = pp_fact)
+        target_det_outlist = averageDetectorReadoutParallel(par,target_outlist,outdir_detector,offaxis = offaxis_filename,factor = pp_fact)
     else:
         ref_det_outlist = []
         if nosource: target_nosource_outlist = []

@@ -8,9 +8,12 @@ import numpy as np
 import multiprocessing
 import matplotlib.pyplot as plt
 from detutils import frebin
+from par_utils import Task, Consumer
+
 from initLogger import getLogger
 log = getLogger('crispy')
 from image import Image
+import multiprocessing
 
 def rebinDetector(par,finalFrame,clip=False):
     '''
@@ -193,6 +196,82 @@ def averageDetectorReadout(par,filelist,detectorFolderOut,suffix = 'detector',of
         outimg.write(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits',clobber=True)
         det_outlist.append(detectorFolderOut+'/'+reffile.split('/')[-1].split('.')[0]+'_'+suffix+'.fits')
     return det_outlist
+
+
+def multipleReadouts(par,filename,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False,factor=1.0,zodi=None,forced_inttime=None,forced_tottime=None):
+
+    log.info('Apply detector readout on '+filename.split('/')[-1])
+    img = Image(filename=filename)
+    if offaxis is not None:
+        off = Image(offaxis)
+        img.data*=factor # Multiplies by post-processing factor
+        img.data+=off.data
+    if zodi is not None:
+        z = Image(zodi)
+        img.data+=z.data
+    par.makeHeader()        
+    
+    if forced_inttime is None:
+        inttime = par.timeframe/par.Nreads
+        nreads = int(par.Nreads)
+        exptime = int(par.timeframe)
+    else:  
+        inttime = forced_inttime
+        nreads = int(forced_tottime/forced_inttime)
+        exptime = int(forced_tottime)
+    #log.info("Nreads: %d" % nreads)
+
+    frame = np.zeros(img.data.shape)
+    varframe = np.zeros(img.data.shape)
+    # averaging reads
+    for i in range(nreads):
+        newread = readDetector(par,img,inttime=inttime)
+        frame += newread
+        varframe += newread**2
+    if averageDivide:
+        frame /= nreads
+        varframe /= nreads
+        varframe -= frame**2
+    if not "NREADS" in par.hdr:
+        par.hdr.append(('NREADS',nreads,'Number of subframes co-added  per image'),end=True)
+        par.hdr.append(('EXPTIME',exptime,'Total exposure time for number of frames'),end=True)
+    par.hdr['NREADS']=nreads
+    par.hdr['EXPTIME']=exptime
+        
+    outimg = Image(data=frame,ivar=1./varframe,header=par.hdr)
+    # append '_suffix' to the file name
+    outimg.write(detectorFolderOut+'/'+filename.split('/')[-1].split('.')[0]+'_'+suffix+'.fits',clobber=True)
+    return detectorFolderOut+'/'+filename.split('/')[-1].split('.')[0]+'_'+suffix+'.fits'
+
+
+def averageDetectorReadoutParallel(par,filelist,detectorFolderOut,suffix = 'detector',offaxis=None,averageDivide=False,factor=1.0,zodi=None,forced_inttime=None,forced_tottime=None):
+    '''	
+    Process a list of files and creates individual detector readouts
+    If we want only one file, we can just make a list of 1
+    '''
+    det_outlist = []
+	
+    tasks = multiprocessing.Queue()
+    results = multiprocessing.Queue()
+    ncpus = multiprocessing.cpu_count()
+    consumers = [ Consumer(tasks, results)
+                  for i in range(ncpus) ]
+    for w in consumers:
+        w.start()
+
+    for i in range(len(filelist)):
+        tasks.put(Task(i, multipleReadouts, (par,filelist[i],detectorFolderOut,'detector',
+                                            offaxis,averageDivide,factor,zodi,
+                                            forced_inttime,forced_tottime)))
+
+    for i in range(ncpus):
+        tasks.put(None)
+    for i in range(len(filelist)):
+        index, strres = results.get()
+        det_outlist.append(strres)
+
+    return det_outlist
+
 
 
 def calculateDark(par,filelist):
