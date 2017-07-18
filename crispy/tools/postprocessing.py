@@ -730,20 +730,26 @@ def process_SPC_IFS2(par,
         if nosource: target_star_nosource_average = np.zeros(Image(filename=target_nosource_outlist[0]).data.shape)
         for reffile in ref_det_outlist:
             ref_star_average += Image(filename=reffile).data
-        ref_star_average/=par.timeframe*len(ref_det_outlist)
+        ref_star_average/=len(ref_det_outlist)
         if par.PCmode:
             ref_star_average*=np.exp(par.RN*par.threshold/par.EMGain)
+            ref_star_average=-np.log(1.-ref_star_average)
+        ref_star_average/=par.timeframe
         for reffile in target_det_outlist:
             target_star_average += Image(filename=reffile).data
-        target_star_average/=par.timeframe*len(target_det_outlist)
+        target_star_average/=len(target_det_outlist)
         if par.PCmode:
             target_star_average*=np.exp(par.RN*par.threshold/par.EMGain)
+            target_star_average=-np.log(1.-target_star_average)
+        target_star_average/=par.timeframe
         if nosource:
             for reffile in target_nosource_outlist:
                 target_star_nosource_average += Image(filename=reffile).data
-            target_star_nosource_average/=par.timeframe*len(target_nosource_outlist)
+            target_star_nosource_average/=len(target_nosource_outlist)
             if par.PCmode:
                 target_star_nosource_average*=np.exp(par.RN*par.threshold/par.EMGain)
+                target_star_nosource_average=-np.log(1.-target_star_nosource_average)
+            target_star_nosource_average/=par.timeframe
         Image(data=ref_star_average,header=par.hdr).write(outdir_average+'/average_ref_star_detector.fits',clobber=True)
         Image(data=target_star_average,header=par.hdr).write(outdir_average+'/average_target_star_detector.fits',clobber=True)
         if nosource: Image(data=target_star_nosource_average,header=par.hdr).write(outdir_average+'/average_target_star_nosource_detector.fits',clobber=True)
@@ -990,7 +996,6 @@ def SNR_spectrum(lam_midpts,signal, noise,
                 ):
     '''
     Plot the outputs of process_SPC_IFS
-    
     '''
     if lam_contrast is not None:
         lams=lam_contrast
