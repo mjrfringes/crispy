@@ -45,8 +45,8 @@ class Params(object):
         self.philens = arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
         self.pinhole = True         # Use a pinhole grid? (not really used)
         self.pin_dia = 25e-6        # Diameter of pinholes (m) (not really used)
-        self.lenslet_sampling= 1./2.# lenslet size in lambda/D
-        self.lenslet_wav = 660.     # Wavelength at which this is defined (nm)
+        self.lensletsampling= 1./2.# lenslet size in lambda/D
+        self.lensletlam = 660.     # Wavelength at which this is defined (nm)
 
         ###################################################################### 
         # Detector stuff
@@ -88,12 +88,14 @@ class Params(object):
         # Spectrograph stuff
         ###################################################################### 
         
-        self.distortPISCES=False    # If True, use measured PISCES distortion/dispersion
-        self.BW = 0.18              # Spectral bandwidth (if distortPISCES==False)
+        self.BW = 0.18              # Spectral bandwidth
         self.npixperdlam = 2.       # Number of pixels per spectral resolution element
-        self.nspecperpix_lstsq = 1. # Nspec per pixel for least squares 
+        self.nchanperspec_lstsq = 1. # Nspec per pixel for least squares 
         self.R = 50                 # Spectral resolving power (extracted cubes have twice)
         
+        # carry-over old parameter names
+        self.lenslet_wav = self.lensletlam     # Wavelength at which this is defined (nm)
+        self.lenslet_sampling= self.lensletsampling# lenslet size in lambda/D
         
 
         self.makeHeader()
@@ -115,9 +117,7 @@ class Params(object):
         self.hdr.append(('FWHM',self.FWHM,'FHWM of PSFLet at detector (pixels)'), end=True) 
         self.hdr.append(('FWHMLAM',self.FWHMlam,'Wavelength at which FWHM is defined (nm)'), end=True) 
         self.hdr.append(('NPIX',self.npix,'Number of detector pixels'), end=True) 
-        self.hdr.append(('DISPDIST',self.distortPISCES,'Use PISCES distortion/dispersion?'), end=True) 
-        if self.distortPISCES:
-            self.hdr.append(('BW',self.BW,'Bandwidth'), end=True) 
-            self.hdr.append(('PIXPRLAM',self.npixperdlam,'Pixels per resolution element'), end=True) 
-            self.hdr.append(('R',self.R,'Spectral resolution'), end=True) 
+        self.hdr.append(('BW',self.BW,'Bandwidth'), end=True) 
+        self.hdr.append(('PIXPRLAM',self.npixperdlam,'Pixels per resolution element'), end=True) 
+        self.hdr.append(('R',self.R,'Spectral resolution'), end=True) 
         

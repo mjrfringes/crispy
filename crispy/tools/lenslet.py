@@ -13,7 +13,7 @@ from detutils import frebin
 from scipy import ndimage
 from scipy.special import erf
 from spectrograph import distort
-from locate_psflets import initcoef,transform
+from locate_psflets import initcoef,transform,return_locations
 
 
 def processImagePlane(par,imagePlane):
@@ -62,18 +62,49 @@ def processImagePlane(par,imagePlane):
 
 
 def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None, 
-                     upsample=5, nlam=10,npix=13):
+                     upsample=5, nlam=10,npix=13,allcoef=None,order=3,x0=0.0):
     """
+    Function propagateLenslets
+    
+    This is the main propagation function. It puts the PSFLets where they belong on the detector.
+    It uses template PSFLets given in hires_arrs, and can use also a pre-determined wavelength
+    solution through the allcoef argument.
+    
+    Parameters
+    ----------
+    
+    par: Params instance
+        Parameters instance for crispy
+    imageplane: 2D array
+        Flux map where each pixel corresponds to one lenslet
+    lam1: float
+        Minimum wavelength in IFS band
+    lam2: float
+        Maximum wavelength in IFS band
+    hires_arr: 4D ndarray
+        For each wavelength, for each location on the detector, a 2D array of the oversampled PSFLet
+    lam_arr: 1D array
+        Wavelength array corresponding to the hires_arr array
+    upsample: int
+        Factor by which the PSFLets are oversampled
+    nlam: int
+        Number of wavelengths to oversample a given wavelength bin
+    npix: int
+       PSFLet will be put on npix*npix detector pixels
+    allcoef: 2D array
+        If None, a standard map will be generated at the native dispersion (using par.R and par.npixperdlam)
+        Otherwise, a wavelength solution can be input to map the PSFLet locations
+    order: int
+        Order used in the polynomial fit of the wavelength solution
+    x0: float
+        Offset from the center of the detector in the vertical direction (x)
     """
-#     oldsum = np.sum(imageplane)
     padding = 10
     ydim,xdim = imageplane.shape
     
     xindx = np.arange(-xdim//2, -xdim//2+xdim)
     xindx, yindx = np.meshgrid(xindx, xindx)
     
-#     val = imageplane[jcoord+imageplane.shape[0]//2,icoord+imageplane.shape[0]//2]
-
     image = np.zeros((par.npix + 2*padding, par.npix + 2*padding))
     x = np.arange(image.shape[0])
     x, y = np.meshgrid(x, x)
@@ -83,8 +114,6 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
 
     for lam in np.exp(loglam):
 
-
-#         if not par.gaussian:
         ################################################################
         # Build the appropriate average hires image by averaging over
         # the nearest wavelengths.  Then apply a spline filter to the
@@ -127,13 +156,12 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
         # here is where one could import any kind of polynomial mapping
         # and introduce distortions
         ################################################################
-        order = 3
-#         dispersion = par.npixperdlam*par.R*(lam-par.FWHMlam)/par.FWHMlam
-        dispersion = par.npixperdlam*par.R*np.log(lam/par.FWHMlam)
-        coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=0, y0=dispersion)
-        ycen, xcen = transform(xindx, yindx, order, coef)
-        xcen+=par.npix//2
-        ycen+=par.npix//2
+        if allcoef==None:
+            dispersion = par.npixperdlam*par.R*np.log(lam/par.FWHMlam)
+            coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=par.npix//2+x0, y0=par.npix//2+dispersion)
+            ycen, xcen = transform(xindx, yindx, order, coef)
+        else:
+            ycen,xcen = return_locations(lam, allcoef, xindx, yindx, order=order):
 
         xcen += padding
         ycen += padding
@@ -197,8 +225,6 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
                     j1 = int(y_hires)
                     j2 = j1 + 1
 
-
-        
                 ##############################################################
                 # Bilinear interpolation by hand.  Do not extrapolate, but
                 # instead use the nearest PSFlet near the edge of the
@@ -229,7 +255,7 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
 
 def Lenslets(par, imageplane, lam,lensletplane, allweights=None,kernels=None,locations=None):
     """
-    Function Lenslets
+    Function Lenslets (obsolete)
     
     Creates the IFS map on a 'dense' detector array where each pixel is smaller than the
     final detector pixels by a factor par.pxperdetpix. Adds to lensletplane array to save
