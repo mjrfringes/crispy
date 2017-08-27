@@ -1,0 +1,1058 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Matched filter determination &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="Matched-filter-determination">
+<h1>Matched filter determination<a class="headerlink" href="#Matched-filter-determination" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic simple">
+<li>Construct function that creates matched filter in a cube</li>
+<li>For each pixel in the dark hole (use bowtie function), record cube
+coordinates (use reshape)</li>
+<li>For each coordinate, compute the matched filter taking into account
+the bowtie mask (watch out for photometry); record to 4D cube (first
+dimension is the index of the cube coordinate)</li>
+<li>When applying the match filter, look up the 4D cube</li>
+</ol>
+<div class="section" id="Load-crispy">
+<h2>Load crispy<a class="headerlink" href="#Load-crispy" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;../../../../crispy&#39;</span>
+<span class="k">print</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">folder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">crispy.params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;../../../crispy&#39;</span>
+
+<span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">polychromeIFS</span>
+<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.imgtools</span> <span class="kn">import</span> <span class="n">scale2imgs</span><span class="p">,</span><span class="n">bowtie</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.rotate</span> <span class="kn">import</span> <span class="n">rotateCube</span><span class="p">,</span><span class="n">shiftCube</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">mf</span><span class="p">,</span><span class="n">recenter_offaxis</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">adjust_krist_header</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+../../../../crispy
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Matched-filter-in-a-cube">
+<h2>Matched filter in a cube<a class="headerlink" href="#Matched-filter-in-a-cube" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">offaxis_ideal_before_rotate</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/OS5_average/offaxis.fits&#39;</span><span class="p">)</span>
+<span class="c1">#offaxis_ideal = Image(data=rotateCube(offaxis_ideal_before_rotate.data,-26*np.pi/180.,clip=True))</span>
+<span class="c1">#offaxis_ideal = Image(data=shiftCube(offaxis_ideal_before_rotate.data,dx=0,dy=-10))</span>
+<span class="n">offaxis_ideal</span> <span class="o">=</span> <span class="n">offaxis_ideal_before_rotate</span>
+<span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/test_offaxisrot.fits&quot;</span><span class="p">)</span>
+<span class="n">matched_filter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">ydim</span><span class="p">,</span><span class="n">xdim</span> <span class="o">=</span> <span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">IWA</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">OWA</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">lamc</span><span class="o">=</span><span class="mf">770.</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">mask</span><span class="p">,</span><span class="n">junk</span> <span class="o">=</span> <span class="n">bowtie</span><span class="p">(</span><span class="n">offaxis_ideal</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">ydim</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">xdim</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">openingAngle</span><span class="o">=</span><span class="mi">65</span><span class="p">,</span>
+            <span class="n">clocking</span><span class="o">=-</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span><span class="n">IWApix</span><span class="o">=</span><span class="n">IWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span><span class="n">OWApix</span><span class="o">=</span><span class="n">OWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span>
+            <span class="n">export</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">twomasks</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="c1"># for slicenum in range(offaxis_ideal.data.shape[0]):</span>
+<span class="c1">#     nanmask = np.isnan(offaxis_ideal.data[slicenum])</span>
+<span class="c1">#     offaxis_ideal_norm = offaxis_ideal.data[slicenum]/np.nansum(offaxis_ideal.data[slicenum])</span>
+<span class="c1">#     this_slice = offaxis_ideal_norm/np.nansum((offaxis_ideal_norm)**2)</span>
+<span class="c1">#     # calculate correction factor since we are going to crop only the top the of the hat</span>
+<span class="c1">#     # this is the inverse ratio of the contribution of the brightest pixels over the rest</span>
+<span class="c1">#     msk = mask*(this_slice&gt;threshold)</span>
+<span class="c1">#     aper_phot = np.nansum(this_slice)/np.nansum(this_slice[msk])</span>
+<span class="c1">#     # Set all low-contributing pixels to 0.0</span>
+<span class="c1">#     this_slice[~msk] = 0.0</span>
+<span class="c1">#     this_slice[nanmask] = np.NaN</span>
+<span class="c1">#     matched_filter[slicenum,:,:] = this_slice</span>
+<span class="c1">#     # Multiply what is left by that aperture correction factor</span>
+<span class="c1">#     matched_filter[slicenum,:,:]*=aper_phot</span>
+<span class="n">matched_filter</span> <span class="o">=</span> <span class="n">mf</span><span class="p">(</span><span class="n">offaxis_ideal</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="n">threshold</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">matched_filter</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/test_matched_filter.fits&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/OS5/OS5_average/offaxis.fits
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_red_optext.fits
+crispy - INFO - Elapsed time: 1.373560s
+crispy - INFO - Writing data to ../../../crispy/SimResults/test_offaxisrot.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/test_matched_filter.fits
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Recenter-off-axis-PSF-used-for-matched-filter">
+<h2>Recenter off-axis PSF used for matched filter<a class="headerlink" href="#Recenter-off-axis-PSF-used-for-matched-filter" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">offaxis</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span><span class="p">)</span>
+<span class="n">offsetpx</span> <span class="o">=</span> <span class="n">offaxis</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OFFSET&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">offaxis</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PIXSIZE&#39;</span><span class="p">]</span>
+<span class="k">print</span> <span class="n">offsetpx</span>
+<span class="n">centered_offaxis</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">shiftCube</span><span class="p">(</span><span class="n">offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">dx</span><span class="o">=</span><span class="n">offsetpx</span><span class="p">,</span><span class="n">dy</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">maxi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">total</span>
+<span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="o">/=</span><span class="n">maxi</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+<span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="o">&lt;</span><span class="mf">0.01</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">newsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span> <span class="o">*=</span> <span class="n">maxi</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="c1">#total[:,np.newaxis,np.newaxis]/newsum[:,np.newaxis,np.newaxis]</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Loss:&quot;</span><span class="p">,(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="n">total</span><span class="p">)</span><span class="o">/</span><span class="n">total</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;%&quot;</span>
+<span class="c1">#centered_offaxis.write(par.exportDir+&#39;/centered_offaxis.fits&#39;)</span>
+<span class="n">outkey</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">offaxis</span><span class="o">.</span><span class="n">header</span><span class="p">))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/centered_offaxis.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">slices</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">nx</span> <span class="o">=</span> <span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+<span class="k">print</span><span class="p">(</span><span class="n">centered_offaxis</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">ny</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">nx</span><span class="o">//</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits
+70.0
+[ 0.0032633   0.00326142  0.00325945  0.00325739  0.00325527  0.00325306
+  0.0032507   0.00324818  0.00324555  0.00324279  0.00323991  0.00323695
+  0.00323381  0.00323054  0.00322716  0.00322369  0.00322017  0.00321664
+  0.00321301  0.00320925  0.00320551  0.00320175  0.00319798  0.00319425
+  0.00319057  0.00318681  0.00318307  0.00317931  0.00317558  0.00317192
+  0.00316837  0.00316489  0.00316125  0.00315758  0.00315395  0.00315035
+  0.0031468   0.00314326  0.00313974  0.0031361   0.00313226  0.0031284
+  0.00312451  0.00312052  0.00311654]
+[ 0.00313361  0.00313279  0.00313123  0.00312994  0.00312835  0.00312874
+  0.00312842  0.00312826  0.0031283   0.00312853  0.00312706  0.00312532
+  0.00312383  0.00312092  0.00312055  0.00312037  0.00311884  0.00311524
+  0.00311298  0.00311079  0.00310841  0.00310601  0.00310325  0.00310132
+  0.00309989  0.00309803  0.00309736  0.00309535  0.00309181  0.00308928
+  0.00308676  0.00308357  0.00308114  0.00307871  0.00307536  0.00307312
+  0.00306918  0.0030646   0.00306134  0.00305734  0.00305238  0.00304682
+  0.00304306  0.00303924  0.00303604]
+Loss: [-3.9743221  -3.94393908 -3.93399485 -3.91286558 -3.89893213 -3.82155916
+ -3.76165861 -3.69211553 -3.61260786 -3.52342955 -3.48334982 -3.44852788
+ -3.40094891 -3.39337578 -3.3035983  -3.20504141 -3.14671313 -3.15228714
+ -3.11306306 -3.06818906 -3.02921238 -2.99006123 -2.96227734 -2.90924027
+ -2.84221285 -2.78579934 -2.69246229 -2.64063971 -2.63792955 -2.60553532
+ -2.57565221 -2.56952381 -2.53413216 -2.49794117 -2.49177584 -2.45151021
+ -2.46668368 -2.50255188 -2.49719501 -2.51143819 -2.55015725 -2.6076973
+ -2.60671226 -2.60472926 -2.58294886] %
+1.10116056615e-05
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">recenter_offaxis</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/centered_offaxis.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[2]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>[&lt;astropy.io.fits.hdu.image.PrimaryHDU object at 0x1043b2bd0&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Construct-matched-filter-cube-library">
+<h2>Construct matched filter cube library<a class="headerlink" href="#Construct-matched-filter-cube-library" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">centered_offaxis_file</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/centered_offaxis.fits&#39;</span><span class="p">)</span>
+<span class="n">adjust_krist_header</span><span class="p">(</span><span class="n">centered_offaxis_file</span><span class="p">,</span><span class="n">lamc</span><span class="o">=</span><span class="mf">770.</span><span class="p">)</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveDetector</span><span class="o">=</span><span class="bp">False</span>
+<span class="n">Nlam</span> <span class="o">=</span> <span class="n">centered_offaxis_file</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">BW</span><span class="o">=</span><span class="mf">0.18</span>
+<span class="n">lamc</span><span class="o">=</span><span class="mf">770.</span>
+<span class="n">lamlist</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="o">+</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">Nlam</span><span class="p">)</span>
+
+<span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">polychromeIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">centered_offaxis_file</span><span class="p">,</span><span class="n">QE</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">detectorFrame</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/offaxis_detector.fits&quot;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">offaxis_reduced</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/offaxis_detector.fits&quot;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/centered_offaxis.fits
+crispy - INFO - The number of input pixels per lenslet is 4.285714
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Done.
+crispy - INFO - Performance: 3 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_detector.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/offaxis_detector.fits
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_detector_red_optext.fits
+crispy - INFO - Elapsed time: 1.346861s
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="c1"># Final cube should be 5D: a matched filter for each x,y location in the cube</span>
+<span class="n">mflib</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">offaxis_reduced</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">offaxis_reduced</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="k">print</span> <span class="n">mflib</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">psf</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/offaxis_detector_red_optext.fits&quot;</span><span class="p">)</span>
+<span class="n">IWA</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">OWA</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">lamc</span><span class="o">=</span><span class="mf">770.</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">ydim</span><span class="p">,</span><span class="n">xdim</span> <span class="o">=</span> <span class="n">offaxis_reduced</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">mask</span><span class="p">,</span><span class="n">junk</span> <span class="o">=</span> <span class="n">bowtie</span><span class="p">(</span><span class="n">offaxis_reduced</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">ydim</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">xdim</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">openingAngle</span><span class="o">=</span><span class="mi">65</span><span class="p">,</span>
+            <span class="n">clocking</span><span class="o">=-</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span><span class="n">IWApix</span><span class="o">=</span><span class="n">IWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span><span class="n">OWApix</span><span class="o">=</span><span class="n">OWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span>
+            <span class="n">export</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">twomasks</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="c1"># input_sampling = 0.1</span>
+<span class="c1"># input_wav = 770.</span>
+<span class="c1"># dpix = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)</span>
+<span class="c1"># print dpix</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(108, 108, 19, 108, 108)
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/offaxis_detector_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/offaxis_detector_red_optext.fits
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">ic</span> <span class="o">=</span> <span class="n">mflib</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span>
+<span class="n">jc</span> <span class="o">=</span> <span class="n">mflib</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span>
+<span class="n">i</span><span class="o">=</span><span class="n">ic</span><span class="o">+</span><span class="mi">10</span>
+<span class="n">j</span><span class="o">=</span><span class="n">jc</span><span class="o">-</span><span class="mi">10</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">shiftCube</span><span class="p">(</span><span class="n">psf</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">dx</span><span class="o">=-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">ic</span><span class="p">),</span><span class="n">dy</span><span class="o">=-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">jc</span><span class="p">)))</span>
+<span class="n">test</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_shift.fits&#39;</span><span class="p">)</span>
+<span class="n">match_filter</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">mf</span><span class="p">(</span><span class="n">test</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="n">threshold</span><span class="p">))</span>
+<span class="n">match_filter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_shifted_mathced_filter.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../../crispy/SimResults/test_shift.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/test_shifted_mathced_filter.fits
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">ic</span> <span class="o">=</span> <span class="n">mflib</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="c1"># i or x axis is horizontal</span>
+<span class="n">jc</span> <span class="o">=</span> <span class="n">mflib</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="c1"># j or y axis is vertical</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mflib</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mflib</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]):</span>
+            <span class="n">decentered</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">shiftCube</span><span class="p">(</span><span class="n">psf</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">dx</span><span class="o">=-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">ic</span><span class="p">),</span><span class="n">dy</span><span class="o">=-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">jc</span><span class="p">)))</span>
+            <span class="n">mflib</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">mf</span><span class="p">(</span><span class="n">decentered</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="n">threshold</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">outkey</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">mflib</span><span class="p">))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/mflib.fits.gz&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-35-cf28408af34a&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> outkey <span class="ansi-blue-fg">=</span> fits<span class="ansi-blue-fg">.</span>HDUList<span class="ansi-blue-fg">(</span>fits<span class="ansi-blue-fg">.</span>PrimaryHDU<span class="ansi-blue-fg">(</span>mflib<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span>outkey<span class="ansi-blue-fg">.</span>writeto<span class="ansi-blue-fg">(</span>par<span class="ansi-blue-fg">.</span>exportDir<span class="ansi-blue-fg">+</span><span class="ansi-blue-fg">&#39;/mflib.fits.gz&#39;</span><span class="ansi-blue-fg">,</span>clobber<span class="ansi-blue-fg">=</span>True<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda/lib/python2.7/site-packages/astropy/utils/decorators.pyc</span> in <span class="ansi-cyan-fg">wrapper</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    505</span>                         <span class="ansi-red-fg"># one with the name of the new argument to the function</span>
+<span class="ansi-green-intense-fg ansi-bold">    506</span>                         kwargs<span class="ansi-blue-fg">[</span>new_name<span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> value
+<span class="ansi-green-fg">--&gt; 507</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> function<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    508</span>
+<span class="ansi-green-intense-fg ansi-bold">    509</span>         <span class="ansi-green-fg">return</span> wrapper
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda/lib/python2.7/site-packages/astropy/io/fits/hdu/hdulist.pyc</span> in <span class="ansi-cyan-fg">writeto</span><span class="ansi-blue-fg">(self, fileobj, output_verify, overwrite, checksum)</span>
+<span class="ansi-green-intense-fg ansi-bold">    873</span>             hdu<span class="ansi-blue-fg">.</span>_prewriteto<span class="ansi-blue-fg">(</span>checksum<span class="ansi-blue-fg">=</span>checksum<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    874</span>             <span class="ansi-green-fg">try</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 875</span><span class="ansi-red-fg">                 </span>hdu<span class="ansi-blue-fg">.</span>_writeto<span class="ansi-blue-fg">(</span>hdulist<span class="ansi-blue-fg">.</span>_file<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    876</span>             <span class="ansi-green-fg">finally</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    877</span>                 hdu<span class="ansi-blue-fg">.</span>_postwriteto<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda/lib/python2.7/site-packages/astropy/io/fits/hdu/base.pyc</span> in <span class="ansi-cyan-fg">_writeto</span><span class="ansi-blue-fg">(self, fileobj, inplace, copy)</span>
+<span class="ansi-green-intense-fg ansi-bold">    655</span>         <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> inplace <span class="ansi-green-fg">or</span> self<span class="ansi-blue-fg">.</span>_new<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    656</span>             header_offset<span class="ansi-blue-fg">,</span> _ <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_writeheader<span class="ansi-blue-fg">(</span>fileobj<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 657</span><span class="ansi-red-fg">             </span>data_offset<span class="ansi-blue-fg">,</span> data_size <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_writedata<span class="ansi-blue-fg">(</span>fileobj<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    658</span>
+<span class="ansi-green-intense-fg ansi-bold">    659</span>             <span class="ansi-red-fg"># Set the various data location attributes on newly-written HDUs</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda/lib/python2.7/site-packages/astropy/io/fits/hdu/base.pyc</span> in <span class="ansi-cyan-fg">_writedata</span><span class="ansi-blue-fg">(self, fileobj)</span>
+<span class="ansi-green-intense-fg ansi-bold">    592</span>         <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>_data_loaded <span class="ansi-green-fg">or</span> self<span class="ansi-blue-fg">.</span>_data_needs_rescale<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    593</span>             <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>data <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> None<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 594</span><span class="ansi-red-fg">                 </span>size <span class="ansi-blue-fg">+=</span> self<span class="ansi-blue-fg">.</span>_writedata_internal<span class="ansi-blue-fg">(</span>fileobj<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    595</span>             <span class="ansi-red-fg"># pad the FITS data block</span>
+<span class="ansi-green-intense-fg ansi-bold">    596</span>             <span class="ansi-green-fg">if</span> size <span class="ansi-blue-fg">&gt;</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda/lib/python2.7/site-packages/astropy/io/fits/hdu/image.pyc</span> in <span class="ansi-cyan-fg">_writedata_internal</span><span class="ansi-blue-fg">(self, fileobj)</span>
+<span class="ansi-green-intense-fg ansi-bold">    636</span>                         fileobj<span class="ansi-blue-fg">.</span>writearray<span class="ansi-blue-fg">(</span>output<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    637</span>                     <span class="ansi-green-fg">finally</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 638</span><span class="ansi-red-fg">                         </span>output<span class="ansi-blue-fg">.</span>byteswap<span class="ansi-blue-fg">(</span>True<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    639</span>                 <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    640</span>                     fileobj<span class="ansi-blue-fg">.</span>writearray<span class="ansi-blue-fg">(</span>output<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">KeyboardInterrupt</span>:
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mflib</span><span class="p">[</span><span class="n">ic</span><span class="o">+</span><span class="mi">8</span><span class="p">,</span><span class="n">jc</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[34]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x11090af10&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Matched_Filter_scratch_15_1.png" src="../_images/notebooks_Matched_Filter_scratch_15_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">outkey</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/mask.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="Save-some-memory-space-by-calculating-the-matched-filter-only-where-it-matters">
+<h3>Save some memory space by calculating the matched filter only where it matters<a class="headerlink" href="#Save-some-memory-space-by-calculating-the-matched-filter-only-where-it-matters" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">xlist</span><span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">ylist</span><span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">trim</span><span class="o">=</span><span class="mi">30</span>
+<span class="n">psftrim</span> <span class="o">=</span> <span class="n">psf</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="n">trim</span><span class="p">:</span><span class="o">-</span><span class="n">trim</span><span class="p">,</span><span class="n">trim</span><span class="p">:</span><span class="o">-</span><span class="n">trim</span><span class="p">]</span>
+<span class="n">masktrim</span> <span class="o">=</span> <span class="n">mask</span><span class="p">[</span><span class="n">trim</span><span class="p">:</span><span class="o">-</span><span class="n">trim</span><span class="p">,</span><span class="n">trim</span><span class="p">:</span><span class="o">-</span><span class="n">trim</span><span class="p">]</span>
+<span class="n">mflib2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">xlist</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">psftrim</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="n">mflib2</span><span class="o">.</span><span class="n">shape</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[52]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>(440, 19, 48, 48)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">ic</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="c1"># i or x axis is horizontal</span>
+<span class="n">jc</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="c1"># j or y axis is vertical</span>
+<span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xlist</span><span class="p">)):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">xlist</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">ylist</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ii</span><span class="o">%</span><span class="k">10</span>==0: print ii
+    <span class="n">decentered</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">shiftCube</span><span class="p">(</span><span class="n">psftrim</span><span class="p">,</span><span class="n">dx</span><span class="o">=-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">ic</span><span class="p">),</span><span class="n">dy</span><span class="o">=-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">jc</span><span class="p">)))</span>
+    <span class="n">mflib2</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">mf</span><span class="p">(</span><span class="n">decentered</span><span class="p">,</span><span class="n">masktrim</span><span class="p">,</span><span class="n">threshold</span><span class="p">)</span>
+<span class="n">outkey</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">mflib2</span><span class="p">))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/mflib2.fits.gz&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0
+10
+20
+30
+40
+50
+60
+70
+80
+90
+100
+110
+120
+130
+140
+150
+160
+170
+180
+190
+200
+210
+220
+230
+240
+250
+260
+270
+280
+290
+300
+310
+320
+330
+340
+350
+360
+370
+380
+390
+400
+410
+420
+430
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [63]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mflib2</span><span class="p">[</span><span class="mi">400</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[63]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x1127e9a90&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Matched_Filter_scratch_21_1.png" src="../_images/notebooks_Matched_Filter_scratch_21_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [67]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">outkey</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">xlist</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">ylist</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/mfcoords.fits.gz&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">construct_mflib</span><span class="p">,</span><span class="n">convolved_mf</span>
+<span class="n">psf</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/offaxis_detector_red_optext.fits&quot;</span><span class="p">)</span>
+<span class="n">construct_mflib</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">psf</span><span class="p">,</span><span class="n">IWA</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">OWA</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span><span class="n">lamc</span><span class="o">=</span><span class="mf">770.</span><span class="p">,</span><span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/offaxis_detector_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/offaxis_detector_red_optext.fits
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">load_mflib</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/mflib.fits.gz&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">load_mflib</span><span class="p">[</span><span class="mi">400</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[5]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x1036259d0&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Matched_Filter_scratch_24_1.png" src="../_images/notebooks_Matched_Filter_scratch_24_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">convolved_mf</span>
+
+<span class="c1"># incube = fits.open(par.exportDir+&#39;/average_target_star_detector_red_optext.fits&#39;)[1].data</span>
+<span class="n">incube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_lstsqdiff.fits&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">convolved</span> <span class="o">=</span> <span class="n">convolved_mf</span><span class="p">(</span><span class="n">incube</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/mflib.fits.gz&#39;</span><span class="p">)</span>
+<span class="n">outkey</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">convolved</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/mfcube.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">pixstd</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">convolved</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">incube</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+<span class="k">print</span> <span class="n">pixstd</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[64.455354713045423, 75.475755767119367, 65.188572004891313, 56.121335808348505, 60.059832054065161, 68.629079764543306, 71.255331145110972, 69.309276761441495, 65.104223524485619, 59.904082580834967, 53.725467493148962, 48.763303258414034, 45.483175653996057, 42.770059094868706, 40.226208821409514, 37.548135764936113, 35.913047802042129, 33.413153686736322, 25.096430152400806]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="More-recent-Matched-filter-analysis-(Comparison-with-aperture-photometry)">
+<h1>More recent Matched filter analysis (Comparison with aperture photometry)<a class="headerlink" href="#More-recent-Matched-filter-analysis-(Comparison-with-aperture-photometry)" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5_SIM_2.0_t1000/average/offaxis_star_red_optext.fits&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">mf</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.imgtools</span> <span class="kn">import</span> <span class="n">bowtie</span>
+<span class="n">ydim</span><span class="p">,</span><span class="n">xdim</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">lamc</span><span class="o">=</span><span class="mi">660</span>
+<span class="n">IWA</span><span class="o">=</span><span class="mf">2.5</span>
+<span class="n">OWA</span><span class="o">=</span><span class="mi">9</span>
+<span class="n">mask</span><span class="p">,</span><span class="n">scratch</span> <span class="o">=</span> <span class="n">bowtie</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">ydim</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">xdim</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">openingAngle</span><span class="o">=</span><span class="mi">65</span><span class="p">,</span>
+        <span class="n">clocking</span><span class="o">=-</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span>
+        <span class="n">IWApix</span><span class="o">=</span><span class="n">IWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span>
+        <span class="n">OWApix</span><span class="o">=</span><span class="n">OWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span>
+        <span class="n">export</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">twomasks</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">matched_filter</span> <span class="o">=</span> <span class="n">mf</span><span class="p">(</span><span class="n">test</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">matched_filter</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="mi">60</span><span class="p">,</span><span class="mi">50</span><span class="p">:</span><span class="mi">70</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">fig</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">fig</span><span class="p">)]</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="mi">60</span><span class="p">,</span><span class="mi">50</span><span class="p">:</span><span class="mi">70</span><span class="p">]</span>
+<span class="n">fig</span><span class="o">/=</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">[</span><span class="n">fig</span><span class="o">&lt;</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1">#print fig[np.nonzero(fig)]</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">mf2</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="n">threshold</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Matched filter function</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cube: 3D ndarray</span>
+<span class="sd">        An IFS cube representing the offaxis PSF, from which to compute the matched filter</span>
+<span class="sd">    mask: 2D ndarray</span>
+<span class="sd">        This is typically the coronagraphic mask</span>
+<span class="sd">    threshold: float</span>
+<span class="sd">        Fraction of max below which we crop the normalized PSF</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    matched_filter: 3D ndarray</span>
+<span class="sd">        Matched filter with the same dimensions as input cube</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">matched_filter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">slicenum</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">cube_norm</span> <span class="o">=</span> <span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">slicenum</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">slicenum</span><span class="p">])</span>
+        <span class="n">msk</span> <span class="o">=</span> <span class="n">mask</span><span class="o">*</span><span class="p">(</span><span class="n">cube_norm</span><span class="o">&gt;</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">cube_norm</span><span class="p">)</span><span class="o">*</span><span class="n">threshold</span><span class="p">)</span>
+
+        <span class="c1"># zero out all pixels outside of the thresholded area</span>
+        <span class="n">cube_norm</span><span class="p">[</span><span class="o">~</span><span class="n">msk</span><span class="p">]</span><span class="o">=</span><span class="mf">0.0</span>
+
+        <span class="c1"># normalize</span>
+        <span class="n">cube_norm</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">cube_norm</span><span class="p">)</span>
+
+        <span class="c1"># this is now the final matched filter coefficients</span>
+        <span class="n">matched_filter</span><span class="p">[</span><span class="n">slicenum</span><span class="p">,:,:]</span> <span class="o">=</span> <span class="n">cube_norm</span><span class="c1">#/np.nansum(cube_norm**2)</span>
+    <span class="k">return</span> <span class="n">matched_filter</span>
+
+<span class="n">matched_filter2</span> <span class="o">=</span> <span class="n">mf2</span><span class="p">(</span><span class="n">test</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">matched_filter3</span> <span class="o">=</span> <span class="n">mf2</span><span class="p">(</span><span class="n">test</span><span class="p">,</span><span class="n">mask</span><span class="p">,</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">fig2</span> <span class="o">=</span> <span class="n">matched_filter2</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="mi">60</span><span class="p">,</span><span class="mi">50</span><span class="p">:</span><span class="mi">70</span><span class="p">]</span>
+<span class="n">fig3</span> <span class="o">=</span> <span class="n">matched_filter3</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="mi">60</span><span class="p">,</span><span class="mi">50</span><span class="p">:</span><span class="mi">70</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig3</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig3</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig3</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fig3</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">fig3</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">fig3</span><span class="p">)]</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fig2</span><span class="p">[</span><span class="n">fig2</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">fig2</span><span class="p">)</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">])</span>
+<span class="k">print</span> <span class="n">fig2</span><span class="p">[</span><span class="n">fig2</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">fig2</span><span class="p">)</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Matched filter determination</a><ul>
+<li><a class="reference internal" href="#Load-crispy">Load crispy</a></li>
+<li><a class="reference internal" href="#Matched-filter-in-a-cube">Matched filter in a cube</a></li>
+<li><a class="reference internal" href="#Recenter-off-axis-PSF-used-for-matched-filter">Recenter off-axis PSF used for matched filter</a></li>
+<li><a class="reference internal" href="#Construct-matched-filter-cube-library">Construct matched filter cube library</a><ul>
+<li><a class="reference internal" href="#Save-some-memory-space-by-calculating-the-matched-filter-only-where-it-matters">Save some memory space by calculating the matched filter only where it matters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#More-recent-Matched-filter-analysis-(Comparison-with-aperture-photometry)">More recent Matched filter analysis (Comparison with aperture photometry)</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/Matched_Filter_scratch.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 27 Aug 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>
