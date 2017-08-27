@@ -591,7 +591,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Generic SPIE images"
+    "## Generic SPIE images"
    ]
   },
   {
@@ -879,7 +879,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Residuals"
+    "## Residuals"
    ]
   },
   {
@@ -987,7 +987,7 @@
     "collapsed": true
    },
    "source": [
-    "# Simple broadband map"
+    "## Simple broadband map"
    ]
   },
   {
@@ -1036,7 +1036,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Bijan's SPC PSF explanation"
+    "## Bijan's SPC PSF explanation"
    ]
   },
   {

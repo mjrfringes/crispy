@@ -999,7 +999,7 @@
     "collapsed": true
    },
    "source": [
-    "# Reduce the flatfield!"
+    "## Reduce the flatfield!"
    ]
   },
   {
@@ -1202,7 +1202,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Start from known wavecal"
+    "## Start from known wavecal"
    ]
   },
   {
