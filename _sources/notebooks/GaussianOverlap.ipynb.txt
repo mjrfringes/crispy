@@ -148,7 +148,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Do this in 2D"
+    "## Do this in 2D"
    ]
   },
   {
