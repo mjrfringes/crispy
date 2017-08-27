@@ -63,339 +63,6 @@ def _smoothandmask(datacube, good):
     return datacube
 
 
-def simpleReduction(par,name,ifsimage):
-    '''
-    Basic cube reduction using an IFS image and a wavecal cube
-    Equivalent to method 1 in the IDL primitive 'pisces_assemble_spectral_datacube'
-
-    Parameters
-    ----------
-    par:    Parameter instance
-            Contains all IFS parameters
-    name: string
-            Name that will be given to final image, without fits extension
-    ifsimage: Image instance of IFS detector map, with optional inverse variance
-                    
-    Returns
-    -------
-    cube :  3D array
-            Return the reduced cube from the original IFS image
-
-
-    '''
-    log.info('Simple reduction')
-    calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
-    
-    waveCalArray = calCube[0].data
-    waveCalArray = waveCalArray/1000.
-    
-    xcenter = calCube[1].data
-    nlens = xcenter.shape[1]
-    ycenter = calCube[2].data
-    good = calCube[3].data
-    ydim,xdim = ifsimage.shape
-    xdim-=2
-    xcenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
-    ycenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
-
-    
-    lam_long = max(waveCalArray)
-    lam_short = min(waveCalArray)
-    wavelengths = np.arange(lam_short,lam_long,par.dlam)
-    cube = np.zeros((len(wavelengths),nlens,nlens))
-
-    X = np.zeros((nlens,nlens),dtype='i4')
-    Y = np.zeros((nlens,nlens),dtype='i4')
-    
-    for wav in range(len(wavelengths)):
-        lam = wavelengths[wav]
-        log.info('Wavelength = %3.1f' % (lam*1000.))
-        for i in range(nlens):
-            for j in range(nlens):
-                if not (np.isnan(xcenter[:,i,j]).any() and np.isnan(ycenter[:,i,j]).any()):
-                    fx = interp1d(waveCalArray,xcenter[:,i,j])
-                    fy = interp1d(waveCalArray,ycenter[:,i,j])
-                    Y[j,i] = np.int(fx(lam))
-                    X[j,i] = np.int(fy(lam))            
-        cube[wav,:,:] = ifsimage[X,Y]+ifsimage[X,Y+1]+ \
-            ifsimage[X,Y-1]+ifsimage[X,Y+2]+ifsimage[X,Y-2]
-    
-    cube[cube==0] = np.NaN
-    pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
-    return cube
-
-
-def densifiedSimpleReduction(par,name,ifsimage,ratio=10.):
-    '''
-    Use the same method as the 'simple' method but interpolate the original IFS map over
-    a grid with finer sampling
-    
-    Parameters
-    ----------
-    par:    Parameter instance
-            Contains all IFS parameters
-    name: string
-            Name that will be given to final image, without fits extension
-    ifsimage: Image instance of IFS detector map, with optional inverse variance
-    ratio:  int
-            Ratio by which the original image is densified.
-                    
-    Returns
-    -------
-    cube :  3D array
-            Return the reduced cube from the original IFS image
-    
-    '''
-    calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
-    
-    nx = int(ifsimage.shape[0] * ratio)
-    ny = int(ifsimage.shape[1] * ratio)
-    
-    x = np.arange(nx)/ratio 
-    y = np.arange(ny)/ratio
-
-    x, y = np.meshgrid(x, y)
-    
-    log.info('Densifying image by a factor %d' % ratio)
-    ifsimageDense = ndimage.map_coordinates(ifsimage, [y, x],cval=np.nan)
-    ifsimageDense /= ratio**2 # conserve energy
-
-    
-    waveCalArray = calCube[0].data
-    waveCalArray = waveCalArray/1000.
-    
-    xcenter = calCube[1].data
-    nlens = xcenter.shape[1]
-    ycenter = calCube[2].data
-    good = calCube[3].data
-    ydim,xdim = ifsimageDense.shape
-    xmargin = (ratio*5)//2
-    ymargin = (ratio)//2
-    xdim-=xmargin
-    ydim-=ymargin
-    xcenter[~((xcenter*ratio<xdim)*(ycenter*ratio<ydim)*(xcenter*ratio>xmargin)*(ycenter*ratio>ymargin))] = np.nan
-    ycenter[~((xcenter*ratio<xdim)*(ycenter*ratio<ydim)*(xcenter*ratio>xmargin)*(ycenter*ratio>ymargin))] = np.nan
-
-    
-    lam_long = max(waveCalArray)
-    lam_short = min(waveCalArray)
-    wavelengths = np.arange(lam_short,lam_long,par.dlam)
-    
-    cube = np.zeros((len(wavelengths),nlens,nlens))
-
-    X = np.zeros((nlens,nlens),dtype='i4')
-    Y = np.zeros((nlens,nlens),dtype='i4')
-    ratio = int(ratio)
-    for wav in range(len(wavelengths)):
-        lam = wavelengths[wav]
-        log.info('Wavelength = %3.1f' % (lam*1000.))
-        for i in range(nlens):
-            for j in range(nlens):
-                if not (np.isnan(xcenter[:,i,j]).any() and np.isnan(ycenter[:,i,j]).any()):
-                    fx = interp1d(waveCalArray,xcenter[:,i,j])
-                    fy = interp1d(waveCalArray,ycenter[:,i,j])
-                    Y[j,i] = np.floor(fx(lam)*ratio)
-                    X[j,i] = np.floor(fy(lam)*ratio)
-        for xcount in range(-ratio//2,-ratio//2+ratio):
-            for ycount in range(-(ratio*5)//2,-(ratio*5)//2+ratio*5):
-                cube[wav,:,:] += ifsimageDense[X+xcount,Y+ycount]
-    
-    cube[cube==0] = np.NaN
-    pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
-    return cube
-
-
-# def apertureReduction(par,name,ifsimage):
-#     '''
-#     Reduction using aperture photometry package from photutils
-# 
-#     Parameters
-#     ----------
-#     par:    Parameter instance
-#     name: string
-#             Name that will be given to final image, without fits extension
-#     ifsimage: Image instance of IFS detector map, with optional inverse variance
-#                     
-#     Returns
-#     -------
-#     cube :  3D array
-#             Return the reduced cube from the original IFS image
-#     
-#     '''
-#     calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
-#     
-#     waveCalArray = calCube[0].data#wavecal[0,:,:]
-#     waveCalArray = waveCalArray/1000.
-#     
-#     xcenter = calCube[1].data
-#     nlens = xcenter.shape[1]
-#     ycenter = calCube[2].data
-#     good = calCube[3].data
-#     ydim,xdim = ifsimage.shape
-#     xdim-=2
-#     xcenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
-#     ycenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>0)*(ycenter>2))] = np.nan
-# 
-#     
-#     lam_long = max(waveCalArray)
-#     lam_short = min(waveCalArray)
-#     wavelengths = np.arange(lam_short,lam_long,par.dlam)
-#     cube = np.zeros((len(wavelengths),nlens,nlens))
-# 
-#     psftool = PSFLets()
-#     lam = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
-#     allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
-# 
-#     # lam in nm
-#     psftool.geninterparray(lam, allcoef)
-#     
-#     for wav in range(len(wavelengths)):
-#         lam = wavelengths[wav]
-#         log.info('Wavelength = %3.1f' % (lam*1000.))
-#         for i in range(nlens):
-#             for j in range(nlens):
-#                 if not (np.isnan(xcenter[:,i,j]).any() and np.isnan(ycenter[:,i,j]).any()):
-#                     _x,_y = psftool.return_locations(lam*1000., allcoef, j-nlens/2, i-nlens/2)
-#                     pos = (_x,_y)
-#                     ap = RectangularAperture(pos,1,5,0)
-#                     cube[wav,j,i] = aperture_photometry(ifsimage,ap)['aperture_sum'][0]
-#     
-#     cube[cube==0] = np.NaN
-#     pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
-#     return cube
-
-
-def GPImethod2(par,name,ifsimage):
-    '''
-    Basic cube reduction using an IFS image and a wavecal cube
-    Equivalent to method 2 in the IDL primitive 'pisces_assemble_spectral_datacube'
-
-    Parameters
-    ----------
-    par:    Parameter instance
-            Contains all IFS parameters
-    name: string
-            Name that will be given to final image, without fits extension
-    ifsimage: Image instance of IFS detector map, with optional inverse variance
-                    
-    Returns
-    -------
-    cube :  3D array
-            Return the reduced cube from the original IFS image
-
-
-    '''
-    log.info('GPI Method 2 reduction')
-    calCube = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
-    
-    waveCalArray = calCube[0].data
-    waveCalArray = waveCalArray/1000.
-    
-    xcenter = calCube[1].data
-    nlens = xcenter.shape[1]
-    ycenter = calCube[2].data
-    good = calCube[3].data
-    ydim,xdim = ifsimage.shape
-    xmargin = 5
-    ymargin = 5
-    xdim-=xmargin
-    ydim-=ymargin
-    xcenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>xmargin)*(ycenter>ymargin))] = np.nan
-    ycenter[~((xcenter<xdim)*(ycenter<ydim)*(xcenter>xmargin)*(ycenter>ymargin))] = np.nan
-
-    sdpx = 26
-    lam_long = max(waveCalArray)
-    lam_short = min(waveCalArray)
-    wavelengths = np.linspace(lam_short,lam_long,sdpx+1)
-    cube = np.zeros((len(wavelengths),nlens,nlens))
-
-    X = np.zeros((nlens,nlens))
-    X0= np.zeros((nlens,nlens))
-    Y = np.zeros((nlens,nlens))
-
-        
-    for wav in range(sdpx):
-        lam = wavelengths[wav]
-        log.info('Wavelength = %3.1f' % (lam*1000.))
-        #index = min(range(len(wavelengths)), key=lambda i: abs(wavelengths[i]-lam))
-        #print index
-        for i in range(nlens):
-            for j in range(nlens):
-                if not (np.isnan(xcenter[:,i,j]).any() and np.isnan(ycenter[:,i,j]).any()):
-                    if good[:,i,j].all():
-                        fx = interp1d(waveCalArray,xcenter[:,i,j])
-                        fy = interp1d(waveCalArray,ycenter[:,i,j])
-                        Y[j,i] = fx(wavelengths[wav+1])
-                        X0[j,i] = fy(wavelengths[wav])
-                        X[j,i] = fy(wavelengths[wav+1])
-
-
-        x_long = np.floor(X)
-#             ;Y_long[np.where(Y_long == floor(!np.nan))] = np.nan
-        x_long[np.where(X > 10000)] = np.nan
-        x_long[np.where(x_long < -10000)] = np.nan
-        x_long_rest = (X-np.floor(X)) #abs(Y_pix_arr - round(Y_pix_arr+0.5))
-        x_short = np.floor(X0)
-        x_short[np.where(x_short > 10000)] = np.nan
-        x_short[np.where(x_short < -10000)] = np.nan
-        x_short_rest = (x_long-X0) #abs(Y_long - Yo_pix_arr) ;- floor(Yo_pix_arr)
-
-        index = np.where(x_long_rest < 0)
-        plot_number = x_long_rest.shape
-        for k in range(plot_number[0] - 1):
-            for l in range(plot_number[1] - 1):
-                if (x_long_rest[k,l] < 0):
-                    x_short_rest[k,l] = 0.
-                if (x_long_rest[k,l] < 0):
-                    yo_pix_arr = floor(Y[k,l])
-                    x_long_rest[k,l] = Yo_pix_arr[k,l] - Y[k,l]  #! Yo_pix_arr nt defined! equivalent to y spacing - just lam?, defined yo_pix_arr here as defined later
-
-        #Fix the pixels that are longer than one pixel in the current spectral channel
-        x_middle = x_short - 1.0
-        x_middle_rest = np.zeros((nlens,nlens))
-        x_middle_rest[np.where(x_long_rest > 1)] = 1.0#Y_long_rest[where(Y_long_rest gt 1)]
-        x_long_rest[np.where(x_long_rest > 1)] = x_long_rest[np.where(x_long_rest > 1)] - 1
-  
-        diff = (Y - np.floor(Y)) - 0.5
-        yo_pix_arr = np.floor(Y)
-        east1 = np.zeros((nlens,nlens))
-        east2 = np.zeros((nlens,nlens))
-        west1 = np.zeros((nlens,nlens))
-        west2 = np.zeros((nlens,nlens))
-  
-        east1[np.where(diff >= 0)] = 1.0
-        east1[np.where(diff < 0)] = 1.0 + diff[np.where(diff < 0)]
-        east2[np.where(diff >= 0)] = diff[np.where(diff >= 0)]
-        west1[np.where(diff >= 0)] = 1.0 - diff[np.where(diff >= 0)]
-        west1[np.where(diff < 0)] = 1.0
-        west2[np.where(diff < 0)] = - diff[np.where(diff < 0)]
-        x_long_rest[np.where(x_long_rest < 0)] = 0
-        x_short_rest[np.where(x_short_rest < 0)] = 0
-        x_middle_rest[np.where(x_middle_rest < 0)] = 0
-        
-        yo_pix_arr = yo_pix_arr.astype(int)
-        x_long = x_long.astype(int)
-        x_short = x_short.astype(int)
-        x_middle = x_middle.astype(int)
-        cube[wav,:,:]=(ifsimage[x_long,yo_pix_arr] + ifsimage[x_long,yo_pix_arr+1] + ifsimage[x_long,yo_pix_arr-1] + east1*ifsimage[x_long,yo_pix_arr+2] + west1*ifsimage[x_long,yo_pix_arr-2]    +   east2*ifsimage[x_long,yo_pix_arr+3] + west2*ifsimage[x_long,yo_pix_arr-3]) * x_long_rest + (ifsimage[x_short,yo_pix_arr] + ifsimage[x_short,yo_pix_arr+1] + ifsimage[x_short,yo_pix_arr-1] + east1*ifsimage[x_short,yo_pix_arr+2] + west1*ifsimage[x_short,yo_pix_arr-2]   +    east2*ifsimage[x_short,yo_pix_arr+3] + west2*ifsimage[x_short,yo_pix_arr-3]) * x_short_rest + (ifsimage[x_middle,yo_pix_arr] + ifsimage[x_middle,yo_pix_arr+1] + ifsimage[x_middle,yo_pix_arr-1] + east1*ifsimage[x_middle,yo_pix_arr+2] + west1*ifsimage[x_middle,yo_pix_arr-2]    +   east2*ifsimage[x_middle,yo_pix_arr+3] + west2*ifsimage[x_middle,yo_pix_arr-3]) * x_middle_rest
-
-  ### cc not declared - need to figure this out before testing for off pixel lenslet          
-  ###
-  ###
-  #declare as NaN mlens not on the detector (or on the reference pixel area, i.e. 4 pixels on each side):
-  #bordy= np.where(~finite(Y) OR (Round(Y) < 4.0) OR (Round(Y) > 1019.0),cc) ;: size of the detector
-  #if (cc ne 0) then cubef[bordy]=!VALUES.F_NAN
-  #;; we expand the border region by 2 pixels in X, so that we flag as NaN
-  #;; any 3x1 pixel box that has at least one pixel off the edge...
-  #bordx=where(~finite(x3) OR (x3 LT 6.0) OR (x3 GT 1017.0),cc) ;: size of the detector
-  #if (cc ne 0) then cubef[bordx]=!VALUES.F_NAN
-
-
-        Yo_pix_arr=Y #?
-    cube[cube==0] = np.NaN
-    pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
-
-
 
 def testReduction(par,name,ifsimage):
     '''
@@ -498,8 +165,13 @@ def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
         else:
             Nspec = int(np.log(max(lamlist)/min(lamlist))*par.R*par.npixperdlam+2)
     log.info('Reduced cube will have %d wavelength bins' % (Nspec-1))
-    lam_endpts = np.linspace(min(lamlist), max(lamlist), Nspec)
-    lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
+#     lam_endpts = np.linspace(min(lamlist), max(lamlist), Nspec)
+#     lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
+    loglam_endpts = np.linspace(np.log(min(lamlist)), np.log(max(lamlist)), Nspec)
+    loglam_midpts = (loglam_endpts[1:] + loglam_endpts[:-1])/2
+    lam_endpts = np.exp(loglam_endpts)
+    lam_midpts = np.exp(loglam_midpts)
+
     return lam_midpts,lam_endpts
 
 def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=False):
@@ -524,12 +196,12 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
     polychromeR = pyf.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
     psflets = polychromeR[0].data
     
-    psftool = PSFLets()
-    lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
-    allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
+#     psftool = PSFLets()
+#     lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
+#     allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
 
     # lam in nm
-    psftool.geninterparray(lamlist, allcoef)
+#     psftool.geninterparray(lamlist, allcoef)
     
 #     n_add = 1
 #     psflets = _add_row(psflets, n=n_add, dtype=np.float64)
@@ -552,6 +224,8 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
     cube = np.zeros((psflets.shape[0],par.nlens,par.nlens))
     ivarcube = np.zeros((psflets.shape[0],par.nlens,par.nlens))
 
+    model = np.zeros(ifsimage.data.shape)
+    
     resid = np.empty(ifsimage.data.shape)
     resid = ifsimage.data.copy()
     
@@ -576,23 +250,26 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
                 cube[:,j,i] = np.NaN
                 ivarcube[:,i,j] = 0.
     
-    xindx = np.arange(-par.nlens/2, par.nlens/2)
-    xindx, yindx = np.meshgrid(xindx, xindx)
+#     xindx = np.arange(-par.nlens/2, par.nlens/2)
+#     xindx, yindx = np.meshgrid(xindx, xindx)
     lam_midpts,lam_endpts = calculateWaveList(par)
     for i in range(len(psflets)):
         ydim,xdim=ifsimage.data.shape
-        _x,_y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
+#         _x,_y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
+        _x = xindx[i]
+        _y = yindx[i]
         good = (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
         psflet_indx = _tag_psflets(ifsimage.data.shape, _x, _y, good,dy=10)
         coefs_flat = np.reshape(cube[i].transpose(), -1)
         resid -= psflets[i]*coefs_flat[psflet_indx]
+        model += psflets[i]*coefs_flat[psflet_indx]
 
     if 'cubemode' not in par.hdr:
         par.hdr.append(('cubemode','Least squares', 'Method used to extract data cube'), end=True)
-        par.hdr.append(('lam_min',np.amin(lams), 'Minimum mid wavelength of extracted cube'), end=True)
-        par.hdr.append(('lam_max',np.amax(lams), 'Maximum mid wavelength of extracted cube'), end=True)
-        par.hdr.append(('dlam',(np.amax(lams)-np.amin(lams))/lams.shape[0], 'Spacing of extracted wavelength bins'), end=True)
-        par.hdr.append(('nlam',lams.shape[0], 'Number of extracted wavelengths'), end=True)
+        par.hdr.append(('lam_min',np.amin(lams), 'Minimum (central) wavelength of extracted cube'),end=True)
+        par.hdr.append(('lam_max',np.amax(lams), 'Maximum (central) wavelength of extracted cube'),end=True)
+        par.hdr.append(('dloglam',np.log(lams[1]/lams[0]), 'Log spacing of extracted wavelength bins'),end=True)
+        par.hdr.append(('nlam', lams.shape[0], 'Number of extracted wavelengths'),end=True)
 
     if hasattr(par,'lenslet_flat'):
         lenslet_flat = pyf.open(par.lenslet_flat)[1].data
@@ -603,6 +280,8 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
         ivarcube /= lenslet_flat**2
     else:
         lenslet_flat = np.ones(cube.shape)
+        
+        
     if hasattr(par,'lenslet_mask'):
         if "MASK" not in par.hdr:
             par.hdr.append(('MASK',True, 'Applied lenslet mask'), end=True)
@@ -615,6 +294,8 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
     
     if 'SMOOTHED' not in par.hdr:
         par.hdr.append(('SMOOTHED',smoothandmask, 'Cube smoothed over bad lenslets'), end=True)
+    else:
+        par.hdr['SMOOTHED'] = (smoothandmask, 'Cube smoothed over bad lenslets')
     if smoothandmask:
         cube = Image(data=cube*lenslet_mask,ivar=ivarcube)
         #good = np.any(cube.data != 0, axis=0)
@@ -622,26 +303,10 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
     else:
         cube = Image(data=cube,ivar=ivarcube)
 
-
-#     if smoothandmask:
-#         par.hdr.append(('SMOOTHED',True, 'Cube smoothed over bad lenslets'), end=True)
-#         cube = Image(data=cube,ivar=None)
-#         good = np.any(cube.data != 0, axis=0)
-#         cube = _smoothandmask(cube, good)
-#     else:
-#         par.hdr.append(('SMOOTHED',False, 'Cube NOT smoothed over bad lenslets'), end=True)
-#         cube = Image(data=cube,ivar=None)
-
-    #cube = Image(data=cube.data,ivar=cube.ivar,header=par.hdr,extraheader=ifsimage.extraheader)
-
-
-    #pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
-    #pyf.PrimaryHDU(resid).writeto(name+'_resid.fits',clobber=True)
     Image(data=cube.data,ivar=ivarcube,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'.fits',clobber=True)
     Image(data=resid,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_resid.fits',clobber=True)
-#     pyf.PrimaryHDU(newresid).writeto(name+'_newresid.fits',clobber=True)
+    Image(data=model,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_model.fits',clobber=True)
     return cube
-
 
 def _add_row(arr, n=1, dtype=None):
     """
@@ -661,8 +326,6 @@ def _add_row(arr, n=1, dtype=None):
     for i in range(1, n + 1):
         outarr[-i] = meanval
     return outarr
-
-
 
 def get_cutout(im, x, y, psflets, dy=3):
     
@@ -718,7 +381,6 @@ def get_cutout(im, x, y, psflets, dy=3):
             psflet_subarr[i] *= isig
 
     return subim, psflet_subarr, [y0,y1, x0,x1]
-
 
 def fit_cutout(subim, psflets, mode='lstsq'):
     """
@@ -801,7 +463,7 @@ def _tag_psflets(shape, x, y, good, dx=10, dy=10):
     Notes
     -----
     The output, psflet_indx, is to be used as follows:
-    coefs[psflet_indx] will give the scaling of the monochromatic PSF-let
+    coefs[psflet_indx] will give the scaling of the monochromatic PSFlet
     frame.
 
     """
@@ -823,7 +485,6 @@ def _tag_psflets(shape, x, y, good, dx=10, dy=10):
 
     for i in range(x_int.shape[0]):
         if good[i]:
-            #psflet_indx[y_int[i] - 6:y_int[i] + 7, x_int[i] - 6:x_int[i] + 7] = i
             iy1, iy2 = [y_int[i] - dy, y_int[i] + dy + 1]
             ix1, ix2 = [x_int[i] - dx, x_int[i] + dx + 1]
 
@@ -839,9 +500,6 @@ def _tag_psflets(shape, x, y, good, dx=10, dy=10):
     y = np.reshape(y, oldshape)
 
     return psflet_indx
-
-
-
 
 def intOptimalExtract(par,name,IFSimage,smoothandmask=True):
     """
@@ -985,9 +643,6 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist,  delt_y=6, flat=None,
     par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
 
     return Image(data=cube,header=par.hdr,extraheader=im.extraheader)
-
-
-
 
 def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=6):
     """

@@ -79,17 +79,6 @@ def readDetector(par,IFSimage,inttime=100):
             if par.PCmode:
                 par.hdr.append(('THRESH',par.threshold,'Photon counting threshold'),end=True)
             par.hdr.append(('LIFEFRAC',par.lifefraction,'Mission life fraction (changes CTE if >0)'),end=True)
-#     if not "NREADS" in par.hdr:
-#         par.hdr.append(('NREADS',par.Nreads,'Number of subframes co-added per image'),end=True)
-#         par.hdr.append(('EXPTIME',par.timeframe,'Total exposure time for number of frames'),end=True)
-#     else:
-#         par.hdr['NREADS']=par.Nreads
-#         par.hdr['EXPTIME']=par.timeframe
-        
-
-#     if not 'INTTIME' in par.hdr:
-#         par.hdr.append(('INTTIME',inttime,'Integration time per frame'),end=True)
-#     else:
     par.hdr['INTTIME']=inttime
 
     # just to deal with small numerical errors - normally there is nothing there
@@ -115,7 +104,6 @@ def readDetector(par,IFSimage,inttime=100):
         else:
             atEMRegister = average
         
-    
         # calculate the number of electrons after the EM register
         if par.EMStats:
             EMmask = atEMRegister>0
@@ -134,10 +122,8 @@ def readDetector(par,IFSimage,inttime=100):
 
         # add photon counting thresholding
         if par.PCmode:
-#           PCmask = afterRN>par.PCbias+par.threshold*par.RN
-#             PCmask = afterRN>np.mean(afterRN)+par.threshold*np.std(afterRN)
             PCmask = afterRN>par.PCbias+par.threshold*par.RN
-            afterRN[PCmask]=1.0 #(afterRN[PCmask]-par.PCbias)/par.EMGain
+            afterRN[PCmask]=1.0
             afterRN[~PCmask]=0.
         else:
             afterRN -= par.PCbias
@@ -286,13 +272,6 @@ def calculateDark(par,filelist):
     for i in range(par.Nreads*len(filelist)):
         darkframe += readDetector(par,blankframe,inttime=inttime)
     return darkframe    
-
-
-import numpy as np
-from astropy.io import fits
-%pylab inline --no-import-all
-matplotlib.rcParams['image.origin'] = 'lower'
-matplotlib.rcParams['image.interpolation'] = 'nearest'
 
 def photonCounting(average,
                 EMGain=1.0,

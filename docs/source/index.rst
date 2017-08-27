@@ -15,15 +15,14 @@ IFS Simulator
    :maxdepth: 2
 
    notebooks/Introduction
+   notebooks/Starting_From_Scratch_Doc
+   notebooks/OS5_Scenario_doc
+   notebooks/UniversalPhotonCounting
+   notebooks/GaussianOverlap
+   notebooks/RDI_sensitivity_study
+   notebooks/SPIE_Images
+
    
-Post-Processing
-===============
-
-..toctree::
-    :maxdepth: 2
-    
-    Coming soon!
-
 PISCES
 ======
 
@@ -42,6 +41,7 @@ API
 .. toctree::
    :maxdepth: 2
 
+   IFS
    tools
    unitTests
 

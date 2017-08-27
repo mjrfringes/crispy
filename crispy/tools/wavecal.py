@@ -42,6 +42,7 @@ def do_inspection(par,image,xpos,ypos,lam):
         ax.add_artist(circle)
     #aps.plot(ax=ax,color='blue', lw=1, alpha=0.5)
     fig.savefig(par.wavecalDir+'inspection_%3d.png' % (lam),dpi=300)
+    plt.close(fig)
         
     
 
@@ -60,7 +61,6 @@ def make_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
     loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
 
     for lam in np.exp(loglam):
-#     for lam in np.linspace(lam1,lam2,nlam):
 
         ################################################################
         # Build the appropriate average hires image by averaging over
@@ -170,7 +170,6 @@ def get_sim_hires(par,lam, upsample=10, nsubarr=1, npix=13, renorm=True):
     monochromatic frames. This version of the function uses the perfect
     knowledge of the Gaussian PSFLet. Only valid if par.gaussian=True.
     All PSFLets are the same across the entire FOV
-
     """
 
 
@@ -506,7 +505,7 @@ def monochromatic_update(par,inImage,inLam,order=3,apodize=False):
 def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=False, makehiresPSFlets=False,
                       makePolychrome=False,
-                      savehiresimages=False,borderpix = 4, upsample=5,nsubarr=3,
+                      savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
                       parallel=True,inspect_first=True,apodize=False,lamsol=None):
     """
     Master wavelength calibration function
@@ -515,10 +514,12 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     ----------
     par :   Parameter instance
             Contains all IFS parameters
-    filelist: list of strings
-            List of the fits files that contain the monochromatic calibration files
-    lamlist: list of floats
-            Wavelengths in nm at which the files are taken
+    filelist: list of strings (optional)
+            List of the fits files that contain the monochromatic calibration files. If None (default),
+            use the files in par.filelist
+    lamlist: list of floats (optional)
+            Wavelengths in nm at which the files are taken. If None (default),
+            use the files in par.lamlist
     order: int
             Order of the polynomial used to fit the PSFLet positions across the detector
     genwavelengthsol: Boolean
@@ -666,7 +667,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
             hires_list = np.sort(glob.glob(par.wavecalDir + 'hires_psflets_lam???.fits'))
             hires_arrs = [pyf.open(filename)[0].data for filename in hires_list]
 
-        lam_midpts,lam_endpts=calculateWaveList(par,lam)
+        lam_midpts,lam_endpts=calculateWaveList(par,lam,method='lstsq')
         Nspec = len(lam_endpts)
         polyimage = np.zeros((Nspec - 1, ysize, xsize))
         xpos = []
@@ -718,7 +719,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
         out.writeto(outdir + 'polychromeR%dstack.fits' % (par.R), clobber=True)
     
     else:
-        lam_midpts,lam_endpts=calculateWaveList(par,lam)
+        lam_midpts,lam_endpts=calculateWaveList(par,lam,method='lstsq')
         xpos = []
         ypos = []
         good = []

@@ -49,7 +49,7 @@ folder = '/Users/mrizzo/IFS/OS5_SIM_'+str(sampling)+'_t'+str(int(par.timeframe))
 offaxis_psf_filename='/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits'
 OS5_files = '/Users/mrizzo/IFS/OS5/with_lowfc/'
 
-averagefolder = folder+'/average_47Umac_660_nospeckles'
+averagefolder = folder+'/average
 detectorfolder = folder+'/detector'
 try:
     os.makedirs(folder)
@@ -87,7 +87,7 @@ signal, noise,noise_no_source,noise_no_rdi,signal_planet,signal_star,signal_no_r
                     target_star_T=5887*u.K, target_star_Vmag=5.03,   # 47 Uma
 #                     target_star_T=5778*u.K, target_star_Vmag=4.83,     # fiducial Sun at 10 pc
                     forced_inttime_ref = 10., # forced integration time for reference star individual frame
-                    forced_tottime_ref = 10., # forced integration time for reference star frame group
+                    forced_tottime_ref = 1000., # forced integration time for reference star frame group
                     pp_fact = 0.00,
                     RDI=False,
                     mflib='',
@@ -164,7 +164,7 @@ for i in range(Ntrials):
                     target_star_T=5887*u.K, target_star_Vmag=5.03,   # 47 Uma
 #                     target_star_T=5778*u.K, target_star_Vmag=4.83,     # fiducial Sun at 10 pc
                     forced_inttime_ref = 10., # forced integration time for reference star individual frame
-                    forced_tottime_ref = 10., # forced integration time for reference star frame group
+                    forced_tottime_ref = 1000., # forced integration time for reference star frame group
                     pp_fact = 0.00,
                     RDI=False,
                     mflib='',

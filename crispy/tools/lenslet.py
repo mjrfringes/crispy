@@ -13,7 +13,7 @@ from detutils import frebin
 from scipy import ndimage
 from scipy.special import erf
 from spectrograph import distort
-from locate_psflets import initcoef,transform,return_locations
+from locate_psflets import initcoef,transform,PSFLets
 
 
 def processImagePlane(par,imagePlane):
@@ -62,7 +62,7 @@ def processImagePlane(par,imagePlane):
 
 
 def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None, 
-                     upsample=5, nlam=10,npix=13,allcoef=None,order=3,x0=0.0):
+                     upsample=3, nlam=10,npix=13,order=3,x0=0.3):
     """
     Function propagateLenslets
     
@@ -90,15 +90,13 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
     nlam: int
         Number of wavelengths to oversample a given wavelength bin
     npix: int
-       PSFLet will be put on npix*npix detector pixels
-    allcoef: 2D array
-        If None, a standard map will be generated at the native dispersion (using par.R and par.npixperdlam)
-        Otherwise, a wavelength solution can be input to map the PSFLet locations
+       PSFLet will be put on npix*npix detector pixels, models will be (npix*upsample)^2
     order: int
         Order used in the polynomial fit of the wavelength solution
     x0: float
         Offset from the center of the detector in the vertical direction (x)
     """
+    
     padding = 10
     ydim,xdim = imageplane.shape
     
@@ -111,6 +109,14 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
 
     dloglam = (np.log(lam2) - np.log(lam1))/nlam
     loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
+    
+    # load external PSFLet positions
+    if par.PSFLetPositions:
+        psftool = PSFLets()
+        lamlist = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
+        allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
+        psftool.geninterparray(lamlist, allcoef)
+
 
     for lam in np.exp(loglam):
 
@@ -156,12 +162,12 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
         # here is where one could import any kind of polynomial mapping
         # and introduce distortions
         ################################################################
-        if allcoef==None:
+        if par.PSFLetPositions:
+            xcen,ycen = psftool.return_locations(lam, allcoef, xindx, yindx, order=order)
+        else:
             dispersion = par.npixperdlam*par.R*np.log(lam/par.FWHMlam)
             coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=par.npix//2+x0, y0=par.npix//2+dispersion)
             ycen, xcen = transform(xindx, yindx, order, coef)
-        else:
-            ycen,xcen = return_locations(lam, allcoef, xindx, yindx, order=order):
 
         xcen += padding
         ycen += padding
@@ -193,11 +199,11 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
             ix1 = int(xcen[i]) - npix//2
             ix2 = ix1 + npix
             
-            # Now find the closest high-resolution PSFs from a library
-            yinterp = (y[iy1:iy2, ix1:ix2] - ycen[i])*upsample + upsample*npix/2
-            xinterp = (x[iy1:iy2, ix1:ix2] - xcen[i])*upsample + upsample*npix/2
-        
             
+            yinterp = (y[iy1:iy2, ix1:ix2] - ycen[i])*upsample + upsample*npix/2.
+            xinterp = (x[iy1:iy2, ix1:ix2] - xcen[i])*upsample + upsample*npix/2.
+        
+            # Now find the closest high-resolution PSFs from a library
             if hires.shape[0]==1 and hires.shape[1]==1:
                 image[iy1:iy2, ix1:ix2] += val*ndimage.map_coordinates(hires[0,0], [yinterp, xinterp], prefilter=False)/nlam
             else:
@@ -248,125 +254,5 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
                 image[iy1:iy2, ix1:ix2] += val*weight22*ndimage.map_coordinates(hires[j2, i2], [yinterp, xinterp], prefilter=False)
      
     image = image[padding:-padding, padding:-padding]
-#     image *= oldsum/np.sum(image)
     return image
-
-
-
-def Lenslets(par, imageplane, lam,lensletplane, allweights=None,kernels=None,locations=None):
-    """
-    Function Lenslets (obsolete)
-    
-    Creates the IFS map on a 'dense' detector array where each pixel is smaller than the
-    final detector pixels by a factor par.pxperdetpix. Adds to lensletplane array to save
-    memory.
-    
-    Parameters
-    ----------
-    par :   Parameters instance
-            Contains all IFS parameters
-    image : 2D array
-            Image plane incident on lenslets.
-    lam : float
-            Wavelength (microns)
-    lensletplane : 2D array
-            Densified detector plane; the function updates this variable
-    allweights : 3D array
-            Cube with weights for each kernel
-    kernels : 3D array
-            Kernels at locations on the detector
-    locations : 2D array
-            Locations where the kernels are sampled
-    
-    """
-
-    # select row values
-    nx,ny = imageplane.shape
-    rowList = np.arange(-nx//2,-nx//2+nx)
-    colList = np.arange(-ny//2,-nx//2+nx)
-
-    I = 64
-    J = 35
-    # loop on all lenslets; there's got to be a way to do this faster
-    for i in range(nx):
-        for j in range(ny):
-            jcoord = colList[j]
-            icoord = rowList[i]
-            val = imageplane[jcoord+imageplane.shape[0]//2,icoord+imageplane.shape[0]//2]
-            
-            # exit early where there is no flux
-            if val==0:
-                continue
-            
-            if par.distortPISCES:
-                # in this case, the lensletplane array is oversampled by a factor par.pxperdetpix
-                theta = np.arctan2(jcoord,icoord)
-                r = np.sqrt(icoord**2 + jcoord**2)
-                x = r*np.cos(theta+par.philens)
-                y = r*np.sin(theta+par.philens)
-                #if i==I and j==J: print x,y
-            
-                # transform this coordinate including the distortion and dispersion
-                factor = 1000.*par.pitch
-                X = x*factor # this is now in millimeters
-                Y = y*factor # this is now in millimeters
-            
-                # apply polynomial transform
-                ytmp,xtmp = distort(Y,X,lam)
-                sy = ytmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[0]//2
-                sx = xtmp/1000.*par.pxperdetpix/par.pixsize+lensletplane.shape[1]//2
-            else:
-                order = 3
-                dispersion = par.npixperdlam*par.R*(lam*1000.-par.FWHMlam)/par.FWHMlam
-                ### NOTE THE NEGATIVE SIGN TO PHILENS
-                coef = initcoef(order, scale=par.pitch/par.pixsize, phi=-par.philens, x0=0, y0=dispersion)
-                sy, sx = transform(i-nx//2, j-nx//2, order, coef)
-                sx+=par.npix//2
-                sy+=par.npix//2
-                
-            
-            if not par.gaussian:
-                # put the kernel in the correct spot with the correct weight
-                kx,ky = kernels[0].shape
-                if sx>kx//2 and sx<lensletplane.shape[0]-kx//2 \
-                    and sy>ky//2 and sy<lensletplane.shape[1]-ky//2:
-                    isx = int(sx)
-                    isy = int(sy)
-                
-                    for k in range(len(locations)):
-                        wx = int(isx/lensletplane.shape[0]*allweights[:,:,k].shape[0])
-                        wy = int(isy/lensletplane.shape[1]*allweights[:,:,k].shape[1])
-                        weight = allweights[wx,wy,k]
-                        if weight ==0:
-                            continue
-                        xlow = isy-ky//2
-                        xhigh = xlow+ky
-                        ylow = isx-kx//2
-                        yhigh = ylow+kx
-                        lensletplane[xlow:xhigh,ylow:yhigh]+=val*weight*kernels[k]
-            else:
-                size = int(3*par.pitch/par.pixsize)
-                if sx>size//2 and sx<lensletplane.shape[0]-size//2 \
-                    and sy>size//2 and sy<lensletplane.shape[1]-size//2:
-                    x = np.arange(size)-size//2 
-                    y = np.arange(size)-size//2 
-                    _x, _y = np.meshgrid(x, y)
-                    isx = int(sx)
-                    isy = int(sy)
-                    rsx = sx-isx
-                    rsy = sy-isy
-                    sig = par.FWHM/2.35
-                    psflet = np.exp(-((_x- rsx)**2+(_y- rsy)**2)/(2*(sig*lam*1000/par.FWHMlam)**2))
-#                     sigma = (sig*lam*1000/par.FWHMlam)
-#                     psflet = (erf((_x - rsx + 0.5) / (np.sqrt(2) * sigma)) - \
-#                         erf((_x - rsx - 0.5) / (np.sqrt(2) * sigma))) * \
-#                         (erf((_y - rsy + 0.5) / (np.sqrt(2) * sigma)) - \
-#                         erf((_y - rsy - 0.5) / (np.sqrt(2) * sigma)))
-                    psflet /= np.sum(psflet)
-                    xlow = isy-size//2
-                    xhigh = xlow+size
-                    ylow = isx-size//2
-                    yhigh = ylow+size
-                    lensletplane[xlow:xhigh,ylow:yhigh]+=val*psflet
-
     

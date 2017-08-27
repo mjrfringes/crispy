@@ -12,7 +12,7 @@ except:
     import pyfits as fits
 from tools.locate_psflets import PSFLets
 from tools.reduction import get_cutout,fit_cutout,calculateWaveList
-from IFS import propagateIFS,polychromeIFS
+from IFS import polychromeIFS
 from tools.spectrograph import selectKernel,loadKernels
 from tools.plotting import plotKernels
 from scipy import ndimage

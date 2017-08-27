@@ -508,7 +508,7 @@ def process_SPC_IFS2(par,
                     IWA = 3,OWA = 9,
                     forced_inttime_ref=10.0,
                     forced_tottime_ref=1000.0,
-                    pp_fact = 0.05,
+                    pp_fact = 1.00,
                     RDI=True,
                     subtract_dark=False,
                     normalize_cubes=True,
@@ -523,7 +523,6 @@ def process_SPC_IFS2(par,
                     process_detector=True,
                     take_averages=True,
                     take_ref_average=True,
-                    normalize_contrast=True,
                     nosource = True):
     '''
     Process SPC PSF cubes from J. Krist through the IFS
@@ -536,8 +535,24 @@ def process_SPC_IFS2(par,
         Where the files from Krist are located
     offaxis_psf_filename: string
         Where the off-axis PSF is located
-    mean_contrast: float
-        Mean contrast of the planet spectrum
+    xshift: float
+        X-shift of the reference star with respect to the target star(pixels)
+    yshift: float
+        Y-shift of the reference star with respect to the target star(pixels)
+    order: int
+        Order of all interpolations (3 recommended)
+    albedo_filename: string
+        Name of file containing the geometric albedo of the planet, located in Inputs/ folder
+    planet_radius: float
+        Radius of planet in Jupiter radii
+    planet_AU: float
+        Distance of the planet from its star in AU
+    planet_dist_pc: float
+        Distance of the star system in pc
+    albedo: float
+        Overrides the albedo. If None, then the original albedo curve is used. If not None,
+        then the maximum of the albedo curve is normalized to the new albedo, while keeping
+        overall albedo shape
     ref_star_T: `u.K` float
         Reference star temperature, float multiplied by astropy.units.K
     ref_star_Vmag: float
@@ -559,10 +574,33 @@ def process_SPC_IFS2(par,
         Inner working angle defined at par.lenslet_wav
     OWA: float
         Outer working angle defined at par.lenslet_wav
+    forced_inttime_ref: float
+        Forced time of a single integration for the reference star. This should be smaller
+        than the individual integration time for the target since the reference star
+        is typically brighter
+    forced_tottime_ref: float
+        Forced time spent for a single input cube for the reference. Typically, this is the
+        same as the time for a single input cube for the target
     pp_fact: float
-        Post-processing factor - multiplies the target star PSF
-    t_zodi = float
-        Zodi transmission
+        Post-processing factor - artificially multiplies the target star PSF. Note that
+        this is NOT the same as Bijan's f_pp
+    RDI: Boolean
+        If True, run an RDI function to clean up the raw cubes.
+    mflib: String
+        Path towards an already-existing matched filter library. If empty string is given,
+        the software will construct the library each time
+    subtract_dark: Boolean
+        If True, estimate the mean dark region (bottom of the detector) and subtract from
+        map. Default: True. For different kinds of input maps that might cover the entire
+        defector, this might be more tricky.
+    normalize_cubes: Boolean
+        If True, all cubes are normalized to contrast units. Default is True.
+    t_zodi: float
+        Zodi transmission (not operational for now)
+    useQE: Boolean
+        If True, the QE is applied when constructing the IFS maps. Note that in this case
+        the QE file should represent both the actual detector QE, and the wavelength-dependent
+        optical losses
     outdir_time_series: string
         Where to store the noiseless IFS detector images
     outdir_detector: string
@@ -579,9 +617,9 @@ def process_SPC_IFS2(par,
         Whether to add detector QE, IFS losses but no detector noise to the IFS images
     take_averages: Boolean
         Whether to average all IFS detector images in the time series to create averages
-    order: int
-        Order of the spline interpolation used for shifting the planet to its correct position
-    
+    nosource: Boolean
+        Whether or not to process everything without actually adding the planet
+        
     Returns
     -------
     signal: ndarray
@@ -1059,8 +1097,6 @@ def mf(cube,mask,threshold):
     for slicenum in range(cube.data.shape[0]):
         cube_norm = cube.data[slicenum]/np.nansum(cube.data[slicenum])
         msk = mask*(cube_norm>np.nanmax(cube_norm)*threshold)
-        # calculate correction factor since we are going to crop only the top the of the hat
-        aper_phot = np.nansum(cube_norm)/np.nansum(cube_norm[msk])
         
         # zero out all pixels outside of the thresholded area
         cube_norm[~msk]=0.0
@@ -1068,11 +1104,8 @@ def mf(cube,mask,threshold):
         # normalize
         cube_norm /= np.nansum(cube_norm)
         
-        # this is now the final matched filter coefficients before the aperture correction
-        this_slice = cube_norm/np.nansum(cube_norm**2)*np.amax(cube_norm)
-        
-        # apply aperture correction
-        matched_filter[slicenum,:,:] = this_slice #* aper_phot
+        # this is now the final matched filter coefficients
+        matched_filter[slicenum,:,:] = cube_norm/np.nansum(cube_norm**2)*np.amax(cube_norm)
     return matched_filter
 
 

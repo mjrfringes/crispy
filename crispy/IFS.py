@@ -17,88 +17,30 @@ import time
 import matplotlib.pyplot as plt
 import tools
 from tools.image import Image
-from tools.lenslet import Lenslets,processImagePlane,propagateLenslets
+from tools.lenslet import processImagePlane,propagateLenslets
 from tools.spectrograph import createAllWeightsArray,selectKernel,loadKernels
 from tools.detector import rebinDetector
 from tools.plotting import plotKernels
-from tools.reduction import simpleReduction,densifiedSimpleReduction,testReduction,lstsqExtract,intOptimalExtract,GPImethod2
+from tools.reduction import testReduction,lstsqExtract,intOptimalExtract
 import multiprocessing
 from tools.par_utils import Task, Consumer
 from tools.wavecal import get_sim_hires
 from scipy.interpolate import interp1d
+import glob
 
 
 from tools.initLogger import getLogger
 log = getLogger('crispy')
 
-def propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame,
-            refWaveList=None,kernelList=None,allweights=None,locations=None):
-    '''
-    Propagates a single wavelength through the Integral Field Spectrograph
-    
-    Parameters
-    ----------
-    par :   Parameter instance
-            with at least the key IFS parameters, interlacing and scale
-    i : int
-            Slice number within the cube
-    wavlist : list of floats
-            List of wavelengths in microns
-    refWaveList : list of floats
-            List of wavelengths in microns that correspond to the loaded kernels
-            representing the PSF at each wavelength
-    kernelList : list of 3D arrays
-            List of kernels representing the wavelength for each reference wavelength and
-            each field location
-    wavlist : list of floats
-            List of wavelengths in microns
-    interpolatedInputCube : 3D ndarray
-            Represents the input cube already pre-processed to match the desired wavelist,
-            spatial sampling, orientation, etc.
-    allweights : 3D ndarray
-            Weights for bilinear interpolation between kernels in the final image. This is
-            passed as an argument to avoid having to recalculate them each time.
-    locations : 3D ndarray
-            Detector fractional locations corresponding to each kernel. Bottom left is (0,0)
-            while top right is (1,1). Same size as kernelList
-    finalFrame : 2D ndarray
-            Densified detector map of size par.npix*par.pxperdetpix square, which is passed
-            as argument to save memory space. This is in lieu of a shared memory array that
-            could be used for parallelization. The function modifies this array.
-                
-    '''
 
-    lam = wavelist[i]
-    
-#     if ~par.parallel: log.info('Processing wavelength %f (%d out of %d)' % (lam,i,nframes))        
-    ###################################################################### 
-    # Interpolate kernel at wavelength lam
-    ###################################################################### 
-    if not par.gaussian:
-        kernel = selectKernel(par,lam,refWaveList,kernelList)
-
-    ###################################################################### 
-    # Rotate and scale the image so that it is in the same 
-    # orientation and scale as the lenslet array
-    # After this step, the pixels in the array each represents a lenslet
-    ###################################################################### 
-#     if ~par.parallel: log.info('Rotate and scale slice %d' % i)
-    imagePlaneRot = processImagePlane(par,interpolatedInputCube.data[i])
-    if par.saveRotatedInput: Image(data=imagePlaneRot).write(par.exportDir+'/imagePlaneRot_%3.1fnm.fits' % (lam*1000.))
-
-    ###################################################################### 
-    # Generate high-resolution detector map for wavelength lam
-    ###################################################################### 
-#     if ~par.parallel: log.info('Propagate through lenslet array')
-    if not par.gaussian:
-        Lenslets(par, imagePlaneRot, lam,finalFrame, allweights,kernel,locations)
-    else:
-        Lenslets(par, imagePlaneRot, lam,finalFrame)
-    if par.saveLensletPlane: Image(data=finalFrame).write(par.exportDir+'/lensletPlane_%3.1fnm.fits' % (lam*1000.))
-    return True
-
-
-def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, QE = True, wavelist_endpts=None,dlambda=None,lam_arr=None):
+def polychromeIFS(par,wavelist,inputcube,
+                name='detectorFrame',
+                parallel=True, 
+                QE = True, 
+                wavelist_endpts=None,
+                dlambda=None,
+                lam_arr=None,
+                wavecalDir = None):
     '''
     Propagates an input cube through the Integral Field Spectrograph
     
@@ -125,7 +67,10 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, QE 
             Temporary input vector of the wavelengths used to construct the polychrome. This is necessary in order to construct
             the wavelength calibration files. If the bandpass changes, one needs to pass an array of wavelengths covering the 
             new bandpass. Need to work on this.
-            
+    wavecal: string
+        This can be used to add a distortion already measured from lab data, for example.
+        Put in there the full folder name where we can find a 'lamsol.dat' file.
+
     Returns
     -------
     detectorFrame : 2D array
@@ -203,16 +148,24 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, QE 
     ###################################################################### 
     # Load template PSFLets
     ###################################################################### 
+    # lam_arr needs to be provided the first time you create monochromatic flats!
+    if lam_arr is None:
+        lam_arr = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
+    
+    hires_arrs = []
     if par.gaussian:
-        hires_arrs = []
-        if lam_arr is None:
-#             lam_arr=np.arange(min(wavelist_endpts),max(wavelist_endpts),10.)
-            lam_arr = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
         for i in range(len(lam_arr)):
             hiresarr = get_sim_hires(par, lam_arr[i])   
             hires_arrs += [hiresarr]
+            
     else:
-        log.error('Importing PSFLets is not yet implemented')
+#         log.error('Importing PSFLets is not yet implemented')
+        try:
+            hires_list = np.sort(glob.glob(par.wavecalDir + 'hires_psflets_lam???.fits'))
+            hires_arrs = [pyf.getdata(filename) for filename in hires_list]
+        except:
+            log.error('Failed loading the PSFLet templates')
+            raise
     
     inputCube = []
     
@@ -258,150 +211,6 @@ def polychromeIFS(par,wavelist,inputcube,name='detectorFrame',parallel=True, QE 
     log.info("Performance: %d seconds total" % (t['End'] - t['Start']))
 
     return detectorFrame
-
-        
-    
-
-def propagateIFS(par,wavelist,inputcube,name='detectorFrame'):
-    '''
-    Propagates an input cube through the Integral Field Spectrograph
-    
-    Parameters
-    ----------
-    par :   Parameter instance
-            with at least the key IFS parameters, interlacing and scale
-    lamlist : list of floats
-            List of wavelengths in microns
-    inputcube : Image
-            or HDU. data is 3D ndarray with first dimension the same length as lamlist
-            header needs to contain the 'PIXSIZE' and 'LAM_C' keywords
-    Returns
-    -------
-    detectorFrame : 2D array
-            Return the detector frame
-    '''
-    par.makeHeader()
-    par.hdr.append(('comment', ''), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)
-    par.hdr.append(('comment', '*'*22 + ' IFS Simulation ' + '*'*18), end=True)
-    par.hdr.append(('comment', '*'*60), end=True)    
-    par.hdr.append(('comment', ''), end=True)
-
-    try:
-        input_sampling = inputcube.header['PIXSIZE']
-        input_wav = inputcube.header['LAM_C']*1000.
-    except:
-        log.error('Missing header information in input file')
-        raise
-
-    ###################################################################### 
-    # Calculate sampling ratio to resample rotated image and match the lenslet sampling
-    ###################################################################### 
-
-    par.pixperlenslet = par.lenslet_sampling/(input_sampling * input_wav/par.lenslet_wav)
-    log.info('The number of input pixels per lenslet is %f' % par.pixperlenslet)
-    par.hdr.append(('SCALE',par.pixperlenslet,'Factor by which the input slice is rescaled'), end=True) 
-
-#    log.info('The plate scale of the input cube is %f um/pixel' % (par.mperpix*1e6))    
-    nframes = inputcube.data.shape[0]
-    allweights = None
-    
-    if inputcube.data.shape[0] != len(wavelist):
-        log.error('Number of wavelengths does not match the number of slices')
-
-    ###################################################################### 
-    # Create cube that is interpolated to the correct level if necessary
-    ###################################################################### 
-    waveList,interpolatedInputCube = prepareCube(par,wavelist,inputcube)
-
-    ###################################################################### 
-    # Defines an array of times for performance monitoring
-    ###################################################################### 
-    t = {'Start':time.time()}
-
-    if not par.gaussian:
-        ###################################################################### 
-        # Load kernels from Zemax
-        ###################################################################### 
-        log.info('Import all kernels and rescale them to same plate scale')
-        kernels890,locations = loadKernels(par,890)
-        kernels770,loc = loadKernels(par,770)
-        kernels660,loc = loadKernels(par,660)
-        refWaveList = [660,770,890]
-        kernelList = np.array([kernels660,kernels770,kernels890])
-
-        ###################################################################### 
-        # Creating kernel weight map (bilinear interpolation)
-        ###################################################################### 
-        allweights = createAllWeightsArray(par,locations)
-    else:
-        log.info('Using PSFlet gaussian approximation')
-        
-    
-    ###################################################################### 
-    # Allocate an array
-    ###################################################################### 
-    finalFrame=np.zeros((par.npix*par.pxperdetpix,par.npix*par.pxperdetpix))
-
-    if not par.gaussian:
-        log.info('Final detector pixel per lenslet: %f' % (par.pxprlens/par.pxperdetpix))
-    else:
-        log.info('Final detector pixel per PSFLet: %f' % (int(3*par.pitch/par.pixsize)))
-    
-    for i in range(len(waveList)):
-        log.info('Processing wavelength %f (%d out of %d)' % (waveList[i],i,nframes))
-        if not par.gaussian:
-            propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame,
-                                        refWaveList,kernelList,allweights,locations)
-        else:
-            propagateSingleWavelength(par,i,wavelist,interpolatedInputCube,finalFrame)
-                       
-
-    ###################################################################### 
-    # Rebinning to detector resolution
-    ###################################################################### 
-    detectorFrame = rebinDetector(par,finalFrame,clip=False)
-    if par.saveDetector: Image(data=detectorFrame,header=par.hdr).write(par.exportDir+'/'+name+'.fits') 
-    log.info('Done.')
-    t['End'] = time.time()
-    log.info("Performance: %d seconds total" % (t['End'] - t['Start']))
-
-    return detectorFrame
-
-def main():
-
-    ###################################################################### 
-    # Load parameters from params.py
-    ###################################################################### 
-    par = Params()
-
-    ###################################################################### 
-    # Initialize logging function; both to console and to file
-    ###################################################################### 
-    initLogger(par.exportDir+'/IFS.log')
-    
-    ###################################################################### 
-    # Load input
-    ###################################################################### 
-    log.info('Loading input')
-#     wavelist = np.arange(0.6,0.7,0.005) #[0.800,0.820,0.840]
-#     wavelist = [0.7] #[0.800,0.820,0.840]
-#     inputcube = np.ones((len(wavelist),512,512),dtype=float)/9.
-#     mperpix = 58e-6
-    BW = 0.18
-    Nlam = 51
-    clam = 0.77
-    wavelist= clam*np.linspace(1.-BW/2.,1.+BW/2.,Nlam)
-    fname = './Inputs/PSF_SPLC_Nwvl51_BW18pct_star.fits'
-    hdu = pyf.open(fname)
-    inputcube = hdu[0].data    
-    mperpix = 3./5.*par.pitch # 5 pixels per lambda/D
-    par.pixperlenslet = par.pitch/mperpix
-    par.mperpix = mperpix
-    
-    propagateIFS(par,wavelist,inputcube)
-
-    log.shutdown()
 
     
 def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None):
@@ -547,7 +356,6 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True,smoothba
     log.info('Elapsed time: %fs' % (time.time()-start))
 
 
-
 def prepareCube(par,wavelist,incube,QE=True,adjustment=0.98898):
 # def prepareCube(par,wavelist,incube,QE=True,adjustment=1.0):
     '''
@@ -576,15 +384,26 @@ def prepareCube(par,wavelist,incube,QE=True,adjustment=0.98898):
 
 
 
-def createWavecalFiles(par,lamlist,lamc=770.,dlam=1.):
+def createWavecalFiles(par,lamlist,dlam=1.):
     '''
     Creates a set of monochromatic IFS images to be used in wavelength calibration step
+    
+    Parameters
+    ----------
+    par:   Parameter instance
+            Contains all IFS parameters
+    lamlist: list or array of floats
+            List of discrete wavelengths at which to create a monochromatic flat
+    dlam:  float
+            Width in nm of the small band for each of the monochromatic wavelengths.
+            Default is 1 nm. This has no effect unless we are trying to add any noise.    
+    
     '''
     
     par.saveDetector=False
     inputCube = np.ones((1,512,512),dtype=float)
     inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))
-    inCube[0].header['LAM_C'] = lamc/1000.
+    inCube[0].header['LAM_C'] = 0.5*(lamlist[-1]+lamlist[0])/1000.
     inCube[0].header['PIXSIZE'] = 0.1
     filelist = []
     for wav in lamlist:
@@ -595,14 +414,6 @@ def createWavecalFiles(par,lamlist,lamc=770.,dlam=1.):
         Image(data=detectorFrame,header=par.hdr).write(filename)
     par.lamlist = lamlist
     par.filelist = filelist
-
-
-# def createNormalizationCube():
-#     '''
-#     This function constructs a cube which is used to normalize the recovered cubes to photons.s-1.nm-1.
-#     This depends on the 
-#     
-#     '''
 
 
 
