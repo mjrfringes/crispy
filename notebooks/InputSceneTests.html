@@ -1,0 +1,1205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Processing time series &#8212; crispy 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.1.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="Processing-time-series">
+<h1>Processing time series<a class="headerlink" href="#Processing-time-series" title="Permalink to this headline">¶</a></h1>
+<p>This notebook runs through some sanity checks about the photon flux
+calculations, comparing them to Bijan&#8217;s spreadsheet results. This is to
+ensure that we properly process the input cubes, and gives an idea of
+how everything is done. Here we take the fiducial example of 47 Uma c.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+<span class="c1">#plt.rc(&#39;text&#39;, usetex=True)</span>
+
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">18</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;../../../../crispy&#39;</span>
+<span class="k">if</span> <span class="n">folder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">crispy.params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;../../../crispy&#39;</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
+</div>
+<div class="section" id="Calculate-photon-fluxes">
+<h2>Calculate photon fluxes<a class="headerlink" href="#Calculate-photon-fluxes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Calculate-star-rates">
+<h3>Calculate star rates<a class="headerlink" href="#Calculate-star-rates" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="c1"># load first filelist to get its shape</span>
+<span class="n">fileshape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">45</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">150</span><span class="p">)</span>
+
+
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
+<span class="kn">import</span> <span class="nn">astropy.constants</span> <span class="kn">as</span> <span class="nn">c</span>
+<span class="kn">import</span> <span class="nn">astropy.analytic_functions</span> <span class="kn">as</span> <span class="nn">af</span>
+
+<span class="n">planet_radius</span> <span class="o">=</span> <span class="mf">1.27</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">R_jup</span>
+<span class="n">ref_star_T</span><span class="o">=</span><span class="mi">9600</span><span class="c1">#9377*u.K</span>
+<span class="n">ref_star_Vmag</span><span class="o">=</span><span class="mf">2.37</span>
+<span class="n">target_star_T</span><span class="o">=</span><span class="mi">5887</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">K</span>
+<span class="n">target_star_Vmag</span><span class="o">=</span><span class="mf">5.03</span>
+
+<span class="n">lamc</span><span class="o">=</span><span class="mf">660.</span>
+<span class="n">BW</span><span class="o">=</span><span class="mf">0.18</span>
+<span class="n">R</span><span class="o">=</span><span class="mi">50</span>
+<span class="n">n_ref_star_imgs</span><span class="o">=</span><span class="mi">30</span>
+<span class="n">Nlam</span> <span class="o">=</span> <span class="mi">45</span>
+<span class="n">lamlist</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="o">+</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">Nlam</span><span class="p">)</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span>
+<span class="n">npixperdlam</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">PSFLetWidth</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">tel_pupil_area</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="mf">2.37</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mf">0.835</span>
+
+<span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">convert_krist_cube</span><span class="p">,</span><span class="n">calc_contrast_Bijan</span>
+<span class="n">target_star_cube</span> <span class="o">=</span> <span class="n">convert_krist_cube</span><span class="p">(</span><span class="n">fileshape</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">target_star_T</span><span class="p">,</span><span class="n">target_star_Vmag</span><span class="p">,</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+<span class="n">ref_star_cube</span> <span class="o">=</span> <span class="n">convert_krist_cube</span><span class="p">(</span><span class="n">fileshape</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">ref_star_T</span><span class="p">,</span><span class="n">ref_star_Vmag</span><span class="p">,</span><span class="n">tel_pupil_area</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Telescope area: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tel_pupil_area</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Photons from the target star over entire band: Us: </span><span class="si">%.3e</span><span class="s2">; Bijan: </span><span class="si">%.3e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="p">),</span><span class="mf">1.14e8</span><span class="o">*</span><span class="n">tel_pupil_area</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Photons from the reference star over entire band: Us: </span><span class="si">%.3e</span><span class="s2">; Bijan: </span><span class="si">%.3e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ref_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="p">),</span><span class="mf">1.07e9</span><span class="o">*</span><span class="n">tel_pupil_area</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet contrast at maximum of the spectrum: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">))))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet flux within band: Us: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="mf">45.</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)))</span><span class="o">+</span><span class="s2">&quot;; Bijan: {:.4E}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">0.79</span><span class="o">*</span><span class="n">tel_pupil_area</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;This makes sense since we use a real spectrum, that contains absorption lines and such&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet flux within single spectral channel (lossless case): {:.4f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="mf">45.</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">npixperdlam</span><span class="o">*</span><span class="n">BW</span><span class="o">*</span><span class="n">R</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; assuming </span><span class="si">%d</span><span class="s2"> spectral channels&quot;</span><span class="o">%</span> <span class="p">(</span><span class="n">npixperdlam</span><span class="o">*</span><span class="n">BW</span><span class="o">*</span><span class="n">R</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Planet flux within single pixel (lossless case): {:.4f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="mf">45.</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">npixperdlam</span><span class="o">*</span><span class="n">BW</span><span class="o">*</span><span class="n">R</span><span class="o">*</span><span class="n">PSFLetWidth</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; assuming </span><span class="si">%d</span><span class="s2"> pixels per spectral channel&quot;</span><span class="o">%</span> <span class="p">(</span><span class="n">PSFLetWidth</span><span class="p">))</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Telescope area: 3.6836E+00 m2
+Photons from the target star over entire band: Us: 4.710e+08; Bijan: 4.199e+08
+Photons from the reference star over entire band: Us: 4.245e+09; Bijan: 3.941e+09
+Planet contrast at maximum of the spectrum: 7.9584E-09
+Planet flux within band: Us: 3.5690E+00; Bijan: 2.9100E+00
+This makes sense since we use a real spectrum, that contains absorption lines and such
+Planet flux within single spectral channel (lossless case): 0.1983 assuming 18 spectral channels
+Planet flux within single pixel (lossless case): 0.0991 assuming 2 pixels per spectral channel
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="n">offaxis</span><span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">offaxis</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.146599718889
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Test-zodi-calculations">
+<h3>Test zodi calculations<a class="headerlink" href="#Test-zodi-calculations" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">zodi_cube</span>
+<span class="n">local_zodi_mag</span> <span class="o">=</span> <span class="mi">23</span>
+<span class="n">exozodi_mag</span> <span class="o">=</span> <span class="mi">22</span>
+<span class="n">D</span> <span class="o">=</span> <span class="mf">2.37</span>
+<span class="n">pixarea</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.1</span><span class="o">*</span><span class="mi">770</span><span class="o">*</span><span class="mf">1e-9</span><span class="o">/</span><span class="n">D</span><span class="o">/</span><span class="mf">4.848e-6</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">dist</span><span class="o">=</span><span class="mf">14.1</span>
+<span class="n">absmag</span> <span class="o">=</span> <span class="n">target_star_Vmag</span><span class="o">-</span><span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">dist</span><span class="o">/</span><span class="mf">10.</span><span class="p">)</span>
+
+<span class="n">zodicube</span> <span class="o">=</span> <span class="n">zodi_cube</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">,</span>
+                     <span class="n">area_per_pixel</span><span class="o">=</span><span class="n">pixarea</span><span class="p">,</span>
+                     <span class="n">absmag</span><span class="o">=</span><span class="n">absmag</span><span class="p">,</span>
+                     <span class="n">Vstarmag</span> <span class="o">=</span> <span class="n">target_star_Vmag</span><span class="p">,</span>
+                     <span class="n">zodi_surfmag</span><span class="o">=</span><span class="n">local_zodi_mag</span><span class="p">,</span>
+                     <span class="n">exozodi_surfmag</span><span class="o">=</span><span class="n">exozodi_mag</span><span class="p">,</span>
+                     <span class="n">distAU</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span><span class="n">t_zodi</span><span class="o">=</span><span class="mf">0.09</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/as2/m2&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">tel_pupil_area</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/pix/m2&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">tel_pupil_area</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/lenslets/m2&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">tel_pupil_area</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/lenslet&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/lenslet/nm&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/sec/lenslet/channel&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span><span class="o">/</span><span class="mi">9</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/fr/lenslet/channel&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span><span class="o">*</span><span class="mi">100</span><span class="o">/</span><span class="mi">9</span>
+<span class="k">print</span> <span class="s2">&quot;Total ph/fr/ifspix/channel&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="mi">150</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mi">25</span><span class="o">*</span><span class="mi">100</span><span class="o">/</span><span class="mi">9</span><span class="o">/</span><span class="mi">4</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total ph/sec/as2/m2 0.996076061813 1 / m2
+Total ph/sec/pix/m2 4.42700471917e-05 1 / m2
+Total ph/sec/lenslets/m2 0.00110675117979 1 / m2
+Total ph/sec/lenslet 0.00407683413341
+Total ph/sec/lenslet/nm 3.43167856347e-05
+Total ph/sec/lenslet/channel 0.000452981570379
+Total ph/fr/lenslet/channel 0.0452981570379
+Total ph/fr/ifspix/channel 0.0113245392595
+</pre></div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Check-photometry-at-detector">
+<h1>Check photometry at detector<a class="headerlink" href="#Check-photometry-at-detector" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">process_planet</span>
+<span class="n">tel_pupil_area</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="mf">2.37</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="mf">0.835</span>
+<span class="n">offaxis_psf_filename</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="n">par</span><span class="o">.</span><span class="n">savePoly</span><span class="o">=</span><span class="bp">True</span>
+<span class="n">detector</span> <span class="o">=</span> <span class="n">process_planet</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">offaxis_psf_filename</span><span class="o">=</span><span class="n">offaxis_psf_filename</span><span class="p">,</span>
+                <span class="n">fileshape</span><span class="o">=</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxis_psf_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+                <span class="n">lamlist</span><span class="o">=</span><span class="n">lamlist</span><span class="p">,</span>
+                <span class="n">lamc</span><span class="o">=</span><span class="n">lamc</span><span class="p">,</span>
+                <span class="n">outdir_average</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="p">,</span>
+                <span class="n">planet_radius</span> <span class="o">=</span> <span class="mf">1.27</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">R_jup</span><span class="p">,</span>
+                <span class="n">planet_AU</span> <span class="o">=</span> <span class="mf">3.6</span><span class="p">,</span><span class="n">planet_dist_pc</span><span class="o">=</span><span class="mf">14.1</span><span class="p">,</span>
+                <span class="n">target_star_T</span><span class="o">=</span><span class="mi">5887</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">target_star_Vmag</span><span class="o">=</span><span class="mf">5.03</span><span class="p">,</span>
+                <span class="n">tel_pupil_area</span><span class="o">=</span><span class="mf">3.650265060424805</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">--------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ImportError</span>                              Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-5-dadba9e8b01d&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> crispy<span class="ansi-blue-fg">.</span>tools<span class="ansi-blue-fg">.</span>postprocessing <span class="ansi-green-fg">import</span> process_planet
+<span class="ansi-green-intense-fg ansi-bold">      2</span> tel_pupil_area<span class="ansi-blue-fg">=</span>np<span class="ansi-blue-fg">.</span>pi<span class="ansi-blue-fg">*</span><span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">2.37</span><span class="ansi-blue-fg">/</span><span class="ansi-cyan-fg">2.</span><span class="ansi-blue-fg">*</span>u<span class="ansi-blue-fg">.</span>m<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">**</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">*</span><span class="ansi-cyan-fg">0.835</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> offaxis_psf_filename<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-green-fg">from</span> astropy<span class="ansi-blue-fg">.</span>io <span class="ansi-green-fg">import</span> fits
+<span class="ansi-green-intense-fg ansi-bold">      5</span> par<span class="ansi-blue-fg">.</span>savePoly<span class="ansi-blue-fg">=</span>True
+
+<span class="ansi-red-fg">ImportError</span>: cannot import name process_planet
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.detector</span> <span class="kn">import</span> <span class="n">readDetector</span>
+<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">par</span><span class="o">.</span><span class="n">nonoise</span><span class="o">=</span><span class="bp">True</span>
+<span class="n">det</span> <span class="o">=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/offaxis_planet.fits&#39;</span><span class="p">),</span><span class="n">inttime</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">outkey</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">det</span><span class="p">))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/detector_offaxis.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/detector_offaxis.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sum of of flux before detector w/o losses (ph-electrons per second):&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">detector</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sum of detector flux w/ losses (electrons per second):&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">det</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sum of flux at lenslet array (ph per second):&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/detector_offaxis_red_optext.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+
+<span class="n">flux_cube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="mf">45.</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Flux in input cube:&quot;</span><span class="p">,</span><span class="n">flux_cube</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Throughput of offaxis PSF:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxis_psf_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Throughput of shifted offaxis PSF:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/offaxiscube_shifted.fits&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="n">loadQE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">QE</span><span class="p">)</span>
+<span class="n">QEinterp</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">loadQE</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">loadQE</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">QEvals</span> <span class="o">=</span> <span class="n">QEinterp</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;QE:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">QEvals</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Total estimated number of counts:&quot;</span><span class="p">,</span><span class="n">flux_cube</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxis_psf_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">QEvals</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Total estimated number of counts #2:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxis_psf_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">QEvals</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">poly</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/detectorFramepoly.fits&#39;</span><span class="p">)</span>
+<span class="n">numslice</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">poly</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">numslice</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[</span><span class="n">numslice</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)[</span><span class="n">numslice</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxis_psf_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">numslice</span><span class="p">])</span><span class="o">*</span><span class="n">QEvals</span><span class="p">[</span><span class="n">numslice</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Percentage error in slice:&quot;</span><span class="p">,(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">poly</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">numslice</span><span class="p">])</span><span class="o">-</span><span class="n">target_star_cube</span><span class="p">[</span><span class="n">numslice</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="n">lamc</span><span class="o">*</span><span class="n">calc_contrast_Bijan</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)[</span><span class="n">numslice</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">offaxis_psf_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">numslice</span><span class="p">])</span><span class="o">*</span><span class="n">QEvals</span><span class="p">[</span><span class="n">numslice</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">poly</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">numslice</span><span class="p">])))</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mi">770</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">target_star_Vmag</span><span class="p">))</span><span class="o">/</span><span class="n">tel_pupil_area</span>
+<span class="k">print</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">pixarea</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">zodicube</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">target_star_cube</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">45</span><span class="o">*</span><span class="mf">0.18</span><span class="o">*</span><span class="mi">770</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="mf">0.4</span><span class="o">*</span><span class="n">target_star_Vmag</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">local_zodi_mag</span><span class="p">)))</span><span class="o">/</span><span class="n">tel_pupil_area</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Test-reduction-with-flatfield">
+<h1>Test reduction with flatfield<a class="headerlink" href="#Test-reduction-with-flatfield" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.unitTests</span> <span class="kn">import</span> <span class="n">testCreateFlatfield</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">offaxis_psf_filename</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">shape</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">offaxis_psf_filename</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">Nspec</span><span class="o">=</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">lam_midpts</span>
+<span class="n">dlam</span> <span class="o">=</span> <span class="n">lam_endpts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">lam_endpts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">print</span> <span class="n">dlam</span>
+<span class="n">par</span><span class="o">.</span><span class="n">savePoly</span><span class="o">=</span><span class="bp">True</span>
+<span class="n">par</span><span class="o">.</span><span class="n">saveRotatedInput</span><span class="o">=</span><span class="bp">True</span>
+<span class="n">testCreateFlatfield</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">pixsize</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">npix</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">Nspec</span><span class="o">=</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pixval</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">dlam</span><span class="p">,</span><span class="n">useQE</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/flatfield_red_optext.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Star-photometry">
+<h1>Star photometry<a class="headerlink" href="#Star-photometry" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">processReferenceCubes</span><span class="p">,</span><span class="n">processTargetCubes</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/OS5/with_lowfc/os5_spc_031.fits&#39;</span>
+<span class="c1"># processReferenceCubes(par,xshift=0.0,yshift=0.0,order=3,</span>
+<span class="c1">#                 outdir_time_series = par.exportDir,</span>
+<span class="c1">#                 ref_input_list=[filename],</span>
+<span class="c1">#                 process_cubes=True,</span>
+<span class="c1">#                 ref_star_T=9377*u.K, ref_star_Vmag=2.37,</span>
+<span class="c1">#                 lamc=660.,BW = 0.18,</span>
+<span class="c1">#                 tel_pupil_area=3.650265060424805*u.m**2)</span>
+<span class="n">processTargetCubes</span><span class="p">(</span><span class="n">par</span><span class="p">,[</span><span class="n">filename</span><span class="p">],</span>
+                <span class="n">outdir_time_series</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="p">,</span>
+                <span class="n">process_cubes</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                <span class="n">target_star_T</span><span class="o">=</span><span class="mi">5887</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">target_star_Vmag</span><span class="o">=</span><span class="mf">5.03</span><span class="p">,</span>
+                <span class="n">lamc</span><span class="o">=</span><span class="mf">660.</span><span class="p">,</span><span class="n">BW</span> <span class="o">=</span> <span class="mf">0.18</span><span class="p">,</span>
+                <span class="n">tel_pupil_area</span><span class="o">=</span><span class="mf">3.650265060424805</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
+                <span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/with_lowfc/os5_spc_031.fits
+crispy - INFO - Processing file os5_spc_031.fits
+crispy - INFO - The number of input pixels per lenslet is 5.000000
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/os5_spc_031_targetstar_IFS.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[6]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>[&#39;../../../crispy/SimResults/os5_spc_031_targetstar_IFS.fits&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.detector</span> <span class="kn">import</span> <span class="n">readDetector</span>
+<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">par</span><span class="o">.</span><span class="n">nonoise</span><span class="o">=</span><span class="bp">True</span>
+<span class="n">det</span> <span class="o">=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/os5_spc_031_targetstar_IFS.fits&#39;</span><span class="p">),</span><span class="n">inttime</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">outkey</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">det</span><span class="p">))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/os5_spc_031_targetstar_IFS_detector.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/os5_spc_031_targetstar_IFS_detector.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/os5_spc_031_targetstar_IFS.fits
+crispy - INFO - Read data from HDU 0 of ../../../crispy/SimResults/os5_spc_031_targetstar_IFS_detector.fits
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/os5_spc_031_targetstar_IFS_detector_red_optext.fits
+crispy - INFO - Elapsed time: 1.520822s
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[8]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;crispy.tools.image.Image instance at 0x10eb23488&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="Calibration-cube">
+<h2>Calibration cube<a class="headerlink" href="#Calibration-cube" title="Permalink to this headline">¶</a></h2>
+<p>The goal of this is to construct a cube that normalizes the extracted
+spectrum from counts per second per nm to input photons per second per
+nm.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
+<span class="kn">import</span> <span class="nn">astropy.constants</span> <span class="kn">as</span> <span class="nn">c</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">processReferenceCubes</span><span class="p">,</span><span class="n">processTargetCubes</span>
+<span class="n">offaxis_psf_filename</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span>
+<span class="n">offaxis_psf</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">offaxis_psf_filename</span><span class="p">)</span>
+<span class="n">lamc</span><span class="o">=</span><span class="mf">660.</span>
+<span class="n">BW</span> <span class="o">=</span> <span class="mf">0.18</span>
+<span class="kn">import</span> <span class="nn">ipywidgets</span>
+<span class="k">def</span> <span class="nf">plt_cubes_slices</span><span class="p">(</span><span class="n">wchan</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">offaxis_psf</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">wchan</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">ipywidgets</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="n">plt_cubes_slices</span><span class="p">,</span> <span class="n">wchan</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">offaxis_psf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[10]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;function __main__.plt_cubes_slices&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_InputSceneTests_26_1.png" src="../_images/notebooks_InputSceneTests_26_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sum of photon flux within offaxis cube: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">offaxis_psf</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">offaxis_psf</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Slice of input cube&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Sum of photon flux&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Sum of photon flux within offaxis cube: 0.146600
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[11]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.text.Text at 0x11a3f6e50&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_InputSceneTests_27_2.png" src="../_images/notebooks_InputSceneTests_27_2.png" />
+</div>
+</div>
+<div class="section" id="Process-planet-PSF">
+<h3>Process planet PSF<a class="headerlink" href="#Process-planet-PSF" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">process_offaxis</span>
+
+<span class="n">reference_file</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/OS5/with_lowfc/os5_spc_001.fits&#39;</span>
+<span class="n">fileshape</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">reference_file</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">lamlist</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="o">+</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">fileshape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span>
+<span class="n">par</span><span class="o">.</span><span class="n">savePoly</span> <span class="o">=</span><span class="bp">True</span>
+<span class="c1"># process_planet(par,offaxis_psf_filename,fileshape=fileshape,</span>
+<span class="c1">#             lamlist=lamlist,</span>
+<span class="c1">#             lamc=lamc,</span>
+<span class="c1">#             outdir_average=par.exportDir,</span>
+<span class="c1">#             planet_radius = 1.27*c.R_jup,</span>
+<span class="c1">#             planet_AU = 3.6,planet_dist_pc=14.1,</span>
+<span class="c1">#             target_star_T=5887*u.K, target_star_Vmag=5.03,</span>
+<span class="c1">#             tel_pupil_area=3.650265060424805*u.m**2, order=3)</span>
+<span class="n">par</span><span class="o">.</span><span class="n">timeframe</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">par</span><span class="o">.</span><span class="n">Nreads</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">process_offaxis</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">offaxis_psf_filename</span><span class="p">,</span><span class="n">fileshape</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">lamc</span><span class="p">,</span><span class="n">outdir_average</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="p">,</span><span class="n">Nave</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/with_lowfc/os5_spc_001.fits
+crispy - INFO - Recentering off-axis cube
+crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits
+crispy - INFO - The number of input pixels per lenslet is 5.000000
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxiscube.fits
+crispy - INFO - Constructing off-axis cube at planet separation: 4.44 lam/D (0.26 arcsec, 8.89 lenslets)
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxiscube_shifted.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxiscube_star_processed.fits
+crispy - INFO - The number of input pixels per lenslet is 5.000000
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Writing data to ../../../crispy/SimResults/detectorFramepoly.fits
+crispy - INFO - Done.
+crispy - INFO - Performance: 37 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_star.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_star_detector.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/offaxis_star_detector.fits
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_star_detector_red_optext.fits
+crispy - INFO - Elapsed time: 1.454152s
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_star_red_optext.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxiscube_planet_processed.fits
+crispy - INFO - The number of input pixels per lenslet is 5.000000
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Writing data to ../../../crispy/SimResults/detectorFramepoly.fits
+crispy - INFO - Done.
+crispy - INFO - Performance: 41 seconds total
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_planet.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_planet_detector.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/offaxis_planet_detector.fits
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_planet_detector_red_optext.fits
+crispy - INFO - Elapsed time: 1.623401s
+crispy - INFO - Writing data to ../../../crispy/SimResults/offaxis_planet_red_optext.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[13]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;crispy.tools.image.Image instance at 0x11a427758&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Evaluate-photometry">
+<h3>Evaluate photometry<a class="headerlink" href="#Evaluate-photometry" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">waveList</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">)</span>
+<span class="n">dlam</span> <span class="o">=</span> <span class="p">(</span><span class="n">waveList</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">waveList</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">waveList</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;dlam in reduced cube: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">dlam</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+
+<span class="n">loadQE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">QE</span><span class="p">)</span>
+<span class="n">QE</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">loadQE</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">loadQE</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">offaxiscube_star_processed</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/offaxiscube_star_processed.fits&quot;</span><span class="p">)</span>
+<span class="n">offaxis_star</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/offaxis_star.fits&quot;</span><span class="p">)</span>
+<span class="n">offaxis_detector</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/offaxis_detector.fits&quot;</span><span class="p">)</span>
+<span class="n">offaxis_detector_cube</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/offaxis_star_detector_red_optext.fits&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sum of all photon rates per nm in input cube: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxiscube_star_processed</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sum of all photon rates before the detector (without optical losses but including QE): </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_star</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sum of all photon rates at the detector: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_detector</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Sum of all cube counts in the reduced cube: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_detector_cube</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+
+
+<span class="n">input_flux_density</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxiscube_star_processed</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxiscube_star_processed</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="c1">#plt.plot(np.nansum(np.nansum(offaxis_detector_poly.data/QE(lamlist)[:,np.newaxis,np.newaxis]/(dlam*len(lam_midpts)/len(lamlist)),axis=2),axis=1))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;Input cube&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Slice number&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Total count rate per nm in input cube&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">222</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_detector_cube</span><span class="o">.</span><span class="n">data</span><span class="o">/</span><span class="n">dlam</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">losses</span><span class="o">/</span><span class="n">QE</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">)[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Slice number&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Total count rate per nm in reduced slice&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">223</span><span class="p">)</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_detector_cube</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">input_flux_density</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">)</span><span class="o">/</span><span class="n">dlam</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Slice number&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Ratio of measured flux density over input flux density&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">offaxis_detector_cube</span><span class="o">.</span><span class="n">data</span><span class="o">/</span><span class="n">dlam</span><span class="o">/</span><span class="n">ratio</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Slice number&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Recovered input flux density&quot;</span><span class="p">)</span>
+
+
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 19 wavelength bins
+dlam in reduced cube: 6.315789
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/offaxiscube_star_processed.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/offaxis_star.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/offaxis_detector.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/offaxis_star_detector_red_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of ../../../crispy/SimResults/offaxis_star_detector_red_optext.fits
+Sum of all photon rates per nm in input cube: 25922284.000000
+Sum of all photon rates before the detector (without optical losses but including QE): 60147772.000000
+Sum of all photon rates at the detector: 20451172.000000
+Sum of all cube counts in the reduced cube: 20506436.000000
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[24]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.text.Text at 0x12074e0d0&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_InputSceneTests_31_2.png" src="../_images/notebooks_InputSceneTests_31_2.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Plots">
+<h3>Plots<a class="headerlink" href="#Plots" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">trim</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="k">def</span> <span class="nf">plt_cubes_slices</span><span class="p">(</span><span class="n">wchan</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">offaxis_planet_cube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">wchan</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">trim</span><span class="p">:</span><span class="o">-</span><span class="n">trim</span><span class="p">,</span><span class="n">trim</span><span class="p">:</span><span class="o">-</span><span class="n">trim</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">offaxis_flipped_planet_cube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">wchan</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">trim</span><span class="p">:</span><span class="o">-</span><span class="n">trim</span><span class="p">,</span><span class="n">trim</span><span class="p">:</span><span class="o">-</span><span class="n">trim</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">ipywidgets</span><span class="o">.</span><span class="n">interact</span><span class="p">(</span><span class="n">plt_cubes_slices</span><span class="p">,</span> <span class="n">wchan</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">offaxis_planet_cube</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]));</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="All-below-is-obsolete">
+<h1>All below is obsolete<a class="headerlink" href="#All-below-is-obsolete" title="Permalink to this headline">¶</a></h1>
+### Compare directly to Bijan's fluxtableBij_lams = [0.36,
+0.44,
+0.55,
+0.70,
+0.80,
+0.90,
+1.05,
+1.26,
+1.64,
+2.18,
+3.40,
+5.00,
+10.20,
+21.00]
+Bij_flux_densities = [4.35e-08,
+7.20e-08,
+3.92e-08,
+1.76e-08,
+1.21e-08,
+8.30e-09,
+5.72e-09,
+3.40e-09,
+1.18e-09,
+3.90e-10,
+7.30e-11,
+2.12e-11,
+1.23e-12,
+6.80e-14]
+plt.figure(figsize=(10,10))
+plt.loglog(Bij_lams,Bij_flux_densities,label="Bijan's zero-points")
+BB6 = af.blackbody_lambda(Bij_lams*u.um, 6000*u.K).to(u.Watt/u.m**2/u.um/u.sr)
+BB9 = af.blackbody_lambda(Bij_lams*u.um, 9000*u.K).to(u.Watt/u.m**2/u.um/u.sr)
+
+plt.loglog(Bij_lams,BB6/BB6[2]*Bij_flux_densities[2],label='6000K star blackbody')
+plt.loglog(Bij_lams,BB9/BB9[2]*Bij_flux_densities[2],label='9000K star blackbody')
+plt.xlabel('Wavelength (um)')
+plt.ylabel(r'Flux density zero-point (W/m2/um)')#($Wm^{-2}\mu m^{-1}$)')
+plt.title('All curves normalized to same Vband flux density',fontsize = 22)
+plt.legend(fontsize=18)plt.figure(figsize=(10,10))
+Bij_energies = c.c*c.h/Bij_lams
+plt.loglog(Bij_lams,Bij_flux_densities/Bij_energies,label="Bijan's zero-points")
+BB6 = af.blackbody_lambda(Bij_lams*u.um, 6000*u.K).to(u.Watt/u.m**2/u.um/u.sr)
+BB9 = af.blackbody_lambda(Bij_lams*u.um, 9000*u.K).to(u.Watt/u.m**2/u.um/u.sr)
+
+plt.loglog(Bij_lams,BB6/BB6[2]*Bij_flux_densities[2]/Bij_energies,label='6000K star blackbody')
+plt.loglog(Bij_lams,BB9/BB9[2]*Bij_flux_densities[2]/Bij_energies,label='9000K star blackbody')
+plt.xlabel('Wavelength (um)')
+plt.ylabel(r'Photon rate zero-point (photons/s/m2/um)')#($\textrm{photons} s^{-1} m^{-2}\mu m^{-1}$)')
+plt.title('Photon rates',fontsize = 22)
+plt.legend(fontsize=18)plt.figure(figsize=(10,10))
+Bij_energies = c.c*c.h/Bij_lams
+BB6 = af.blackbody_lambda(Bij_lams*u.um, 6000*u.K).to(u.Watt/u.m**2/u.um/u.sr)
+plt.semilogx(Bij_lams,BB6/BB6[2]*Bij_flux_densities[2]/Bij_flux_densities,label="Ratio of photon rate")
+
+plt.xlabel('Wavelength (um)')
+plt.ylabel(r'Ratio of photon rates')
+plt.title('Ratio of photon rates (Blackbody over Bijan) assuming Vband equivalence',fontsize = 22)
+plt.legend(fontsize=18)from scipy.interpolate import interp1d
+ratios =interp1d(Bij_lams,BB6/BB6[2]*Bij_flux_densities[2]/Bij_flux_densities)
+print("Ratio at 0.7 microns (our flux over what Bijan finds):")
+print(ratios(0.7))# Comparison to John Krist's filesThe purpose of this section is to examine the files from John Krist to see if everything checks out compared to Bijan's estimatesfrom crispy.tools.image import Image
+from astropy.io import fits
+from crispy.IFS import propagateIFS
+from crispy.params import Params
+codefolder = '../../../crispy'
+par = Params(codefolder)
+print(par.exportDir)
+par.saveDetector = False
+
+psf_time_series_folder='/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/with_lowfc'
+
+# load the filenames
+filelist = glob.glob(psf_time_series_folder+'/*')
+filelist.sort()
+
+# load first filelist to get its shape
+fileshape = Image(filename=filelist[0]).data.shape
+
+tel_pupil_area = 4.412*u.m**2*0.835
+
+# reference and target star cube conversions
+ref_star_cube = convert_krist_cube(fileshape,lamlist,ref_star_T,ref_star_Vmag,tel_pupil_area)
+target_star_cube = convert_krist_cube(fileshape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
+
+
+# Pick one of the images in the time series
+reffile = filelist[45]
+cube = fits.open(reffile)[0]
+print("Sum of John Krist's cube: %e" %np.sum(cube.data))
+cube.data*=target_star_cube
+#cube.write('test_Krist_cube.fits',clobber=True)
+out = fits.HDUList(fits.PrimaryHDU(cube.data.astype(np.float32)))
+out.writeto(par.exportDir + '/test_Krist_cube.fits', clobber=True)
+print("Total counts from star at primary after obscuration: %e" % np.sum(target_star_cube[:,0,0]))
+print("Sum of cube in photons per second: %f (residual speckle rate for entire area w/o focal plane mask)" % np.sum(cube.data))
+print("Coronagraph contrast (no focal plane mask): %e " % (np.sum(cube.data)/np.sum(target_star_cube[:,0,0])))offaxispsf= '/local/data/nicolaus2/mrizzo/haystacks/for_gsfc/spc_offaxis_psf.fits'
+offaxis = fits.open(offaxispsf)[0]
+print("Sum of John Krist's offaxis: %f" %np.sum(offaxis.data))
+fileshape=offaxis.data.shape
+target_star_cube = convert_krist_cube(fileshape,lamlist,target_star_T,target_star_Vmag,tel_pupil_area)
+
+contrast = calc_contrast_Bijan(lamlist)
+contrast_cube = np.zeros(offaxis.data.shape)
+for i in range(offaxis.data.shape[0]):
+    contrast_cube[i,:,:] += contrast[i]*offaxis.data.shape[0]
+
+
+offaxis.data*=target_star_cube*contrast_cube
+out = fits.HDUList(fits.PrimaryHDU(offaxis.data.astype(np.float32)))
+out.writeto(par.exportDir + '/test_Krist_offaxis.fits', clobber=True)
+print("Total counts per second from planet at primary after obscuration: %e" % np.sum(target_star_cube[:,0,0]*contrast))
+print("Sum of cube in photons per second: %f" % np.sum(offaxis.data))
+print("Planet raw throughput (no reflections/transmissions): %e " % (np.sum(offaxis.data)/np.sum(target_star_cube[:,0,0]*contrast)))
+plt.plot(lamlist,target_star_cube[:,0,0]*contrast)### Process an image to see the detector mappar.saveRotatedInput = True
+from crispy.IFS import propagateIFS
+
+if offaxis.header['LAM_C']==0.8:
+    if lamc==770.:
+        offaxis.header['LAM_C']=0.77
+        # by NOT changing the pixelsize, we implicitly assume that the PSF is the same at 770 then at 800
+    else:
+        offaxis.header['LAM_C']=lamc/1000.
+        offaxis.header['PIXSIZE']*=lamc/0.77
+else:
+    offaxis.header['LAM_C']=lamc/1000.
+    offaxis.header['PIXSIZE']*=lamc/0.77
+par.saveDetector=True
+pol=0.5
+IFSLosses = 0.30
+QE = 0.68
+PhCountingEff = 0.8
+CTE = .893
+offaxis.data*=IFSLosses*QE*PhCountingEff*CTE*pol
+# offaxis.data*=0.68*0.8*0.893
+print(np.sum(offaxis.data))
+detectorFrame = propagateIFS(par,lamlist.value/1000.,offaxis)print(np.sum(offaxis.data)*0.11)
+np.sum(offaxis.data)*0.11/3e-3rotated_list = glob.glob(par.exportDir+'/imagePlaneRot*nm.fits')
+sum_rotated = np.zeros(Image(rotated_list[0]).data.shape)
+for filename in rotated_list:
+    sum_rotated += Image(filename).data
+out = fits.HDUList(fits.PrimaryHDU(sum_rotated.astype(np.float32)))
+out.writeto(par.exportDir + '/imagePlaneRot_sum.fits', clobber=True)print(np.sum(sum_rotated)*0.11)
+print(np.sum(offaxis.data*0.11))import numpy as np
+import glob
+import matplotlib
+import matplotlib.pyplot as plt
+
+matplotlib.rcParams['image.origin'] = 'lower'
+matplotlib.rcParams['image.interpolation'] = 'nearest'
+import sys
+codefolder = '../../../../crispy'
+if codefolder not in sys.path: sys.path.append(codefolder)
+from crispy.tools.initLogger import getLogger
+log = getLogger('crispy')
+from crispy.params import Params
+codefolder = '../../../crispy'
+par = Params(codefolder)
+from astropy.io import fits as pyf
+from crispy.IFS import polychromeIFS
+from crispy.tools.image import Image</div>
+<div class="section" id="inputCube-=-np.ones((1,512,512),dtype=float)">
+<h1>inputCube = np.ones((1,512,512),dtype=float)<a class="headerlink" href="#inputCube-=-np.ones((1,512,512),dtype=float)" title="Permalink to this headline">¶</a></h1>
+<p>inCube = pyf.HDUList(pyf.PrimaryHDU(inputCube))
+inCube[0].header[&#8216;LAM_C&#8217;] = 770./1000. inCube[0].header[&#8216;PIXSIZE&#8217;] =
+0.1 dlam=1. par.saveRotatedInput=True</p>
+<p>detectorFrame =
+polychromeIFS(par,[770.],inCube[0],dlambda=dlam,parallel=False) filename
+= par.exportDir+&#8217;/det_660.fits&#8217;
+Image(data=detectorFrame,header=par.hdr).write(filename)</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Processing time series</a><ul>
+<li><a class="reference internal" href="#Calculate-photon-fluxes">Calculate photon fluxes</a><ul>
+<li><a class="reference internal" href="#Calculate-star-rates">Calculate star rates</a></li>
+<li><a class="reference internal" href="#Test-zodi-calculations">Test zodi calculations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Check-photometry-at-detector">Check photometry at detector</a></li>
+<li><a class="reference internal" href="#Test-reduction-with-flatfield">Test reduction with flatfield</a></li>
+<li><a class="reference internal" href="#Star-photometry">Star photometry</a><ul>
+<li><a class="reference internal" href="#Calibration-cube">Calibration cube</a><ul>
+<li><a class="reference internal" href="#Process-planet-PSF">Process planet PSF</a></li>
+<li><a class="reference internal" href="#Evaluate-photometry">Evaluate photometry</a></li>
+<li><a class="reference internal" href="#Plots">Plots</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#All-below-is-obsolete">All below is obsolete</a></li>
+<li><a class="reference internal" href="#inputCube-=-np.ones((1,512,512),dtype=float)">inputCube = np.ones((1,512,512),dtype=float)</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/InputSceneTests.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 27 Aug 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>
