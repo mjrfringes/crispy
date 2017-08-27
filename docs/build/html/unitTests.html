@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>unitTests module &#8212; crispy 0.1.0 documentation</title>
+    <title>unitTests module &#8212; crispy 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.0',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -58,7 +58,7 @@
     <h3>Navigation</h3>
     <ul>
       <li>
-	<a href="index.html">crispy 0.1.0 documentation</a>
+	<a href="index.html">crispy 0.2.0 documentation</a>
 	 &#187;
       </li>
       
@@ -72,8 +72,73 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="unittests-module">
-<h1>unitTests module<a class="headerlink" href="#unittests-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-unitTests">
+<span id="unittests-module"></span><h1>unitTests module<a class="headerlink" href="#module-unitTests" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="unitTests.testCreateFlatfield">
+<code class="descclassname">unitTests.</code><code class="descname">testCreateFlatfield</code><span class="sig-paren">(</span><em>par</em>, <em>pixsize=0.1</em>, <em>npix=512</em>, <em>pixval=1.0</em>, <em>Nspec=45</em>, <em>outname='flatfield.fits'</em>, <em>useQE=True</em>, <em>method='optext'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testCreateFlatfield"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testCreateFlatfield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a polychromatic flatfield</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>pixsize:   float</strong></p>
+<blockquote>
+<div><p>Pixel scale (lam/D)</p>
+</div></blockquote>
+<p><strong>npix: int</strong></p>
+<blockquote>
+<div><p>Each input frame has a pixel size npix x npix</p>
+</div></blockquote>
+<p><strong>pixval: float</strong></p>
+<blockquote>
+<div><p>Each input frame has a unform value pixval in photons per second per nm of bandwidth</p>
+</div></blockquote>
+<p><strong>Nspec: float</strong></p>
+<blockquote>
+<div><p>Optional input forcing the number of wavelengths bins used</p>
+</div></blockquote>
+<p><strong>outname: string</strong></p>
+<blockquote>
+<div><p>Name of flatfield image</p>
+</div></blockquote>
+<p><strong>useQE: boolean</strong></p>
+<blockquote class="last">
+<div><p>Whether to take into account the wavelength-dependent QE of the detector</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="unitTests.testCutout">
+<code class="descclassname">unitTests.</code><code class="descname">testCutout</code><span class="sig-paren">(</span><em>par</em>, <em>fname</em>, <em>lensnum=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testCutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testCutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing the cutout function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="unitTests.testFitCutout">
+<code class="descclassname">unitTests.</code><code class="descname">testFitCutout</code><span class="sig-paren">(</span><em>par</em>, <em>fname</em>, <em>lensnum</em>, <em>mode='lstsq'</em>, <em>ivar=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testFitCutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testFitCutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing the fit_cutout function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="unitTests.testGenPixSol">
+<code class="descclassname">unitTests.</code><code class="descname">testGenPixSol</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testGenPixSol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testGenPixSol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="unitTests.testLoadKernels">
+<code class="descclassname">unitTests.</code><code class="descname">testLoadKernels</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testLoadKernels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testLoadKernels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure the kernel interpolation with wavelength makes sense</p>
+</dd></dl>
+
 </div>
 
 
