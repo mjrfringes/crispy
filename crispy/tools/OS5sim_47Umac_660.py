@@ -49,7 +49,7 @@ folder = '/Users/mrizzo/IFS/OS5_SIM_'+str(sampling)+'_t'+str(int(par.timeframe))
 offaxis_psf_filename='/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits'
 OS5_files = '/Users/mrizzo/IFS/OS5/with_lowfc/'
 
-averagefolder = folder+'/average
+averagefolder = folder+'/average'
 detectorfolder = folder+'/detector'
 try:
     os.makedirs(folder)

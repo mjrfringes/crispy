@@ -163,6 +163,127 @@ def make_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
     image = image[padding:-padding, padding:-padding]
     return image
 
+def make_hires_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
+                     xindx, yindx, ydim,xdim, upsample=10, nlam=10):
+    """
+    """
+
+    padding = 10
+    image = np.zeros((ydim + 2*padding, xdim + 2*padding))
+    hiresimg = np.zeros((image.shape[0]*upsample,image.shape[1]*upsample))
+    x = np.arange(hiresimg.shape[0])
+    x, y = np.meshgrid(x, x)
+    npix = hires_arrs[0].shape[2]
+
+    dloglam = (np.log(lam2) - np.log(lam1))/nlam
+    loglam = np.log(lam1) + dloglam/2. + np.arange(nlam)*dloglam
+
+    for lam in np.exp(loglam):
+
+        ################################################################
+        # Build the appropriate average hires image by averaging over
+        # the nearest wavelengths.  Then apply a spline filter to the
+        # interpolated high resolution PSFlet images to avoid having
+        # to do this later, saving a factor of a few in time.
+        ################################################################
+
+        hires = np.zeros((hires_arrs[0].shape))
+        if lam <= np.amin(lam_arr):
+            hires[:] = hires_arrs[0]
+        elif lam >= np.amax(lam_arr):
+            hires[:] = hires_arrs[-1]
+        else:
+            i1 = np.amax(np.arange(len(lam_arr))[np.where(lam > lam_arr)])
+            i2 = i1 + 1
+            hires = hires_arrs[i1]*(lam - lam_arr[i1])/(lam_arr[i2] - lam_arr[i1])
+            hires += hires_arrs[i2]*(lam_arr[i2] - lam)/(lam_arr[i2] - lam_arr[i1])
+
+        for i in range(hires.shape[0]):
+            for j in range(hires.shape[1]):
+                hires[i, j] = ndimage.spline_filter(hires[i, j])
+
+        ################################################################
+        # Run through lenslet centroids at this wavelength using the
+        # fitted coefficients in psftool to get the centroids.  For
+        # each centroid, compute the weights for the four nearest
+        # regions on which the high-resolution PSFlets have been made.
+        # Interpolate the high-resolution PSFlets and take their
+        # weighted average, adding this to the image in the
+        # appropriate place.
+        ################################################################
+
+        xcen, ycen = psftool.return_locations(lam, allcoef, xindx, yindx)
+        xcen += padding
+        ycen += padding
+        xcen = np.reshape(xcen, -1)
+        ycen = np.reshape(ycen, -1)
+        for i in range(xcen.shape[0]):
+            if not (xcen[i] > npix//(2*upsample) and xcen[i] < image.shape[0] - npix//(2*upsample) and 
+                    ycen[i] > npix//(2*upsample) and ycen[i] < image.shape[0] - npix//(2*upsample)):
+                continue
+            # central pixel -> npix*upsample//2
+            iy1 = int(ycen[i]*upsample) - npix//2
+            iy2 = iy1 + npix
+            ix1 = int(xcen[i]*upsample) - npix//2
+            ix2 = ix1 + npix
+#             yinterp = (y[iy1:iy2, ix1:ix2] - ycen[i])*upsample + upsample*npix/2
+#             xinterp = (x[iy1:iy2, ix1:ix2] - xcen[i])*upsample + upsample*npix/2
+            yinterp = (y[iy1:iy2, ix1:ix2] - ycen[i]*upsample)+npix/2
+            xinterp = (x[iy1:iy2, ix1:ix2] - xcen[i]*upsample)+npix/2
+#             if j==1:
+#                 print yinterp,xinterp
+
+            # Now find the closest high-resolution PSFs
+            
+            x_hires = xcen[i]*1./image.shape[1]
+            y_hires = ycen[i]*1./image.shape[0]
+            
+            x_hires = x_hires*hires_arrs[0].shape[1] - 0.5
+            y_hires = y_hires*hires_arrs[0].shape[0] - 0.5
+            
+            totweight = 0
+            
+            if x_hires <= 0:
+                i1 = i2 = 0
+            elif x_hires >= hires_arrs[0].shape[1] - 1:
+                i1 = i2 = hires_arrs[0].shape[1] - 1
+            else:
+                i1 = int(x_hires)
+                i2 = i1 + 1
+
+            if y_hires < 0:
+                j1 = j2 = 0
+            elif y_hires >= hires_arrs[0].shape[0] - 1:
+                j1 = j2 = hires_arrs[0].shape[0] - 1
+            else:
+                j1 = int(y_hires)
+                j2 = j1 + 1
+            
+            ##############################################################
+            # Bilinear interpolation by hand.  Do not extrapolate, but
+            # instead use the nearest PSFlet near the edge of the
+            # image.  The outer regions will therefore have slightly
+            # less reliable PSFlet reconstructions.  Then take the
+            # weighted average of the interpolated PSFlets.
+            ##############################################################
+
+            weight22 = max(0, (x_hires - i1)*(y_hires - j1))
+            weight12 = max(0, (x_hires - i1)*(j2 - y_hires))
+            weight21 = max(0, (i2 - x_hires)*(y_hires - j1))
+            weight11 = max(0, (i2 - x_hires)*(j2 - y_hires))
+            totweight = weight11 + weight21 + weight12 + weight22
+            weight11 /= totweight*nlam
+            weight12 /= totweight*nlam
+            weight21 /= totweight*nlam
+            weight22 /= totweight*nlam
+
+            hiresimg[iy1:iy2, ix1:ix2] += weight11*ndimage.map_coordinates(hires[j1, i1], [yinterp, xinterp], prefilter=False)
+            hiresimg[iy1:iy2, ix1:ix2] += weight12*ndimage.map_coordinates(hires[j1, i2], [yinterp, xinterp], prefilter=False)
+            hiresimg[iy1:iy2, ix1:ix2] += weight21*ndimage.map_coordinates(hires[j2, i1], [yinterp, xinterp], prefilter=False)
+            hiresimg[iy1:iy2, ix1:ix2] += weight22*ndimage.map_coordinates(hires[j2, i2], [yinterp, xinterp], prefilter=False)
+     
+    hiresimg = hiresimg[padding*upsample:-padding*upsample, padding*upsample:-padding*upsample]
+    return hiresimg
 
 def get_sim_hires(par,lam, upsample=10, nsubarr=1, npix=13, renorm=True):
     """
@@ -193,9 +314,6 @@ def get_sim_hires(par,lam, upsample=10, nsubarr=1, npix=13, renorm=True):
 
             
     return hires_arr
-
-
-
 
 def gethires(x, y, good, image, upsample=5, nsubarr=5, npix=13, renorm=True):
     """
@@ -362,7 +480,6 @@ def gethires(x, y, good, image, upsample=5, nsubarr=5, npix=13, renorm=True):
             
     return hires_arr
 
-
 def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, savehiresimages=True,upsample=5,nsubarr=5):
     '''
     Construct high-resolution PSFLets
@@ -500,11 +617,9 @@ def monochromatic_update(par,inImage,inLam,order=3,apodize=False):
     log.info("Don't forget to run buildcalibrations again with makePolychrome=True!")
     return dx,dy,dphi
 
-
-
 def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=False, makehiresPSFlets=False,
-                      makePolychrome=False,
+                      makePolychrome=False,makehiresPolychrome=False,
                       savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
                       parallel=True,inspect_first=True,apodize=False,lamsol=None):
     """
@@ -535,6 +650,11 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     makehiresPSFlets: Boolean
             Whether or not to do a high-resolution fitting of the PSFs, using the sampling
             diversity. This requires high-SNR monochromatic images.
+    makePolychrome: Boolean
+            Whether or not to build the polychrome cube used in the least squares extraction
+    makehiresPolychrome: Boolean
+            Whether or not to build a polychrome cube at a high spatial resolution for future
+            subpixel interpolations
     savehiresimages: Boolean
             Whether to save fits files with the high-res PSFLets
     borderpix:  int
@@ -569,13 +689,12 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                             - an array of the Y positions of all lenslets
                             - an array of booleans indicating whether that lenslet is good or not
                             (e.g. when it is outside of the detector area)
-    polychromeRXX.fits: list of 2D arrays of size Npix x Npix which each contain a map with
-                        the high-resolution lenslet PSFLets put in their correct position
-                        for all the wavelengths that we want in the output cube. Each PSFLet
+    polychromeRXX.fits: 3D arrays of size Nspec x Npix x Npix with maps of the PSFLets put in their correct 
+                        positions for each wavelength bins that we want in the output cube. Each PSFLet
                         in each wavelength slice is used for least-squares fitting.
+    hiresPolychromeRXX.fits: same as polychromeRXX.fits but this time using the high-resolution PSFLets
     PSFLoc.fits:    nsubarr x nsubarr array of 2D high-resolution PSFLets at each location
                     in the detector.
-    polychromeRXX.fits and PSFLoc.fits are only generated if makehiresPSFlets is True.
     
     """
     outdir = par.wavecalDir
@@ -737,5 +856,49 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     outkey.append(pyf.PrimaryHDU(np.asarray(ypos)))
     outkey.append(pyf.PrimaryHDU(np.asarray(good).astype(np.uint8)))
     outkey.writeto(outdir + 'polychromekeyR%d.fits' % (par.R), clobber=True)
+
+    if makehiresPolychrome:
+        log.info('Making high-resolution polychrome cube (can use lots of memory)')        
+        if not makehiresPSFlets:
+            hires_list = np.sort(glob.glob(par.wavecalDir + 'hires_psflets_lam???.fits'))
+            hires_arrs = [pyf.open(filename)[0].data for filename in hires_list]
+
+        lam_midpts,lam_endpts=calculateWaveList(par,lam,method='lstsq')
+        Nspec = len(lam_endpts)
+        hirespoly = np.zeros((Nspec - 1, ysize*upsample, xsize*upsample))
+
+        if parallel==False:
+            for i in range(Nspec - 1):
+                hirespoly[i] = (lam_endpts[i + 1]-lam_endpts[i])*make_hires_polychrome(lam_endpts[i], lam_endpts[i + 1],
+                                                          hires_arrs, lam, psftool, 
+                                                          allcoef, xindx, yindx,ysize,xsize,upsample=upsample)/upsample**2
+        else:
+            tasks = multiprocessing.Queue()
+            results = multiprocessing.Queue()
+            ncpus = multiprocessing.cpu_count()
+            consumers = [ Consumer(tasks, results)
+                          for i in range(ncpus) ]
+            for w in consumers:
+                w.start()
+        
+            for i in range(Nspec - 1):
+                tasks.put(Task(i, make_hires_polychrome, (lam_endpts[i], lam_endpts[i + 1],
+                                                          hires_arrs, lam, psftool, 
+                                                          allcoef, xindx, yindx,ysize,xsize,upsample)))
+        
+            for i in range(ncpus):
+                tasks.put(None)
+            for i in range(Nspec - 1):
+                index, poly = results.get()
+                hirespoly[index] = poly*(lam_endpts[index + 1]-lam_endpts[index])/upsample**2
+            
+        log.info('Saving hi-res polychrome cube')
+
+        out = pyf.HDUList(pyf.PrimaryHDU(hirespoly.astype(np.float32)))
+        out.writeto(outdir + 'hirespolychromeR%d.fits.gz' % (par.R), clobber=True)
+        out = pyf.HDUList(pyf.PrimaryHDU(np.sum(hirespoly,axis=0).astype(np.float32)))
+        out.writeto(outdir + 'hiresPolychromeR%dstack.fits' % (par.R), clobber=True)
+
+
     
     log.info("Total time elapsed: %.0f s" % (time.time() - tstart))

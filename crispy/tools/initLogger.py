@@ -1,25 +1,15 @@
-import logging
-
-# def initLogger(logfile,levelConsole=logging.INFO,levelLogFile=logging.DEBUG):
-#     with open(logfile,'w'):
-#         pass
-#     logging.basicConfig(filename=logfile, level=levelLogFile,format='%(asctime)s %(message)s')
-#     console = logging.StreamHandler()
-#     console.setLevel(levelConsole)
-#     formatter = logging.Formatter('%(asctime)s: %(levelname)-8s %(message)s')
-#     console.setFormatter(formatter)
-#     logging.getLogger('').addHandler(console)
-    
+import logging    
 import platform
 import sys
 import traceback
 
 log_dict={}
 
-class CharisLogger(logging.getLoggerClass()):
+class crispyLogger(logging.getLoggerClass()):
     """
-    This is the advanced logging object used throughout the CHARIS
-    Data Extraction Pipeline.  It inherits from the standard 
+    This is the advanced logging object used for crispy. 
+    It is almost a carbon copy of the CHARIS DRP logger routine.
+    It inherits from the standard 
     Python library 'logging' and provides added features.
     The default log level for the output file will be 1, ie ALL messages;
     while the default for the screen will be INFO, and can be changed easily 
@@ -238,10 +228,10 @@ def setUpLogger(name='generalLoggerName',lvl=20,addFH=True,addSH=True):
         addSH (boolean): Add a stream handler to this logger? Severity set with 
                         the lvl argument.  Default = True.
     Returns:
-        log (CharisLogger object): A CharisLogger object that was freshly 
+        log (crispyLogger object): A crispyLogger object that was freshly 
                                    instantiated.
     """
-    logging.setLoggerClass(CharisLogger)
+    logging.setLoggerClass(crispyLogger)
     log = logging.getLogger(name)
     log_dict[name]=log
     log.setLevel(1)
@@ -258,7 +248,7 @@ def addFileHandler(log, lvl=1):
     This function will add a file handler to a log with the provided level.
     
     Args:
-        log (CharisLogger object): A CharisLogger object that was freshly 
+        log (crispyLogger object): A crispyLogger object that was freshly 
                                    instantiated.
         lvl (int): The severity level of messages printed to the file with 
                     the file handler, default = 1.
@@ -278,7 +268,7 @@ def addStreamHandler(log,lvl=20):
     This function will add a stream handler to a log with the provided level.
     
     Args:
-        log (CharisLogger object): A CharisLogger object that was freshly 
+        log (crispyLogger object): A crispyLogger object that was freshly 
                                    instantiated.
         lvl (int): The severity level of messages printed to the screen with 
                     the stream handler, default = 20.
@@ -298,7 +288,7 @@ def addFitsStyleHandler(log):
     directly loading into a FITS header.
     
     Args:
-        log (CharisLogger object): A CharisLogger object that was freshly 
+        log (crispyLogger object): A crispyLogger object that was freshly 
                                    instantiated.
     """
     fitsFhLevel = 1
@@ -312,66 +302,3 @@ def addFitsStyleHandler(log):
     fh2.setFormatter(fFrmt2)
     # add the Handler to the logger
     log.addHandler(fh2)
-    
-
-# def logSystemInfo(log):
-#     """ A function to be called just after a logging object is instantiated 
-#     for the DEP to load the log up with info about the computer it is 
-#     being ran on and the software version.  This function utilizes the 
-#     psutil and platform libraries, so they must be install for it to work.  
-#     For clarity of the log, it is suggested to perform immediately after 
-#     instantiation to put it at the top of the log file.
-#     
-#     Args:
-#         log (Python logging object): logging object to have the system's 
-#                                     info summarized in.
-#                                     
-#     The messages this prints to the log will look like:
-#     
-#     | System Information Summary:
-#     | OS type = Linux
-#     | OS Version = 3.9.10-100.fc17.x86_64
-#     | Machine UserName = xxxxxx.astron.s.u-tokyo.ac.jp
-#     | Machine Processor Type = x86_64
-#     | Number of cores = 8
-#     | Total RAM [GB] = 23.5403785706, % used = 15.9
-#     | Python Version = '2.7.3'
-# 
-#     """
-#     log.info("-"*11+' System Information Summary '+'-'*11)
-#     #log.info('Machine Type = '+platform.machine())
-#     #log.info('Machine Version = '+platform.version())
-#     log.info('OS type = '+platform.uname()[0])
-#     log.info('OS Version = '+platform.uname()[2])
-#     log.info('Machine UserName = '+platform.uname()[1])
-#     log.info('Machine Processor Type = '+platform.processor())
-#     log.info('Number of cores = '+str(psutil.NUM_CPUS))
-#     totMem = psutil.virtual_memory()[0]/1073741824.0
-#     percentMem = psutil.virtual_memory()[2]
-#     log.info('Total RAM [GB] = '+str(totMem)+', % used = '+str(percentMem))
-#     log.info('Python Version = '+repr(platform.python_version()))
-#     log.info('-'*50)
-    
-# def logFileProcessInfo(log):
-#     """
-#     """
-#     log.info("="*12+' File and Process Summary '+'='*12)
-#     log.info("NOTHING HAPPENING IN THIS FUNCTION YET!!!!!!")
-#     log.info('='*50)
-#     
-    
-#     def __tracebacker(self):
-#         """
-#         Internal function for creating nicely formatted 
-#         tracebacks for the ERROR level messages if requested.
-#         """
-#         ex_type, ex, tb = sys.exc_info()
-#         tb_list = traceback.extract_tb(tb,6)
-#         s='\nTraceback:\n'
-#         for i in range(0,len(tb_list)):
-#             line_str = ', Line: '+tb_list[i][3]
-#             func_str = ', Function: '+tb_list[i][2]
-#             ln_str = ', Line Number: '+str(tb_list[i][1])
-#             file_str = ' File: '+tb_list[i][0]
-#             s = s+file_str+func_str+ln_str+'\n'
-#         return s

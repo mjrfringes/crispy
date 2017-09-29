@@ -213,7 +213,7 @@ def polychromeIFS(par,wavelist,inputcube,
     return detectorFrame
 
     
-def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None):
+def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None,hires=False):
     '''
     Main reduction function
     
@@ -264,7 +264,7 @@ def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None):
 
     if method == 'lstsq':
         reducedName += '_red_lstsq'
-        cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad)
+        cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad,hires=hires)
     elif method == 'optext':
         reducedName += '_red_optext'
         cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad)

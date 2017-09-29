@@ -84,3 +84,11 @@ presentations/2017Rizzo_SPIE.pptx
 presentations/2017Rizzo_OS5_Results.pptx
 
 crispy/ReferenceFiles/testWavecal660/*
+
+build/*
+
+crispy.egg-info/*
+
+crispy/Inputs/ETC/*
+
+dist/*

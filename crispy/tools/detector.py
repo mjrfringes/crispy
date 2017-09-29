@@ -273,6 +273,7 @@ def calculateDark(par,filelist):
         darkframe += readDetector(par,blankframe,inttime=inttime)
     return darkframe    
 
+from scipy import stats
 def photonCounting(average,
                 EMGain=1.0,
                 RN=0.0,
@@ -309,7 +310,7 @@ def photonCounting(average,
         # add photon counting thresholding
         if PCmode:
             PCmask = afterRN>PCbias+threshold*RN
-            afterRN[PCmask]=1.0 #(afterRN[PCmask]-par.PCbias)/par.EMGain
+            afterRN[PCmask]=1.0
             afterRN[~PCmask]=0.
         else:
             afterRN -= PCbias
@@ -338,30 +339,36 @@ def readoutPhotonFluxMapWFIRST(
                 nonoise=False,
                 poisson=True,
                 EMStats=True,
-                PCmode=True):
-    # if inttime is None, determine the exposure time so that the brightest pixel is only 0.1 electrons  
-    if inttime is None:
-        exptime = 0.1/np.amax(QE*eff*fluxMap)
-        print("Individual exposure time: %.2f" % exptime)
-    else:
-        exptime=inttime
-    
-    photoelectrons = QE*eff*fluxMap*exptime
+                PCmode=True,
+                PCcorrect=False,
+                normalize=False,
+                verbose=False):
+   
+    photoElectronsRate = QE*eff*fluxMap
     
     if nonoise:
-        return photoelectrons
+        return photoElectronsRate*tottime
     else:
-    
+        # if inttime is None, determine the exposure time so that the brightest pixel is only 0.1 electrons  
+        if inttime is None:
+            exptime = 0.1/np.amax(QE*eff*fluxMap)
+            if verbose: print("Individual exposure time: %.3f" % exptime)
+        else:
+            exptime=inttime
+            
+        nreads = int(tottime/exptime)
+        if verbose: print("Number of reads: %d" % nreads)
+            
+        photoElectrons = photoElectronsRate*exptime
         
         if lifefraction>0.0:
-            photoelectrons= QE*np.maximum(np.zeros(photoelectrons.shape),np.minimum(np.ones(photoelectrons.shape)+lifefraction*(dqeKnee-1.),np.ones(photoelectrons.shape)+lifefraction*(dqeKnee-1)+lifefraction*dqeFluxSlope*(photoelectrons/QE-dqeKneeFlux)))
+            photoElectrons *= np.maximum(np.zeros(photoElectrons.shape),np.minimum(np.ones(photoElectrons.shape)+lifefraction*(dqeKnee-1.),np.ones(photoelectrons.shape)+lifefraction*(dqeKnee-1)+lifefraction*dqeFluxSlope*(photoElectrons-dqeKneeFlux)))
 
         dark = darkBOL+lifefraction*(darkEOL-darkBOL)
-        average = photoelectrons+dark*exptime+CIC
+        average = photoElectrons+dark*exptime+CIC
     
         frame = np.zeros(average.shape)
         
-        nreads = int(tottime/exptime)
         for n in range(nreads):
             newread = photonCounting(average,
                                     EMGain=EMGain,
@@ -372,9 +379,16 @@ def readoutPhotonFluxMapWFIRST(
                                     EMStats=EMStats,
                                     PCmode=PCmode)
             frame += newread
-        frame/=nreads
-        if PCmode:
-            frame*=np.exp(RN*threshold/EMGain)
-            frame=-np.log(1.-frame)
-        frame/=exptime
+        if normalize:
+            frame/=float(nreads)
+            if PCcorrect:
+                frame*=np.exp(RN*threshold/EMGain)
+                frame=-np.log(1.-frame)
+            frame/=exptime
+        else:
+            if PCcorrect:
+                frame*=np.exp(RN*threshold/EMGain)
+                frame=-np.log(1.-frame)
+
+            
         return frame
