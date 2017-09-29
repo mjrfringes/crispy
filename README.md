@@ -10,5 +10,15 @@ Maxime Rizzo, Tim Brandt, Tyler Groff, Prabal Saxena, Mike McElwain, Avi Mandell
 NASA Goddard Space Flight Center
 
 
+To install (work in progress):
+1) clone the repository
+2) cd into the main directory and type python setup.py install
+3) then you can run the notebooks (in docs/source/notebooks/)
 
-Compatibility to Python 3.5 added. IPython notebook can be run both with a Python 2.7 kernel and a Python 3.5 kernel
+Alternatively, you can run the notebooks by adding the git folder path to the path by:
+```python
+import sys
+folder = '../../../../crispy'
+if folder not in sys.path: sys.path.append(folder)
+```
+
