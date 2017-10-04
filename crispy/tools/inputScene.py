@@ -101,7 +101,7 @@ def convert_krist_cube(cubeshape,lamlist,star_T,star_Vmag,tel_area):
     return newcube
 
 
-def convert_haystacks_cube(hducube):
+def convert_haystacks_cube(cube,wavlist):
     '''
     Function convert_haystacks_cube
     
@@ -109,42 +109,50 @@ def convert_haystacks_cube(hducube):
     
     Parameters
     ----------
-    hducube: HDUList
-        Imported Haystacks fits HDUList
+    cube: ndarray
+        Cube ; pixel values are in Jy or in a compatible units.Quantity
+    lamlist: ndarray
+        array of wavelengths for each slice; either in microns or as a units.Quantity instance
         
     Returns
     -------
-    newcube: HDUList
-        New HDUList with processed cube.
+    hc: ndarray
+        Converted cube in ph/s/um/m2
             
     '''
     
     # extension 1 is the list of wavelengths
-    lamlist = (hducube[1].data*u.um).to(u.nm)
+    if isinstance(wavlist,u.Quantity):
+        lamlist = wavlist.to(u.um)
+    else:
+        lamlist = wavlist*u.um
     lamcube = c.c/lamlist[:,np.newaxis,np.newaxis]**2
     
-    hc = hducube[0].data * u.Jansky 
+    if isinstance(cube,u.Quantity):
+        hc = cube.to(u.Jansky)
+    else:
+        hc = cube*u.Jansky
     
     hc = hc.to(u.Watt/u.m**2/u.Hertz)
     hc *= lamcube
-    hc = hc.to(u.W/u.m**2/u.nm)
+    hc = hc.to(u.W/u.m**2/u.um)
     
     # photon energy
     Eph = (c.h*c.c/lamlist[:,np.newaxis,np.newaxis]).to(u.J)
-    hc = (hc/Eph).to(1./u.s/u.m**2/u.nm)
+    hc = (hc/Eph).to(1./u.s/u.m**2/u.um)
     
     # Copy header and edit what needs to be edited
-    header = hducube[0].header
-    header['BUNIT']='ph/s/nm/m2'
-    header.append(('COMMENT', 'Converted to photons/sec/m2/nm/pixel'), end=True)
+#     header = hducube[0].header
+#     header['BUNIT']='ph/s/um/m2'
+#     header.append(('COMMENT', 'Converted to photons/sec/m2/um/pixel'), end=True)
+#     
+#     # construct a new HDUList, copying over the old cube
+#     outkey = fits.HDUList(fits.PrimaryHDU(hc.value,header))
+#     outkey.append(hducube[1])
+#     outkey.append(hducube[2])
+#     outkey.append(hducube[0])
     
-    # construct a new HDUList, copying over the old cube
-    outkey = fits.HDUList(fits.PrimaryHDU(hc.value,header))
-    outkey.append(hducube[1])
-    outkey.append(hducube[2])
-    outkey.append(hducube[0])
-    
-    return outkey
+    return hc
 
 
 def zodi_cube(krist_cube,area_per_pixel,absmag,Vstarmag,zodi_surfmag,exozodi_surfmag,distAU,t_zodi):

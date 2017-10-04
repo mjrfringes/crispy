@@ -697,6 +697,9 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist,  delt_y=6, flat=None,
     par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum (central) wavelength of extracted cube'), end=True)
     par.hdr.append(('dloglam',loglam[1]-loglam[0], 'Log spacing of extracted wavelength bins'), end=True)
     par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
+#     par.hdr.append(('CDELT3','AWAV-LOG', 'Number of extracted wavelengths'), end=True)
+#     par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
+#     par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
 
     return Image(data=cube,header=par.hdr,extraheader=im.extraheader)
 

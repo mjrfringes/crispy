@@ -92,3 +92,10 @@ crispy.egg-info/*
 crispy/Inputs/ETC/*
 
 dist/*
+
+crispy/ReferenceFiles/wavecalR50_660_SC/*
+
+crispy/ReferenceFiles/wavecalR50_SC/*
+
+
+crispy/ReferenceFiles/Calibra_170425/polyimageR70.fits
