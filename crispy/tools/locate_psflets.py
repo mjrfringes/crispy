@@ -388,7 +388,6 @@ class PSFLets:
 
 
 
-
 def initcoef(order, scale=15.02, phi=np.arctan2(1.926,-1), x0=0, y0=0):
 
     """

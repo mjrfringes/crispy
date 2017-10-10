@@ -62,7 +62,7 @@ class Params(object):
                                     # of Lucy-Richardson deconvolution
         self.PSFLetPositions = False # use the wavelength calibration to place the PSFLets on the detector
 
-        self.QE = "QE_CCD201_wl.txt"	# detector QE, including wavelength-dependent losses
+        self.QE = "QE_CCD201.txt"	# detector QE, including wavelength-dependent losses
                                     # to not include the losses, use simply "QE_CCD201.txt" and set
                                     # self.losses parameters below
         self.nonoise=True           # whether to disable all the noises (except QE)

@@ -33,7 +33,7 @@ from tools.initLogger import getLogger
 log = getLogger('crispy')
 
 
-def polychromeIFS(par,wavelist,inputcube,
+def polychromeIFS(par,inWavelist,inputcube,
                 name='detectorFrame',
                 parallel=True, 
                 QE = True, 
@@ -48,7 +48,7 @@ def polychromeIFS(par,wavelist,inputcube,
     ----------
     par :   Parameter instance
             with at least the key IFS parameters, interlacing and scale
-    wavelist : list of floats
+    inWavelist : list of floats
             List of wavelengths in nm corresponding to the center of each bin
     inputcube : Image
             or HDU. data is 3D ndarray with first dimension the same length as lamlist
@@ -89,6 +89,12 @@ def polychromeIFS(par,wavelist,inputcube,
     except:
         log.error('Missing header information in input file')
         raise
+
+    if isinstance(inWavelist,u.Quantity):
+        wavelist = inWavelist.to(u.nm)
+    else:
+        # assume it is in nm
+        wavelist = inWavelist*u.nm
 
     ###################################################################### 
     # Calculate sampling ratio to resample rotated image and match the lenslet sampling

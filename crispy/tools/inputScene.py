@@ -101,56 +101,73 @@ def convert_krist_cube(cubeshape,lamlist,star_T,star_Vmag,tel_area):
     return newcube
 
 
-def convert_haystacks_cube(cube,wavlist):
+def haystacks_to_photons(haystacks_hdu):
     '''
-    Function convert_haystacks_cube
+    Function haystacks_to_photons
     
-    This function converts a Haystacks cube in Jy/pixels to photons/s/nm/pixel
+    This function converts a Haystacks hdu in Jy/pixels to photons/s/nm/m^2/pixel
+    and returns a full cube
     
     Parameters
     ----------
-    cube: ndarray
-        Cube ; pixel values are in Jy or in a compatible units.Quantity
-    lamlist: ndarray
-        array of wavelengths for each slice; either in microns or as a units.Quantity instance
+    cube: haystacks_hdu
+        Haystacks HDU
         
     Returns
     -------
     hc: ndarray
         Converted cube in ph/s/um/m2
+    lamlist: wavelength array
             
     '''
     
-    # extension 1 is the list of wavelengths
+    # last extension is the list of wavelengths
+    NEXT = haystacks_hdu[0].header['N_EXT']
+    lamlist = haystacks_hdu[NEXT+1].data*u.um
+    lamcube = c.c/lamlist[:,np.newaxis,np.newaxis]**2
+    
+    # allocate memory
+    hc = np.zeros((NEXT,haystacks_hdu[1].data.shape[0],haystacks_hdu[1].data.shape[1]),dtype=np.float32)*u.Jy
+    for i in range(NEXT):
+        hc[i] = haystacks_hdu[i+1].data*u.Jy
+    
+    # convert cube
+    hc = hc.to(u.Watt/u.m**2/u.Hertz)
+    hc *= lamcube
+    hc = hc.to(u.W/u.m**2/u.um)
+    
+    # photon energy
+    Eph = (c.h*c.c/lamlist[:,np.newaxis,np.newaxis]/u.photon).to(u.J/u.photon)
+    
+    # convert to photon
+    return (hc/Eph).to(u.photon/u.s/u.m**2/u.nm),lamlist
+    
+def Jy_to_photons(cube_Jy, wavel):
+    '''
+    Parameters
+    ----------
+        cube_Jy: 3D datacube in Jy
+        wavel: 1D array with wavelengths in microns
+    Returns
+    -------
+        hc: 3D haystacks cube in photons/m2/um/s
+   
+    '''
     if isinstance(wavlist,u.Quantity):
         lamlist = wavlist.to(u.um)
     else:
         lamlist = wavlist*u.um
     lamcube = c.c/lamlist[:,np.newaxis,np.newaxis]**2
     
-    if isinstance(cube,u.Quantity):
-        hc = cube.to(u.Jansky)
-    else:
-        hc = cube*u.Jansky
+    hc = cube_Jy * u.Jansky 
     
     hc = hc.to(u.Watt/u.m**2/u.Hertz)
     hc *= lamcube
     hc = hc.to(u.W/u.m**2/u.um)
     
     # photon energy
-    Eph = (c.h*c.c/lamlist[:,np.newaxis,np.newaxis]).to(u.J)
-    hc = (hc/Eph).to(1./u.s/u.m**2/u.um)
-    
-    # Copy header and edit what needs to be edited
-#     header = hducube[0].header
-#     header['BUNIT']='ph/s/um/m2'
-#     header.append(('COMMENT', 'Converted to photons/sec/m2/um/pixel'), end=True)
-#     
-#     # construct a new HDUList, copying over the old cube
-#     outkey = fits.HDUList(fits.PrimaryHDU(hc.value,header))
-#     outkey.append(hducube[1])
-#     outkey.append(hducube[2])
-#     outkey.append(hducube[0])
+    Eph = (c.h*c.c/lamlist[:,np.newaxis,np.newaxis]/u.photon).to(u.J/u.photon)
+    hc = (hc/Eph).to(u.photon/u.s/u.m**2/u.um)
     
     return hc
 

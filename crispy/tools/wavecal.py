@@ -5,13 +5,13 @@ import matplotlib as mpl
 import numpy as np
 from scipy import signal
 try:
-    from astropy.io import fits as pyf
+    from astropy.io import fits as fits
 except:
-    import pyfits as pyf
+    import pyfits as fits
 
 from initLogger import getLogger
 log = getLogger('crispy')
-import os
+import os,re
 import time
 import multiprocessing
 from scipy import ndimage
@@ -21,6 +21,8 @@ from scipy.special import erf
 from shutil import copy2
 import glob
 import warnings
+from scipy import ndimage,interpolate
+
 warnings.filterwarnings("ignore")
 
 
@@ -378,8 +380,8 @@ def gethires(x, y, good, image, upsample=5, nsubarr=5, npix=13, renorm=True):
                     xval = x[i] - 0.5/upsample
                     yval = y[i] - 0.5/upsample
 
-                    ix = (1 + int(xval) - xval)*upsample
-                    iy = (1 + int(yval) - yval)*upsample
+                    ix = int((1 + int(xval) - xval)*upsample)
+                    iy = int((1 + int(yval) - yval)*upsample)
 
                     if ix == upsample:
                         ix -= upsample
@@ -388,6 +390,7 @@ def gethires(x, y, good, image, upsample=5, nsubarr=5, npix=13, renorm=True):
 
                     iy1, ix1 = [int(yval) - npix//2, int(xval) - npix//2]
                     cutout = image.data[iy1:iy1 + npix + 1, ix1:ix1 + npix + 1]
+#                     log.info('{:},{:},{:}'.format(k,iy,ix))
                     subim[k, iy::upsample, ix::upsample] = cutout
                     k += 1
 
@@ -532,7 +535,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
                 for ii in range(di):
                     for jj in range(di):
                         outim[ii*dj:(ii + 1)*dj, jj*dj:(jj + 1)*dj] = hiresarr[ii, jj]
-                out = pyf.HDUList(pyf.PrimaryHDU(hiresarr.astype(np.float32)))
+                out = fits.HDUList(fits.PrimaryHDU(hiresarr.astype(np.float32)))
                 out.writeto(par.wavecalDir + 'hires_psflets_lam%d.fits' % (lam[index]), clobber=True)
     else:
         log.info('No parallel computation')
@@ -553,7 +556,7 @@ def makeHires(par,xindx,yindx,lam,allcoef,psftool,imlist = None, parallel=True, 
                 for ii in range(di):
                     for jj in range(di):
                         outim[ii*dj:(ii + 1)*dj, jj*dj:(jj + 1)*dj] = hiresarr[ii, jj]
-                out = pyf.HDUList(pyf.PrimaryHDU(hiresarr.astype(np.float32)))
+                out = fits.HDUList(fits.PrimaryHDU(hiresarr.astype(np.float32)))
                 out.writeto(par.wavecalDir + 'hires_psflets_lam%d.fits' % (lam[i]), clobber=True)
 
     return hires_arrs
@@ -619,7 +622,7 @@ def monochromatic_update(par,inImage,inLam,order=3,apodize=False):
 
 def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=False, makehiresPSFlets=False,
-                      makePolychrome=False,makehiresPolychrome=False,
+                      makePolychrome=False,makehiresPolychrome=False,makePSFWidths=False,
                       savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
                       parallel=True,inspect_first=True,apodize=False,lamsol=None):
     """
@@ -652,6 +655,8 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
             diversity. This requires high-SNR monochromatic images.
     makePolychrome: Boolean
             Whether or not to build the polychrome cube used in the least squares extraction
+    makePSFWidths: Boolean
+            Whether or not to fit the PSFLet widths using the high-res PSFLets
     makehiresPolychrome: Boolean
             Whether or not to build a polychrome cube at a high spatial resolution for future
             subpixel interpolations
@@ -780,11 +785,55 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     if makehiresPSFlets:
 
         hires_arrs = makeHires(par,xindx,yindx,lam,allcoef, psftool,imlist, parallel,savehiresimages,upsample,nsubarr)
-    
+        
+    hires_list = np.sort(glob.glob(par.wavecalDir + 'hires_psflets_lam???.fits'))
+    if makePSFWidths:
+        log.info("Computing PSFLet widths...")
+        if not makehiresPSFlets:
+            hires_arrs = [fits.open(filename)[0].data for filename in hires_list]
+            lam_hires = [int(re.sub('.*lam', '', re.sub('.fits', '', filename)))
+                            for filename in hires_list]
+        else:
+            lam_hires = lam.copy()
+            
+        shape = hires_arrs[0].shape
+        sigarr = np.zeros((len(hires_list), shape[0], shape[1]))
+        _x = np.arange(shape[2])/float(upsample)
+        _x -= _x[_x.shape[0]//2]
+
+        for i in range(sigarr.shape[0]):
+            for j in range(sigarr.shape[1]):
+                for k in range(sigarr.shape[2]):                
+                    row = np.sum(hires_arrs[i][j, k, :, shape[3]//2-1:shape[3]//2+1],axis=1) 
+                    sigarr[i, j, k] = np.sum(row*_x**2)
+                    sigarr[i, j, k] /= np.sum(row)
+
+            sigarr[i] = np.sqrt(sigarr[i])
+
+        mean_x = psftool.xindx[:, :, psftool.xindx.shape[-1]//2]
+        mean_y = psftool.yindx[:, :, psftool.yindx.shape[-1]//2]
+
+        longsigarr = np.zeros((len(lam_hires), mean_x.shape[0], mean_x.shape[1]))
+
+        ix = mean_x*hires_arrs[0].shape[1]/par.npix - 0.5
+        iy = mean_y*hires_arrs[0].shape[0]/par.npix - 0.5
+
+        for i in range(sigarr.shape[0]):
+            longsigarr[i] = ndimage.map_coordinates(sigarr[i], [iy, ix], order=3, mode='nearest')
+        fullsigarr = np.ones((psftool.xindx.shape))
+        for i in range(mean_x.shape[0]):
+            for j in range(mean_x.shape[1]):
+                if psftool.good[i,j]:
+                    fit = interpolate.interp1d(np.asarray(lam_hires), longsigarr[:, i, j],
+                                               bounds_error=False, fill_value='extrapolate')
+                    fullsigarr[i, j] = fit(psftool.lam_indx[i, j])
+                    
+        out = fits.HDUList(fits.PrimaryHDU(fullsigarr.astype(np.float32)))
+        out.writeto(outdir+'PSFwidths.fits', clobber=True)
+
     if makePolychrome:
         if not makehiresPSFlets:
-            hires_list = np.sort(glob.glob(par.wavecalDir + 'hires_psflets_lam???.fits'))
-            hires_arrs = [pyf.open(filename)[0].data for filename in hires_list]
+            hires_arrs = [fits.open(filename)[0].data for filename in hires_list]
 
         lam_midpts,lam_endpts=calculateWaveList(par,lam,method='lstsq')
         Nspec = len(lam_endpts)
@@ -832,9 +881,9 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
             
         log.info('Saving polychrome cube')
 
-        out = pyf.HDUList(pyf.PrimaryHDU(polyimage.astype(np.float32)))
+        out = fits.HDUList(fits.PrimaryHDU(polyimage.astype(np.float32)))
         out.writeto(outdir + 'polychromeR%d.fits' % (par.R), clobber=True)
-        out = pyf.HDUList(pyf.PrimaryHDU(np.sum(polyimage,axis=0).astype(np.float32)))
+        out = fits.HDUList(fits.PrimaryHDU(np.sum(polyimage,axis=0).astype(np.float32)))
         out.writeto(outdir + 'polychromeR%dstack.fits' % (par.R), clobber=True)
     
     else:
@@ -851,17 +900,17 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
             good += [_good]
     
     log.info('Saving wavelength calibration cube')
-    outkey = pyf.HDUList(pyf.PrimaryHDU(lam_midpts))
-    outkey.append(pyf.PrimaryHDU(np.asarray(xpos)))
-    outkey.append(pyf.PrimaryHDU(np.asarray(ypos)))
-    outkey.append(pyf.PrimaryHDU(np.asarray(good).astype(np.uint8)))
+    outkey = fits.HDUList(fits.PrimaryHDU(lam_midpts))
+    outkey.append(fits.PrimaryHDU(np.asarray(xpos)))
+    outkey.append(fits.PrimaryHDU(np.asarray(ypos)))
+    outkey.append(fits.PrimaryHDU(np.asarray(good).astype(np.uint8)))
     outkey.writeto(outdir + 'polychromekeyR%d.fits' % (par.R), clobber=True)
 
     if makehiresPolychrome:
         log.info('Making high-resolution polychrome cube (can use lots of memory)')        
         if not makehiresPSFlets:
             hires_list = np.sort(glob.glob(par.wavecalDir + 'hires_psflets_lam???.fits'))
-            hires_arrs = [pyf.open(filename)[0].data for filename in hires_list]
+            hires_arrs = [fits.open(filename)[0].data for filename in hires_list]
 
         lam_midpts,lam_endpts=calculateWaveList(par,lam,method='lstsq')
         Nspec = len(lam_endpts)
@@ -894,9 +943,9 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
             
         log.info('Saving hi-res polychrome cube')
 
-        out = pyf.HDUList(pyf.PrimaryHDU(hirespoly.astype(np.float32)))
+        out = fits.HDUList(fits.PrimaryHDU(hirespoly.astype(np.float32)))
         out.writeto(outdir + 'hirespolychromeR%d.fits.gz' % (par.R), clobber=True)
-        out = pyf.HDUList(pyf.PrimaryHDU(np.sum(hirespoly,axis=0).astype(np.float32)))
+        out = fits.HDUList(fits.PrimaryHDU(np.sum(hirespoly,axis=0).astype(np.float32)))
         out.writeto(outdir + 'hiresPolychromeR%dstack.fits' % (par.R), clobber=True)
 
 

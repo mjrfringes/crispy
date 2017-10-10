@@ -1,7 +1,7 @@
 try:
-    from astropy.io import fits as pyf
+    from astropy.io import fits
 except:
-    import pyfits as pyf
+    import pyfits as fits
 
 import numpy as np
 from initLogger import getLogger
@@ -82,7 +82,7 @@ def testReduction(par,name,ifsimage):
             Return the reduced cube from the original IFS image
     
     '''
-    calCube = pyf.open(par.wavecalDir+par.wavecalName)
+    calCube = fits.open(par.wavecalDir+par.wavecalName)
     
     waveCalArray = calCube[0].data#wavecal[0,:,:]
     waveCalArray = waveCalArray/1000.
@@ -126,7 +126,7 @@ def testReduction(par,name,ifsimage):
                 else:
                     cube[iwav,j,i] = np.NaN                
 
-    pyf.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
+    fits.PrimaryHDU(cube).writeto(name+'.fits',clobber=True)
     return cube
 
 def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
@@ -174,7 +174,7 @@ def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
 
     return lam_midpts,lam_endpts
 
-def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=False,hires=False,upsample=3):
+def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=False,hires=False,upsample=3,fitbkgnd=True):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -193,14 +193,23 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
             Return the reduced cube from the original IFS image
 
     '''
-    polychromeR = pyf.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
+    polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
     psflets = polychromeR[0].data
-    
-    polychromekey = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
-    lams = polychromekey[0].data
+        
+    polychromekey = fits.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
     xindx = polychromekey[1].data
     yindx = polychromekey[2].data
     good = polychromekey[3].data
+
+    if fitbkgnd:
+        n_add = 1
+        psflets = _add_row(psflets, n=n_add, dtype=np.float64)
+        psflets[-n_add:] = 0
+        psflets[-1, 4:-4, 4:-4] = 1
+        xindx = _add_row(xindx, n=n_add)
+        yindx = _add_row(yindx, n=n_add)
+        good = _add_row(good, n=n_add)
+    par.hdr.append(('fitbkgnd',fitbkgnd, 'Fit a uniform background to each lenslet?'), end=True)
     
     if ivar:
         if ifsimage.ivar is None:
@@ -227,7 +236,6 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
             else:
                 cube[:,j,i] = np.NaN
                 ivarcube[:,i,j] = 0.
-    
     lam_midpts,lam_endpts = calculateWaveList(par)
     for i in range(len(psflets)):
         ydim,xdim=ifsimage.data.shape
@@ -240,7 +248,7 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
         model += psflets[i]*coefs_flat[psflet_indx]
     
     if hires:
-        hires_polychromeR = pyf.open(par.wavecalDir + 'hiresPolyChromeR%d.fits.gz' % (par.R))[0].data
+        hires_polychromeR = fits.open(par.wavecalDir + 'hiresPolyChromeR%d.fits.gz' % (par.R))[0].data
         hires_model = np.zeros(hires_polychromeR[0].shape)
         for i in range(len(psflets)):
             ydim,xdim=ifsimage.data.shape
@@ -254,18 +262,44 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
 
     if 'cubemode' not in par.hdr:
         par.hdr.append(('cubemode','Least squares', 'Method used to extract data cube'), end=True)
-        par.hdr.append(('lam_min',np.amin(lams), 'Minimum (central) wavelength of extracted cube'),end=True)
-        par.hdr.append(('lam_max',np.amax(lams), 'Maximum (central) wavelength of extracted cube'),end=True)
-        par.hdr.append(('dloglam',np.log(lams[1]/lams[0]), 'Log spacing of extracted wavelength bins'),end=True)
-        par.hdr.append(('nlam', lams.shape[0], 'Number of extracted wavelengths'),end=True)
+        par.hdr.append(('lam_min',np.amin(lam_midpts), 'Minimum (central) wavelength of extracted cube'),end=True)
+        par.hdr.append(('lam_max',np.amax(lam_midpts), 'Maximum (central) wavelength of extracted cube'),end=True)
+        par.hdr.append(('dloglam',np.log(lam_midpts[1]/lam_midpts[0]), 'Log spacing of extracted wavelength bins'),end=True)
+        par.hdr.append(('nlam', lam_midpts.shape[0], 'Number of extracted wavelengths'),end=True)
+    
+    par.hdr.append(('CTYPE1', 'RA---TAN','first parameter RA  ,  projection TANgential'), end=True)
+    par.hdr.append(('CTYPE2', 'DEC--TAN','second parameter DEC,  projection TANgential'), end=True)       
+    par.hdr.append(('CRVAL1', 0.,'Reference X pixel value'), end=True)
+    par.hdr.append(('CRVAL2', 0.,'Reference Y pixel value'), end=True)
+    par.hdr.append(('CRPIX1', par.nlens//2,'Reference X pixel'), end=True)
+    par.hdr.append(('CRPIX2', par.nlens//2,'Reference Y pixel'), end=True)
+    par.hdr.append(('EQUINOX', 2000,'Equinox of coordinates'), end=True)
+    
+    angle = par.philens
+    xpixscale=-0.01/3600.
+    ypixscale=0.01/3600.
+    par.hdr.append(('CD1_1', np.cos(angle)*xpixscale,'Rotation matrix coefficient'), end=True)
+    par.hdr.append(('CD1_2', -np.sin(angle)*xpixscale,'Rotation matrix coefficient'), end=True)
+    par.hdr.append(('CD2_1', np.sin(angle)*ypixscale,'Rotation matrix coefficient'), end=True)
+    par.hdr.append(('CD2_2', np.cos(angle)*ypixscale,'Rotation matrix coefficient'), end=True)
+    par.hdr['CTYPE3'] = 'WAVE-LOG'
+    par.hdr['CUNIT3'] = 'nm'
+    par.hdr['CRVAL3'] = lam_midpts[0]
+    par.hdr['CDELT3'] = np.log(lam_midpts[1]/lam_midpts[0])*lam_midpts[len(lam_midpts)//2]
+    par.hdr['CRPIX3'] = 1
+
+
+    if fitbkgnd:
+        cube = cube[:-1]
+        ivarcube = ivarcube[:-1]
 
     if hasattr(par,'lenslet_flat'):
-        lenslet_flat = pyf.open(par.lenslet_flat)[1].data
+        lenslet_flat = fits.open(par.lenslet_flat)[1].data
         lenslet_flat = lenslet_flat[np.newaxis,:]
         if "FLAT" not in par.hdr:
             par.hdr.append(('FLAT',True, 'Applied lenslet flatfield'), end=True)
         cube *= lenslet_flat
-        ivarcube /= lenslet_flat**2
+        ivarcube /= lenslet_flat**2+1e-20
     else:
         lenslet_flat = np.ones(cube.shape)
         
@@ -273,9 +307,8 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
     if hasattr(par,'lenslet_mask'):
         if "MASK" not in par.hdr:
             par.hdr.append(('MASK',True, 'Applied lenslet mask'), end=True)
-        lenslet_mask = pyf.open(par.lenslet_mask)[1].data
-        lenslet_mask = lenslet_mask[np.newaxis,:]
-        ivarcube *= lenslet_mask
+        lenslet_mask = fits.open(par.lenslet_mask)[1].data
+        ivarcube *= lenslet_mask[np.newaxis,:]
     else:
         lenslet_mask = np.ones(cube.shape)
     
@@ -284,13 +317,22 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
         par.hdr.append(('SMOOTHED',smoothandmask, 'Cube smoothed over bad lenslets'), end=True)
     else:
         par.hdr['SMOOTHED'] = (smoothandmask, 'Cube smoothed over bad lenslets')
+        
+            
+    
     if smoothandmask:
-        cube = Image(data=cube*lenslet_mask,ivar=ivarcube)
+        cube = Image(data=cube*lenslet_mask[np.newaxis,:],ivar=ivarcube)
         cube = _smoothandmask(cube, np.ones(good.shape))
     else:
         cube = Image(data=cube,ivar=ivarcube)
 
-    Image(data=cube.data,ivar=ivarcube,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'.fits',clobber=True)
+    #Image(data=cube.data,ivar=ivarcube,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'.fits',clobber=True)
+    out = fits.HDUList(fits.PrimaryHDU(None,par.hdr))
+    out.append(fits.PrimaryHDU(cube.data,par.hdr))
+    out.append(fits.PrimaryHDU(cube.ivar,par.hdr))
+    out.append(fits.PrimaryHDU(None,ifsimage.extraheader))
+    out.writeto(name+'.fits', clobber=True)
+
     Image(data=resid,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_resid.fits',clobber=True)
     Image(data=model,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_model.fits',clobber=True)
     if hires: Image(data=hires_model,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_hires_model.fits',clobber=True)
@@ -588,7 +630,15 @@ def intOptimalExtract(par,name,IFSimage,smoothandmask=True):
 
     
     datacube = fitspec_intpix_np(par,IFSimage, loc, lam_midpts,smoothandmask=smoothandmask)
-    datacube.write(name+'.fits',clobber=True)
+    #datacube.write(name+'.fits',clobber=True)
+    out = fits.HDUList(fits.PrimaryHDU(None,par.hdr))
+    out.append(fits.PrimaryHDU(datacube.data,par.hdr))
+    out.append(fits.PrimaryHDU(datacube.ivar,par.hdr))
+    out.append(fits.PrimaryHDU(None,datacube.extraheader))
+    out.writeto(name+'.fits', clobber=True)
+
+    
+    
     return datacube
 
 def fitspec_intpix(par,im, PSFlet_tool, lamlist,  delt_y=6, flat=None, 
@@ -703,7 +753,7 @@ def fitspec_intpix(par,im, PSFlet_tool, lamlist,  delt_y=6, flat=None,
 
     return Image(data=cube,header=par.hdr,extraheader=im.extraheader)
 
-def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=6):
+def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=5):
     """
     Original optimal extraction routine in Numpy from T. Brand
     
@@ -729,7 +779,11 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=6)
     xindx = PSFlet_tool.xindx
     yindx = PSFlet_tool.yindx
     Nmax = PSFlet_tool.nlam_max
-
+    try:
+        sig = fits.open(par.wavecalDir + 'PSFwidths.fits')[0].data
+    except:
+        sig=par.FWHM/2.35*np.ones(xindx.shape)
+    
     x = np.arange(im.data.shape[1])
     y = np.arange(im.data.shape[0])
     x, y = np.meshgrid(x, y)
@@ -746,7 +800,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=6)
     allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
     PSFlet_tool.geninterparray(lamsol, allcoef)
     
-    #polychromekey = pyf.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
+    #polychromekey = fits.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
 #     lams = polychromekey[0].data
 #     xindx = polychromekey[1].data+0.5
 #     yindx = polychromekey[2].data+0.5
@@ -756,24 +810,18 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=6)
     
     for i in range(xindx.shape[0]):
         for j in range(yindx.shape[1]):
-#             good = True
-#             for lam in lamlist:
-#                 _x,_y = PSFlet_tool.return_locations(lam, allcoef, j-par.nlens//2, i-par.nlens//2)
-#                 good *= (_x > delt_y)*(_x < xdim-delt_y)*(_y > delt_y)*(_y < ydim-delt_y)
-#                  
-#             if good:
             if good[i,j]:
                 _x = xindx[i, j, :PSFlet_tool.nlam[i, j]]
                 _y = yindx[i, j, :PSFlet_tool.nlam[i, j]]
+                _sig = sig[i, j, :PSFlet_tool.nlam[i, j]]
                 _lam = PSFlet_tool.lam_indx[i, j, :PSFlet_tool.nlam[i, j]]
                 iy = np.nanmean(_y)
                 if ~np.isnan(iy):
                     i1 = int(iy - delt_y/2.)
                     dy = _y[xarr[:,:len(_lam)]] - y[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
-                    lams,tmp = np.meshgrid(_lam,np.arange(delt_y))
+                    lams,_ = np.meshgrid(_lam,np.arange(delt_y))
                     
-                    sig = par.FWHM/2.35*lams/par.FWHMlam
-                    weight = np.exp(-dy**2/2./sig**2)/sig/np.sqrt(2.*np.pi)
+                    weight = np.exp(-dy**2/2./_sig**2)/_sig/np.sqrt(2.*np.pi)
                     data = im.data[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
                     
                     if im.ivar is not None:
@@ -798,22 +846,44 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=6)
         par.hdr.append(('cubemode','Optimal Extraction', 'Method used to extract data cube'), end=True)
         par.hdr.append(('lam_min',np.amin(lamlist), 'Minimum mid wavelength of extracted cube'), end=True)
         par.hdr.append(('lam_max',np.amax(lamlist), 'Maximum mid wavelength of extracted cube'), end=True)
-        par.hdr.append(('dlam',lamlist[1]-lamlist[0], 'Spacing of extracted wavelength bins'), end=True)
+        par.hdr.append(('dloglam',np.log(lamlist[1]/lamlist[0]), 'Log spacing of extracted wavelength bins'),end=True)
         par.hdr.append(('nlam',lamlist.shape[0], 'Number of extracted wavelengths'), end=True)
+        
+    par.hdr.append(('CTYPE1', 'RA---TAN','first parameter RA  ,  projection TANgential'), end=True)
+    par.hdr.append(('CTYPE2', 'DEC--TAN','second parameter DEC,  projection TANgential'), end=True)       
+    par.hdr.append(('CRVAL1', 0.,'Reference X pixel value'), end=True)
+    par.hdr.append(('CRVAL2', 0.,'Reference Y pixel value'), end=True)
+    par.hdr.append(('CRPIX1', par.nlens//2,'Reference X pixel'), end=True)
+    par.hdr.append(('CRPIX2', par.nlens//2,'Reference Y pixel'), end=True)
+    par.hdr.append(('EQUINOX', 2000,'Equinox of coordinates'), end=True)
+    
+    angle = par.philens
+    xpixscale=-0.01/3600.
+    ypixscale=0.01/3600.
+    par.hdr.append(('CD1_1', np.cos(angle)*xpixscale,'Rotation matrix coefficient'), end=True)
+    par.hdr.append(('CD1_2', -np.sin(angle)*xpixscale,'Rotation matrix coefficient'), end=True)
+    par.hdr.append(('CD2_1', np.sin(angle)*ypixscale,'Rotation matrix coefficient'), end=True)
+    par.hdr.append(('CD2_2', np.cos(angle)*ypixscale,'Rotation matrix coefficient'), end=True)
+    par.hdr['CTYPE3'] = 'WAVE-LOG'
+    par.hdr['CUNIT3'] = 'nm'
+    par.hdr['CRVAL3'] = lamlist[0]
+    par.hdr['CDELT3'] = np.log(lamlist[1]/lamlist[0])*lamlist[len(lamlist)//2]
+    par.hdr['CRPIX3'] = 1
+
     
     if hasattr(par,'lenslet_flat'):
-        lenslet_flat = pyf.open(par.lenslet_flat)[1].data
+        lenslet_flat = fits.open(par.lenslet_flat)[1].data
         lenslet_flat = lenslet_flat[np.newaxis,:]
         if "FLAT" not in par.hdr:
             par.hdr.append(('FLAT',True, 'Applied lenslet flatfield'), end=True)
         cube *= lenslet_flat
-        ivarcube /= lenslet_flat**2
+        ivarcube /= lenslet_flat**2 + 1e-20
     else:
         lenslet_flat = np.ones(cube.shape)
     if hasattr(par,'lenslet_mask'):
         if "MASK" not in par.hdr:
             par.hdr.append(('MASK',True, 'Applied lenslet mask'), end=True)
-        lenslet_mask = pyf.open(par.lenslet_mask)[1].data
+        lenslet_mask = fits.open(par.lenslet_mask)[1].data
         lenslet_mask = lenslet_mask[np.newaxis,:]
         ivarcube *= lenslet_mask
     else:
@@ -835,7 +905,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=6)
 
     return cube
 
-def fitspec_intpix_np_old(im, PSFlet_tool, lam, delt_x=7, header=pyf.PrimaryHDU().header):
+def fitspec_intpix_np_old(im, PSFlet_tool, lam, delt_x=7, header=fits.PrimaryHDU().header):
     """
     """
 

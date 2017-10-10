@@ -41,7 +41,7 @@ class Params(object):
 
         self.nlens = 108            # Number of lenslets across array (account for rotation)
         self.pitch = 174e-6         # Lenslet pitch (meters)
-        self.interlace = 3          # Interlacing
+        self.interlace = 2.          # Interlacing
         self.philens = arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
         self.lensletsampling= 1./2.# lenslet size in lambda/D
         self.lensletlam = 660.     # Wavelength at which this is defined (nm)
