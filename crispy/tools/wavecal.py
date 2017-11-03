@@ -776,7 +776,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
 
     log.info("Computing wavelength values at pixel centers")
     psftool = PSFLets()
-    psftool.genpixsol(par,lam, allcoef, order=order,lam1=lam1/1.05, lam2=lam2*1.05)
+    psftool.genpixsol(par,lam, allcoef, order=order,lam1=lam1/1.01, lam2=lam2*1.01)
     psftool.savepixsol(outdir=outdir)
 
     xindx = np.arange(-par.nlens/2, par.nlens/2)

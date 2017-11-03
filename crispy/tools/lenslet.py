@@ -16,7 +16,7 @@ from spectrograph import distort
 from locate_psflets import initcoef,transform,PSFLets
 
 
-def processImagePlane(par,imagePlane):
+def processImagePlane(par,imagePlane,noRot=False):
     '''
     Function processImagePlane
     
@@ -48,7 +48,10 @@ def processImagePlane(par,imagePlane):
     ypad //=2
     paddedImagePlane[xpad:-xpad,ypad:-ypad] = imagePlane
     
-    imagePlaneRot = Rotate(paddedImagePlane,par.philens,clip=False)
+    if noRot:
+        imagePlaneRot = paddedImagePlane.copy()
+    else:    
+        imagePlaneRot = Rotate(paddedImagePlane,par.philens,clip=False)
     
     ###################################################################### 
     # Flux conservative rebinning

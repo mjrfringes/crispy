@@ -174,7 +174,9 @@ def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
 
     return lam_midpts,lam_endpts
 
-def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=False,hires=False,upsample=3,fitbkgnd=True):
+def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=2,
+                refine=False,hires=False,upsample=3,fitbkgnd=False,
+                specialPolychrome=None,returnall=False):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -193,8 +195,11 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
             Return the reduced cube from the original IFS image
 
     '''
-    polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
-    psflets = polychromeR[0].data
+    if specialPolychrome is None:
+        polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
+        psflets = polychromeR[0].data
+    else:
+        psflets = specialPolychrome.copy()
         
     polychromekey = fits.open(par.wavecalDir + 'polychromekeyR%d.fits' % (par.R))
     xindx = polychromekey[1].data
@@ -209,7 +214,9 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
         xindx = _add_row(xindx, n=n_add)
         yindx = _add_row(yindx, n=n_add)
         good = _add_row(good, n=n_add)
-    par.hdr.append(('fitbkgnd',fitbkgnd, 'Fit a uniform background to each lenslet?'), end=True)
+    else:
+        n_add=0
+    par.hdr.append(('fitbkgnd',fitbkgnd, 'Fit a uniform background to each microspectrum?'), end=True)
     
     if ivar:
         if ifsimage.ivar is None:
@@ -232,17 +239,19 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
             if np.prod(good[:,i,j],axis=0):
                 subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xindx[:,i,j],yindx[:,i,j],psflets,dy)
                 cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
-                ivarcube[:,i,j] = 1.
+                ivarcube[:,j,i] = 1.
+#                 for k in range(len(psflets)):
+#                     resid[y0:y1, x0:x1] -= psflets[k,y0:y1, x0:x1]*cube[k,j,i]
+#                     model[y0:y1, x0:x1] += psflets[k,y0:y1, x0:x1]*cube[k,j,i]
             else:
                 cube[:,j,i] = np.NaN
-                ivarcube[:,i,j] = 0.
-    lam_midpts,lam_endpts = calculateWaveList(par)
+                ivarcube[:,j,i] = 0.
     for i in range(len(psflets)):
         ydim,xdim=ifsimage.data.shape
         _x = xindx[i]
         _y = yindx[i]
         good = (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
-        psflet_indx = _tag_psflets(ifsimage.data.shape, _x, _y, good,dy=10)
+        psflet_indx = _tag_psflets(ifsimage.data.shape, _x, _y, good,dx=10,dy=10)
         coefs_flat = np.reshape(cube[i].transpose(), -1)
         resid -= psflets[i]*coefs_flat[psflet_indx]
         model += psflets[i]*coefs_flat[psflet_indx]
@@ -255,10 +264,11 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
             _x = xindx[i]
             _y = yindx[i]
             good = (_x > dy)*(_x < xdim-dy)*(_y > dy)*(_y < ydim-dy)
-            psflet_indx = _tag_hires_psflets(hires_model.shape, _x, _y, good,dy=10,upsample=upsample)
+            psflet_indx = _tag_hires_psflets(hires_model.shape, _x, _y, good,dx=10,dy=10,upsample=upsample)
             coefs_flat = np.reshape(cube[i].transpose(), -1)
             hires_model += hires_polychromeR[i]*coefs_flat[psflet_indx]/upsample**2
         
+    lam_midpts,lam_endpts = calculateWaveList(par,method='lstsq')
 
     if 'cubemode' not in par.hdr:
         par.hdr.append(('cubemode','Least squares', 'Method used to extract data cube'), end=True)
@@ -336,7 +346,10 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=3,refine=Fals
     Image(data=resid,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_resid.fits',clobber=True)
     Image(data=model,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_model.fits',clobber=True)
     if hires: Image(data=hires_model,header=par.hdr,extraheader=ifsimage.extraheader).write(name+'_hires_model.fits',clobber=True)
-    return cube
+    if returnall:
+        return cube,model,resid
+    else:
+        return cube
 
 def _add_row(arr, n=1, dtype=None):
     """
@@ -466,7 +479,7 @@ def fit_cutout(subim, psflets, mode='lstsq'):
 
     return coef
 
-def _tag_psflets(shape, x, y, good, dx=10, dy=10):
+def _tag_psflets(shape, x, y, good, dx=8, dy=7):
     """
     Create an array with the index of each lenslet at a given
     wavelength.  This will make it very easy to remove the best-fit
@@ -500,10 +513,8 @@ def _tag_psflets(shape, x, y, good, dx=10, dy=10):
 
     psflet_indx = np.zeros(shape, np.int)
     oldshape = x.shape
-    x_int = (np.reshape(x + 0.5, -1)).astype(int)
-    y_int = (np.reshape(y + 0.5, -1)).astype(int)
-#     x_int = (np.reshape(x, -1)).astype(int)
-#     y_int = (np.reshape(y, -1)).astype(int)
+    x_int = (np.reshape(x+0.5, -1)).astype(int)
+    y_int = (np.reshape(y+0.5, -1)).astype(int)
     
     good = np.reshape(good, -1)
     x = np.reshape(x, -1)

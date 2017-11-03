@@ -16,22 +16,24 @@ class Params(object):
         Main class containing all the sim parameters
         '''
 
-        self.saveRotatedInput = True
-        self.saveLensletPlane = True 
+        self.saveRotatedInput = False
+        self.saveLensletPlane = False 
         self.saveDetector = True
-        self.savePoly = False # save polychromatic cubes
         self.codeRoot = codeRoot
         self.prefix = self.codeRoot+'/ReferenceFiles'
         self.exportDir = self.codeRoot+'/SimResults'
         self.unitTestsOutputs = self.codeRoot+'/unitTestsOutputs'
 #         self.wavecalDir = self.prefix+'/VARIAwavecal/'
+        self.wavecalDir = self.prefix+'/Calibra_170510/'
 #         self.wavecalDir = self.prefix+'/HighSNRWavecal/'
 #         self.wavecalDir = self.prefix+'/wavecal/'
 #         self.wavecalDir = self.prefix+'/wavecalR50_660/'
-        self.wavecalDir = self.prefix+'/wavecalR50_SC/'
+#         self.wavecalDir = self.prefix+'/wavecalR50_770/'
 #         self.wavecalName = 'VARIAcalCube.fits'
 #         self.wavecalName = 'LLTFcalCube.fits'
 #         self.wavecalName = 'simCalCube.fits'
+        self.lenslet_flat = self.wavecalDir+"lenslet_flat.fits"
+        self.lenslet_mask = self.wavecalDir+"lenslet_mask.fits"
         self.filelist = []
         self.lamlist = []
 
@@ -41,10 +43,11 @@ class Params(object):
 
         self.nlens = 108            # Number of lenslets across array (account for rotation)
         self.pitch = 174e-6         # Lenslet pitch (meters)
-        self.interlace = 3          # Interlacing
+        self.interlace = 2          # Interlacing
         self.philens = arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
+        self.pinhole = True         # Use a pinhole grid?
         self.lensletsampling= 1./2.# lenslet size in lambda/D
-        self.lensletlam = 660.     # Wavelength at which this is defined (nm)
+        self.lensletlam = 600.     # Wavelength at which this is defined (nm)
 
         ###################################################################### 
         # Detector stuff
@@ -55,47 +58,34 @@ class Params(object):
         self.pxperdetpix = 1       # Oversampling of the final detector pixels
         self.convolve = True        # whether to convolve the existing kernels with
                                     # gaussian kernel (simulating defocus)
-        self.FWHM = 2.               # FWHM of gaussian kernel
+        self.FWHM = 2               # FWHM of gaussian kernel
         self.FWHMlam = 660.         # Lam at which FWHM is defined
-        self.gaussian = True        # Use standard Gaussian kernels instead of library
-        self.gaussian_hires = True  # Use Gaussians for hires PSFLet matching, instead
-                                    # of Lucy-Richardson deconvolution
-        self.PSFLetPositions = False # use the wavelength calibration to place the PSFLets on the detector
+        self.gaussian = False        # Use standard Gaussian kernels instead of library
 
-        self.QE = "QE_CCD201.txt"	# detector QE, including wavelength-dependent losses
-                                    # to not include the losses, use simply "QE_CCD201.txt" and set
-                                    # self.losses parameters below
-        self.nonoise=True           # whether to disable all the noises (except QE)
-        self.poisson = True         # Use Poisson statistics?
-        self.RN = 100.0             # Gain register read noise (e/px/fr)
-        self.CIC = 1e-2             # Clock-induced charge (e/px/fr)
-        self.dark = 2e-4            # Dark current noise (e/px/s)
-        self.Traps = False          # Use traps or not (not yet implemented)
-        self.losses = 1.			# total losses for on-axis PSF (obsolete, now contained directly in QE file)
-        self.PhCountEff = 1.0		# Photon counting efficiency
-        self.lifefraction = 0.0    # fraction of lifetime (using Bijan's empirical model)
-        self.pol = 1.		        # Polarization losses
-        self.EMStats = True         # Calculate EM stats with Gamma function?
-        self.EMGain = 2500.          # Gain of the EM stage
-        self.PCmode = True          # Photon counting mode?
-        self.PCbias = 200           # In order to allow the RN to be negative
-        self.threshold = 5        # if PCmode is True, this is photon detection threshold (sigmas)
-        self.Nreads = 3			# number of reads for a target frame
+        self.RN = 0.2               # FWHM of gaussian kernel
+        self.CIC = 1e-3             # Lam at which FWHM is defined
+        self.dark = 1e-5            # Use standard Gaussian kernels instead of library
+        self.Traps = False          # Use standard Gaussian kernels instead of library
+
+        self.QE = 0.7				# detector QE; need to make this wavelength-dependent
+        self.losses = 0.34			# total losses for on-axis PSF (given by J. Krist)
+        self.Nreads = 10			# number of reads for a frame
         self.timeframe = 1000		# time in second for a frame (from file)
 
         ###################################################################### 
         # Spectrograph stuff
         ###################################################################### 
         
-        self.BW = 0.34              # Spectral bandwidth
-        self.npixperdlam = 2.       # Number of pixels per spectral resolution element
+        self.distortPISCES=False    # If True, use measured PISCES distortion/dispersion
+        self.BW = 0.18              # Spectral bandwidth (if distortPISCES==False)
+        self.npixperdlam = 2        # Number of pixels per spectral resolution element
         self.nchanperspec_lstsq = 1.2 # Nspec per pixel for least squares 
-        self.R = 50                 # Spectral resolving power (extracted cubes have twice)
-        
+        self.R = 70                 # Spectral resolving power (extracted cubes have twice)
+
         # carry-over old parameter names
         self.lenslet_wav = self.lensletlam     # Wavelength at which this is defined (nm)
         self.lenslet_sampling= self.lensletsampling# lenslet size in lambda/D
-        
+
 
         self.makeHeader()
 
@@ -116,7 +106,9 @@ class Params(object):
         self.hdr.append(('FWHM',self.FWHM,'FHWM of PSFLet at detector (pixels)'), end=True) 
         self.hdr.append(('FWHMLAM',self.FWHMlam,'Wavelength at which FWHM is defined (nm)'), end=True) 
         self.hdr.append(('NPIX',self.npix,'Number of detector pixels'), end=True) 
-        self.hdr.append(('BW',self.BW,'Bandwidth'), end=True) 
-        self.hdr.append(('PIXPRLAM',self.npixperdlam,'Pixels per resolution element'), end=True) 
-        self.hdr.append(('R',self.R,'Spectral resolution'), end=True) 
+        self.hdr.append(('DISPDIST',self.distortPISCES,'Use PISCES distortion/dispersion?'), end=True) 
+        if self.distortPISCES:
+            self.hdr.append(('BW',self.BW,'Bandwidth'), end=True) 
+            self.hdr.append(('PIXPRLAM',self.npixperdlam,'Pixels per resolution element'), end=True) 
+            self.hdr.append(('R',self.R,'Spectral resolution'), end=True) 
         

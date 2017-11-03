@@ -27,6 +27,7 @@ from tools.par_utils import Task, Consumer
 from tools.wavecal import get_sim_hires
 from scipy.interpolate import interp1d
 import glob
+import astropy.units as u
 
 
 from tools.initLogger import getLogger
@@ -40,7 +41,8 @@ def polychromeIFS(par,inWavelist,inputcube,
                 wavelist_endpts=None,
                 dlambda=None,
                 lam_arr=None,
-                wavecalDir = None):
+                wavecalDir = None,
+                noRot = False):
     '''
     Propagates an input cube through the Integral Field Spectrograph
     
@@ -70,6 +72,9 @@ def polychromeIFS(par,inWavelist,inputcube,
     wavecal: string
         This can be used to add a distortion already measured from lab data, for example.
         Put in there the full folder name where we can find a 'lamsol.dat' file.
+    noRot: boolean
+        A rarely used option that allows to NOT rotate the input cube, if we want to simulate sending
+        a input map aligned with the lenslets
 
     Returns
     -------
@@ -91,10 +96,10 @@ def polychromeIFS(par,inWavelist,inputcube,
         raise
 
     if isinstance(inWavelist,u.Quantity):
-        wavelist = inWavelist.to(u.nm)
+        wavelist = inWavelist.to(u.nm).value
     else:
         # assume it is in nm
-        wavelist = inWavelist*u.nm
+        wavelist = inWavelist
 
     ###################################################################### 
     # Calculate sampling ratio to resample rotated image and match the lenslet sampling
@@ -163,12 +168,12 @@ def polychromeIFS(par,inWavelist,inputcube,
         for i in range(len(lam_arr)):
             hiresarr = get_sim_hires(par, lam_arr[i])   
             hires_arrs += [hiresarr]
-            
+        log.info('Creating Gaussian PSFLet templates')
     else:
-#         log.error('Importing PSFLets is not yet implemented')
         try:
             hires_list = np.sort(glob.glob(par.wavecalDir + 'hires_psflets_lam???.fits'))
             hires_arrs = [pyf.getdata(filename) for filename in hires_list]
+            log.info('Loaded PSFLet templates')
         except:
             log.error('Failed loading the PSFLet templates')
             raise
@@ -177,7 +182,7 @@ def polychromeIFS(par,inWavelist,inputcube,
     
     if parallel==False:
         for i in range(len(waveList)):
-            imagePlaneRot = (wavelist_endpts[i + 1]-wavelist_endpts[i])*processImagePlane(par,interpolatedInputCube.data[i])
+            imagePlaneRot = (wavelist_endpts[i + 1]-wavelist_endpts[i])*processImagePlane(par,interpolatedInputCube.data[i],noRot)
             inputCube += [imagePlaneRot]
             polyimage[i] = propagateLenslets(par,imagePlaneRot, 
                             wavelist_endpts[i], wavelist_endpts[i + 1],
@@ -192,7 +197,7 @@ def polychromeIFS(par,inWavelist,inputcube,
             w.start()
     
         for i in range(len(waveList)):
-            imagePlaneRot = (wavelist_endpts[i + 1]-wavelist_endpts[i])*processImagePlane(par,interpolatedInputCube.data[i])
+            imagePlaneRot = (wavelist_endpts[i + 1]-wavelist_endpts[i])*processImagePlane(par,interpolatedInputCube.data[i],noRot)
             inputCube += [imagePlaneRot]
             tasks.put(Task(i, propagateLenslets, (par,imagePlaneRot,
                         wavelist_endpts[i], wavelist_endpts[i + 1],
@@ -219,7 +224,8 @@ def polychromeIFS(par,inWavelist,inputcube,
     return detectorFrame
 
     
-def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None,hires=False):
+def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None,
+                hires=False,dy=3,fitbkgnd=True,specialPolychrome=None,returnall=False):
     '''
     Main reduction function
     
@@ -270,7 +276,8 @@ def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None,hir
 
     if method == 'lstsq':
         reducedName += '_red_lstsq'
-        cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad,hires=hires)
+        cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad,
+            hires=hires,dy=dy,fitbkgnd=fitbkgnd,specialPolychrome=None,returnall=False)
     elif method == 'optext':
         reducedName += '_red_optext'
         cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad)
