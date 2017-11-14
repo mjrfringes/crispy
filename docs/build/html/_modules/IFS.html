@@ -103,20 +103,22 @@
 <span class="kn">from</span> <span class="nn">tools.wavecal</span> <span class="k">import</span> <span class="n">get_sim_hires</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">interp1d</span>
 <span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
 
 
 <span class="kn">from</span> <span class="nn">tools.initLogger</span> <span class="k">import</span> <span class="n">getLogger</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="polychromeIFS"><a class="viewcode-back" href="../IFS.html#IFS.polychromeIFS">[docs]</a><span class="k">def</span> <span class="nf">polychromeIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">wavelist</span><span class="p">,</span><span class="n">inputcube</span><span class="p">,</span>
+<div class="viewcode-block" id="polychromeIFS"><a class="viewcode-back" href="../IFS.html#IFS.polychromeIFS">[docs]</a><span class="k">def</span> <span class="nf">polychromeIFS</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">inWavelist</span><span class="p">,</span><span class="n">inputcube</span><span class="p">,</span>
                 <span class="n">name</span><span class="o">=</span><span class="s1">&#39;detectorFrame&#39;</span><span class="p">,</span>
                 <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
                 <span class="n">QE</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
                 <span class="n">wavelist_endpts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">dlambda</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">lam_arr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">wavecalDir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">wavecalDir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">noRot</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Propagates an input cube through the Integral Field Spectrograph</span>
 <span class="sd">    </span>
@@ -124,7 +126,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    par :   Parameter instance</span>
 <span class="sd">            with at least the key IFS parameters, interlacing and scale</span>
-<span class="sd">    wavelist : list of floats</span>
+<span class="sd">    inWavelist : list of floats</span>
 <span class="sd">            List of wavelengths in nm corresponding to the center of each bin</span>
 <span class="sd">    inputcube : Image</span>
 <span class="sd">            or HDU. data is 3D ndarray with first dimension the same length as lamlist</span>
@@ -146,6 +148,9 @@
 <span class="sd">    wavecal: string</span>
 <span class="sd">        This can be used to add a distortion already measured from lab data, for example.</span>
 <span class="sd">        Put in there the full folder name where we can find a &#39;lamsol.dat&#39; file.</span>
+<span class="sd">    noRot: boolean</span>
+<span class="sd">        A rarely used option that allows to NOT rotate the input cube, if we want to simulate sending</span>
+<span class="sd">        a input map aligned with the lenslets</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -165,6 +170,12 @@
     <span class="k">except</span><span class="p">:</span>
         <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Missing header information in input file&#39;</span><span class="p">)</span>
         <span class="k">raise</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inWavelist</span><span class="p">,</span><span class="n">u</span><span class="o">.</span><span class="n">Quantity</span><span class="p">):</span>
+        <span class="n">wavelist</span> <span class="o">=</span> <span class="n">inWavelist</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># assume it is in nm</span>
+        <span class="n">wavelist</span> <span class="o">=</span> <span class="n">inWavelist</span>
 
     <span class="c1">###################################################################### </span>
     <span class="c1"># Calculate sampling ratio to resample rotated image and match the lenslet sampling</span>
@@ -233,12 +244,12 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lam_arr</span><span class="p">)):</span>
             <span class="n">hiresarr</span> <span class="o">=</span> <span class="n">get_sim_hires</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">lam_arr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>   
             <span class="n">hires_arrs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">hiresarr</span><span class="p">]</span>
-            
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating Gaussian PSFLet templates&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-<span class="c1">#         log.error(&#39;Importing PSFLets is not yet implemented&#39;)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">hires_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s1">&#39;hires_psflets_lam???.fits&#39;</span><span class="p">))</span>
             <span class="n">hires_arrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyf</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">hires_list</span><span class="p">]</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loaded PSFLet templates&#39;</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Failed loading the PSFLet templates&#39;</span><span class="p">)</span>
             <span class="k">raise</span>
@@ -247,7 +258,7 @@
     
     <span class="k">if</span> <span class="n">parallel</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">waveList</span><span class="p">)):</span>
-            <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">processImagePlane</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">interpolatedInputCube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">processImagePlane</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">interpolatedInputCube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">noRot</span><span class="p">)</span>
             <span class="n">inputCube</span> <span class="o">+=</span> <span class="p">[</span><span class="n">imagePlaneRot</span><span class="p">]</span>
             <span class="n">polyimage</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">propagateLenslets</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">imagePlaneRot</span><span class="p">,</span> 
                             <span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
@@ -262,7 +273,7 @@
             <span class="n">w</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
     
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">waveList</span><span class="p">)):</span>
-            <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">processImagePlane</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">interpolatedInputCube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">processImagePlane</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">interpolatedInputCube</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">noRot</span><span class="p">)</span>
             <span class="n">inputCube</span> <span class="o">+=</span> <span class="p">[</span><span class="n">imagePlaneRot</span><span class="p">]</span>
             <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">Task</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">propagateLenslets</span><span class="p">,</span> <span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">imagePlaneRot</span><span class="p">,</span>
                         <span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">wavelist_endpts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
@@ -289,7 +300,8 @@
     <span class="k">return</span> <span class="n">detectorFrame</span></div>
 
     
-<div class="viewcode-block" id="reduceIFSMap"><a class="viewcode-back" href="../IFS.html#IFS.reduceIFSMap">[docs]</a><span class="k">def</span> <span class="nf">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">IFSimageName</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="reduceIFSMap"><a class="viewcode-back" href="../IFS.html#IFS.reduceIFSMap">[docs]</a><span class="k">def</span> <span class="nf">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">IFSimageName</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">hires</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">dy</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">specialPolychrome</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">returnall</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Main reduction function</span>
 <span class="sd">    </span>
@@ -340,7 +352,8 @@
 
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;lstsq&#39;</span><span class="p">:</span>
         <span class="n">reducedName</span> <span class="o">+=</span> <span class="s1">&#39;_red_lstsq&#39;</span>
-        <span class="n">cube</span> <span class="o">=</span> <span class="n">lstsqExtract</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reducedName</span><span class="p">,</span><span class="n">IFSimage</span><span class="p">,</span><span class="n">smoothandmask</span><span class="o">=</span><span class="n">smoothbad</span><span class="p">)</span>
+        <span class="n">cube</span> <span class="o">=</span> <span class="n">lstsqExtract</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reducedName</span><span class="p">,</span><span class="n">IFSimage</span><span class="p">,</span><span class="n">smoothandmask</span><span class="o">=</span><span class="n">smoothbad</span><span class="p">,</span>
+            <span class="n">hires</span><span class="o">=</span><span class="n">hires</span><span class="p">,</span><span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="n">fitbkgnd</span><span class="p">,</span><span class="n">specialPolychrome</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">returnall</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;optext&#39;</span><span class="p">:</span>
         <span class="n">reducedName</span> <span class="o">+=</span> <span class="s1">&#39;_red_optext&#39;</span>
         <span class="n">cube</span> <span class="o">=</span> <span class="n">intOptimalExtract</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reducedName</span><span class="p">,</span><span class="n">IFSimage</span><span class="p">,</span><span class="n">smoothandmask</span><span class="o">=</span><span class="n">smoothbad</span><span class="p">)</span>
@@ -514,7 +527,7 @@
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Aug 2017. <br/>
+    Last built 14 Nov 2017. <br/>
   </p>
 </footer>
   </body>

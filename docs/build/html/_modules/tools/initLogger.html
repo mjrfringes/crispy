@@ -74,35 +74,25 @@
           <div class="body" role="main">
             
   <h1>Source code for tools.initLogger</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="c1"># def initLogger(logfile,levelConsole=logging.INFO,levelLogFile=logging.DEBUG):</span>
-<span class="c1">#     with open(logfile,&#39;w&#39;):</span>
-<span class="c1">#         pass</span>
-<span class="c1">#     logging.basicConfig(filename=logfile, level=levelLogFile,format=&#39;%(asctime)s %(message)s&#39;)</span>
-<span class="c1">#     console = logging.StreamHandler()</span>
-<span class="c1">#     console.setLevel(levelConsole)</span>
-<span class="c1">#     formatter = logging.Formatter(&#39;%(asctime)s: %(levelname)-8s %(message)s&#39;)</span>
-<span class="c1">#     console.setFormatter(formatter)</span>
-<span class="c1">#     logging.getLogger(&#39;&#39;).addHandler(console)</span>
-    
+<span></span><span class="kn">import</span> <span class="nn">logging</span>    
 <span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="n">log_dict</span><span class="o">=</span><span class="p">{}</span>
 
-<div class="viewcode-block" id="CharisLogger"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger">[docs]</a><span class="k">class</span> <span class="nc">CharisLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLoggerClass</span><span class="p">()):</span>
+<div class="viewcode-block" id="crispyLogger"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger">[docs]</a><span class="k">class</span> <span class="nc">crispyLogger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLoggerClass</span><span class="p">()):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This is the advanced logging object used throughout the CHARIS</span>
-<span class="sd">    Data Extraction Pipeline.  It inherits from the standard </span>
+<span class="sd">    This is the advanced logging object used for crispy. </span>
+<span class="sd">    It is almost a carbon copy of the CHARIS DRP logger routine.</span>
+<span class="sd">    It inherits from the standard </span>
 <span class="sd">    Python library &#39;logging&#39; and provides added features.</span>
 <span class="sd">    The default log level for the output file will be 1, ie ALL messages;</span>
 <span class="sd">    while the default for the screen will be INFO, and can be changed easily </span>
 <span class="sd">    using the setStreamLevel(lvl) member function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>       
     
-<div class="viewcode-block" id="CharisLogger.setStreamLevel"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.setStreamLevel">[docs]</a>    <span class="k">def</span> <span class="nf">setStreamLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.setStreamLevel"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.setStreamLevel">[docs]</a>    <span class="k">def</span> <span class="nf">setStreamLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set/change the level for the stream handler for a logging object.</span>
 <span class="sd">        Any file handlers will be left alone.</span>
 <span class="sd">        All messages of a higher severity level than &#39;lvl&#39; will be printed </span>
@@ -175,86 +165,86 @@
     <span class="c1"># Levels for the &#39;main&#39;, or top, tier.</span>
     <span class="n">MAINCRITICAL</span> <span class="o">=</span> <span class="mi">80</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">MAINCRITICAL</span><span class="p">,</span> <span class="s1">&#39;MAINCRITICAL&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.maincritical"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.maincritical">[docs]</a>    <span class="k">def</span> <span class="nf">maincritical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAINCRITICAL</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.maincritical"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.maincritical">[docs]</a>    <span class="k">def</span> <span class="nf">maincritical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAINCRITICAL</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">maincritical</span> <span class="o">=</span> <span class="n">maincritical</span>
     <span class="n">MAINERROR</span> <span class="o">=</span> <span class="mi">75</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">MAINERROR</span><span class="p">,</span> <span class="s1">&#39;MAINERROR&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.mainerror"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.mainerror">[docs]</a>    <span class="k">def</span> <span class="nf">mainerror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAINERROR</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.mainerror"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.mainerror">[docs]</a>    <span class="k">def</span> <span class="nf">mainerror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAINERROR</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">mainerror</span> <span class="o">=</span> <span class="n">mainerror</span>
     <span class="n">MAINWARNING</span> <span class="o">=</span> <span class="mi">70</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">MAINWARNING</span><span class="p">,</span> <span class="s1">&#39;MAINWARNING&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.mainwarning"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.mainwarning">[docs]</a>    <span class="k">def</span> <span class="nf">mainwarning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAINWARNING</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.mainwarning"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.mainwarning">[docs]</a>    <span class="k">def</span> <span class="nf">mainwarning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAINWARNING</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">mainwarning</span> <span class="o">=</span> <span class="n">mainwarning</span>
     <span class="n">MAININFO</span> <span class="o">=</span> <span class="mi">65</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">MAININFO</span><span class="p">,</span> <span class="s1">&#39;MAININFO&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.maininfo"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.maininfo">[docs]</a>    <span class="k">def</span> <span class="nf">maininfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAININFO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.maininfo"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.maininfo">[docs]</a>    <span class="k">def</span> <span class="nf">maininfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAININFO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">maininfo</span> <span class="o">=</span> <span class="n">maininfo</span>
     <span class="n">MAINDEBUG</span> <span class="o">=</span> <span class="mi">60</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">MAINDEBUG</span><span class="p">,</span> <span class="s1">&#39;MAINDEBUG&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.maindebug"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.maindebug">[docs]</a>    <span class="k">def</span> <span class="nf">maindebug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAINDEBUG</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.maindebug"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.maindebug">[docs]</a>    <span class="k">def</span> <span class="nf">maindebug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">MAINDEBUG</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">maindebug</span> <span class="o">=</span> <span class="n">maindebug</span>
     <span class="c1"># Levels for the &#39;prims&#39; tier.</span>
     <span class="n">PRIMCRITICAL</span> <span class="o">=</span> <span class="mi">55</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">PRIMCRITICAL</span><span class="p">,</span> <span class="s1">&#39;PRIMCRITICAL&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.primcritical"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.primcritical">[docs]</a>    <span class="k">def</span> <span class="nf">primcritical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMCRITICAL</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.primcritical"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.primcritical">[docs]</a>    <span class="k">def</span> <span class="nf">primcritical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMCRITICAL</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">primcritical</span> <span class="o">=</span> <span class="n">primcritical</span>
     <span class="n">PRIMERROR</span> <span class="o">=</span> <span class="mi">49</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">PRIMERROR</span><span class="p">,</span> <span class="s1">&#39;PRIMERROR&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.primerror"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.primerror">[docs]</a>    <span class="k">def</span> <span class="nf">primerror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMERROR</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.primerror"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.primerror">[docs]</a>    <span class="k">def</span> <span class="nf">primerror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMERROR</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">primerror</span> <span class="o">=</span> <span class="n">primerror</span>
     <span class="n">PRIMWARNING</span> <span class="o">=</span> <span class="mi">45</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">PRIMWARNING</span><span class="p">,</span> <span class="s1">&#39;PRIMWARNING&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.primwarning"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.primwarning">[docs]</a>    <span class="k">def</span> <span class="nf">primwarning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMWARNING</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.primwarning"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.primwarning">[docs]</a>    <span class="k">def</span> <span class="nf">primwarning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMWARNING</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">primwarning</span> <span class="o">=</span> <span class="n">primwarning</span>
     <span class="n">PRIMINFO</span> <span class="o">=</span> <span class="mi">39</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">PRIMINFO</span><span class="p">,</span> <span class="s1">&#39;PRIMINFO&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.priminfo"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.priminfo">[docs]</a>    <span class="k">def</span> <span class="nf">priminfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMINFO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.priminfo"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.priminfo">[docs]</a>    <span class="k">def</span> <span class="nf">priminfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMINFO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">priminfo</span> <span class="o">=</span> <span class="n">priminfo</span>
     <span class="n">PRIMDEBUG</span> <span class="o">=</span> <span class="mi">35</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">PRIMDEBUG</span><span class="p">,</span> <span class="s1">&#39;PRIMDEBUG&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.primdebug"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.primdebug">[docs]</a>    <span class="k">def</span> <span class="nf">primdebug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMDEBUG</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.primdebug"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.primdebug">[docs]</a>    <span class="k">def</span> <span class="nf">primdebug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">PRIMDEBUG</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">primdebug</span> <span class="o">=</span> <span class="n">primdebug</span>
     <span class="c1"># Levels for the &#39;tools&#39; tier.</span>
     <span class="n">TOOLCRITICAL</span> <span class="o">=</span> <span class="mi">29</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">TOOLCRITICAL</span><span class="p">,</span> <span class="s1">&#39;TOOLCRITICAL&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.toolcritical"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.toolcritical">[docs]</a>    <span class="k">def</span> <span class="nf">toolcritical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLCRITICAL</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.toolcritical"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.toolcritical">[docs]</a>    <span class="k">def</span> <span class="nf">toolcritical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLCRITICAL</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">toolcritical</span> <span class="o">=</span> <span class="n">toolcritical</span>
     <span class="n">TOOLERROR</span> <span class="o">=</span> <span class="mi">25</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">TOOLERROR</span><span class="p">,</span> <span class="s1">&#39;TOOLERROR&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.toolerror"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.toolerror">[docs]</a>    <span class="k">def</span> <span class="nf">toolerror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLERROR</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.toolerror"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.toolerror">[docs]</a>    <span class="k">def</span> <span class="nf">toolerror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLERROR</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">toolerror</span> <span class="o">=</span> <span class="n">toolerror</span>
     <span class="n">TOOLWARNING</span> <span class="o">=</span> <span class="mi">19</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">TOOLWARNING</span><span class="p">,</span> <span class="s1">&#39;TOOLWARNING&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.toolwarning"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.toolwarning">[docs]</a>    <span class="k">def</span> <span class="nf">toolwarning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLWARNING</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.toolwarning"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.toolwarning">[docs]</a>    <span class="k">def</span> <span class="nf">toolwarning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLWARNING</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">toolwarning</span> <span class="o">=</span> <span class="n">toolwarning</span>
     <span class="n">TOOLINFO</span> <span class="o">=</span> <span class="mi">15</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">TOOLINFO</span><span class="p">,</span> <span class="s1">&#39;TOOLINFO&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.toolinfo"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.toolinfo">[docs]</a>    <span class="k">def</span> <span class="nf">toolinfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLINFO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.toolinfo"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.toolinfo">[docs]</a>    <span class="k">def</span> <span class="nf">toolinfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLINFO</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">toolinfo</span> <span class="o">=</span> <span class="n">toolinfo</span>
     <span class="n">TOOLDEBUG</span> <span class="o">=</span> <span class="mi">9</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">TOOLDEBUG</span><span class="p">,</span> <span class="s1">&#39;TOOLDEBUG&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.tooldebug"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.tooldebug">[docs]</a>    <span class="k">def</span> <span class="nf">tooldebug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLDEBUG</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.tooldebug"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.tooldebug">[docs]</a>    <span class="k">def</span> <span class="nf">tooldebug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">TOOLDEBUG</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">tooldebug</span> <span class="o">=</span> <span class="n">tooldebug</span>
     <span class="c1"># Level for the &#39;summary&#39; info used for the main log file and the </span>
     <span class="c1"># special summary file and the fits headers.</span>
     <span class="n">SUMMARY</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">SUMMARY</span><span class="p">,</span> <span class="s1">&#39;SUMMARY&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="CharisLogger.summary"><a class="viewcode-back" href="../../tools.html#tools.image.CharisLogger.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">SUMMARY</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+<div class="viewcode-block" id="crispyLogger.summary"><a class="viewcode-back" href="../../tools.html#tools.image.crispyLogger.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">lvl</span><span class="o">=</span><span class="n">SUMMARY</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lvl</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span></div>
     <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="n">summary</span></div>
     
@@ -314,10 +304,10 @@
 <span class="sd">        addSH (boolean): Add a stream handler to this logger? Severity set with </span>
 <span class="sd">                        the lvl argument.  Default = True.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        log (CharisLogger object): A CharisLogger object that was freshly </span>
+<span class="sd">        log (crispyLogger object): A crispyLogger object that was freshly </span>
 <span class="sd">                                   instantiated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">setLoggerClass</span><span class="p">(</span><span class="n">CharisLogger</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">setLoggerClass</span><span class="p">(</span><span class="n">crispyLogger</span><span class="p">)</span>
     <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="n">log_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">log</span>
     <span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -334,7 +324,7 @@
 <span class="sd">    This function will add a file handler to a log with the provided level.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">        log (CharisLogger object): A CharisLogger object that was freshly </span>
+<span class="sd">        log (crispyLogger object): A crispyLogger object that was freshly </span>
 <span class="sd">                                   instantiated.</span>
 <span class="sd">        lvl (int): The severity level of messages printed to the file with </span>
 <span class="sd">                    the file handler, default = 1.</span>
@@ -354,7 +344,7 @@
 <span class="sd">    This function will add a stream handler to a log with the provided level.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">        log (CharisLogger object): A CharisLogger object that was freshly </span>
+<span class="sd">        log (crispyLogger object): A crispyLogger object that was freshly </span>
 <span class="sd">                                   instantiated.</span>
 <span class="sd">        lvl (int): The severity level of messages printed to the screen with </span>
 <span class="sd">                    the stream handler, default = 20.</span>
@@ -374,7 +364,7 @@
 <span class="sd">    directly loading into a FITS header.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">        log (CharisLogger object): A CharisLogger object that was freshly </span>
+<span class="sd">        log (crispyLogger object): A crispyLogger object that was freshly </span>
 <span class="sd">                                   instantiated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fitsFhLevel</span> <span class="o">=</span> <span class="mi">1</span>
@@ -388,69 +378,6 @@
     <span class="n">fh2</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">fFrmt2</span><span class="p">)</span>
     <span class="c1"># add the Handler to the logger</span>
     <span class="n">log</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fh2</span><span class="p">)</span></div>
-    
-
-<span class="c1"># def logSystemInfo(log):</span>
-<span class="c1">#     &quot;&quot;&quot; A function to be called just after a logging object is instantiated </span>
-<span class="c1">#     for the DEP to load the log up with info about the computer it is </span>
-<span class="c1">#     being ran on and the software version.  This function utilizes the </span>
-<span class="c1">#     psutil and platform libraries, so they must be install for it to work.  </span>
-<span class="c1">#     For clarity of the log, it is suggested to perform immediately after </span>
-<span class="c1">#     instantiation to put it at the top of the log file.</span>
-<span class="c1">#     </span>
-<span class="c1">#     Args:</span>
-<span class="c1">#         log (Python logging object): logging object to have the system&#39;s </span>
-<span class="c1">#                                     info summarized in.</span>
-<span class="c1">#                                     </span>
-<span class="c1">#     The messages this prints to the log will look like:</span>
-<span class="c1">#     </span>
-<span class="c1">#     | System Information Summary:</span>
-<span class="c1">#     | OS type = Linux</span>
-<span class="c1">#     | OS Version = 3.9.10-100.fc17.x86_64</span>
-<span class="c1">#     | Machine UserName = xxxxxx.astron.s.u-tokyo.ac.jp</span>
-<span class="c1">#     | Machine Processor Type = x86_64</span>
-<span class="c1">#     | Number of cores = 8</span>
-<span class="c1">#     | Total RAM [GB] = 23.5403785706, % used = 15.9</span>
-<span class="c1">#     | Python Version = &#39;2.7.3&#39;</span>
-<span class="c1"># </span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     log.info(&quot;-&quot;*11+&#39; System Information Summary &#39;+&#39;-&#39;*11)</span>
-<span class="c1">#     #log.info(&#39;Machine Type = &#39;+platform.machine())</span>
-<span class="c1">#     #log.info(&#39;Machine Version = &#39;+platform.version())</span>
-<span class="c1">#     log.info(&#39;OS type = &#39;+platform.uname()[0])</span>
-<span class="c1">#     log.info(&#39;OS Version = &#39;+platform.uname()[2])</span>
-<span class="c1">#     log.info(&#39;Machine UserName = &#39;+platform.uname()[1])</span>
-<span class="c1">#     log.info(&#39;Machine Processor Type = &#39;+platform.processor())</span>
-<span class="c1">#     log.info(&#39;Number of cores = &#39;+str(psutil.NUM_CPUS))</span>
-<span class="c1">#     totMem = psutil.virtual_memory()[0]/1073741824.0</span>
-<span class="c1">#     percentMem = psutil.virtual_memory()[2]</span>
-<span class="c1">#     log.info(&#39;Total RAM [GB] = &#39;+str(totMem)+&#39;, % used = &#39;+str(percentMem))</span>
-<span class="c1">#     log.info(&#39;Python Version = &#39;+repr(platform.python_version()))</span>
-<span class="c1">#     log.info(&#39;-&#39;*50)</span>
-    
-<span class="c1"># def logFileProcessInfo(log):</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     log.info(&quot;=&quot;*12+&#39; File and Process Summary &#39;+&#39;=&#39;*12)</span>
-<span class="c1">#     log.info(&quot;NOTHING HAPPENING IN THIS FUNCTION YET!!!!!!&quot;)</span>
-<span class="c1">#     log.info(&#39;=&#39;*50)</span>
-<span class="c1">#     </span>
-    
-<span class="c1">#     def __tracebacker(self):</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         Internal function for creating nicely formatted </span>
-<span class="c1">#         tracebacks for the ERROR level messages if requested.</span>
-<span class="c1">#         &quot;&quot;&quot;</span>
-<span class="c1">#         ex_type, ex, tb = sys.exc_info()</span>
-<span class="c1">#         tb_list = traceback.extract_tb(tb,6)</span>
-<span class="c1">#         s=&#39;\nTraceback:\n&#39;</span>
-<span class="c1">#         for i in range(0,len(tb_list)):</span>
-<span class="c1">#             line_str = &#39;, Line: &#39;+tb_list[i][3]</span>
-<span class="c1">#             func_str = &#39;, Function: &#39;+tb_list[i][2]</span>
-<span class="c1">#             ln_str = &#39;, Line Number: &#39;+str(tb_list[i][1])</span>
-<span class="c1">#             file_str = &#39; File: &#39;+tb_list[i][0]</span>
-<span class="c1">#             s = s+file_str+func_str+ln_str+&#39;\n&#39;</span>
-<span class="c1">#         return s</span>
 </pre></div>
 
           </div>
@@ -470,7 +397,7 @@
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Aug 2017. <br/>
+    Last built 14 Nov 2017. <br/>
   </p>
 </footer>
   </body>

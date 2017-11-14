@@ -240,7 +240,7 @@ div.nboutput div.output_area.stderr {
 the column</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [8]:
+<span></span>In [1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -254,21 +254,28 @@ the column</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="This-is-the-kernel-I-use">
+<h2>This is the kernel I use<a class="headerlink" href="#This-is-the-kernel-I-use" title="Permalink to this headline">¶</a></h2>
+<p>This is a best fit from Bijan&#8217;s code for 1 single type of traps. Done by
+running the &#8220;1 electron&#8221; mode of Bijan&#8217;s code with 1 single trap along
+that column, for a large number of times, and fit the average resulting
+image.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [ ]:
+<span></span>In [17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span></span><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># that&#39;s pixels</span>
 <span class="n">b</span> <span class="o">=</span> <span class="mf">0.25</span>
-<span class="n">kernel</span> <span class="o">=</span> <span class="mf">0.4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">b</span><span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">b</span><span class="o">*</span><span class="n">arr</span><span class="p">)</span>
+<span class="n">kernel</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [140]:
+<span></span>In [18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -281,14 +288,16 @@ the column</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_4_0.png" src="../_images/notebooks_TrapsExperiments_4_0.png" />
+<img alt="../_images/notebooks_TrapsExperiments_6_0.png" src="../_images/notebooks_TrapsExperiments_6_0.png" />
+</div>
 </div>
 </div>
 <div class="section" id="Create-fake-data">
 <h2>Create fake data<a class="headerlink" href="#Create-fake-data" title="Permalink to this headline">¶</a></h2>
+<p>Just testing things out.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [55]:
+<span></span>In [19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -303,38 +312,25 @@ the column</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_6_0.png" src="../_images/notebooks_TrapsExperiments_6_0.png" />
+<img alt="../_images/notebooks_TrapsExperiments_9_0.png" src="../_images/notebooks_TrapsExperiments_9_0.png" />
 </div>
 </div>
 </div>
 <div class="section" id="Brute-force-treatment">
 <h2>Brute force treatment<a class="headerlink" href="#Brute-force-treatment" title="Permalink to this headline">¶</a></h2>
+<p>This is the only I could come up with on small timescales, but honestly
+it is not very clever and quite brute force.</p>
+<p>Effectively replaces the flux density of each pixel by an exponential
+tail. Need to make the column larger by the kernel size, and then crop
+it later.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [56]:
+<span></span>In [21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">final</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">fakecolumn</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(100,)
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [57]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">final</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel</span><span class="p">)):</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">final</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel</span><span class="p">)):</span>
     <span class="n">final</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel</span><span class="p">)]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">fakecolumn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">kernel</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fakecolumn</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">final</span><span class="p">[:</span><span class="mi">100</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Convolved&#39;</span><span class="p">)</span>
@@ -346,43 +342,22 @@ the column</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_9_0.png" src="../_images/notebooks_TrapsExperiments_9_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [46]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[46]:
-</pre></div>
-</div>
-<div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>1.0165514795535835
-</pre></div>
+<img alt="../_images/notebooks_TrapsExperiments_12_0.png" src="../_images/notebooks_TrapsExperiments_12_0.png" />
 </div>
 </div>
 <div class="section" id="Application-to-images">
 <h3>Application to images<a class="headerlink" href="#Application-to-images" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [37]:
+<span></span>In [24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../../crispy&#39;</span>
-<span class="k">if</span> <span class="n">codefolder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+<span></span><span class="c1"># load image with crispy module, but you can put any array that you want</span>
 <span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s1">&#39;../../../crispy/Inputs/os5_spc_064_targetstar_IFS.fits&#39;</span><span class="p">)</span>
 <span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">200</span><span class="p">:</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">:</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span>
+<span class="c1"># just to play with some fluxes for now, the absolute scale is meaningless for this test</span>
 <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="mi">1000</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
@@ -404,16 +379,17 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/os5_spc_064_targe
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_12_1.png" src="../_images/notebooks_TrapsExperiments_12_1.png" />
+<img alt="../_images/notebooks_TrapsExperiments_14_1.png" src="../_images/notebooks_TrapsExperiments_14_1.png" />
 </div>
 </div>
 </div>
 </div>
 <div class="section" id="Seed-random-traps">
 <h2>Seed random traps<a class="headerlink" href="#Seed-random-traps" title="Permalink to this headline">¶</a></h2>
+<p>Just create the traps locations randomly.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [31]:
+<span></span>In [25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -421,7 +397,6 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/os5_spc_064_targe
 <span class="n">imgshape</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">traps_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">imgshape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">Ntraps</span><span class="p">)</span>
 <span class="n">traps_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">imgshape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">Ntraps</span><span class="p">)</span>
-<span class="c1">#X,Y = np.meshgrid(traps_X.astype(int),traps_Y.astype(int))</span>
 <span class="n">traps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">imgshape</span><span class="p">)</span>
 <span class="n">traps</span><span class="p">[</span><span class="n">traps_Y</span><span class="p">,</span><span class="n">traps_X</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
@@ -434,39 +409,46 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/os5_spc_064_targe
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_14_0.png" src="../_images/notebooks_TrapsExperiments_14_0.png" />
+<img alt="../_images/notebooks_TrapsExperiments_17_0.png" src="../_images/notebooks_TrapsExperiments_17_0.png" />
 </div>
 </div>
 </div>
-<div class="section" id="Assume-that-parallel-register-is-on-the-top-of-the-image-(pixels-have-tail-towards-the-bottom)">
-<h2>Assume that parallel register is on the top of the image (pixels have tail towards the bottom)<a class="headerlink" href="#Assume-that-parallel-register-is-on-the-top-of-the-image-(pixels-have-tail-towards-the-bottom)" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Assume-that-parallel-register-is-on-the-top-of-the-image-(pixels-have-tail-towards-the-bottom,-in-these-images)">
+<h2>Assume that parallel register is on the top of the image (pixels have tail towards the bottom, in these images)<a class="headerlink" href="#Assume-that-parallel-register-is-on-the-top-of-the-image-(pixels-have-tail-towards-the-bottom,-in-these-images)" title="Permalink to this headline">¶</a></h2>
 <p>Go column by column</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [42]:
+<span></span>In [26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-
-
-<span></span><span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">traps_X</span><span class="p">)):</span>
+<span></span><span class="c1"># loop over columns in which there is a trap</span>
+<span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">traps_X</span><span class="p">)):</span>
+    <span class="c1"># determine trap coordinates</span>
     <span class="n">Xval</span> <span class="o">=</span> <span class="n">traps_X</span><span class="p">[</span><span class="n">icol</span><span class="p">]</span>
     <span class="n">Yval</span> <span class="o">=</span> <span class="n">traps_Y</span><span class="p">[</span><span class="n">icol</span><span class="p">]</span>
+    <span class="c1"># select column below the trap (only part that will be affected by the trap)</span>
     <span class="n">data_column</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="n">Yval</span><span class="p">,</span><span class="n">Xval</span><span class="p">]</span>
+    <span class="c1"># flip column vector to accomodate kernel (please be smarter next time and flip kernel instead)</span>
     <span class="n">data_column</span> <span class="o">=</span> <span class="n">data_column</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># create a new, empty column with padded edge to accommodate for kernel size</span>
     <span class="n">final</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data_column</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="c1"># now do a pseudo-convolution for all pixels in the kernel</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">final</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel</span><span class="p">)):</span>
         <span class="n">final</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel</span><span class="p">)]</span> <span class="o">+=</span> <span class="n">data_column</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">kernel</span>
+    <span class="c1"># crop to go back to normal column size</span>
     <span class="n">final</span> <span class="o">=</span> <span class="n">final</span><span class="p">[:</span><span class="o">-</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="c1"># and don&#39;t forget to flip again because I was stupid</span>
     <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="n">Yval</span><span class="p">,</span><span class="n">Xval</span><span class="p">]</span> <span class="o">=</span> <span class="n">final</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
+<span class="c1"># we have now created a new flux density map. Now we can draw a Poisson distribution from it.</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_heat&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;../../code/SimResults/testTraps.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;../../../crispy/SimResults/testTraps.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -474,77 +456,37 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/os5_spc_064_targe
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">----------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                           Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-42-e0b94d994677&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span>     final <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>zeros<span class="ansi-blue-fg">(</span>data_column<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">+</span>kernel<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     10</span>     <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>len<span class="ansi-blue-fg">(</span>final<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">-</span>len<span class="ansi-blue-fg">(</span>kernel<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">---&gt; 11</span><span class="ansi-red-fg">         </span>final<span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">:</span>i<span class="ansi-blue-fg">+</span>len<span class="ansi-blue-fg">(</span>kernel<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">+=</span> data_column<span class="ansi-blue-fg">[</span>i<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">*</span>kernel
-<span class="ansi-green-intense-fg ansi-bold">     12</span>     final <span class="ansi-blue-fg">=</span> final<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">-</span>kernel<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">]</span>
-<span class="ansi-green-intense-fg ansi-bold">     13</span>     img<span class="ansi-blue-fg">.</span>data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span>Yval<span class="ansi-blue-fg">,</span>Xval<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> final<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span>
-
-<span class="ansi-red-fg">ValueError</span>: operands could not be broadcast together with shapes (10,) (10,50) (10,)
-</pre></div></div>
-</div>
-</div>
-<div class="section" id="Explore-multiple-traps-along-the-same-column">
-<h2>Explore multiple traps along the same column<a class="headerlink" href="#Explore-multiple-traps-along-the-same-column" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [32]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">fakecolumn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">flux</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">fakecolumn</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span>
-<span class="n">fakecolumn</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span>
-<span class="n">fakecolumn</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span>
-<span class="n">fakecolumn</span><span class="p">[</span><span class="mi">75</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux</span>
-<span class="n">traps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">traps</span><span class="p">[</span><span class="mi">65</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">traps</span><span class="p">[</span><span class="mi">40</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">traps</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">xarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fakecolumn</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xarray</span><span class="p">,</span><span class="n">fakecolumn</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xarray</span><span class="p">,</span><span class="n">traps</span><span class="p">,</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
-<span class="c1"># how many traps are between a pixel and the register?</span>
-<span class="n">ntraps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">traps</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xarray</span><span class="p">,</span><span class="mi">10</span><span class="o">*</span><span class="n">ntraps</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
+<img alt="../_images/notebooks_TrapsExperiments_20_0.png" src="../_images/notebooks_TrapsExperiments_20_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_19_0.png" src="../_images/notebooks_TrapsExperiments_19_0.png" />
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../../crispy/SimResults/testTraps.fits
+</pre></div></div>
 </div>
-</div>
+<div class="section" id="Now-with-multiple-traps-along-the-same-column">
+<h3>Now with multiple traps along the same column<a class="headerlink" href="#Now-with-multiple-traps-along-the-same-column" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [33]:
+<span></span>In [30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">final</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+<span></span><span class="c1"># we are going to construct 10 kernels for when there are 0-9 traps between a pixel and the register</span>
 <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span><span class="mi">50</span><span class="p">))</span>
+
+<span class="c1"># kernel size are now 50 pixels instead of 20</span>
 <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># when a pixel has to go through more than one kernel, the exponential constants are added (roughly)</span>
 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
     <span class="k">if</span> <span class="n">k</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-        <span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># this is for when there is no traps</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">/</span><span class="n">k</span><span class="o">*</span><span class="n">arr</span><span class="p">)</span><span class="c1">#0.5/k*np.exp(-0.5/k*arr)</span>
+        <span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.25</span><span class="o">/</span><span class="n">k</span><span class="o">*</span><span class="n">arr</span><span class="p">)</span>
     <span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
 
 </pre></div>
@@ -552,87 +494,55 @@ crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [34]:
+<span></span>In [32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">kernel</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-1.0
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [35]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">final</span><span class="p">)</span><span class="o">-</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
-    <span class="n">final</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">fakecolumn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">kernel</span><span class="p">[</span><span class="n">ntraps</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fakecolumn</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">final</span><span class="p">[:</span><span class="mi">100</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Convolved&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="stderr output_area docutils container">
-<div class="highlight"><pre>
-/Users/mrizzo/anaconda/lib/python2.7/site-packages/ipykernel/__main__.py:2: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
-  from ipykernel import kernelapp as app
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_22_1.png" src="../_images/notebooks_TrapsExperiments_22_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [38]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="c1"># traps = np.zeros(imgshape)</span>
-<span class="c1"># traps[traps_Y,traps_X] = 1</span>
-<span class="n">testNoTraps</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
-<span class="n">testNoTraps</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;../../../crispy/SimResults/testNoTraps.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span></span><span class="c1"># testNoTraps = Image(data=np.random.poisson(img.data))</span>
+<span class="c1"># testNoTraps.write(&#39;../../../crispy/SimResults/testNoTraps.fits&#39;,clobber=True)</span>
 
+<span class="c1"># reload image from scratch</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s1">&#39;../../../crispy/Inputs/os5_spc_064_targetstar_IFS.fits&#39;</span><span class="p">)</span>
+<span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">200</span><span class="p">:</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span><span class="mi">200</span><span class="p">:</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span>
+<span class="c1"># just to play with some fluxes for now, the absolute scale is meaningless for this test</span>
+<span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="mi">1000</span>
+
+
+<span class="c1"># copy image so that we don&#39;t alter original data</span>
 <span class="n">imout</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Go over every column instead of every trap</span>
 <span class="k">for</span> <span class="n">icol</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">imout</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
     <span class="n">Xval</span> <span class="o">=</span> <span class="n">traps_X</span><span class="p">[</span><span class="n">icol</span><span class="p">]</span>
+    <span class="c1"># how many traps are there between each pixel and the readout register?</span>
+    <span class="c1"># this returns a 1D array of the same length as the column with the cumulative sum as a function of pixel index</span>
     <span class="n">ntraps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">traps</span><span class="p">[:,</span><span class="n">Xval</span><span class="p">])</span>
+
+    <span class="c1"># grab the data</span>
     <span class="n">data_column</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="n">Xval</span><span class="p">]</span>
+
+    <span class="c1"># flip the data since the kernel is still in the wrong direction</span>
     <span class="n">data_column</span> <span class="o">=</span> <span class="n">data_column</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># create empty column with padding on the ends</span>
     <span class="n">final</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data_column</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="c1"># loop on all pixels within column</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">final</span><span class="p">)</span><span class="o">-</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
+        <span class="c1"># Add the correct kernel according to how many traps they will pass through</span>
         <span class="n">final</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">data_column</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">kernel</span><span class="p">[</span><span class="n">ntraps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)]</span>
+
+    <span class="c1"># crop the column off to get back to the same size</span>
     <span class="n">final</span> <span class="o">=</span> <span class="n">final</span><span class="p">[:</span><span class="o">-</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="c1"># flip vector</span>
     <span class="n">imout</span><span class="p">[:,</span><span class="n">Xval</span><span class="p">]</span> <span class="o">=</span> <span class="n">final</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
+<span class="n">testMultipleTraps</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">imout</span><span class="p">)</span>
+<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;../../../crispy/SimResults/testMultipleTraps_nonoise.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+
+<span class="c1"># add noise</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">imout</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_heat&#39;</span><span class="p">)</span>
@@ -640,22 +550,23 @@ crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="n">testMultipleTraps</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">skimage.measure.compare_mse</span> <span class="kn">as</span> <span class="nn">mse</span>
-<span class="kn">import</span> <span class="nn">skimage.measure.compare_nrmse</span> <span class="kn">as</span> <span class="nn">nrmse</span>
-<span class="kn">import</span> <span class="nn">skimage.measure.compare_ssim</span> <span class="kn">as</span> <span class="nn">ssim</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">ssim</span><span class="p">(</span><span class="n">testNoTraps</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-<span class="n">n</span> <span class="o">=</span> <span class="n">nrmse</span><span class="p">(</span><span class="n">testNoTraps</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">testNoTraps</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">)</span>
-<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">22</span> <span class="o">+</span> <span class="s1">&#39; Compare between w/ and w/o traps &#39;</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">20</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;SSIM&#39;</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="s1">&#39;Structural similarity index&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;MSE&#39;</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="s1">&#39;Mean squared error&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;NRMSE&#39;</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="s1">&#39;Normalized Root Mean squared error&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">testMultipleTraps</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;../../../crispy/SimResults/testMultipleTraps.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c1"># import skimage.measure.compare_mse as mse</span>
+<span class="c1"># import skimage.measure.compare_nrmse as nrmse</span>
+<span class="c1"># import skimage.measure.compare_ssim as ssim</span>
+<span class="c1"># s = ssim(testNoTraps.data, testMultipleTraps.data)</span>
+<span class="c1"># n = nrmse(testNoTraps.data, testMultipleTraps.data)</span>
+<span class="c1"># m = mse(testNoTraps.data, testMultipleTraps.data)</span>
+<span class="c1"># print(s,n,m)</span>
+<span class="c1"># testMultipleTraps.header.append((&#39;comment&#39;, &#39;&#39;), end=True)</span>
+<span class="c1"># testMultipleTraps.header.append((&#39;comment&#39;, &#39;*&#39;*60), end=True)</span>
+<span class="c1"># testMultipleTraps.header.append((&#39;comment&#39;, &#39;*&#39;*22 + &#39; Compare between w/ and w/o traps &#39; + &#39;*&#39;*20), end=True)</span>
+<span class="c1"># testMultipleTraps.header.append((&#39;comment&#39;, &#39;*&#39;*60), end=True)</span>
+<span class="c1"># testMultipleTraps.header.append((&#39;comment&#39;, &#39;&#39;), end=True)</span>
+<span class="c1"># testMultipleTraps.header.append((&#39;SSIM&#39;,s,&#39;Structural similarity index&#39;),end=True)</span>
+<span class="c1"># testMultipleTraps.header.append((&#39;MSE&#39;,m,&#39;Mean squared error&#39;),end=True)</span>
+<span class="c1"># testMultipleTraps.header.append((&#39;NRMSE&#39;,m,&#39;Normalized Root Mean squared error&#39;),end=True)</span>
+
 </pre></div>
 </div>
 </div>
@@ -664,138 +575,73 @@ crispy - INFO - Writing data to ../../code/SimResults/testNoTraps.fits
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Writing data to ../../../crispy/SimResults/testNoTraps.fits
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">IndexError</span>                                Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-38-c07a890af508&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      7</span> <span class="ansi-green-fg">for</span> icol <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>imout<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">      8</span>     Xval <span class="ansi-blue-fg">=</span> traps_X<span class="ansi-blue-fg">[</span>icol<span class="ansi-blue-fg">]</span>
-<span class="ansi-green-fg">----&gt; 9</span><span class="ansi-red-fg">     </span>ntraps <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>cumsum<span class="ansi-blue-fg">(</span>traps<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span>Xval<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     10</span>     data_column <span class="ansi-blue-fg">=</span> img<span class="ansi-blue-fg">.</span>data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span>Xval<span class="ansi-blue-fg">]</span>
-<span class="ansi-green-intense-fg ansi-bold">     11</span>     data_column <span class="ansi-blue-fg">=</span> data_column<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span>
-
-<span class="ansi-red-fg">IndexError</span>: too many indices for array
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [52]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">imageA</span><span class="p">,</span> <span class="n">imageB</span><span class="p">):</span>
-    <span class="c1"># the &#39;Mean Squared Error&#39; between the two images is the</span>
-    <span class="c1"># sum of the squared difference between the two images;</span>
-    <span class="c1"># NOTE: the two images must have the same dimension</span>
-    <span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">imageA</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="n">imageB</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">err</span> <span class="o">/=</span> <span class="nb">float</span><span class="p">(</span><span class="n">imageA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">imageA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-    <span class="c1"># return the MSE, the lower the error, the more &quot;similar&quot;</span>
-    <span class="c1"># the two images are</span>
-    <span class="k">return</span> <span class="n">err</span>
-
-
-<span class="kn">from</span> <span class="nn">skimage.measure</span> <span class="kn">import</span> <span class="n">structural_similarity</span> <span class="k">as</span> <span class="n">ssim</span>
-
-<span class="k">def</span> <span class="nf">compare_images</span><span class="p">(</span><span class="n">imageA</span><span class="p">,</span> <span class="n">imageB</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
-    <span class="c1"># compute the mean squared error and structural similarity</span>
-    <span class="c1"># index for the images</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">imageA</span><span class="p">,</span> <span class="n">imageB</span><span class="p">)</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">ssim</span><span class="p">(</span><span class="n">imageA</span><span class="p">,</span> <span class="n">imageB</span><span class="p">)</span>
-
-    <span class="c1"># setup the figure</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;MSE: </span><span class="si">%.2f</span><span class="s2">, SSIM: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
-
-    <span class="c1"># show first image</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">imageA</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
-
-    <span class="c1"># show the second image</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">imageB</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
-
-    <span class="c1"># show the images</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">img1</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s1">&#39;../../code/SimResults/testNoTraps.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
-<span class="n">img2</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s1">&#39;../../code/SimResults/testMultipleTraps.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
-<span class="n">compare_images</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span><span class="n">img2</span><span class="p">,</span><span class="s1">&#39;Traps effects&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ../../code/SimResults/testNoTraps.fits
-crispy - INFO - Read data from HDU 1 of ../../code/SimResults/testMultipleTraps.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/os5_spc_064_targetstar_IFS.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/testMultipleTraps_nonoise.fits
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="stderr output_area docutils container">
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_TrapsExperiments_23_1.png" src="../_images/notebooks_TrapsExperiments_23_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
 <div class="highlight"><pre>
-/Users/mrizzo/anaconda/lib/python2.7/site-packages/skimage/measure/_structural_similarity.py:224: skimage_deprecation: Call to deprecated function ``structural_similarity``. Use ``compare_ssim`` instead.
-  def structural_similarity(X, Y, win_size=None, gradient=False,
+crispy - INFO - Writing data to ../../../crispy/SimResults/testMultipleTraps.fits
 </pre></div></div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_24_2.png" src="../_images/notebooks_TrapsExperiments_24_2.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [24]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">100000</span><span class="p">),</span><span class="mi">450</span><span class="p">)</span>
-<span class="n">vals</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span></span><span class="c1"># def mse(imageA, imageB):</span>
+<span class="c1">#     # the &#39;Mean Squared Error&#39; between the two images is the</span>
+<span class="c1">#     # sum of the squared difference between the two images;</span>
+<span class="c1">#     # NOTE: the two images must have the same dimension</span>
+<span class="c1">#     err = np.sum((imageA.astype(&quot;float&quot;) - imageB.astype(&quot;float&quot;)) ** 2)</span>
+<span class="c1">#     err /= float(imageA.shape[0] * imageA.shape[1])</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span><span class="n">bins</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1">#     # return the MSE, the lower the error, the more &quot;similar&quot;</span>
+<span class="c1">#     # the two images are</span>
+<span class="c1">#     return err</span>
 
+
+<span class="c1"># from skimage.measure import structural_similarity as ssim</span>
+
+<span class="c1"># def compare_images(imageA, imageB, title):</span>
+<span class="c1">#     # compute the mean squared error and structural similarity</span>
+<span class="c1">#     # index for the images</span>
+<span class="c1">#     m = mse(imageA, imageB)</span>
+<span class="c1">#     s = ssim(imageA, imageB)</span>
+
+<span class="c1">#     # setup the figure</span>
+<span class="c1">#     fig = plt.figure(title)</span>
+<span class="c1">#     plt.suptitle(&quot;MSE: %.2f, SSIM: %.2f&quot; % (m, s))</span>
+
+<span class="c1">#     # show first image</span>
+<span class="c1">#     ax = fig.add_subplot(1, 2, 1)</span>
+<span class="c1">#     plt.imshow(imageA, cmap = plt.cm.gray)</span>
+<span class="c1">#     plt.axis(&quot;off&quot;)</span>
+
+<span class="c1">#     # show the second image</span>
+<span class="c1">#     ax = fig.add_subplot(1, 2, 2)</span>
+<span class="c1">#     plt.imshow(imageB, cmap = plt.cm.gray)</span>
+<span class="c1">#     plt.axis(&quot;off&quot;)</span>
+
+<span class="c1">#     # show the images</span>
+<span class="c1">#     plt.show()</span>
+
+<span class="c1"># # img1 = Image(&#39;../../code/SimResults/testNoTraps.fits&#39;).data</span>
+<span class="c1"># # img2 = Image(&#39;../../code/SimResults/testMultipleTraps.fits&#39;).data</span>
+<span class="c1"># # compare_images(img1,img2,&#39;Traps effects&#39;)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_25_0.png" src="../_images/notebooks_TrapsExperiments_25_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [10]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_TrapsExperiments_26_0.png" src="../_images/notebooks_TrapsExperiments_26_0.png" />
 </div>
 </div>
 </div>
@@ -809,14 +655,17 @@ crispy - INFO - Read data from HDU 1 of ../../code/SimResults/testMultipleTraps.
         <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
 <ul>
 <li><a class="reference internal" href="#">Traps experiments</a><ul>
+<li><a class="reference internal" href="#This-is-the-kernel-I-use">This is the kernel I use</a></li>
 <li><a class="reference internal" href="#Create-fake-data">Create fake data</a></li>
 <li><a class="reference internal" href="#Brute-force-treatment">Brute force treatment</a><ul>
 <li><a class="reference internal" href="#Application-to-images">Application to images</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#Seed-random-traps">Seed random traps</a></li>
-<li><a class="reference internal" href="#Assume-that-parallel-register-is-on-the-top-of-the-image-(pixels-have-tail-towards-the-bottom)">Assume that parallel register is on the top of the image (pixels have tail towards the bottom)</a></li>
-<li><a class="reference internal" href="#Explore-multiple-traps-along-the-same-column">Explore multiple traps along the same column</a></li>
+<li><a class="reference internal" href="#Assume-that-parallel-register-is-on-the-top-of-the-image-(pixels-have-tail-towards-the-bottom,-in-these-images)">Assume that parallel register is on the top of the image (pixels have tail towards the bottom, in these images)</a><ul>
+<li><a class="reference internal" href="#Now-with-multiple-traps-along-the-same-column">Now with multiple traps along the same column</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -834,7 +683,7 @@ crispy - INFO - Read data from HDU 1 of ../../code/SimResults/testMultipleTraps.
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Aug 2017. <br/>
+    Last built 14 Nov 2017. <br/>
   </p>
 </footer>
   </body>

@@ -106,7 +106,7 @@ Default is 1 nm. This has no effect unless we are trying to add any noise.</p>
 
 <dl class="function">
 <dt id="IFS.polychromeIFS">
-<code class="descclassname">IFS.</code><code class="descname">polychromeIFS</code><span class="sig-paren">(</span><em>par</em>, <em>wavelist</em>, <em>inputcube</em>, <em>name='detectorFrame'</em>, <em>parallel=True</em>, <em>QE=True</em>, <em>wavelist_endpts=None</em>, <em>dlambda=None</em>, <em>lam_arr=None</em>, <em>wavecalDir=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/IFS.html#polychromeIFS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#IFS.polychromeIFS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">IFS.</code><code class="descname">polychromeIFS</code><span class="sig-paren">(</span><em>par</em>, <em>inWavelist</em>, <em>inputcube</em>, <em>name='detectorFrame'</em>, <em>parallel=True</em>, <em>QE=True</em>, <em>wavelist_endpts=None</em>, <em>dlambda=None</em>, <em>lam_arr=None</em>, <em>wavecalDir=None</em>, <em>noRot=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/IFS.html#polychromeIFS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#IFS.polychromeIFS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Propagates an input cube through the Integral Field Spectrograph</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -116,7 +116,7 @@ Default is 1 nm. This has no effect unless we are trying to add any noise.</p>
 <blockquote>
 <div><p>with at least the key IFS parameters, interlacing and scale</p>
 </div></blockquote>
-<p><strong>wavelist</strong> : list of floats</p>
+<p><strong>inWavelist</strong> : list of floats</p>
 <blockquote>
 <div><p>List of wavelengths in nm corresponding to the center of each bin</p>
 </div></blockquote>
@@ -156,6 +156,11 @@ new bandpass. Need to work on this.</p>
 <div><p>This can be used to add a distortion already measured from lab data, for example.
 Put in there the full folder name where we can find a &#8216;lamsol.dat&#8217; file.</p>
 </div></blockquote>
+<p><strong>noRot: boolean</strong></p>
+<blockquote>
+<div><p>A rarely used option that allows to NOT rotate the input cube, if we want to simulate sending
+a input map aligned with the lenslets</p>
+</div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>detectorFrame</strong> : 2D array</p>
@@ -176,7 +181,7 @@ Put in there the full folder name where we can find a &#8216;lamsol.dat&#8217; f
 
 <dl class="function">
 <dt id="IFS.reduceIFSMap">
-<code class="descclassname">IFS.</code><code class="descname">reduceIFSMap</code><span class="sig-paren">(</span><em>par</em>, <em>IFSimageName</em>, <em>method='optext'</em>, <em>smoothbad=True</em>, <em>name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/IFS.html#reduceIFSMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#IFS.reduceIFSMap" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">IFS.</code><code class="descname">reduceIFSMap</code><span class="sig-paren">(</span><em>par</em>, <em>IFSimageName</em>, <em>method='optext'</em>, <em>smoothbad=True</em>, <em>name=None</em>, <em>hires=False</em>, <em>dy=3</em>, <em>fitbkgnd=True</em>, <em>specialPolychrome=None</em>, <em>returnall=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/IFS.html#reduceIFSMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#IFS.reduceIFSMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main reduction function</p>
 <p>Uses various routines to extract an IFS detector map into a spectral-spatial cube.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -267,7 +272,7 @@ wavlength calibration map. Then remap each microspectrum onto the desired wavele
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Aug 2017. <br/>
+    Last built 14 Nov 2017. <br/>
   </p>
 </footer>
   </body>

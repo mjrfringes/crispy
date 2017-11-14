@@ -1,0 +1,1113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>IFS calibration &#8212; crispy 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body role="document">
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.2.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="IFS-calibration">
+<h1>IFS calibration<a class="headerlink" href="#IFS-calibration" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic simple">
+<li>Run normal deconvolution routine</li>
+<li>construct a high-resolution, flattened polychrome</li>
+<li>For x, y offset determination, run a grid search by interpolating the
+high-res polychrome around</li>
+<li>Find the minimum/maximum of the heatmap</li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s1">&#39;serif&#39;</span><span class="p">,</span> <span class="n">serif</span><span class="o">=</span><span class="s1">&#39;Times&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick.major&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick.major&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;figure&#39;</span><span class="p">,</span><span class="n">titlesize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">crispy.PISCESparams</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="c1"># from crispy.params import Params</span>
+<span class="n">codefolder</span> <span class="o">=</span> <span class="s1">&#39;../../../crispy&#39;</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">codefolder</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/Inputs/BB.fits&quot;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">,</span><span class="n">smoothbad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">hires</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
+crispy - INFO - Reduced cube will have 11 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_resid.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_model.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_hires_model.fits
+crispy - INFO - Elapsed time: 35.437632s
+</pre></div></div>
+</div>
+<div class="section" id="Construct-high-resolution-polychrome-cube">
+<h2>Construct high-resolution polychrome cube<a class="headerlink" href="#Construct-high-resolution-polychrome-cube" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.locate_psflets</span> <span class="kn">import</span> <span class="n">locatePSFlets</span><span class="p">,</span><span class="n">PSFLets</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyf</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.wavecal</span> <span class="kn">import</span> <span class="n">make_hires_polychrome</span>
+
+<span class="n">lam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s2">&quot;lamsol.dat&quot;</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">allcoef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s2">&quot;lamsol.dat&quot;</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">:]</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing wavelength values at pixel centers&quot;</span><span class="p">)</span>
+<span class="n">psftool</span> <span class="o">=</span> <span class="n">PSFLets</span><span class="p">()</span>
+<span class="n">psftool</span><span class="o">.</span><span class="n">genpixsol</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">lam</span><span class="p">,</span> <span class="n">allcoef</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">lam1</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span><span class="o">/</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">lam2</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span><span class="o">*</span><span class="mf">1.05</span><span class="p">)</span>
+<span class="c1"># psftool.savepixsol(outdir=par.wavecalDir)</span>
+
+<span class="n">xindx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">nlens</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">xindx</span><span class="p">,</span> <span class="n">yindx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xindx</span><span class="p">,</span> <span class="n">xindx</span><span class="p">)</span>
+
+<span class="n">hires_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s1">&#39;hires_psflets_lam???.fits&#39;</span><span class="p">))</span>
+<span class="n">hires_arrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyf</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">hires_list</span><span class="p">]</span>
+
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span><span class="o">=</span><span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">lam</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+<span class="n">Nspec</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lam_endpts</span><span class="p">)</span>
+
+<span class="n">ysize</span><span class="p">,</span><span class="n">xsize</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/Inputs/BB.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+
+<span class="n">hirespoly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Nspec</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ysize</span><span class="o">*</span><span class="n">upsample</span><span class="p">,</span> <span class="n">xsize</span><span class="o">*</span><span class="n">upsample</span><span class="p">))</span>
+
+
+<span class="n">upsample</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nspec</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Slice </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">hirespoly</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">lam_endpts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">lam_endpts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">make_hires_polychrome</span><span class="p">(</span><span class="n">lam_endpts</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lam_endpts</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                                              <span class="n">hires_arrs</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">psftool</span><span class="p">,</span>
+                                              <span class="n">allcoef</span><span class="p">,</span> <span class="n">xindx</span><span class="p">,</span> <span class="n">yindx</span><span class="p">,</span><span class="n">ysize</span><span class="p">,</span><span class="n">xsize</span><span class="p">,</span><span class="n">upsample</span><span class="o">=</span><span class="n">upsample</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Computing wavelength values at pixel centers
+crispy - INFO - Reduced cube will have 11 wavelength bins
+crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
+Step 0
+Step 1
+Step 2
+Step 3
+Step 4
+Step 5
+Step 6
+Step 7
+Step 8
+Step 9
+Step 10
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">outkey</span> <span class="o">=</span> <span class="n">pyf</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">pyf</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">hirespoly</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)))</span>
+<span class="n">outkey</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s1">&#39;hiresPolyChromeR</span><span class="si">%d</span><span class="s1">.fits.gz&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="p">),</span> <span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.detutils</span> <span class="kn">import</span> <span class="n">frebin</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [152]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">BB</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/Inputs/BB.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">hires</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_hires_model.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">normalres</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_model.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">hires_rebinned</span> <span class="o">=</span> <span class="n">frebin</span><span class="p">(</span><span class="n">hires</span><span class="p">,</span><span class="n">normalres</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">hires_rebinned</span><span class="o">.</span><span class="n">shape</span>
+<span class="k">print</span> <span class="n">normalres</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_hires_model.fits
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_model.fits
+(1032, 1056)
+(1032, 1056)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [153]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">311</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">BB</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">312</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hires_rebinned</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">313</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hires_rebinned</span><span class="o">-</span><span class="n">BB</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">hires_rebinned</span><span class="o">-</span><span class="n">BB</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_hires_resid.fits&quot;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_hires_resid.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_IFS_calibration_9_1.png" src="../_images/notebooks_IFS_calibration_9_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [154]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
+
+<span class="n">hires</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">hires</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">smooth_model</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">spline_filter</span><span class="p">(</span><span class="n">hires</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">model_func2d</span><span class="p">(</span><span class="n">offx</span><span class="p">,</span><span class="n">offy</span><span class="p">):</span>
+    <span class="n">shifted</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">interpolation</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">smooth_model</span><span class="p">,[</span><span class="n">offy</span><span class="p">,</span><span class="n">offx</span><span class="p">],</span><span class="n">prefilter</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">frebin</span><span class="p">(</span><span class="n">shifted</span><span class="p">,</span><span class="n">BB</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">upsample</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">npixmin</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">npixmax</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">nx</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">ny</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">))</span>
+<span class="n">yoffsets</span><span class="p">,</span><span class="n">xoffsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">npixmin</span><span class="p">,</span><span class="n">npixmax</span><span class="p">,</span><span class="n">nx</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">npixmin</span><span class="p">,</span><span class="n">npixmax</span><span class="p">,</span><span class="n">ny</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ox</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Iteration </span><span class="si">%d</span><span class="s1"> out of </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ox</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">nx</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">oy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ny</span><span class="p">):</span>
+        <span class="n">grid</span><span class="p">[</span><span class="n">oy</span><span class="p">,</span><span class="n">ox</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">model_func2d</span><span class="p">(</span><span class="n">xoffsets</span><span class="p">[</span><span class="n">ox</span><span class="p">,</span><span class="n">oy</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span><span class="p">,</span><span class="n">yoffsets</span><span class="p">[</span><span class="n">ox</span><span class="p">,</span><span class="n">oy</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span><span class="p">)</span><span class="o">-</span><span class="n">BB</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">argmin</span><span class="p">(),</span> <span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Fitted offsets: </span><span class="si">%.2f</span><span class="s1">, </span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">yoffsets</span><span class="p">[</span><span class="n">coords</span><span class="p">],</span><span class="n">xoffsets</span><span class="p">[</span><span class="n">coords</span><span class="p">]))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="o">-</span><span class="n">grid</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]],[</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.2f</span><span class="s1">, </span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">yoffsets</span><span class="p">[</span><span class="n">coords</span><span class="p">],</span><span class="n">xoffsets</span><span class="p">[</span><span class="n">coords</span><span class="p">]),</span><span class="n">xy</span><span class="o">=</span><span class="n">coords</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span><span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Heatmap with maximum indicated&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Iteration 0 out of 10
+crispy - INFO - Iteration 1 out of 10
+crispy - INFO - Iteration 2 out of 10
+crispy - INFO - Iteration 3 out of 10
+crispy - INFO - Iteration 4 out of 10
+crispy - INFO - Iteration 5 out of 10
+crispy - INFO - Iteration 6 out of 10
+crispy - INFO - Iteration 7 out of 10
+crispy - INFO - Iteration 8 out of 10
+crispy - INFO - Iteration 9 out of 10
+crispy - INFO - Fitted offsets: 0.56, 0.44
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[22]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.text.Text at 0x10f9e1950&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_IFS_calibration_11_2.png" src="../_images/notebooks_IFS_calibration_11_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">newmodel</span> <span class="o">=</span> <span class="n">model_func2d</span><span class="p">(</span><span class="n">xoffsets</span><span class="p">[</span><span class="n">ox</span><span class="p">,</span><span class="n">oy</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span><span class="p">,</span><span class="n">yoffsets</span><span class="p">[</span><span class="n">coords</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span><span class="p">)</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">newmodel</span><span class="o">-</span><span class="n">BB</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_hires_resid_new.fits&quot;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_hires_resid_new.fits
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span> <span class="n">yoffsets</span>
+<span class="k">print</span> <span class="n">grid</span><span class="p">[</span><span class="n">coords</span><span class="p">]</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">((</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_resid.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">-</span><span class="n">BB</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]
+ [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]
+ [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]
+ [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]
+ [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]
+ [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]
+ [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]
+ [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]
+ [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]
+ [ 0.          0.11111111  0.22222222  0.33333333  0.44444444  0.55555556
+   0.66666667  0.77777778  0.88888889  1.        ]]
+5958523803.9
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_resid.fits
+1.11166e+11
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Repeat-now-by-dividing-up-the-image-into-small-chunks">
+<h2>Repeat now by dividing up the image into small chunks<a class="headerlink" href="#Repeat-now-by-dividing-up-the-image-into-small-chunks" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [165]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">hires</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_hires_model.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">hires</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">hires</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">smooth_model</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">spline_filter</span><span class="p">(</span><span class="n">hires</span><span class="p">)</span>
+<span class="n">nchunks</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># power of 2</span>
+<span class="n">list_offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="n">nchunks</span><span class="p">,</span><span class="n">nchunks</span><span class="p">))</span>
+<span class="n">BBsplit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">BB</span><span class="p">,</span><span class="n">nchunks</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">BBsplithires</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">hires</span><span class="p">,</span><span class="n">nchunks</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">new_polychrome</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">BB</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">BBsplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">BBsplit</span><span class="p">):</span>
+<span class="c1">#     if i==0:</span>
+<span class="c1">#         chunkhires = BBsplithires[i]</span>
+<span class="c1">#         indiv = np.split(chunk,nchunks,axis=1)[0]</span>
+<span class="c1">#         indiv_hires = np.split(chunkhires,nchunks,axis=1)[0]</span>
+<span class="c1">#         plt.subplot(131)</span>
+<span class="c1">#         plt.imshow(indiv)</span>
+<span class="c1">#         plt.subplot(132)</span>
+<span class="c1">#         plt.imshow(indiv_hires)</span>
+<span class="c1">#         plt.subplot(133)</span>
+<span class="c1">#         plt.imshow(frebin(indiv_hires,indiv.T.shape))</span>
+    <span class="n">chunkhires</span> <span class="o">=</span> <span class="n">BBsplithires</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">indivlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span><span class="n">nchunks</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">indiv</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indivlist</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Chunk (</span><span class="si">%d</span><span class="s1">,</span><span class="si">%d</span><span class="s1">) out of (</span><span class="si">%d</span><span class="s1">,</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">nchunks</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">nchunks</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">indiv_hires</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">chunkhires</span><span class="p">,</span><span class="n">nchunks</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">smooth_model</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">spline_filter</span><span class="p">(</span><span class="n">indiv_hires</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">model_func2d</span><span class="p">(</span><span class="n">offx</span><span class="p">,</span><span class="n">offy</span><span class="p">):</span>
+            <span class="n">shifted</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">interpolation</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">smooth_model</span><span class="p">,[</span><span class="n">offy</span><span class="p">,</span><span class="n">offx</span><span class="p">],</span><span class="n">prefilter</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">frebin</span><span class="p">(</span><span class="n">shifted</span><span class="p">,</span><span class="n">indiv</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">upsample</span><span class="o">=</span><span class="mi">3</span>
+        <span class="n">npixmin</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="n">npixmax</span> <span class="o">=</span> <span class="mf">0.8</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">))</span>
+        <span class="n">yoffsets</span><span class="p">,</span><span class="n">xoffsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">npixmin</span><span class="p">,</span><span class="n">npixmax</span><span class="p">,</span><span class="n">nx</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">npixmin</span><span class="p">,</span><span class="n">npixmax</span><span class="p">,</span><span class="n">ny</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">ox</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+<span class="c1">#             log.info(&#39;Iteration %d out of %d&#39; % (ox+1,nx))</span>
+            <span class="k">for</span> <span class="n">oy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ny</span><span class="p">):</span>
+                <span class="n">grid</span><span class="p">[</span><span class="n">oy</span><span class="p">,</span><span class="n">ox</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">model_func2d</span><span class="p">(</span><span class="n">xoffsets</span><span class="p">[</span><span class="n">oy</span><span class="p">,</span><span class="n">ox</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span><span class="p">,</span><span class="n">yoffsets</span><span class="p">[</span><span class="n">oy</span><span class="p">,</span><span class="n">ox</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span><span class="p">)</span><span class="o">-</span><span class="n">indiv</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">argmin</span><span class="p">(),</span> <span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">list_offsets</span><span class="p">[:,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">xoffsets</span><span class="p">[</span><span class="n">coords</span><span class="p">],</span><span class="n">yoffsets</span><span class="p">[</span><span class="n">coords</span><span class="p">])</span>
+        <span class="n">new_polychrome</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">indiv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">indiv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                       <span class="n">j</span><span class="o">*</span><span class="n">indiv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">indiv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">model_func2d</span><span class="p">(</span><span class="n">xoffsets</span><span class="p">[</span><span class="n">coords</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span><span class="p">,</span>
+                                                                             <span class="n">yoffsets</span><span class="p">[</span><span class="n">coords</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_hires_model.fits
+(129, 1056)
+crispy - INFO - Chunk (0,0) out of (7,7)
+crispy - INFO - Chunk (0,1) out of (7,7)
+crispy - INFO - Chunk (0,2) out of (7,7)
+crispy - INFO - Chunk (0,3) out of (7,7)
+crispy - INFO - Chunk (0,4) out of (7,7)
+crispy - INFO - Chunk (0,5) out of (7,7)
+crispy - INFO - Chunk (0,6) out of (7,7)
+crispy - INFO - Chunk (0,7) out of (7,7)
+crispy - INFO - Chunk (1,0) out of (7,7)
+crispy - INFO - Chunk (1,1) out of (7,7)
+crispy - INFO - Chunk (1,2) out of (7,7)
+crispy - INFO - Chunk (1,3) out of (7,7)
+crispy - INFO - Chunk (1,4) out of (7,7)
+crispy - INFO - Chunk (1,5) out of (7,7)
+crispy - INFO - Chunk (1,6) out of (7,7)
+crispy - INFO - Chunk (1,7) out of (7,7)
+crispy - INFO - Chunk (2,0) out of (7,7)
+crispy - INFO - Chunk (2,1) out of (7,7)
+crispy - INFO - Chunk (2,2) out of (7,7)
+crispy - INFO - Chunk (2,3) out of (7,7)
+crispy - INFO - Chunk (2,4) out of (7,7)
+crispy - INFO - Chunk (2,5) out of (7,7)
+crispy - INFO - Chunk (2,6) out of (7,7)
+crispy - INFO - Chunk (2,7) out of (7,7)
+crispy - INFO - Chunk (3,0) out of (7,7)
+crispy - INFO - Chunk (3,1) out of (7,7)
+crispy - INFO - Chunk (3,2) out of (7,7)
+crispy - INFO - Chunk (3,3) out of (7,7)
+crispy - INFO - Chunk (3,4) out of (7,7)
+crispy - INFO - Chunk (3,5) out of (7,7)
+crispy - INFO - Chunk (3,6) out of (7,7)
+crispy - INFO - Chunk (3,7) out of (7,7)
+crispy - INFO - Chunk (4,0) out of (7,7)
+crispy - INFO - Chunk (4,1) out of (7,7)
+crispy - INFO - Chunk (4,2) out of (7,7)
+crispy - INFO - Chunk (4,3) out of (7,7)
+crispy - INFO - Chunk (4,4) out of (7,7)
+crispy - INFO - Chunk (4,5) out of (7,7)
+crispy - INFO - Chunk (4,6) out of (7,7)
+crispy - INFO - Chunk (4,7) out of (7,7)
+crispy - INFO - Chunk (5,0) out of (7,7)
+crispy - INFO - Chunk (5,1) out of (7,7)
+crispy - INFO - Chunk (5,2) out of (7,7)
+crispy - INFO - Chunk (5,3) out of (7,7)
+crispy - INFO - Chunk (5,4) out of (7,7)
+crispy - INFO - Chunk (5,5) out of (7,7)
+crispy - INFO - Chunk (5,6) out of (7,7)
+crispy - INFO - Chunk (5,7) out of (7,7)
+crispy - INFO - Chunk (6,0) out of (7,7)
+crispy - INFO - Chunk (6,1) out of (7,7)
+crispy - INFO - Chunk (6,2) out of (7,7)
+crispy - INFO - Chunk (6,3) out of (7,7)
+crispy - INFO - Chunk (6,4) out of (7,7)
+crispy - INFO - Chunk (6,5) out of (7,7)
+crispy - INFO - Chunk (6,6) out of (7,7)
+crispy - INFO - Chunk (6,7) out of (7,7)
+crispy - INFO - Chunk (7,0) out of (7,7)
+crispy - INFO - Chunk (7,1) out of (7,7)
+crispy - INFO - Chunk (7,2) out of (7,7)
+crispy - INFO - Chunk (7,3) out of (7,7)
+crispy - INFO - Chunk (7,4) out of (7,7)
+crispy - INFO - Chunk (7,5) out of (7,7)
+crispy - INFO - Chunk (7,6) out of (7,7)
+crispy - INFO - Chunk (7,7) out of (7,7)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.figure.Figure at 0x10dc9ea50&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [166]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span> <span class="n">list_offsets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[ 0.1         0.28421053  0.43157895  0.43157895  0.43157895  0.39473684
+   0.13684211  0.1       ]
+ [ 0.50526316  0.57894737  0.54210526  0.46842105  0.46842105  0.57894737
+   0.61578947  0.32105263]
+ [ 0.50526316  0.50526316  0.43157895  0.39473684  0.39473684  0.46842105
+   0.54210526  0.50526316]
+ [ 0.46842105  0.43157895  0.39473684  0.32105263  0.32105263  0.32105263
+   0.46842105  0.50526316]
+ [ 0.43157895  0.46842105  0.43157895  0.43157895  0.43157895  0.43157895
+   0.32105263  0.46842105]
+ [ 0.39473684  0.46842105  0.50526316  0.54210526  0.54210526  0.46842105
+   0.32105263  0.32105263]
+ [ 0.39473684  0.43157895  0.50526316  0.54210526  0.54210526  0.43157895
+   0.32105263  0.46842105]
+ [ 0.54210526  0.32105263  0.32105263  0.32105263  0.32105263  0.32105263
+   0.46842105  0.8       ]]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [176]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="c1"># interpolate offset grid</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp2d</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">nchunks</span><span class="p">)</span><span class="o">*</span><span class="n">indiv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">nchunks</span><span class="p">)</span><span class="o">*</span><span class="n">indiv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">upsample</span>
+<span class="n">offyinterp</span> <span class="o">=</span> <span class="n">interp2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">list_offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+<span class="n">offxinterp</span> <span class="o">=</span> <span class="n">interp2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">list_offsets</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [177]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">list_offsets</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">list_offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[177]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x10cba8d10&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_IFS_calibration_18_1.png" src="../_images/notebooks_IFS_calibration_18_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [178]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">hires</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">hires</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">valx</span> <span class="o">=</span> <span class="n">offxinterp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">valy</span> <span class="o">=</span> <span class="n">offyinterp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [179]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">valx</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">valy</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[179]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x15370b850&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_IFS_calibration_20_1.png" src="../_images/notebooks_IFS_calibration_20_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [180]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">hires</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_hires_model.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">hires</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">hires</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="k">print</span> <span class="n">valy</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">valx</span><span class="o">.</span><span class="n">shape</span>
+<span class="k">print</span> <span class="n">BB</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">),</span><span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">))</span>
+<span class="k">print</span> <span class="n">yy</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">yy</span> <span class="o">-=</span> <span class="n">valx</span><span class="o">*</span><span class="n">upsample</span>
+<span class="n">xx</span> <span class="o">-=</span> <span class="n">valy</span><span class="o">*</span><span class="n">upsample</span>
+<span class="n">new_hires_poly</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">map_coordinates</span><span class="p">(</span><span class="n">hires</span><span class="p">,[</span><span class="n">yy</span><span class="p">,</span><span class="n">xx</span><span class="p">],</span><span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">hires</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_hires_model.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">new_poly</span> <span class="o">=</span> <span class="n">frebin</span><span class="p">(</span><span class="n">new_hires_poly</span><span class="p">,</span><span class="n">BB</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">new_hires</span> <span class="o">=</span> <span class="n">frebin</span><span class="p">(</span><span class="n">hires</span><span class="p">,</span><span class="n">BB</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="n">BB</span><span class="o">-</span><span class="n">new_poly</span>
+<span class="n">diff</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">new_hires</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">diff</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_new_poly_resid.fits&quot;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_hires_model.fits
+(3096, 3168) (3096, 3168)
+(1032, 1056)
+(3096, 3168)
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_hires_model.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_new_poly_resid.fits
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [181]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">((</span><span class="n">BB</span><span class="o">-</span><span class="n">new_polychrome</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">((</span><span class="n">diff</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">((</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_resid.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">-</span><span class="n">BB</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">new_poly</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+6.12659e+09
+1.08441e+09
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_resid.fits
+1.11166e+11
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[181]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x153969b50&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_IFS_calibration_22_2.png" src="../_images/notebooks_IFS_calibration_22_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [151]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">BB</span><span class="o">-</span><span class="n">new_polychrome</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/BB_red_lstsq_new_polychrome_resid.fits&quot;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_new_polychrome_resid.fits
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Now-edit-polychrome">
+<h2>Now edit polychrome<a class="headerlink" href="#Now-edit-polychrome" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [185]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">old_hires_polychrome</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;hiresPolyChromeR70.fits.gz&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="k">print</span> <span class="n">old_hires_polychrome</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">new_polychrome</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;polychromeR70_old.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">),</span><span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">))</span>
+<span class="n">yy</span> <span class="o">-=</span> <span class="n">valx</span><span class="o">*</span><span class="n">upsample</span>
+<span class="n">xx</span> <span class="o">-=</span> <span class="n">valy</span><span class="o">*</span><span class="n">upsample</span>
+<span class="k">for</span> <span class="n">iwav</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">old_hires_polychrome</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">new_polychrome</span><span class="p">[</span><span class="n">iwav</span><span class="p">]</span> <span class="o">=</span> <span class="n">frebin</span><span class="p">(</span><span class="n">ndimage</span><span class="o">.</span><span class="n">map_coordinates</span><span class="p">(</span><span class="n">old_hires_polychrome</span><span class="p">[</span><span class="n">iwav</span><span class="p">],[</span><span class="n">yy</span><span class="p">,</span><span class="n">xx</span><span class="p">],</span><span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span><span class="n">new_polychrome</span><span class="p">[</span><span class="n">iwav</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170425/hiresPolyChromeR70.fits.gz
+(11, 3096, 3168)
+crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170425/polychromeR70_old.fits
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170425/polychromeR70.fits
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [189]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">new_polychrome</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;polychromeR70stack.fits&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">fits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">new_polychrome</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)))</span>
+<span class="n">out</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;polychromeR</span><span class="si">%d</span><span class="s1">.fits&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="p">),</span> <span class="n">clobber</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to ../../../crispy/ReferenceFiles/Calibra_170425/polychromeR70stack.fits
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [190]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/Inputs/BB.fits&quot;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">,</span><span class="n">smoothbad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">hires</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
+crispy - INFO - Reduced cube will have 11 wavelength bins
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_resid.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_model.fits
+crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_hires_model.fits
+crispy - INFO - Elapsed time: 36.854684s
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [193]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span> <span class="o">+</span> <span class="s1">&#39;/BB_red_lstsq_resid.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span> <span class="o">+</span> <span class="s1">&#39;/BB/BB_red_lstsq_resid.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_resid.fits
+9.70901e+08
+crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB/BB_red_lstsq_resid.fits
+1.89795e+09
+</pre></div></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">IFS calibration</a><ul>
+<li><a class="reference internal" href="#Construct-high-resolution-polychrome-cube">Construct high-resolution polychrome cube</a></li>
+<li><a class="reference internal" href="#Repeat-now-by-dividing-up-the-image-into-small-chunks">Repeat now by dividing up the image into small chunks</a></li>
+<li><a class="reference internal" href="#Now-edit-polychrome">Now edit polychrome</a></li>
+</ul>
+</li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/IFS_calibration.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
+    Last built 14 Nov 2017. <br/>
+  </p>
+</footer>
+  </body>
+</html>

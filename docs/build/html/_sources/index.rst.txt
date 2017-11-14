@@ -8,6 +8,14 @@ The Coronagraph and Rapid Imaging Spectrograph in Python
 
 This software is designed to simulate lenslet array-based Integral Field Spectrographs and their reduction process. This was developed within the context of NASA's WFIRST Coronagraph mission.
 
+Coronagraph Simulator
+=====================
+
+.. toctree::
+   :maxdepth: 1
+
+   notebooks/HLC_Haystacks
+
 IFS Simulator
 =============
 
