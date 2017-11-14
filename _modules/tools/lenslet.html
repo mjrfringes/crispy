@@ -92,7 +92,7 @@
 <span class="kn">from</span> <span class="nn">locate_psflets</span> <span class="k">import</span> <span class="n">initcoef</span><span class="p">,</span><span class="n">transform</span><span class="p">,</span><span class="n">PSFLets</span>
 
 
-<div class="viewcode-block" id="processImagePlane"><a class="viewcode-back" href="../../tools.html#tools.lenslet.processImagePlane">[docs]</a><span class="k">def</span> <span class="nf">processImagePlane</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">imagePlane</span><span class="p">):</span>
+<div class="viewcode-block" id="processImagePlane"><a class="viewcode-back" href="../../tools.html#tools.lenslet.processImagePlane">[docs]</a><span class="k">def</span> <span class="nf">processImagePlane</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">imagePlane</span><span class="p">,</span><span class="n">noRot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Function processImagePlane</span>
 <span class="sd">    </span>
@@ -124,7 +124,10 @@
     <span class="n">ypad</span> <span class="o">//=</span><span class="mi">2</span>
     <span class="n">paddedImagePlane</span><span class="p">[</span><span class="n">xpad</span><span class="p">:</span><span class="o">-</span><span class="n">xpad</span><span class="p">,</span><span class="n">ypad</span><span class="p">:</span><span class="o">-</span><span class="n">ypad</span><span class="p">]</span> <span class="o">=</span> <span class="n">imagePlane</span>
     
-    <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="n">Rotate</span><span class="p">(</span><span class="n">paddedImagePlane</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="p">,</span><span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">noRot</span><span class="p">:</span>
+        <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="n">paddedImagePlane</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>    
+        <span class="n">imagePlaneRot</span> <span class="o">=</span> <span class="n">Rotate</span><span class="p">(</span><span class="n">paddedImagePlane</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="p">,</span><span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     
     <span class="c1">###################################################################### </span>
     <span class="c1"># Flux conservative rebinning</span>
@@ -351,7 +354,7 @@
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Aug 2017. <br/>
+    Last built 14 Nov 2017. <br/>
   </p>
 </footer>
   </body>

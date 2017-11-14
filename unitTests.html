@@ -117,8 +117,50 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="unitTests.testCrosstalk">
+<code class="descclassname">unitTests.</code><code class="descname">testCrosstalk</code><span class="sig-paren">(</span><em>par</em>, <em>pixsize=0.1</em>, <em>npix=512</em>, <em>pixval=1.0</em>, <em>Nspec=45</em>, <em>outname='crosstalk.fits'</em>, <em>useQE=True</em>, <em>method='optext'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testCrosstalk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testCrosstalk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a polychromatic flatfield</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par</strong> :   Parameter instance</p>
+<blockquote>
+<div><p>Contains all IFS parameters</p>
+</div></blockquote>
+<p><strong>pixsize:   float</strong></p>
+<blockquote>
+<div><p>Pixel scale (lam/D)</p>
+</div></blockquote>
+<p><strong>npix: int</strong></p>
+<blockquote>
+<div><p>Each input frame has a pixel size npix x npix</p>
+</div></blockquote>
+<p><strong>pixval: float</strong></p>
+<blockquote>
+<div><p>Each input frame has a unform value pixval in photons per second per nm of bandwidth</p>
+</div></blockquote>
+<p><strong>Nspec: float</strong></p>
+<blockquote>
+<div><p>Optional input forcing the number of wavelengths bins used</p>
+</div></blockquote>
+<p><strong>outname: string</strong></p>
+<blockquote>
+<div><p>Name of flatfield image</p>
+</div></blockquote>
+<p><strong>useQE: boolean</strong></p>
+<blockquote class="last">
+<div><p>Whether to take into account the wavelength-dependent QE of the detector</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="unitTests.testCutout">
-<code class="descclassname">unitTests.</code><code class="descname">testCutout</code><span class="sig-paren">(</span><em>par</em>, <em>fname</em>, <em>lensnum=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testCutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testCutout" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">unitTests.</code><code class="descname">testCutout</code><span class="sig-paren">(</span><em>par</em>, <em>fname</em>, <em>lensX=0</em>, <em>lensY=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testCutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testCutout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Testing the cutout function</p>
 </dd></dl>
 
@@ -164,7 +206,7 @@
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Aug 2017. <br/>
+    Last built 14 Nov 2017. <br/>
   </p>
 </footer>
   </body>

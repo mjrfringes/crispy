@@ -127,7 +127,7 @@ generating IFSimage images</p>
 
 <dl class="function">
 <dt id="tools.detector.readoutPhotonFluxMapWFIRST">
-<code class="descclassname">tools.detector.</code><code class="descname">readoutPhotonFluxMapWFIRST</code><span class="sig-paren">(</span><em>fluxMap</em>, <em>tottime</em>, <em>inttime=None</em>, <em>QE=1.0</em>, <em>darkBOL=0.00014</em>, <em>darkEOL=0.00028</em>, <em>CIC=0.01</em>, <em>eff=1.0</em>, <em>EMGain=2500.0</em>, <em>RN=100.0</em>, <em>PCbias=1000.0</em>, <em>threshold=6.0</em>, <em>lifefraction=0.0</em>, <em>dqeKnee=0.858</em>, <em>dqeFluxSlope=3.24</em>, <em>dqeKneeFlux=0.089</em>, <em>nonoise=False</em>, <em>poisson=True</em>, <em>EMStats=True</em>, <em>PCmode=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detector.html#readoutPhotonFluxMapWFIRST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detector.readoutPhotonFluxMapWFIRST" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.detector.</code><code class="descname">readoutPhotonFluxMapWFIRST</code><span class="sig-paren">(</span><em>fluxMap</em>, <em>tottime</em>, <em>inttime=None</em>, <em>QE=1.0</em>, <em>darkBOL=0.00014</em>, <em>darkEOL=0.00028</em>, <em>CIC=0.01</em>, <em>eff=1.0</em>, <em>EMGain=2500.0</em>, <em>RN=100.0</em>, <em>PCbias=1000.0</em>, <em>threshold=6.0</em>, <em>lifefraction=0.0</em>, <em>dqeKnee=0.858</em>, <em>dqeFluxSlope=3.24</em>, <em>dqeKneeFlux=0.089</em>, <em>nonoise=False</em>, <em>poisson=True</em>, <em>EMStats=True</em>, <em>PCmode=True</em>, <em>PCcorrect=False</em>, <em>normalize=False</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detector.html#readoutPhotonFluxMapWFIRST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detector.readoutPhotonFluxMapWFIRST" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -258,7 +258,7 @@ clobber is provided as a keyword to fits.HDUList.writeto.</p>
 
 <dl class="data">
 <dt id="tools.image.log">
-<code class="descclassname">tools.image.</code><code class="descname">log</code><em class="property"> = &lt;tools.initLogger.CharisLogger object&gt;</em><a class="headerlink" href="#tools.image.log" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.image.</code><code class="descname">log</code><em class="property"> = &lt;tools.initLogger.crispyLogger object&gt;</em><a class="headerlink" href="#tools.image.log" title="Permalink to this definition">¶</a></dt>
 <dd><p>most of this code is due to Tim Brandt</p>
 </dd></dl>
 
@@ -409,150 +409,198 @@ Images can be cubes.</p>
 </div>
 <div class="section" id="module-tools.initLogger">
 <span id="tools-initlogger-module"></span><h2>tools.initLogger module<a class="headerlink" href="#module-tools.initLogger" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.initLogger.addFileHandler">
+<code class="descclassname">tools.initLogger.</code><code class="descname">addFileHandler</code><span class="sig-paren">(</span><em>log</em>, <em>lvl=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addFileHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addFileHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will add a file handler to a log with the provided level.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>log (crispyLogger object): A crispyLogger object that was freshly </dt>
+<dd>instantiated.</dd>
+<dt>lvl (int): The severity level of messages printed to the file with </dt>
+<dd>the file handler, default = 1.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.addFitsStyleHandler">
+<code class="descclassname">tools.initLogger.</code><code class="descname">addFitsStyleHandler</code><span class="sig-paren">(</span><em>log</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addFitsStyleHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addFitsStyleHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will add a file handler with a string format ideal for 
+directly loading into a FITS header.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>log (crispyLogger object): A crispyLogger object that was freshly </dt>
+<dd>instantiated.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.initLogger.addStreamHandler">
+<code class="descclassname">tools.initLogger.</code><code class="descname">addStreamHandler</code><span class="sig-paren">(</span><em>log</em>, <em>lvl=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addStreamHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addStreamHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will add a stream handler to a log with the provided level.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>log (crispyLogger object): A crispyLogger object that was freshly </dt>
+<dd>instantiated.</dd>
+<dt>lvl (int): The severity level of messages printed to the screen with </dt>
+<dd>the stream handler, default = 20.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="class">
-<dt id="tools.initLogger.CharisLogger">
-<em class="property">class </em><code class="descclassname">tools.initLogger.</code><code class="descname">CharisLogger</code><span class="sig-paren">(</span><em>name</em>, <em>level=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger">
+<em class="property">class </em><code class="descclassname">tools.initLogger.</code><code class="descname">crispyLogger</code><span class="sig-paren">(</span><em>name</em>, <em>level=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/logging.html#logging.Logger" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">logging.Logger</span></code></a></p>
-<p>This is the advanced logging object used throughout the CHARIS
-Data Extraction Pipeline.  It inherits from the standard 
+<p>This is the advanced logging object used for crispy. 
+It is almost a carbon copy of the CHARIS DRP logger routine.
+It inherits from the standard 
 Python library &#8216;logging&#8217; and provides added features.
 The default log level for the output file will be 1, ie ALL messages;
 while the default for the screen will be INFO, and can be changed easily 
 using the setStreamLevel(lvl) member function.</p>
 <p>Initialize the logger with a name and an optional level.</p>
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.MAINCRITICAL">
-<code class="descname">MAINCRITICAL</code><em class="property"> = 80</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAINCRITICAL" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.MAINCRITICAL">
+<code class="descname">MAINCRITICAL</code><em class="property"> = 80</em><a class="headerlink" href="#tools.initLogger.crispyLogger.MAINCRITICAL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.MAINDEBUG">
-<code class="descname">MAINDEBUG</code><em class="property"> = 60</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAINDEBUG" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.MAINDEBUG">
+<code class="descname">MAINDEBUG</code><em class="property"> = 60</em><a class="headerlink" href="#tools.initLogger.crispyLogger.MAINDEBUG" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.MAINERROR">
-<code class="descname">MAINERROR</code><em class="property"> = 75</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAINERROR" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.MAINERROR">
+<code class="descname">MAINERROR</code><em class="property"> = 75</em><a class="headerlink" href="#tools.initLogger.crispyLogger.MAINERROR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.MAININFO">
-<code class="descname">MAININFO</code><em class="property"> = 65</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAININFO" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.MAININFO">
+<code class="descname">MAININFO</code><em class="property"> = 65</em><a class="headerlink" href="#tools.initLogger.crispyLogger.MAININFO" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.MAINWARNING">
-<code class="descname">MAINWARNING</code><em class="property"> = 70</em><a class="headerlink" href="#tools.initLogger.CharisLogger.MAINWARNING" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.MAINWARNING">
+<code class="descname">MAINWARNING</code><em class="property"> = 70</em><a class="headerlink" href="#tools.initLogger.crispyLogger.MAINWARNING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.PRIMCRITICAL">
-<code class="descname">PRIMCRITICAL</code><em class="property"> = 55</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMCRITICAL" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.PRIMCRITICAL">
+<code class="descname">PRIMCRITICAL</code><em class="property"> = 55</em><a class="headerlink" href="#tools.initLogger.crispyLogger.PRIMCRITICAL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.PRIMDEBUG">
-<code class="descname">PRIMDEBUG</code><em class="property"> = 35</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMDEBUG" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.PRIMDEBUG">
+<code class="descname">PRIMDEBUG</code><em class="property"> = 35</em><a class="headerlink" href="#tools.initLogger.crispyLogger.PRIMDEBUG" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.PRIMERROR">
-<code class="descname">PRIMERROR</code><em class="property"> = 49</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMERROR" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.PRIMERROR">
+<code class="descname">PRIMERROR</code><em class="property"> = 49</em><a class="headerlink" href="#tools.initLogger.crispyLogger.PRIMERROR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.PRIMINFO">
-<code class="descname">PRIMINFO</code><em class="property"> = 39</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMINFO" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.PRIMINFO">
+<code class="descname">PRIMINFO</code><em class="property"> = 39</em><a class="headerlink" href="#tools.initLogger.crispyLogger.PRIMINFO" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.PRIMWARNING">
-<code class="descname">PRIMWARNING</code><em class="property"> = 45</em><a class="headerlink" href="#tools.initLogger.CharisLogger.PRIMWARNING" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.PRIMWARNING">
+<code class="descname">PRIMWARNING</code><em class="property"> = 45</em><a class="headerlink" href="#tools.initLogger.crispyLogger.PRIMWARNING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.SUMMARY">
-<code class="descname">SUMMARY</code><em class="property"> = 5</em><a class="headerlink" href="#tools.initLogger.CharisLogger.SUMMARY" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.SUMMARY">
+<code class="descname">SUMMARY</code><em class="property"> = 5</em><a class="headerlink" href="#tools.initLogger.crispyLogger.SUMMARY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.TOOLCRITICAL">
-<code class="descname">TOOLCRITICAL</code><em class="property"> = 29</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLCRITICAL" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.TOOLCRITICAL">
+<code class="descname">TOOLCRITICAL</code><em class="property"> = 29</em><a class="headerlink" href="#tools.initLogger.crispyLogger.TOOLCRITICAL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.TOOLDEBUG">
-<code class="descname">TOOLDEBUG</code><em class="property"> = 9</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLDEBUG" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.TOOLDEBUG">
+<code class="descname">TOOLDEBUG</code><em class="property"> = 9</em><a class="headerlink" href="#tools.initLogger.crispyLogger.TOOLDEBUG" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.TOOLERROR">
-<code class="descname">TOOLERROR</code><em class="property"> = 25</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLERROR" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.TOOLERROR">
+<code class="descname">TOOLERROR</code><em class="property"> = 25</em><a class="headerlink" href="#tools.initLogger.crispyLogger.TOOLERROR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.TOOLINFO">
-<code class="descname">TOOLINFO</code><em class="property"> = 15</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLINFO" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.TOOLINFO">
+<code class="descname">TOOLINFO</code><em class="property"> = 15</em><a class="headerlink" href="#tools.initLogger.crispyLogger.TOOLINFO" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="tools.initLogger.CharisLogger.TOOLWARNING">
-<code class="descname">TOOLWARNING</code><em class="property"> = 19</em><a class="headerlink" href="#tools.initLogger.CharisLogger.TOOLWARNING" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.TOOLWARNING">
+<code class="descname">TOOLWARNING</code><em class="property"> = 19</em><a class="headerlink" href="#tools.initLogger.crispyLogger.TOOLWARNING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.maincritical">
-<code class="descname">maincritical</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=80</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.maincritical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.maincritical" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.maincritical">
+<code class="descname">maincritical</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=80</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.maincritical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.maincritical" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.maindebug">
-<code class="descname">maindebug</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=60</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.maindebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.maindebug" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.maindebug">
+<code class="descname">maindebug</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=60</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.maindebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.maindebug" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.mainerror">
-<code class="descname">mainerror</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=75</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.mainerror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.mainerror" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.mainerror">
+<code class="descname">mainerror</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=75</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.mainerror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.mainerror" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.maininfo">
-<code class="descname">maininfo</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=65</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.maininfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.maininfo" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.maininfo">
+<code class="descname">maininfo</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=65</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.maininfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.maininfo" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.mainwarning">
-<code class="descname">mainwarning</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=70</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.mainwarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.mainwarning" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.mainwarning">
+<code class="descname">mainwarning</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=70</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.mainwarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.mainwarning" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.primcritical">
-<code class="descname">primcritical</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=55</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.primcritical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.primcritical" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.primcritical">
+<code class="descname">primcritical</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=55</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.primcritical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.primcritical" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.primdebug">
-<code class="descname">primdebug</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=35</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.primdebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.primdebug" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.primdebug">
+<code class="descname">primdebug</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=35</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.primdebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.primdebug" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.primerror">
-<code class="descname">primerror</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=49</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.primerror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.primerror" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.primerror">
+<code class="descname">primerror</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=49</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.primerror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.primerror" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.priminfo">
-<code class="descname">priminfo</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=39</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.priminfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.priminfo" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.priminfo">
+<code class="descname">priminfo</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=39</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.priminfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.priminfo" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.primwarning">
-<code class="descname">primwarning</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=45</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.primwarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.primwarning" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.primwarning">
+<code class="descname">primwarning</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=45</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.primwarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.primwarning" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.setStreamLevel">
-<code class="descname">setStreamLevel</code><span class="sig-paren">(</span><em>lvl=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.setStreamLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.setStreamLevel" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.setStreamLevel">
+<code class="descname">setStreamLevel</code><span class="sig-paren">(</span><em>lvl=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.setStreamLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.setStreamLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set/change the level for the stream handler for a logging object.
 Any file handlers will be left alone.
 All messages of a higher severity level than &#8216;lvl&#8217; will be printed 
@@ -650,82 +698,35 @@ to the screen.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.summary">
-<code class="descname">summary</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=5</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.summary" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.summary">
+<code class="descname">summary</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=5</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.summary" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.toolcritical">
-<code class="descname">toolcritical</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=29</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.toolcritical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.toolcritical" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.toolcritical">
+<code class="descname">toolcritical</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=29</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.toolcritical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.toolcritical" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.tooldebug">
-<code class="descname">tooldebug</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=9</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.tooldebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.tooldebug" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.tooldebug">
+<code class="descname">tooldebug</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=9</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.tooldebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.tooldebug" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.toolerror">
-<code class="descname">toolerror</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=25</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.toolerror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.toolerror" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.toolerror">
+<code class="descname">toolerror</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=25</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.toolerror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.toolerror" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.toolinfo">
-<code class="descname">toolinfo</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=15</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.toolinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.toolinfo" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.toolinfo">
+<code class="descname">toolinfo</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=15</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.toolinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.toolinfo" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tools.initLogger.CharisLogger.toolwarning">
-<code class="descname">toolwarning</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=19</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#CharisLogger.toolwarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.CharisLogger.toolwarning" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.initLogger.crispyLogger.toolwarning">
+<code class="descname">toolwarning</code><span class="sig-paren">(</span><em>msg</em>, <em>lvl=19</em>, <em>*args</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.toolwarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.toolwarning" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.initLogger.addFileHandler">
-<code class="descclassname">tools.initLogger.</code><code class="descname">addFileHandler</code><span class="sig-paren">(</span><em>log</em>, <em>lvl=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addFileHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addFileHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will add a file handler to a log with the provided level.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
-<dt>log (CharisLogger object): A CharisLogger object that was freshly </dt>
-<dd>instantiated.</dd>
-<dt>lvl (int): The severity level of messages printed to the file with </dt>
-<dd>the file handler, default = 1.</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.initLogger.addFitsStyleHandler">
-<code class="descclassname">tools.initLogger.</code><code class="descname">addFitsStyleHandler</code><span class="sig-paren">(</span><em>log</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addFitsStyleHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addFitsStyleHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will add a file handler with a string format ideal for 
-directly loading into a FITS header.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
-<dt>log (CharisLogger object): A CharisLogger object that was freshly </dt>
-<dd>instantiated.</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.initLogger.addStreamHandler">
-<code class="descclassname">tools.initLogger.</code><code class="descname">addStreamHandler</code><span class="sig-paren">(</span><em>log</em>, <em>lvl=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addStreamHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addStreamHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will add a stream handler to a log with the provided level.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
-<dt>log (CharisLogger object): A CharisLogger object that was freshly </dt>
-<dd>instantiated.</dd>
-<dt>lvl (int): The severity level of messages printed to the screen with </dt>
-<dd>the stream handler, default = 20.</dd>
-</dl>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="function">
@@ -787,7 +788,7 @@ name+&#8217;.log&#8217;.  Default = True.</dd>
 </dd>
 <dt>Returns:</dt>
 <dd><dl class="first last docutils">
-<dt>log (CharisLogger object): A CharisLogger object that was freshly </dt>
+<dt>log (crispyLogger object): A crispyLogger object that was freshly </dt>
 <dd>instantiated.</dd>
 </dl>
 </dd>
@@ -797,6 +798,28 @@ name+&#8217;.log&#8217;.  Default = True.</dd>
 </div>
 <div class="section" id="module-tools.inputScene">
 <span id="tools-inputscene-module"></span><h2>tools.inputScene module<a class="headerlink" href="#module-tools.inputScene" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.inputScene.Jy_to_photons">
+<code class="descclassname">tools.inputScene.</code><code class="descname">Jy_to_photons</code><span class="sig-paren">(</span><em>cube_Jy</em>, <em>wavel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#Jy_to_photons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.Jy_to_photons" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cube_Jy: 3D datacube in Jy</strong></p>
+<blockquote>
+<div><p>wavel: 1D array with wavelengths in microns</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;-</strong></p>
+<blockquote class="last">
+<div><p>hc: 3D haystacks cube in photons/m2/um/s</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="function">
 <dt id="tools.inputScene.adjust_krist_header">
 <code class="descclassname">tools.inputScene.</code><code class="descname">adjust_krist_header</code><span class="sig-paren">(</span><em>cube</em>, <em>lamc</em>, <em>pixsize=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#adjust_krist_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.adjust_krist_header" title="Permalink to this definition">¶</a></dt>
@@ -872,31 +895,6 @@ in the text file is normalized to have its maximum within the wavelist range to 
 </dd></dl>
 
 <dl class="function">
-<dt id="tools.inputScene.convert_haystacks_cube">
-<code class="descclassname">tools.inputScene.</code><code class="descname">convert_haystacks_cube</code><span class="sig-paren">(</span><em>hducube</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#convert_haystacks_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.convert_haystacks_cube" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function convert_haystacks_cube</p>
-<p>This function converts a Haystacks cube in Jy/pixels to photons/s/nm/pixel</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>hducube: HDUList</strong></p>
-<blockquote>
-<div><p>Imported Haystacks fits HDUList</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">newcube: HDUList</p>
-<blockquote class="last">
-<div><p>New HDUList with processed cube.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="tools.inputScene.convert_krist_cube">
 <code class="descclassname">tools.inputScene.</code><code class="descname">convert_krist_cube</code><span class="sig-paren">(</span><em>cubeshape</em>, <em>lamlist</em>, <em>star_T</em>, <em>star_Vmag</em>, <em>tel_area</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#convert_krist_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.convert_krist_cube" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function convert_krist_cube</p>
@@ -943,6 +941,33 @@ bandwidth of each slice to determine the photons/s/pixel incident on the telesco
 </dd></dl>
 
 <dl class="function">
+<dt id="tools.inputScene.haystacks_to_photons">
+<code class="descclassname">tools.inputScene.</code><code class="descname">haystacks_to_photons</code><span class="sig-paren">(</span><em>haystacks_hdu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#haystacks_to_photons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.haystacks_to_photons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function haystacks_to_photons</p>
+<p>This function converts a Haystacks hdu in Jy/pixels to photons/s/nm/m^2/pixel
+and returns a full cube</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cube: haystacks_hdu</strong></p>
+<blockquote>
+<div><p>Haystacks HDU</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">hc: ndarray</p>
+<blockquote>
+<div><p>Converted cube in ph/s/um/m2</p>
+</div></blockquote>
+<p class="last">lamlist: wavelength array</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="tools.inputScene.zodi_cube">
 <code class="descclassname">tools.inputScene.</code><code class="descname">zodi_cube</code><span class="sig-paren">(</span><em>krist_cube</em>, <em>area_per_pixel</em>, <em>absmag</em>, <em>Vstarmag</em>, <em>zodi_surfmag</em>, <em>exozodi_surfmag</em>, <em>distAU</em>, <em>t_zodi</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#zodi_cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.zodi_cube" title="Permalink to this definition">¶</a></dt>
 <dd><p>(obsolete)</p>
@@ -953,7 +978,7 @@ bandwidth of each slice to determine the photons/s/pixel incident on the telesco
 <span id="tools-lenslet-module"></span><h2>tools.lenslet module<a class="headerlink" href="#module-tools.lenslet" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="tools.lenslet.processImagePlane">
-<code class="descclassname">tools.lenslet.</code><code class="descname">processImagePlane</code><span class="sig-paren">(</span><em>par</em>, <em>imagePlane</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/lenslet.html#processImagePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.lenslet.processImagePlane" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.lenslet.</code><code class="descname">processImagePlane</code><span class="sig-paren">(</span><em>par</em>, <em>imagePlane</em>, <em>noRot=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/lenslet.html#processImagePlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.lenslet.processImagePlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function processImagePlane</p>
 <p>Rotates an image or slice, and rebins in a flux-conservative way
 on an array of lenslets, using the plate scale provided in par.pixperlenslet.
@@ -1705,7 +1730,7 @@ implement regularization.</p>
 
 <dl class="function">
 <dt id="tools.reduction.fitspec_intpix_np">
-<code class="descclassname">tools.reduction.</code><code class="descname">fitspec_intpix_np</code><span class="sig-paren">(</span><em>par</em>, <em>im</em>, <em>PSFlet_tool</em>, <em>lamlist</em>, <em>smoothandmask=True</em>, <em>delt_y=6</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#fitspec_intpix_np"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.fitspec_intpix_np" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.reduction.</code><code class="descname">fitspec_intpix_np</code><span class="sig-paren">(</span><em>par</em>, <em>im</em>, <em>PSFlet_tool</em>, <em>lamlist</em>, <em>smoothandmask=True</em>, <em>delt_y=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#fitspec_intpix_np"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.fitspec_intpix_np" title="Permalink to this definition">¶</a></dt>
 <dd><p>Original optimal extraction routine in Numpy from T. Brand</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1831,7 +1856,7 @@ will make the fit chi2 and properly handle bad/masked pixels.</p>
 
 <dl class="function">
 <dt id="tools.reduction.lstsqExtract">
-<code class="descclassname">tools.reduction.</code><code class="descname">lstsqExtract</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>ifsimage</em>, <em>smoothandmask=True</em>, <em>ivar=True</em>, <em>dy=3</em>, <em>refine=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#lstsqExtract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.lstsqExtract" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.reduction.</code><code class="descname">lstsqExtract</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>ifsimage</em>, <em>smoothandmask=True</em>, <em>ivar=True</em>, <em>dy=2</em>, <em>refine=False</em>, <em>hires=False</em>, <em>upsample=3</em>, <em>fitbkgnd=False</em>, <em>specialPolychrome=None</em>, <em>returnall=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#lstsqExtract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.lstsqExtract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Least squares extraction, inspired by T. Brandt and making use of some of his code.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2113,7 +2138,7 @@ top right</p>
 <span id="tools-wavecal-module"></span><h2>tools.wavecal module<a class="headerlink" href="#module-tools.wavecal" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="tools.wavecal.buildcalibrations">
-<code class="descclassname">tools.wavecal.</code><code class="descname">buildcalibrations</code><span class="sig-paren">(</span><em>par</em>, <em>filelist=None</em>, <em>lamlist=None</em>, <em>order=3</em>, <em>inspect=False</em>, <em>genwavelengthsol=False</em>, <em>makehiresPSFlets=False</em>, <em>makePolychrome=False</em>, <em>savehiresimages=True</em>, <em>borderpix=4</em>, <em>upsample=5</em>, <em>nsubarr=3</em>, <em>parallel=True</em>, <em>inspect_first=True</em>, <em>apodize=False</em>, <em>lamsol=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#buildcalibrations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.buildcalibrations" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.wavecal.</code><code class="descname">buildcalibrations</code><span class="sig-paren">(</span><em>par</em>, <em>filelist=None</em>, <em>lamlist=None</em>, <em>order=3</em>, <em>inspect=False</em>, <em>genwavelengthsol=False</em>, <em>makehiresPSFlets=False</em>, <em>makePolychrome=False</em>, <em>makehiresPolychrome=False</em>, <em>makePSFWidths=False</em>, <em>savehiresimages=True</em>, <em>borderpix=4</em>, <em>upsample=5</em>, <em>nsubarr=3</em>, <em>parallel=True</em>, <em>inspect_first=True</em>, <em>apodize=False</em>, <em>lamsol=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#buildcalibrations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.buildcalibrations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Master wavelength calibration function</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2157,6 +2182,19 @@ monochromatic picture of the first file, to visually inspect the fitting results
 <blockquote>
 <div><p>Whether or not to do a high-resolution fitting of the PSFs, using the sampling
 diversity. This requires high-SNR monochromatic images.</p>
+</div></blockquote>
+<p><strong>makePolychrome: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to build the polychrome cube used in the least squares extraction</p>
+</div></blockquote>
+<p><strong>makePSFWidths: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to fit the PSFLet widths using the high-res PSFLets</p>
+</div></blockquote>
+<p><strong>makehiresPolychrome: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to build a polychrome cube at a high spatial resolution for future
+subpixel interpolations</p>
 </div></blockquote>
 <p><strong>savehiresimages: Boolean</strong></p>
 <blockquote>
@@ -2210,14 +2248,14 @@ of lenslet position on the lenslet array.</div></blockquote>
 - an array of the Y positions of all lenslets
 - an array of booleans indicating whether that lenslet is good or not
 (e.g. when it is outside of the detector area)</dd>
-<dt>polychromeRXX.fits: list of 2D arrays of size Npix x Npix which each contain a map with</dt>
-<dd>the high-resolution lenslet PSFLets put in their correct position
-for all the wavelengths that we want in the output cube. Each PSFLet
+<dt>polychromeRXX.fits: 3D arrays of size Nspec x Npix x Npix with maps of the PSFLets put in their correct </dt>
+<dd>positions for each wavelength bins that we want in the output cube. Each PSFLet
 in each wavelength slice is used for least-squares fitting.</dd>
-<dt>PSFLoc.fits:    nsubarr x nsubarr array of 2D high-resolution PSFLets at each location</dt>
-<dd>in the detector.</dd>
 </dl>
-<p>polychromeRXX.fits and PSFLoc.fits are only generated if makehiresPSFlets is True.</p>
+<p>hiresPolychromeRXX.fits: same as polychromeRXX.fits but this time using the high-resolution PSFLets
+PSFLoc.fits:    nsubarr x nsubarr array of 2D high-resolution PSFLets at each location</p>
+<blockquote>
+<div>in the detector.</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -2248,6 +2286,11 @@ monochromatic frames.</p>
 <code class="descclassname">tools.wavecal.</code><code class="descname">makeHires</code><span class="sig-paren">(</span><em>par</em>, <em>xindx</em>, <em>yindx</em>, <em>lam</em>, <em>allcoef</em>, <em>psftool</em>, <em>imlist=None</em>, <em>parallel=True</em>, <em>savehiresimages=True</em>, <em>upsample=5</em>, <em>nsubarr=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#makeHires"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.makeHires" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct high-resolution PSFLets</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="tools.wavecal.make_hires_polychrome">
+<code class="descclassname">tools.wavecal.</code><code class="descname">make_hires_polychrome</code><span class="sig-paren">(</span><em>lam1</em>, <em>lam2</em>, <em>hires_arrs</em>, <em>lam_arr</em>, <em>psftool</em>, <em>allcoef</em>, <em>xindx</em>, <em>yindx</em>, <em>ydim</em>, <em>xdim</em>, <em>upsample=10</em>, <em>nlam=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#make_hires_polychrome"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.make_hires_polychrome" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="tools.wavecal.make_polychrome">
@@ -2308,7 +2351,7 @@ monochromatic frames.</p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
     Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 27 Aug 2017. <br/>
+    Last built 14 Nov 2017. <br/>
   </p>
 </footer>
   </body>
