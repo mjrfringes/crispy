@@ -240,9 +240,6 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=2,
                 subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xindx[:,i,j],yindx[:,i,j],psflets,dy)
                 cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
                 ivarcube[:,j,i] = 1.
-#                 for k in range(len(psflets)):
-#                     resid[y0:y1, x0:x1] -= psflets[k,y0:y1, x0:x1]*cube[k,j,i]
-#                     model[y0:y1, x0:x1] += psflets[k,y0:y1, x0:x1]*cube[k,j,i]
             else:
                 cube[:,j,i] = np.NaN
                 ivarcube[:,j,i] = 0.
@@ -425,6 +422,34 @@ def get_cutout(im, x, y, psflets, dy=3):
 
     return subim, psflet_subarr, [y0,y1, x0,x1]
 
+def RL(img,psflets,eps=1e-10):
+    '''
+    Richardson-Lucy deconvolution
+    '''
+    
+    #1.
+    psflets_flat = np.reshape(psflets.copy(), (psflets.shape[0], -1))
+    img_flat = np.reshape(img, -1)
+    guess = np.linalg.lstsq(psflets_flat.T, img_flat)[0]
+    res = []
+    res.append(guess)
+    loglike = []
+    ll = -np.sum(np.dot(guess,psflets_flat)) + np.sum(np.log(np.dot(guess,psflets_flat)+1e-10)*img_flat)
+    prevll = -np.inf
+    loglike.append(ll)
+    val = guess.copy()
+    count = 0
+    while ll-prevll > eps:
+        prev = val.copy()
+        prevll = ll.copy()
+        ll = -np.sum(np.dot(prev,psflets_flat)) + np.sum(np.log(np.dot(prev,psflets_flat)+1e-10)*img_flat)
+        loglike.append(ll)
+        #2. update
+        val = prev*np.sum(psflets_flat*img_flat/(np.dot(prev,psflets_flat)+1e-10),axis=1)
+        res.append(val)
+        count += 1
+    return val,np.array(res),np.array(loglike),count
+
 def fit_cutout(subim, psflets, mode='lstsq'):
     """
     Fit a series of PSFlets to an image, recover the best-fit coefficients.
@@ -466,14 +491,7 @@ def fit_cutout(subim, psflets, mode='lstsq'):
         subim_flat = np.reshape(subim, -1)
         psflets_flat = np.reshape(psflets, (psflets.shape[0], -1))
         coef = np.linalg.lstsq(psflets_flat.T, subim_flat)[0]
-#     elif mode == 'ext':
-#         coef = np.zeros(psflets.shape[0])
-#         for i in range(psflets.shape[0]):
-#             coef[i] = np.sum(psflets[i]*subim)/np.sum(psflets[i])
-#     elif mode == 'apphot':
-#         coef = np.zeros((subim.shape[1]))
-#         for i in range(subim.shape[1]):
-#             coef[i] = np.sum(subim[:,i])
+    
     else:
         raise ValueError("mode " + mode + " to fit microspectra is not currently implemented.")
 

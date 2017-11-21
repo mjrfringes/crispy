@@ -32,8 +32,8 @@ class Params(object):
 #         self.wavecalName = 'VARIAcalCube.fits'
 #         self.wavecalName = 'LLTFcalCube.fits'
 #         self.wavecalName = 'simCalCube.fits'
-        self.lenslet_flat = self.wavecalDir+"lenslet_flat.fits"
-        self.lenslet_mask = self.wavecalDir+"lenslet_mask.fits"
+#         self.lenslet_flat = self.wavecalDir+"lenslet_flat.fits"
+#         self.lenslet_mask = self.wavecalDir+"lenslet_mask.fits"
         self.filelist = []
         self.lamlist = []
 
