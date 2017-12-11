@@ -274,10 +274,10 @@ def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None,
         else:
             reducedName = name
 
-    if method == 'lstsq':
-        reducedName += '_red_lstsq'
+    if method in ['lstsq','RL']:
+        reducedName += '_red_'+method
         cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad,
-            hires=hires,dy=dy,fitbkgnd=fitbkgnd,specialPolychrome=specialPolychrome,returnall=returnall)
+            hires=hires,dy=dy,fitbkgnd=fitbkgnd,specialPolychrome=specialPolychrome,returnall=returnall,mode=method)
     elif method == 'optext':
         reducedName += '_red_optext'
         cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad)

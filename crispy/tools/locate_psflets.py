@@ -126,7 +126,6 @@ class PSFLets:
         xarr = np.ones((lam.shape[0], order + 1))
         for i in range(1, order + 1):
             xarr[:, i] = np.log(lam)**i
-
         for i in range(self.interp_arr.shape[1]):
             coef = np.linalg.lstsq(xarr, allcoef[:, i])[0]
             self.interp_arr[:, i] = coef

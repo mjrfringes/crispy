@@ -176,7 +176,7 @@ def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
 
 def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=2,
                 refine=False,hires=False,upsample=3,fitbkgnd=False,
-                specialPolychrome=None,returnall=False):
+                specialPolychrome=None,returnall=False,mode='lstsq'):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -238,7 +238,7 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=2,
         for j in range(par.nlens):            
             if np.prod(good[:,i,j],axis=0):
                 subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xindx[:,i,j],yindx[:,i,j],psflets,dy)
-                cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode='lstsq')
+                cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode=mode)
                 ivarcube[:,j,i] = 1.
             else:
                 cube[:,j,i] = np.NaN
@@ -487,11 +487,12 @@ def fit_cutout(subim, psflets, mode='lstsq'):
     except:
         raise ValueError("subim must be the same shape as each psflet.")
     
+    subim_flat = np.reshape(subim, -1)
+    psflets_flat = np.reshape(psflets, (psflets.shape[0], -1))
     if mode == 'lstsq':
-        subim_flat = np.reshape(subim, -1)
-        psflets_flat = np.reshape(psflets, (psflets.shape[0], -1))
         coef = np.linalg.lstsq(psflets_flat.T, subim_flat)[0]
-    
+    elif mode == 'RL':
+        coef = RL(subim_flat,psflets_flat)[0]
     else:
         raise ValueError("mode " + mode + " to fit microspectra is not currently implemented.")
 
@@ -811,6 +812,7 @@ def fitspec_intpix_np(par,im, PSFlet_tool, lamlist,smoothandmask=True, delt_y=5)
     try:
         sig = fits.open(par.wavecalDir + 'PSFwidths.fits')[0].data
     except:
+        log.warning("No PSFLet widths found - assuming critical samping at central wavelength")
         sig=par.FWHM/2.35*np.ones(xindx.shape)
     
     x = np.arange(im.data.shape[1])

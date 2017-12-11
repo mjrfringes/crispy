@@ -16,6 +16,7 @@ from tools.spectrograph import selectKernel,loadKernels
 from tools.plotting import plotKernels
 from scipy import ndimage
 from scipy.interpolate import interp1d
+from scipy import interpolate
 
 
 
@@ -74,7 +75,7 @@ def testCutout(par,fname,lensX = 0,lensY = 0):
     return subim
 
 
-def testFitCutout(par,fname,lensnum, mode='lstsq',ivar=False):
+def testFitCutout(par,fname,lensX, lensY, mode='lstsq',ivar=False):
     '''
     Testing the fit_cutout function
     
@@ -93,7 +94,7 @@ def testFitCutout(par,fname,lensnum, mode='lstsq',ivar=False):
     xlist = []
     ylist = []
     for lam in lamlist:
-        _x,_y = psftool.return_locations(lam, allcoef, lensnum, lensnum)
+        _x,_y = psftool.return_locations(lam, allcoef, lensX, lensY)
         xlist += [_x]    
         ylist += [_y]    
     
@@ -106,6 +107,75 @@ def testFitCutout(par,fname,lensnum, mode='lstsq',ivar=False):
         im.ivar = 1./im.ivar
     subim, psflet_subarr, [x0, x1, y0, y1] = get_cutout(im,xlist,ylist,psflets)
     return fit_cutout(subim, psflet_subarr, mode=mode)
+
+
+def testOptExt(par,im, lensX, lensY, smoothandmask=True, delt_y=5):
+    """
+    """
+
+
+    PSFlet_tool = PSFLets(load=True, infiledir=par.wavecalDir)
+    #Nspec = int(par.BW*par.npixperdlam*par.R)
+    lamlist,scratch = calculateWaveList(par,method='optext')
+
+    xindx = PSFlet_tool.xindx
+    yindx = PSFlet_tool.yindx
+    Nmax = PSFlet_tool.nlam_max
+    try:
+        sig = fits.open(par.wavecalDir + 'PSFwidths.fits')[0].data
+    except:
+        log.warning("No PSFLet widths found - assuming critical samping at central wavelength")
+        sig=par.FWHM/2.35*np.ones(xindx.shape)
+    
+    x = np.arange(im.data.shape[1])
+    y = np.arange(im.data.shape[0])
+    x, y = np.meshgrid(x, y)
+
+    ydim,xdim = im.data.shape
+
+    coefs = np.zeros(tuple([max(Nmax, lamlist.shape[0])] + list(yindx.shape)[:-1]))
+    xarr, yarr = np.meshgrid(np.arange(Nmax),np.arange(delt_y))
+
+    #loglam = np.log(lamlist)
+    lamsol = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 0]
+    allcoef = np.loadtxt(par.wavecalDir + "lamsol.dat")[:, 1:]
+    PSFlet_tool.geninterparray(lamsol, allcoef)
+    
+    good = PSFlet_tool.good
+
+    
+    i =lensX
+    j =lensX
+    
+    if good[i,j]:
+        _x = xindx[i, j, :PSFlet_tool.nlam[i, j]]
+        _y = yindx[i, j, :PSFlet_tool.nlam[i, j]]
+        _sig = sig[i, j, :PSFlet_tool.nlam[i, j]]
+        _lam = PSFlet_tool.lam_indx[i, j, :PSFlet_tool.nlam[i, j]]
+        iy = np.nanmean(_y)
+        if ~np.isnan(iy):
+            i1 = int(iy - delt_y/2.)
+            dy = _y[xarr[:,:len(_lam)]] - y[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
+            lams,_ = np.meshgrid(_lam,np.arange(delt_y))
+            
+            weight = np.exp(-dy**2/2./_sig**2)/_sig/np.sqrt(2.*np.pi)
+            data = im.data[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
+            
+            if im.ivar is not None:
+                ivar = im.ivar[i1:i1 + delt_y,int(_x[0]):int(_x[-1]) + 1]
+            else:
+                ivar = np.ones(data.shape)
+
+            coefs[:len(_lam), i, j] = np.sum(weight*data*ivar, axis=0)
+            coefs[:len(_lam), i, j] /= np.sum(weight**2*ivar, axis=0)
+            tck = interpolate.splrep(_lam, coefs[:len(_lam), i, j], s=0, k=3)
+            outspec = interpolate.splev(lamlist, tck, ext=1)
+            tck = interpolate.splrep(_lam, np.sum(weight**2*ivar, axis=0)/np.sum(weight**2, axis=0), s=0, k=3)
+            outvar = interpolate.splev(lamlist, tck, ext=1)
+                
+
+    return outspec,outvar
+
 
 
 def testGenPixSol(par):
