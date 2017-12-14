@@ -427,27 +427,32 @@ def RL(img,psflets,eps=1e-10):
     Richardson-Lucy deconvolution
     '''
     
-    #1.
+    #1. Guess with ordinary least squares
     psflets_flat = np.reshape(psflets.copy(), (psflets.shape[0], -1))
     img_flat = np.reshape(img, -1)
     guess = np.linalg.lstsq(psflets_flat.T, img_flat)[0]
     res = []
     res.append(guess)
     loglike = []
+    #2. Compute log likelihood to follow progress
     ll = -np.sum(np.dot(guess,psflets_flat)) + np.sum(np.log(np.dot(guess,psflets_flat)+1e-10)*img_flat)
     prevll = -np.inf
     loglike.append(ll)
     val = guess.copy()
     count = 0
+    # main loop
     while ll-prevll > eps:
         prev = val.copy()
         prevll = ll.copy()
+        # compute new likelihood (Expectation step)
         ll = -np.sum(np.dot(prev,psflets_flat)) + np.sum(np.log(np.dot(prev,psflets_flat)+1e-10)*img_flat)
         loglike.append(ll)
         #2. update
+        # maximize new likelihood (Maximization step)
         val = prev*np.sum(psflets_flat*img_flat/(np.dot(prev,psflets_flat)+1e-10),axis=1)
         res.append(val)
         count += 1
+    # export a bunch of stuff for bookkeeping, but really only [0] matters
     return val,np.array(res),np.array(loglike),count
 
 def fit_cutout(subim, psflets, mode='lstsq'):
