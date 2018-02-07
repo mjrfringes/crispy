@@ -463,7 +463,7 @@ def RL(img,psflets,niter = 10, guess=None, eps=1e-10,prior=0.0):
      # export a bunch of stuff for bookkeeping, but really only [0] matters
     return val,np.array(res),np.array(loglike),count
 
-def fit_cutout(subim, psflets, mode='lstsq',niter=10):
+def fit_cutout(subim, psflets, mode='lstsq',niter=5,pixnoise=0.0):
     """
     Fit a series of PSFlets to an image, recover the best-fit coefficients.
     This is currently little more than a wrapper for np.linalg.lstsq, but 
@@ -501,13 +501,14 @@ def fit_cutout(subim, psflets, mode='lstsq',niter=10):
         raise ValueError("subim must be the same shape as each psflet.")
     
     subim_flat = np.reshape(subim, -1)
-    psflets_flat = np.reshape(psflets, (psflets.shape[0], -1))
+    N = psflets.shape[0]
+    psflets_flat = np.reshape(psflets, (N, -1))
     A = psflets_flat.T
-    rl = RL(subim,psflets=psflets,niter=niter)[0]
-    var = np.reshape(np.sum(psflets*rl[:,np.newaxis,np.newaxis],axis=0),-1)
-    Ninv = np.diag(1./(var+1e-10))
-    Cinv = np.dot(A.T,np.dot(Ninv,A))
-    C = np.linalg.inv(Cinv)
+#     rl = RL(subim,psflets=psflets,niter=niter)[0]
+#     var = np.reshape(np.sum(psflets*rl[:,np.newaxis,np.newaxis],axis=0),-1)
+#     Ninv = np.diag(1./(var+1e-10))
+#     Cinv = np.dot(A.T,np.dot(Ninv,A))
+#     C = np.linalg.inv(Cinv)
     
     right = np.dot(A.T,np.dot(Ninv,subim_flat))
     f = np.dot(C,right)
@@ -516,12 +517,21 @@ def fit_cutout(subim, psflets, mode='lstsq',niter=10):
         coef = f
         cov = np.diagonal(Cinv)
     elif mode == 'lstsq_conv':
-        Q = sp.linalg.sqrtm(Cinv)
-        s = np.sum(Q,axis=0)
-        R = Q/s[:,np.newaxis]
-        #Ctilde = np.diag(1./(s**2+1e-10)
-        coef = np.dot(R,f)
-        varlstsq = 1./(s**2+1e-10)
+        guess = np.ones(N)*np.sum(subim_flat)/float(N)
+        for i in range(niter):
+            var = np.reshape(np.sum(psflets*guess[:,np.newaxis,np.newaxis]+pixnoise,axis=0),-1)
+            Ninv = np.diag(1./(variance+1e-10))
+            Cinv = np.dot(A.T,np.dot(Ninv,A))
+            C = np.linalg.inv(Cinv)
+            Q = sp.linalg.sqrtm(Cinv)
+            s = np.sum(Q,axis=0)
+            varlstsq = 1./(s**2+1e-10)
+            R = Q/s[:,np.newaxis]
+            right = np.dot(A.T,np.dot(Ninv,subim_flat))
+            f = np.dot(C,right)
+            guess = np.dot(R,f)
+            
+        coef = guess
         cov = varlstsq
     elif mode == 'RL':
         coef = rl
