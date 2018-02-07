@@ -25,7 +25,6 @@ from crispy.tools.imgtools import bowtie,scale2imgs,circularMask
 from crispy.tools.rotate import shiftCube
 from scipy import ndimage
 from scipy.interpolate import interp1d
-from crispy.params import Params
 import scipy
 
 
@@ -1635,7 +1634,8 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
                     albedo=0.28,
                     target_star_T=5887*u.K, target_star_Vmag=5.03,
                     ref_star_T=9377*u.K, ref_star_Vmag=2.37,
-                    tel_pupil_area=3.650265060424805*u.m**2, order=3):
+                    tel_pupil_area=3.650265060424805*u.m**2, order=3,
+                    useQE=True, polychromeOut=True):
 
     '''
     Processes an off-axis PSF cube from John Krist. This is used to to construct an ideal cube of the planet
@@ -1662,6 +1662,8 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
         V Magnitude of the target star
     tel_pupil_area: 'u.m**2'
         Collecting area of the telescope, minus obscurations, in u.m**2
+    polychromeOut: Boolean
+        Whether or not to export a polychrome cube weighted by the PSF
     
     Returns
     -------
@@ -1712,8 +1714,12 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     # adjust headers for different wavelength
     adjust_krist_header(offtarget,lamc=lamc)
     
-    Image(data=offtarget.data).write(outdir_average+'/offaxiscube_star_processed.fits',clobber=True)
-    detectorFrame = polychromeIFS(par,lamlist.value,offtarget,QE=True)
+#     log.info('{:}'.format(offtarget.data[1,1,1]))
+    out = fits.HDUList(fits.PrimaryHDU(None, offtarget.header))
+    out.append(fits.PrimaryHDU((offtarget.data.value).astype(np.float32)))
+
+    out.writeto(outdir_average+'/offaxiscube_star_processed.fits',clobber=True)
+    detectorFrame = polychromeIFS(par,lamlist.value,offtarget,QE=useQE)
     det = Image(data = detectorFrame,header=par.hdr)
     det.write(outdir_average+'/offaxis_star.fits',clobber=True)
     
@@ -1743,8 +1749,10 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     # adjust headers for different wavelength
     adjust_krist_header(offref,lamc=lamc)
     
-    Image(data=offref.data).write(outdir_average+'/offaxiscube_ref_star_processed.fits',clobber=True)
-    detectorFrame = polychromeIFS(par,lamlist.value,offref,QE=True)
+    out = fits.HDUList(fits.PrimaryHDU(None, offref.header))
+    out.append(fits.PrimaryHDU((offref.data.value).astype(np.float32)))
+    out.writeto(outdir_average+'/offaxiscube_ref_star_processed.fits',clobber=True)
+    detectorFrame = polychromeIFS(par,lamlist.value,offref,QE=useQE)
     det = Image(data = detectorFrame,header=par.hdr)
     det.write(outdir_average+'/offaxis_ref_star.fits',clobber=True)
     
@@ -1766,25 +1774,22 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     ###################################################################################
     # Propagate the planet
     ###################################################################################
-#     contrast = calc_contrast_Bijan(lamlist.value)
     contrast = calc_contrast(lamlist.value,distance=planet_AU, radius=planet_radius,filename=filename,albedo=albedo)
-
-#     contrast_cube = np.zeros(offaxiscube.data.shape)
-#     for i in range(offaxiscube.data.shape[0]):
-#         contrast_cube[i,:,:] += contrast[i]
-    offaxiscube.data*=offaxis_star_cube*contrast[:,np.newaxis,np.newaxis]
+    offaxiscube.data=offaxiscube.data*offaxis_star_cube.value*contrast[:,np.newaxis,np.newaxis]
 
     # adjust headers for slightly different wavelength
-#     adjust_krist_header(offaxiscube,lamc=lamc)
     par.saveDetector=False
-    Image(data=offaxiscube.data).write(outdir_average+'/offaxiscube_planet_processed.fits',clobber=True)
-    detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=True)
+    out = fits.HDUList(fits.PrimaryHDU(None, offaxiscube.header))
+    out.append(fits.PrimaryHDU((offaxiscube.data.value).astype(np.float32)))
+    out.writeto(outdir_average+'/offaxiscube_planet_processed.fits',clobber=True)
+    
+    detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=useQE)
     par.hdr.append(('XSHIFT',planet_WA*par.pixperlenslet*lamc/par.lenslet_wav/par.lenslet_sampling,'X Shift in px in offaxis cubes'),end=True)
     det = Image(data = detectorFrame,header=par.hdr)
     det.write(outdir_average+'/offaxis_planet.fits',clobber=True)
 
     det_out = np.zeros(detectorFrame.shape)
-    # temporary use no noise
+    # temporarily use no noise
     old_noise_param = par.nonoise
     par.nonoise=True
     for i in range(Nave*Nreads):
@@ -1797,32 +1802,30 @@ def process_offaxis(par,offaxis_psf_filename,fileshape,lamlist,lamc,outdir_avera
     # reduce the IFS map
     reduced = reduceIFSMap(par,outdir_average+'/offaxis_planet_detector.fits')
     reduced.write(outdir_average+'/offaxis_planet_red_optext.fits',clobber=True)
+    PSF_cube = fits.open(par.exportDir+'/detectorFramePoly.fits')[1].data
+    out = fits.HDUList(fits.PrimaryHDU(None, offaxiscube.header))
+    out.append(fits.PrimaryHDU(PSF_cube))
+    out.writeto(outdir_average+'/PSF_cube.fits',clobber=True)
     
-    # do flipped
-#     offaxiscube.data = ndimage.interpolation.shift(offaxiscube.data,
-#                     [0.0,0.0,-2*planet_WA*par.pixperlenslet*lamc/par.lenslet_wav/par.lenslet_sampling],order=order)
-#                     
-#     Image(data=offaxiscube.data).write(outdir_average+'/offaxis_flipped_processed.fits',clobber=True)
-#     detectorFrame = polychromeIFS(par,lamlist.value,offaxiscube,QE=True)
-#     par.hdr.append(('XSHIFT',-2*planet_WA*par.pixperlenslet*lamc/par.lenslet_wav/par.lenslet_sampling,'X Shift in px in offaxis cubes'),end=True)
-# 
-#     det = Image(data = detectorFrame,header=par.hdr)
-#     det.write(outdir_average+'/offaxis_flipped_planet.fits',clobber=True)
-# 
-#     det_out = np.zeros(detectorFrame.shape)
-#     # temporary use no noise
-#     old_noise_param = par.nonoise
-#     par.nonoise=True
-#     for i in range(Nave*Nreads):
-#         det_out+=readDetector(par,det,inttime=inttime)
-# 
-#     Image(data = detectorFrame,header=par.hdr).write(outdir_average+'/offaxis_flipped_planet_detector.fits',clobber=True)
-#     # revert back to original noise parameter
-#     par.nonoise=old_noise_param
-#     
-#     # reduce the IFS map
-#     reduced = reduceIFSMap(par,outdir_average+'/offaxis_flipped_planet_detector.fits')
-#     reduced.write(outdir_average+'/offaxis_flipped_planet_red_optext.fits',clobber=True)
+    ###################################################################################
+    # Construct a polychrome cube with weights corresponding to the off-axis PSF for
+    # maximum-likelihood extraction
+    ###################################################################################
+    if polychromeOut:
+        # interpolate original list of wavelengths
+        interpol = interp1d(lamlist.value,range(len(lamlist)))
+        lam_midpts,_ = calculateWaveList(par,method='lstsq')
+        # find closest index
+        indices = np.round(interpol(lam_midpts)).astype(int)
+        # now offaxiscube[indices] corresponds to the slices with the coefficients for the polychrome
+        newcube = Image(data=offaxiscube.data[indices],header=offaxiscube.header)
+        # construct polychrome (make sure par.savePoly=True)
+        detector = polychromeIFS(par,lam_midpts,newcube,QE=useQE)
+        PSF_polychrome = fits.open(par.exportDir+'/detectorFramePoly.fits')[1].data
+        out = fits.HDUList(fits.PrimaryHDU(None, offaxiscube.header))
+        out.append(fits.PrimaryHDU(PSF_polychrome))
+        out.writeto(outdir_average+'/PSF_polychrome.fits',clobber=True)
+        
     
     return reduced
 

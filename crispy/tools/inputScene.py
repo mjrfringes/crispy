@@ -87,13 +87,13 @@ def convert_krist_cube(cubeshape,lamlist,star_T,star_Vmag,tel_area):
 
     # Now convert each slice to photons per second per square meter
     dlam = lamlist[1]-lamlist[0]
-    newcube=np.zeros(cubeshape)
+    newcube=np.zeros(cubeshape)*u.photon/u.s/u.m**2/u.nm
     for i in range(len(lamlist)):
-        E_ph = (c.h*c.c/lamlist[i]).to(u.J) # photon energy at middle frequency
+        E_ph = (c.h*c.c/lamlist[i]/u.photon).to(u.J/u.photon) # photon energy at middle frequency
         BBlam = af.blackbody_lambda(lamlist[i], star_T).to(u.Watt/u.m**2/u.nm/u.sr)
         flux = (BBlam*ratio_star).to(u.W/u.m**2/u.nm) # this is Watts per m2 per nm
         photon_flux = flux/E_ph # This is in Photons per second per m2 per nm
-        newcube[i,:,:] += photon_flux.to(1./u.s/u.m**2/u.nm) # add value to entire cube since we will multiply Krist's cube
+        newcube[i,:,:] += photon_flux.to(u.photon/u.s/u.m**2/u.nm) # add value to entire cube since we will multiply Krist's cube
     
     # multiply by the number of wavelengths since this is the way J. Krist normalizes his cubes
     newcube *= tel_area*len(lamlist)
@@ -253,5 +253,5 @@ def calc_contrast(wavelist,distance,radius,filename,albedo=None):
         vals /= np.amax(vals)
         vals *= albedo
     
-    vals *= (radius*c.R_jup.to(u.m)/(distance*u.AU).to(u.m))**2
+    vals = vals*(radius*c.R_jup.to(u.m)/(distance*u.AU).to(u.m))**2
     return vals

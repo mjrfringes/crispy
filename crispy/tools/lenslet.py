@@ -208,7 +208,7 @@ def propagateLenslets(par,imageplane, lam1, lam2, hires_arrs=None, lam_arr=None,
         
             # Now find the closest high-resolution PSFs from a library
             if hires.shape[0]==1 and hires.shape[1]==1:
-                image[iy1:iy2, ix1:ix2] += val*ndimage.map_coordinates(hires[0,0], [yinterp, xinterp], prefilter=False)/nlam
+                image[iy1:iy2, ix1:ix2] += val*ndimage.map_coordinates(hires[0,0], [yinterp, xinterp], prefilter=False)/nlam 
             else:
                 x_hires = xcen[i]*1./image.shape[1]
                 y_hires = ycen[i]*1./image.shape[0]

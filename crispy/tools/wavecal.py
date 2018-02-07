@@ -624,7 +624,8 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                       inspect=False, genwavelengthsol=False, makehiresPSFlets=False,
                       makePolychrome=False,makehiresPolychrome=False,makePSFWidths=False,
                       savehiresimages=True,borderpix = 4, upsample=5,nsubarr=3,
-                      parallel=True,inspect_first=True,apodize=False,lamsol=None):
+                      parallel=True,inspect_first=True,apodize=False,lamsol=None,
+                      threshold=0.0):
     """
     Master wavelength calibration function
     
@@ -680,6 +681,10 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
     lamsol: 2D array
             Optional argument that, if not None and if genwavelengthsol==False, will take the argument
             and use it as the current wavelength calibration to build the polychrome.
+    threshold: float
+            Threshold under which to zero out the polychrome. This is only useful for reducing
+            the file size of the polychrome, and has only very little impact on the extraction.
+            To be safe, for science extractions threshold should be kept at its default value of 0.0
     
     Notes
     -----
@@ -801,6 +806,7 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
         _x = np.arange(shape[2])/float(upsample)
         _x -= _x[_x.shape[0]//2]
 
+        # Measure the std along the average of ~3 columns
         for i in range(sigarr.shape[0]):
             for j in range(sigarr.shape[1]):
                 for k in range(sigarr.shape[2]):                
@@ -880,11 +886,11 @@ def buildcalibrations(par,filelist=None, lamlist=None,order=3,
                 good += [_good]
             
         log.info('Saving polychrome cube')
-
+        polyimage[polyimage<threshold]=0.0
         out = fits.HDUList(fits.PrimaryHDU(polyimage.astype(np.float32)))
-        out.writeto(outdir + 'polychromeR%d.fits' % (par.R), clobber=True)
+        out.writeto(outdir + 'polychromeR%d.fits.gz' % (par.R), clobber=True)
         out = fits.HDUList(fits.PrimaryHDU(np.sum(polyimage,axis=0).astype(np.float32)))
-        out.writeto(outdir + 'polychromeR%dstack.fits' % (par.R), clobber=True)
+        out.writeto(outdir + 'polychromeR%dstack.fits.gz' % (par.R), clobber=True)
     
     else:
         lam_midpts,lam_endpts=calculateWaveList(par,lam,method='lstsq')

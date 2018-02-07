@@ -6,6 +6,7 @@ except:
 import numpy as np
 from initLogger import getLogger
 log = getLogger('crispy')
+import scipy as sp
 from scipy import signal
 from scipy.interpolate import interp1d
 from scipy import ndimage
@@ -176,7 +177,7 @@ def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
 
 def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=2,
                 refine=False,hires=False,upsample=3,fitbkgnd=False,
-                specialPolychrome=None,returnall=False,mode='lstsq'):
+                specialPolychrome=None,returnall=False,mode='lstsq',niter=10):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -196,7 +197,10 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=2,
 
     '''
     if specialPolychrome is None:
-        polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
+        try:
+            polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits.gz' % (par.R))
+        except:
+            polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
         psflets = polychromeR[0].data
     else:
         psflets = specialPolychrome.copy()
@@ -238,8 +242,7 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=2,
         for j in range(par.nlens):            
             if np.prod(good[:,i,j],axis=0):
                 subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xindx[:,i,j],yindx[:,i,j],psflets,dy)
-                cube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode=mode)
-                ivarcube[:,j,i] = 1.
+                cube[:,j,i],ivarcube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode=mode, niter=niter)
             else:
                 cube[:,j,i] = np.NaN
                 ivarcube[:,j,i] = 0.
@@ -422,7 +425,7 @@ def get_cutout(im, x, y, psflets, dy=3):
 
     return subim, psflet_subarr, [y0,y1, x0,x1]
 
-def RL(img,psflets,eps=1e-10):
+def RL(img,psflets,niter = 10, guess=None, eps=1e-10,prior=0.0):
     '''
     Richardson-Lucy deconvolution
     '''
@@ -430,7 +433,9 @@ def RL(img,psflets,eps=1e-10):
     #1. Guess with ordinary least squares
     psflets_flat = np.reshape(psflets.copy(), (psflets.shape[0], -1))
     img_flat = np.reshape(img, -1)
-    guess = np.linalg.lstsq(psflets_flat.T, img_flat)[0]
+    if guess is None:
+#         guess = np.linalg.lstsq(psflets_flat.T, img_flat-prior)[0]
+        guess = (np.sum(img)-prior*len(img_flat))*np.ones(psflets.shape[0])
     res = []
     res.append(guess)
     loglike = []
@@ -439,23 +444,26 @@ def RL(img,psflets,eps=1e-10):
     prevll = -np.inf
     loglike.append(ll)
     val = guess.copy()
+    prev = np.zeros_like(val)
     count = 0
     # main loop
-    while ll-prevll > eps:
+    while np.sum((prev-val)**2) > eps and count<niter:
         prev = val.copy()
         prevll = ll.copy()
         # compute new likelihood (Expectation step)
-        ll = -np.sum(np.dot(prev,psflets_flat)) + np.sum(np.log(np.dot(prev,psflets_flat)+1e-10)*img_flat)
+        mult = np.dot(prev,psflets_flat)
+        ll = -np.sum(mult) + np.sum(np.log(mult+1e-10)*img_flat)
         loglike.append(ll)
         #2. update
         # maximize new likelihood (Maximization step)
-        val = prev*np.sum(psflets_flat*img_flat/(np.dot(prev,psflets_flat)+1e-10),axis=1)
+        val = prev*np.sum(psflets_flat*img_flat/(np.dot(prev,psflets_flat)+prior+1e-10),axis=1)
+#         val = prev*np.dot(psflets_flat/(np.dot(prev,psflets_flat)+prior_flat+1e-10,img_flat)
         res.append(val)
         count += 1
-    # export a bunch of stuff for bookkeeping, but really only [0] matters
+     # export a bunch of stuff for bookkeeping, but really only [0] matters
     return val,np.array(res),np.array(loglike),count
 
-def fit_cutout(subim, psflets, mode='lstsq'):
+def fit_cutout(subim, psflets, mode='lstsq',niter=10):
     """
     Fit a series of PSFlets to an image, recover the best-fit coefficients.
     This is currently little more than a wrapper for np.linalg.lstsq, but 
@@ -494,14 +502,42 @@ def fit_cutout(subim, psflets, mode='lstsq'):
     
     subim_flat = np.reshape(subim, -1)
     psflets_flat = np.reshape(psflets, (psflets.shape[0], -1))
+    A = psflets_flat.T
+    rl = RL(subim,psflets=psflets,niter=niter)[0]
+    var = np.reshape(np.sum(psflets*rl[:,np.newaxis,np.newaxis],axis=0),-1)
+    Ninv = np.diag(1./(var+1e-10))
+    Cinv = np.dot(A.T,np.dot(Ninv,A))
+    C = np.linalg.inv(Cinv)
+    
+    right = np.dot(A.T,np.dot(Ninv,subim_flat))
+    f = np.dot(C,right)
+
     if mode == 'lstsq':
-        coef = np.linalg.lstsq(psflets_flat.T, subim_flat)[0]
+        coef = f
+        cov = np.diagonal(Cinv)
+    elif mode == 'lstsq_conv':
+        Q = sp.linalg.sqrtm(Cinv)
+        s = np.sum(Q,axis=0)
+        R = Q/s[:,np.newaxis]
+        #Ctilde = np.diag(1./(s**2+1e-10)
+        coef = np.dot(R,f)
+        varlstsq = 1./(s**2+1e-10)
+        cov = varlstsq
     elif mode == 'RL':
-        coef = RL(subim_flat,psflets_flat)[0]
+        coef = rl
+        cov = Cinv
+    elif mode == 'RL_conv':
+        Q = sp.linalg.sqrtm(Cinv)
+        s = np.sum(Q,axis=0)
+        R = Q/s[:,np.newaxis]
+        #Ctilde = np.diag(1./(s**2+1e-10)
+        coef = np.dot(R,rl)
+        varlstsq = 1./(s**2+1e-10)
+        cov = varlstsq
     else:
         raise ValueError("mode " + mode + " to fit microspectra is not currently implemented.")
 
-    return coef
+    return coef,cov
 
 def _tag_psflets(shape, x, y, good, dx=8, dy=7):
     """

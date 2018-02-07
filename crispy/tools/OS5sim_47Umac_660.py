@@ -8,9 +8,9 @@ import os
 
 
 # set folders
-folder = '../../../crispy'
-print(folder)
-if folder not in sys.path: sys.path.append(folder)
+# folder = '../../../crispy'
+# print(folder)
+# if folder not in sys.path: sys.path.append(folder)
 
 from crispy.params import Params
 folder = '../../crispy'

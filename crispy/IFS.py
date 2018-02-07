@@ -225,7 +225,7 @@ def polychromeIFS(par,inWavelist,inputcube,
 
     
 def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None,
-                hires=False,dy=3,fitbkgnd=True,specialPolychrome=None,returnall=False):
+                hires=False,dy=3,fitbkgnd=True,specialPolychrome=None,returnall=False,niter=10):
     '''
     Main reduction function
     
@@ -274,10 +274,10 @@ def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None,
         else:
             reducedName = name
 
-    if method in ['lstsq','RL']:
+    if method in ['lstsq','lstsq_conv','RL','RL_conv']:
         reducedName += '_red_'+method
         cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad,
-            hires=hires,dy=dy,fitbkgnd=fitbkgnd,specialPolychrome=specialPolychrome,returnall=returnall,mode=method)
+            hires=hires,dy=dy,fitbkgnd=fitbkgnd,specialPolychrome=specialPolychrome,returnall=returnall,mode=method, niter=niter)
     elif method == 'optext':
         reducedName += '_red_optext'
         cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad)
@@ -409,7 +409,14 @@ def createWavecalFiles(par,lamlist,dlam=1.):
             List of discrete wavelengths at which to create a monochromatic flat
     dlam:  float
             Width in nm of the small band for each of the monochromatic wavelengths.
-            Default is 1 nm. This has no effect unless we are trying to add any noise.    
+            Default is 1 nm. This has no effect unless we are trying to add any noise. 
+            
+    Notes
+    -----
+    This function populates the fields par.lamlist and par.filelist which are subsequently
+    used by the buildcalibrations function. If this createWavecalFiles is not called, the
+    two fields need to be populated manually with the set of files and wavelengths that 
+    you want to use for the calibration.   
     
     '''
     
@@ -427,6 +434,7 @@ def createWavecalFiles(par,lamlist,dlam=1.):
         Image(data=detectorFrame,header=par.hdr).write(filename)
     par.lamlist = lamlist
     par.filelist = filelist
+    return filelist
 
 
 

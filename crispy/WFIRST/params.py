@@ -19,7 +19,7 @@ class Params(object):
         self.saveRotatedInput = False
         self.saveLensletPlane = False 
         self.saveDetector = True
-        self.savePoly = False # save polychromatic cubes
+        self.savePoly = True # save polychromatic cubes
         self.codeRoot = codeRoot
         self.prefix = self.codeRoot+'/ReferenceFiles'
         self.exportDir = self.codeRoot+'/SimResults'
@@ -88,7 +88,7 @@ class Params(object):
         ###################################################################### 
         
         self.BW = 0.18              # Spectral bandwidth
-        self.npixperdlam = 2.       # Number of pixels per spectral resolution element
+        self.npixperdlam = 2.0       # Number of pixels per spectral resolution element
         self.nchanperspec_lstsq = 1.2 # Nspec per pixel for least squares 
         self.R = 50                 # Spectral resolving power (extracted cubes have twice)
         
@@ -118,5 +118,6 @@ class Params(object):
         self.hdr.append(('NPIX',self.npix,'Number of detector pixels'), end=True) 
         self.hdr.append(('BW',self.BW,'Bandwidth'), end=True) 
         self.hdr.append(('PIXPRLAM',self.npixperdlam,'Pixels per resolution element'), end=True) 
+        self.hdr.append(('RESLSTSQ',self.nchanperspec_lstsq,'Nspec per Nyq. sample for lstsq extraction'), end=True) 
         self.hdr.append(('R',self.R,'Spectral resolution'), end=True) 
         
