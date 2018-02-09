@@ -89,8 +89,6 @@ build/*
 
 crispy.egg-info/*
 
-crispy/Inputs/ETC/*
-
 dist/*
 
 crispy/ReferenceFiles/wavecalR50_660_SC/*
