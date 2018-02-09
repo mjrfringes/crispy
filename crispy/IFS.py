@@ -225,7 +225,8 @@ def polychromeIFS(par,inWavelist,inputcube,
 
     
 def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None,
-                hires=False,dy=3,fitbkgnd=True,specialPolychrome=None,returnall=False,niter=10):
+                hires=False,dy=3,fitbkgnd=True,specialPolychrome=None,returnall=False,
+                niter=10,pixnoise=0.0,normpsflets=False):
     '''
     Main reduction function
     
@@ -277,7 +278,8 @@ def reduceIFSMap(par,IFSimageName,method='optext',smoothbad = True,name=None,
     if method in ['lstsq','lstsq_conv','RL','RL_conv']:
         reducedName += '_red_'+method
         cube = lstsqExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad,
-            hires=hires,dy=dy,fitbkgnd=fitbkgnd,specialPolychrome=specialPolychrome,returnall=returnall,mode=method, niter=niter)
+            hires=hires,dy=dy,fitbkgnd=fitbkgnd,specialPolychrome=specialPolychrome,returnall=returnall,mode=method,
+            niter=niter,pixnoise=pixnoise,normpsflets=normpsflets)
     elif method == 'optext':
         reducedName += '_red_optext'
         cube = intOptimalExtract(par,par.exportDir+'/'+reducedName,IFSimage,smoothandmask=smoothbad)

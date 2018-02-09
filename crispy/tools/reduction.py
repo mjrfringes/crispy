@@ -177,7 +177,8 @@ def calculateWaveList(par,lam_list=None,Nspec=None,method='lstsq'):
 
 def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=2,
                 refine=False,hires=False,upsample=3,fitbkgnd=False,
-                specialPolychrome=None,returnall=False,mode='lstsq',niter=10):
+                specialPolychrome=None,returnall=False,mode='lstsq',
+                niter=10,pixnoise=0.0,normpsflets=False):
     '''
     Least squares extraction, inspired by T. Brandt and making use of some of his code.
     
@@ -241,8 +242,8 @@ def lstsqExtract(par,name,ifsimage,smoothandmask=True,ivar=True,dy=2,
     for i in range(par.nlens):
         for j in range(par.nlens):            
             if np.prod(good[:,i,j],axis=0):
-                subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xindx[:,i,j],yindx[:,i,j],psflets,dy)
-                cube[:,j,i],ivarcube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode=mode, niter=niter)
+                subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(ifsimage,xindx[:,i,j],yindx[:,i,j],psflets,dy,normpsflets=normpsflets)
+                cube[:,j,i],ivarcube[:,j,i] = fit_cutout(subim.copy(), psflet_subarr.copy(), mode=mode, niter=niter,pixnoise=pixnoise)
             else:
                 cube[:,j,i] = np.NaN
                 ivarcube[:,j,i] = 0.
@@ -370,7 +371,7 @@ def _add_row(arr, n=1, dtype=None):
         outarr[-i] = meanval
     return outarr
 
-def get_cutout(im, x, y, psflets, dy=3):
+def get_cutout(im, x, y, psflets, dy=3,normpsflets=False):
     
     """
     Cut out a microspectrum for fitting.  Return the inputs to 
@@ -412,16 +413,17 @@ def get_cutout(im, x, y, psflets, dy=3):
     y0, y1 = [int(np.amin(y)) - dy+1, int(np.amax(y)) + dy+1]
 
     subim = im.data[y0:y1, x0:x1]
-    if im.ivar is not None:
-        isig = np.sqrt(im.ivar[y0:y1, x0:x1])
-        subim *= isig
+#     if im.ivar is not None:
+#         isig = np.sqrt(im.ivar[y0:y1, x0:x1])
+#         subim *= isig
 
     subarrshape = tuple([len(psflets)] + list(subim.shape))
     psflet_subarr = np.zeros(subarrshape)
     for i in range(len(psflets)):
         psflet_subarr[i] = psflets[i][y0:y1, x0:x1]
-        if im.ivar is not None:
-            psflet_subarr[i] *= isig
+        if normpsflets: psflet_subarr[i] /= np.sum(psflet_subarr[i])
+#         if im.ivar is not None:
+#             psflet_subarr[i] *= isig
 
     return subim, psflet_subarr, [y0,y1, x0,x1]
 
@@ -504,50 +506,53 @@ def fit_cutout(subim, psflets, mode='lstsq',niter=5,pixnoise=0.0):
     N = psflets.shape[0]
     psflets_flat = np.reshape(psflets, (N, -1))
     A = psflets_flat.T
-#     rl = RL(subim,psflets=psflets,niter=niter)[0]
-#     var = np.reshape(np.sum(psflets*rl[:,np.newaxis,np.newaxis],axis=0),-1)
-#     Ninv = np.diag(1./(var+1e-10))
-#     Cinv = np.dot(A.T,np.dot(Ninv,A))
-#     C = np.linalg.inv(Cinv)
     
-    right = np.dot(A.T,np.dot(Ninv,subim_flat))
-    f = np.dot(C,right)
-
     if mode == 'lstsq':
+        guess = np.ones(N)*np.sum(subim_flat)/float(N)
+        var = np.reshape(np.sum(psflets*guess[:,np.newaxis,np.newaxis],axis=0)+pixnoise,-1)
+        Ninv = np.diag(1./(var+1e-10))
+        Cinv = np.dot(A.T,np.dot(Ninv,A))
+        C = np.linalg.inv(Cinv)
+        right = np.dot(A.T,np.dot(Ninv,subim_flat))
+        f = np.dot(C,right)
         coef = f
-        cov = np.diagonal(Cinv)
+        icov = np.diagonal(C)
     elif mode == 'lstsq_conv':
         guess = np.ones(N)*np.sum(subim_flat)/float(N)
         for i in range(niter):
-            var = np.reshape(np.sum(psflets*guess[:,np.newaxis,np.newaxis]+pixnoise,axis=0),-1)
-            Ninv = np.diag(1./(variance+1e-10))
+            var = np.reshape(np.sum(psflets*guess[:,np.newaxis,np.newaxis],axis=0)+pixnoise,-1)
+            Ninv = np.diag(1./(var+1e-10))
             Cinv = np.dot(A.T,np.dot(Ninv,A))
             C = np.linalg.inv(Cinv)
             Q = sp.linalg.sqrtm(Cinv)
             s = np.sum(Q,axis=0)
-            varlstsq = 1./(s**2+1e-10)
+            ivarlstsq = s**2 # inverse variance
             R = Q/s[:,np.newaxis]
             right = np.dot(A.T,np.dot(Ninv,subim_flat))
             f = np.dot(C,right)
             guess = np.dot(R,f)
-            
         coef = guess
-        cov = varlstsq
+        icov = ivarlstsq
     elif mode == 'RL':
         coef = rl
-        cov = Cinv
+        icov = Cinv
     elif mode == 'RL_conv':
+        rl = RL(subim,psflets=psflets,niter=niter,prior=pixnoise)[0]
+        var = np.reshape(np.sum(psflets*rl[:,np.newaxis,np.newaxis],axis=0)+pixnoise,-1)
+        Ninv = np.diag(1./(var+1e-10))
+        Cinv = np.dot(A.T,np.dot(Ninv,A))
+        C = np.linalg.inv(Cinv)
         Q = sp.linalg.sqrtm(Cinv)
         s = np.sum(Q,axis=0)
         R = Q/s[:,np.newaxis]
         #Ctilde = np.diag(1./(s**2+1e-10)
         coef = np.dot(R,rl)
-        varlstsq = 1./(s**2+1e-10)
-        cov = varlstsq
+        ivarlstsq = s**2
+        icov = ivarlstsq
     else:
         raise ValueError("mode " + mode + " to fit microspectra is not currently implemented.")
 
-    return coef,cov
+    return coef,icov
 
 def _tag_psflets(shape, x, y, good, dx=8, dy=7):
     """
