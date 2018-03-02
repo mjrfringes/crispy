@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Process multiple IFS images in parallel &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,7 +33,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -245,7 +242,11 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="Process-multiple-IFS-images-in-parallel">
 <h1>Process multiple IFS images in parallel<a class="headerlink" href="#Process-multiple-IFS-images-in-parallel" title="Permalink to this headline">¶</a></h1>
@@ -273,7 +274,7 @@ div.nboutput div.output_area.stderr {
 </div>
 </div>
 <div class="section" id="Import-files-to-reduce,-doesn't-matter-how-many">
-<h2>Import files to reduce, doesn&#8217;t matter how many<a class="headerlink" href="#Import-files-to-reduce,-doesn't-matter-how-many" title="Permalink to this headline">¶</a></h2>
+<h2>Import files to reduce, doesn’t matter how many<a class="headerlink" href="#Import-files-to-reduce,-doesn't-matter-how-many" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [3]:
@@ -848,16 +849,6 @@ INFO:crispy:Writing data to ../../../crispy/SimResults/IFS725nm_red_optext.fits
 Elapsed time: 49.575726s
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
 </div>
 
 
@@ -868,7 +859,7 @@ Elapsed time: 49.575726s
         <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
 <ul>
 <li><a class="reference internal" href="#">Process multiple IFS images in parallel</a><ul>
-<li><a class="reference internal" href="#Import-files-to-reduce,-doesn't-matter-how-many">Import files to reduce, doesn&#8217;t matter how many</a></li>
+<li><a class="reference internal" href="#Import-files-to-reduce,-doesn't-matter-how-many">Import files to reduce, doesn’t matter how many</a></li>
 <li><a class="reference internal" href="#No-parallelization">No parallelization</a></li>
 <li><a class="reference internal" href="#Parallelized-version">Parallelized version</a></li>
 </ul>
@@ -888,8 +879,8 @@ Elapsed time: 49.575726s
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

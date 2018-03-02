@@ -16,10 +16,8 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 8,
-   "metadata": {
-    "collapsed": false
-   },
+   "execution_count": 1,
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -57,10 +55,8 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 9,
-   "metadata": {
-    "collapsed": false
-   },
+   "execution_count": 5,
+   "metadata": {},
    "outputs": [
     {
      "data": {
@@ -87,7 +83,7 @@
        "DISPDIST=                    F / Use PISCES distortion/dispersion?              "
       ]
      },
-     "execution_count": 9,
+     "execution_count": 5,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -99,7 +95,7 @@
     "from crispy.tools.initLogger import getLogger\n",
     "log = getLogger('crispy')\n",
     "from crispy.tools.image import Image\n",
-    "from PISCESparams import Params\n",
+    "from params import Params\n",
     "par = Params()\n",
     "par.hdr"
    ]
@@ -113,10 +109,8 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {
-    "collapsed": false
-   },
+   "execution_count": 6,
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -140,11 +134,11 @@
       "crispy - INFO - Loading wavelength solution from ..//ReferenceFiles/Calibra_170425/lamsol.dat\n",
       "crispy - INFO - Computing wavelength values at pixel centers\n",
       "crispy - INFO - Computing PSFLet widths...\n",
-      "crispy - INFO - Reduced cube will have 11 wavelength bins\n",
+      "crispy - INFO - Reduced cube will have 23 wavelength bins\n",
       "crispy - INFO - Making polychrome cube\n",
       "crispy - INFO - Saving polychrome cube\n",
       "crispy - INFO - Saving wavelength calibration cube\n",
-      "crispy - INFO - Total time elapsed: 33 s\n"
+      "crispy - INFO - Total time elapsed: 86 s\n"
      ]
     }
    ],
@@ -171,9 +165,7 @@
   {
    "cell_type": "code",
    "execution_count": 5,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -226,9 +218,7 @@
   {
    "cell_type": "code",
    "execution_count": 6,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -300,9 +290,7 @@
   {
    "cell_type": "code",
    "execution_count": 7,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -374,9 +362,7 @@
   {
    "cell_type": "code",
    "execution_count": 3,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -402,9 +388,7 @@
   {
    "cell_type": "code",
    "execution_count": 7,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -443,9 +427,7 @@
   {
    "cell_type": "code",
    "execution_count": 13,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -487,9 +469,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "import re\n",
@@ -504,9 +484,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "print lam_hires\n",
@@ -545,9 +523,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "from crispy.tools.detutils import frebin\n",
@@ -564,9 +540,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "print sigarr[i, j, k]"
@@ -575,9 +549,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "from crispy.tools.locate_psflets import PSFLets\n",
@@ -592,9 +564,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "from scipy import ndimage,interpolate\n",
@@ -621,9 +591,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "plt.imshow(fullsigarr[:,:,10])\n",
@@ -633,9 +601,7 @@
   {
    "cell_type": "code",
    "execution_count": 10,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -681,7 +647,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython2",
-   "version": "2.7.13"
+   "version": "2.7.14"
   }
  },
  "nbformat": 4,

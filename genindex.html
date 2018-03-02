@@ -1,17 +1,14 @@
 
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Index &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -25,7 +22,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
     <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="#" />
@@ -35,7 +32,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -141,11 +138,15 @@
 </li>
       <li><a href="tools.html#tools.imgtools.circularMask">circularMask() (in module tools.imgtools)</a>
 </li>
+      <li><a href="tools.html#tools.postprocessing.construct_mflib">construct_mflib() (in module tools.postprocessing)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="tools.html#tools.par_utils.Consumer">Consumer (class in tools.par_utils)</a>
 </li>
       <li><a href="tools.html#tools.inputScene.convert_krist_cube">convert_krist_cube() (in module tools.inputScene)</a>
+</li>
+      <li><a href="tools.html#tools.postprocessing.convolved_mf">convolved_mf() (in module tools.postprocessing)</a>
 </li>
       <li><a href="tools.html#tools.locate_psflets.corrval">corrval() (in module tools.locate_psflets)</a>
 </li>
@@ -295,6 +296,8 @@
 </li>
       <li><a href="tools.html#tools.wavecal.makeHires">makeHires() (in module tools.wavecal)</a>
 </li>
+      <li><a href="tools.html#tools.postprocessing.mf">mf() (in module tools.postprocessing)</a>
+</li>
       <li><a href="tools.html#tools.wavecal.monochromatic_update">monochromatic_update() (in module tools.wavecal)</a>
 </li>
       <li><a href="tools.html#tools.locate_psflets.PSFLets.monochrome_coef">monochrome_coef() (tools.locate_psflets.PSFLets method)</a>
@@ -323,21 +326,31 @@
 </li>
       <li><a href="tools.html#tools.initLogger.crispyLogger.primdebug">primdebug() (tools.initLogger.crispyLogger method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="tools.html#tools.initLogger.crispyLogger.PRIMERROR">PRIMERROR (tools.initLogger.crispyLogger attribute)</a>
 </li>
       <li><a href="tools.html#tools.initLogger.crispyLogger.primerror">primerror() (tools.initLogger.crispyLogger method)</a>
 </li>
       <li><a href="tools.html#tools.initLogger.crispyLogger.PRIMINFO">PRIMINFO (tools.initLogger.crispyLogger attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="tools.html#tools.initLogger.crispyLogger.priminfo">priminfo() (tools.initLogger.crispyLogger method)</a>
 </li>
       <li><a href="tools.html#tools.initLogger.crispyLogger.PRIMWARNING">PRIMWARNING (tools.initLogger.crispyLogger attribute)</a>
 </li>
       <li><a href="tools.html#tools.initLogger.crispyLogger.primwarning">primwarning() (tools.initLogger.crispyLogger method)</a>
 </li>
+      <li><a href="tools.html#tools.postprocessing.process_offaxis">process_offaxis() (in module tools.postprocessing)</a>
+</li>
+      <li><a href="tools.html#tools.postprocessing.process_SPC_IFS">process_SPC_IFS() (in module tools.postprocessing)</a>
+</li>
+      <li><a href="tools.html#tools.postprocessing.process_SPC_IFS2">process_SPC_IFS2() (in module tools.postprocessing)</a>
+</li>
       <li><a href="tools.html#tools.lenslet.processImagePlane">processImagePlane() (in module tools.lenslet)</a>
+</li>
+      <li><a href="tools.html#tools.postprocessing.processReferenceCubes">processReferenceCubes() (in module tools.postprocessing)</a>
+</li>
+      <li><a href="tools.html#tools.postprocessing.processTargetCubes">processTargetCubes() (in module tools.postprocessing)</a>
 </li>
       <li><a href="tools.html#tools.lenslet.propagateLenslets">propagateLenslets() (in module tools.lenslet)</a>
 </li>
@@ -349,6 +362,8 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tools.html#tools.postprocessing.RDI_noise">RDI_noise() (in module tools.postprocessing)</a>
+</li>
       <li><a href="tools.html#tools.detector.readDetector">readDetector() (in module tools.detector)</a>
 </li>
       <li><a href="tools.html#tools.detector.readoutPhotonFluxMapWFIRST">readoutPhotonFluxMapWFIRST() (in module tools.detector)</a>
@@ -357,17 +372,21 @@
 </li>
       <li><a href="tools.html#tools.detector.rebinDetector">rebinDetector() (in module tools.detector)</a>
 </li>
-      <li><a href="IFS.html#IFS.reduceIFSMap">reduceIFSMap() (in module IFS)</a>
+      <li><a href="tools.html#tools.postprocessing.recenter_offaxis">recenter_offaxis() (in module tools.postprocessing)</a>
 </li>
-      <li><a href="IFS.html#IFS.reduceIFSMapList">reduceIFSMapList() (in module IFS)</a>
+      <li><a href="IFS.html#IFS.reduceIFSMap">reduceIFSMap() (in module IFS)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="IFS.html#IFS.reduceIFSMapList">reduceIFSMapList() (in module IFS)</a>
+</li>
       <li><a href="tools.html#tools.locate_psflets.PSFLets.return_locations">return_locations() (tools.locate_psflets.PSFLets method)</a>
 </li>
       <li><a href="tools.html#tools.locate_psflets.PSFLets.return_locations_short">return_locations_short() (tools.locate_psflets.PSFLets method)</a>
 </li>
       <li><a href="tools.html#tools.locate_psflets.PSFLets.return_res">return_res() (tools.locate_psflets.PSFLets method)</a>
+</li>
+      <li><a href="tools.html#tools.reduction.RL">RL() (in module tools.reduction)</a>
 </li>
       <li><a href="tools.html#tools.rotate.Rotate">Rotate() (in module tools.rotate)</a>
 </li>
@@ -397,6 +416,8 @@
 </li>
       <li><a href="tools.html#tools.rotate.shiftCube">shiftCube() (in module tools.rotate)</a>
 </li>
+      <li><a href="tools.html#tools.postprocessing.SNR_spectrum">SNR_spectrum() (in module tools.postprocessing)</a>
+</li>
       <li><a href="tools.html#tools.imgtools.subtract_mean">subtract_mean() (in module tools.imgtools)</a>
 </li>
       <li><a href="tools.html#tools.initLogger.crispyLogger.SUMMARY">SUMMARY (tools.initLogger.crispyLogger attribute)</a>
@@ -422,6 +443,8 @@
       <li><a href="unitTests.html#unitTests.testGenPixSol">testGenPixSol() (in module unitTests)</a>
 </li>
       <li><a href="unitTests.html#unitTests.testLoadKernels">testLoadKernels() (in module unitTests)</a>
+</li>
+      <li><a href="unitTests.html#unitTests.testOptExt">testOptExt() (in module unitTests)</a>
 </li>
       <li><a href="tools.html#tools.reduction.testReduction">testReduction() (in module tools.reduction)</a>
 </li>
@@ -464,6 +487,8 @@
       <li><a href="tools.html#module-tools.par_utils">tools.par_utils (module)</a>
 </li>
       <li><a href="tools.html#module-tools.plotting">tools.plotting (module)</a>
+</li>
+      <li><a href="tools.html#module-tools.postprocessing">tools.postprocessing (module)</a>
 </li>
       <li><a href="tools.html#module-tools.reduction">tools.reduction (module)</a>
 </li>
@@ -517,8 +542,8 @@
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

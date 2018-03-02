@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>unitTests module &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
     <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -34,7 +31,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -166,7 +163,7 @@
 
 <dl class="function">
 <dt id="unitTests.testFitCutout">
-<code class="descclassname">unitTests.</code><code class="descname">testFitCutout</code><span class="sig-paren">(</span><em>par</em>, <em>fname</em>, <em>lensnum</em>, <em>mode='lstsq'</em>, <em>ivar=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testFitCutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testFitCutout" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">unitTests.</code><code class="descname">testFitCutout</code><span class="sig-paren">(</span><em>par</em>, <em>fname</em>, <em>lensX</em>, <em>lensY</em>, <em>mode='lstsq'</em>, <em>ivar=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testFitCutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testFitCutout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Testing the fit_cutout function</p>
 </dd></dl>
 
@@ -180,6 +177,11 @@
 <code class="descclassname">unitTests.</code><code class="descname">testLoadKernels</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testLoadKernels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testLoadKernels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make sure the kernel interpolation with wavelength makes sense</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="unitTests.testOptExt">
+<code class="descclassname">unitTests.</code><code class="descname">testOptExt</code><span class="sig-paren">(</span><em>par</em>, <em>im</em>, <em>lensX</em>, <em>lensY</em>, <em>smoothandmask=True</em>, <em>delt_y=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unitTests.html#testOptExt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#unitTests.testOptExt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 
@@ -205,8 +207,8 @@
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>tools.inputScene &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -34,7 +31,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -80,44 +77,45 @@
 <span class="kn">import</span> <span class="nn">astropy.analytic_functions</span> <span class="k">as</span> <span class="nn">af</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span>
-<span class="k">except</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">pyfits</span> <span class="k">as</span> <span class="nn">fits</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">interp1d</span>
 
-<div class="viewcode-block" id="adjust_krist_header"><a class="viewcode-back" href="../../tools.html#tools.inputScene.adjust_krist_header">[docs]</a><span class="k">def</span> <span class="nf">adjust_krist_header</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span><span class="n">lamc</span><span class="p">,</span><span class="n">pixsize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="adjust_krist_header"><a class="viewcode-back" href="../../tools.html#tools.inputScene.adjust_krist_header">[docs]</a><span class="k">def</span> <span class="nf">adjust_krist_header</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">lamc</span><span class="p">,</span> <span class="n">pixsize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Force a different central wavelength, assuming that everything is wavelength-independent</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    </span>
+
 <span class="sd">    cube: 3D float array</span>
 <span class="sd">        Input cube from J. Krist</span>
 <span class="sd">    lamc: float</span>
 <span class="sd">        Central wavelength to override in nm</span>
 <span class="sd">    pixsize: float</span>
 <span class="sd">        Pixel scale at central wavelength to override (in lambda/D)</span>
-<span class="sd">    </span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">oldlam</span> <span class="o">=</span> <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span>
-    <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">/</span><span class="mf">1000.</span>
-    <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_MIN&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">lamc</span><span class="o">/</span><span class="mf">1000.</span><span class="o">/</span><span class="n">oldlam</span>
-    <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_MAX&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">lamc</span><span class="o">/</span><span class="mf">1000.</span><span class="o">/</span><span class="n">oldlam</span>
-    
+    <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_C&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lamc</span> <span class="o">/</span> <span class="mf">1000.</span>
+    <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_MIN&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">lamc</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">/</span> <span class="n">oldlam</span>
+    <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;LAM_MAX&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="n">lamc</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">/</span> <span class="n">oldlam</span>
+
     <span class="k">if</span> <span class="n">pixsize</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cube</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PIXSIZE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pixsize</span></div>
 
 
-<div class="viewcode-block" id="convert_krist_cube"><a class="viewcode-back" href="../../tools.html#tools.inputScene.convert_krist_cube">[docs]</a><span class="k">def</span> <span class="nf">convert_krist_cube</span><span class="p">(</span><span class="n">cubeshape</span><span class="p">,</span><span class="n">lamlist</span><span class="p">,</span><span class="n">star_T</span><span class="p">,</span><span class="n">star_Vmag</span><span class="p">,</span><span class="n">tel_area</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_krist_cube"><a class="viewcode-back" href="../../tools.html#tools.inputScene.convert_krist_cube">[docs]</a><span class="k">def</span> <span class="nf">convert_krist_cube</span><span class="p">(</span><span class="n">cubeshape</span><span class="p">,</span> <span class="n">lamlist</span><span class="p">,</span> <span class="n">star_T</span><span class="p">,</span> <span class="n">star_Vmag</span><span class="p">,</span> <span class="n">tel_area</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    </span>
+
 <span class="sd">    Function convert_krist_cube</span>
-<span class="sd">    </span>
+
 <span class="sd">    This function calculates the number of photons per second</span>
 <span class="sd">    entering the WFIRST obscured aperture, given the star `Vmag` and its temperature</span>
 <span class="sd">    for each slice of the input cube</span>
 <span class="sd">    This was only tested with John Krist&#39;s cubes and his normalization.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cubeshape: tuple</span>
@@ -130,181 +128,224 @@
 <span class="sd">        Stellar magnitude in V band</span>
 <span class="sd">    tel_area: units.m**2</span>
 <span class="sd">        Area of telescope in units of units.m**2</span>
-<span class="sd">        </span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    newcube: 3D array</span>
 <span class="sd">        Cube that multiplies an input normalized cube from John Krist to turn it into units</span>
-<span class="sd">        of photons/s/nm/pixel. Each slice from the product cube subsequently needs to be multiplied by the </span>
+<span class="sd">        of photons/s/nm/pixel. Each slice from the product cube subsequently needs to be multiplied by the</span>
 <span class="sd">        bandwidth of each slice to determine the photons/s/pixel incident on the telescope</span>
-<span class="sd">            </span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
-    
-    
+
     <span class="c1"># We need to determine the coefficient of proportionality between a blackbody source and the</span>
     <span class="c1"># actualy flux received (depends on size of the star, distance, etc)</span>
     <span class="c1"># define Vband</span>
-    <span class="n">lambda_cent</span> <span class="o">=</span> <span class="mi">550</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nanometer</span>
+    <span class="n">lambda_cent</span> <span class="o">=</span> <span class="mi">550</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">nanometer</span>
 
-    <span class="c1"># this is the flux density per steradian (specific intensity) you would expect from Vband</span>
-    <span class="n">flux_bb_F550</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">blackbody_lambda</span><span class="p">(</span><span class="n">lambda_cent</span><span class="p">,</span> <span class="n">star_T</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">sr</span><span class="p">)</span>
+    <span class="c1"># this is the flux density per steradian (specific intensity) you would</span>
+    <span class="c1"># expect from Vband</span>
+    <span class="n">flux_bb_F550</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">blackbody_lambda</span><span class="p">(</span>
+        <span class="n">lambda_cent</span><span class="p">,</span> <span class="n">star_T</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+        <span class="n">u</span><span class="o">.</span><span class="n">Watt</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">um</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">sr</span><span class="p">)</span>
 
     <span class="c1"># this is the actual flux density received in Vband</span>
-    <span class="n">Vband_zero_pt</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3636</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Jansky</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="p">)</span>
-    <span class="n">Vband_zero_pt</span> <span class="o">*=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">lambda_cent</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">flux_star_Vband</span> <span class="o">=</span> <span class="n">Vband_zero_pt</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">star_Vmag</span><span class="p">)</span>
+    <span class="n">Vband_zero_pt</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3636</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">Jansky</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="p">)</span>
+    <span class="n">Vband_zero_pt</span> <span class="o">*=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span> <span class="n">lambda_cent</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">flux_star_Vband</span> <span class="o">=</span> <span class="n">Vband_zero_pt</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">star_Vmag</span><span class="p">)</span>
 
     <span class="c1"># the ratio is coefficient we seek; this will multiply a blackbody function to yield flux densities</span>
     <span class="c1"># at all wavelengths</span>
-    <span class="n">ratio_star</span> <span class="o">=</span> <span class="p">(</span><span class="n">flux_star_Vband</span><span class="o">/</span><span class="n">flux_bb_F550</span><span class="p">)</span>
+    <span class="n">ratio_star</span> <span class="o">=</span> <span class="p">(</span><span class="n">flux_star_Vband</span> <span class="o">/</span> <span class="n">flux_bb_F550</span><span class="p">)</span>
 
     <span class="c1"># this is the ratio which we want to multiply phot_Uma_Vband for the other bands</span>
     <span class="c1">#print(&quot;Ratio of blackbodies is %f&quot; % ratio_Uma)</span>
 
     <span class="c1"># Now convert each slice to photons per second per square meter</span>
-    <span class="n">dlam</span> <span class="o">=</span> <span class="n">lamlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">lamlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">newcube</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cubeshape</span><span class="p">)</span>
+    <span class="n">dlam</span> <span class="o">=</span> <span class="n">lamlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lamlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">newcube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cubeshape</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">photon</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">s</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">nm</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)):</span>
-        <span class="n">E_ph</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">lamlist</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">J</span><span class="p">)</span> <span class="c1"># photon energy at middle frequency</span>
-        <span class="n">BBlam</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">blackbody_lambda</span><span class="p">(</span><span class="n">lamlist</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">star_T</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">sr</span><span class="p">)</span>
-        <span class="n">flux</span> <span class="o">=</span> <span class="p">(</span><span class="n">BBlam</span><span class="o">*</span><span class="n">ratio_star</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">W</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">)</span> <span class="c1"># this is Watts per m2 per nm</span>
-        <span class="n">photon_flux</span> <span class="o">=</span> <span class="n">flux</span><span class="o">/</span><span class="n">E_ph</span> <span class="c1"># This is in Photons per second per m2 per nm</span>
-        <span class="n">newcube</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:]</span> <span class="o">+=</span> <span class="n">photon_flux</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">)</span> <span class="c1"># add value to entire cube since we will multiply Krist&#39;s cube</span>
-    
-    <span class="c1"># multiply by the number of wavelengths since this is the way J. Krist normalizes his cubes</span>
-    <span class="n">newcube</span> <span class="o">*=</span> <span class="n">tel_area</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)</span>
-    <span class="c1"># note that this is still per unit nanometer of bandwidth, so it still needs to be multipled by dlam in the IFS.</span>
+        <span class="n">E_ph</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">h</span> <span class="o">*</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span>
+            <span class="n">lamlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">J</span> <span class="o">/</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span>  <span class="c1"># photon energy at middle frequency</span>
+        <span class="n">BBlam</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">blackbody_lambda</span><span class="p">(</span>
+            <span class="n">lamlist</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">star_T</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">Watt</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">nm</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">sr</span><span class="p">)</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">BBlam</span> <span class="o">*</span>
+            <span class="n">ratio_star</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">W</span> <span class="o">/</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">)</span>  <span class="c1"># this is Watts per m2 per nm</span>
+        <span class="n">photon_flux</span> <span class="o">=</span> <span class="n">flux</span> <span class="o">/</span> <span class="n">E_ph</span>  <span class="c1"># This is in Photons per second per m2 per nm</span>
+        <span class="c1"># add value to entire cube since we will multiply Krist&#39;s cube</span>
+        <span class="n">newcube</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">photon_flux</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">s</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">)</span>
+
+    <span class="c1"># multiply by the number of wavelengths since this is the way J. Krist</span>
+    <span class="c1"># normalizes his cubes</span>
+    <span class="n">newcube</span> <span class="o">*=</span> <span class="n">tel_area</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)</span>
+    <span class="c1"># note that this is still per unit nanometer of bandwidth, so it still</span>
+    <span class="c1"># needs to be multipled by dlam in the IFS.</span>
     <span class="k">return</span> <span class="n">newcube</span></div>
 
 
 <div class="viewcode-block" id="haystacks_to_photons"><a class="viewcode-back" href="../../tools.html#tools.inputScene.haystacks_to_photons">[docs]</a><span class="k">def</span> <span class="nf">haystacks_to_photons</span><span class="p">(</span><span class="n">haystacks_hdu</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Function haystacks_to_photons</span>
-<span class="sd">    </span>
+
 <span class="sd">    This function converts a Haystacks hdu in Jy/pixels to photons/s/nm/m^2/pixel</span>
 <span class="sd">    and returns a full cube</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cube: haystacks_hdu</span>
 <span class="sd">        Haystacks HDU</span>
-<span class="sd">        </span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    hc: ndarray</span>
 <span class="sd">        Converted cube in ph/s/um/m2</span>
 <span class="sd">    lamlist: wavelength array</span>
-<span class="sd">            </span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
-    
+
     <span class="c1"># last extension is the list of wavelengths</span>
     <span class="n">NEXT</span> <span class="o">=</span> <span class="n">haystacks_hdu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;N_EXT&#39;</span><span class="p">]</span>
-    <span class="n">lamlist</span> <span class="o">=</span> <span class="n">haystacks_hdu</span><span class="p">[</span><span class="n">NEXT</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span>
-    <span class="n">lamcube</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">lamlist</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
-    
+    <span class="n">lamlist</span> <span class="o">=</span> <span class="n">haystacks_hdu</span><span class="p">[</span><span class="n">NEXT</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">um</span>
+    <span class="n">lamcube</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span> <span class="n">lamlist</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+
     <span class="c1"># allocate memory</span>
-    <span class="n">hc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">NEXT</span><span class="p">,</span><span class="n">haystacks_hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">haystacks_hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Jy</span>
+    <span class="n">hc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">NEXT</span><span class="p">,</span>
+         <span class="n">haystacks_hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">haystacks_hdu</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">Jy</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NEXT</span><span class="p">):</span>
-        <span class="n">hc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">haystacks_hdu</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">Jy</span>
-    
+        <span class="n">hc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">haystacks_hdu</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">Jy</span>
+
     <span class="c1"># convert cube</span>
-    <span class="n">hc</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="p">)</span>
+    <span class="n">hc</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="p">)</span>
     <span class="n">hc</span> <span class="o">*=</span> <span class="n">lamcube</span>
-    <span class="n">hc</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">W</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
-    
+    <span class="n">hc</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">W</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
+
     <span class="c1"># photon energy</span>
-    <span class="n">Eph</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">lamlist</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">J</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span>
-    
+    <span class="n">Eph</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">h</span> <span class="o">*</span>
+           <span class="n">c</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span>
+           <span class="n">lamlist</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">/</span>
+           <span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">J</span> <span class="o">/</span>
+                        <span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span>
+
     <span class="c1"># convert to photon</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">hc</span><span class="o">/</span><span class="n">Eph</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">),</span><span class="n">lamlist</span></div>
-    
-<div class="viewcode-block" id="Jy_to_photons"><a class="viewcode-back" href="../../tools.html#tools.inputScene.Jy_to_photons">[docs]</a><span class="k">def</span> <span class="nf">Jy_to_photons</span><span class="p">(</span><span class="n">cube_Jy</span><span class="p">,</span> <span class="n">wavel</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">hc</span> <span class="o">/</span> <span class="n">Eph</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">s</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">),</span> <span class="n">lamlist</span></div>
+
+
+<div class="viewcode-block" id="Jy_to_photons"><a class="viewcode-back" href="../../tools.html#tools.inputScene.Jy_to_photons">[docs]</a><span class="k">def</span> <span class="nf">Jy_to_photons</span><span class="p">(</span><span class="n">cube_Jy</span><span class="p">,</span> <span class="n">wavlist</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">        cube_Jy: 3D datacube in Jy</span>
-<span class="sd">        wavel: 1D array with wavelengths in microns</span>
+<span class="sd">        wavlist: 1D array with wavelengths in microns</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">        hc: 3D haystacks cube in photons/m2/um/s</span>
-<span class="sd">   </span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wavlist</span><span class="p">,</span><span class="n">u</span><span class="o">.</span><span class="n">Quantity</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wavlist</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">Quantity</span><span class="p">):</span>
         <span class="n">lamlist</span> <span class="o">=</span> <span class="n">wavlist</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">lamlist</span> <span class="o">=</span> <span class="n">wavlist</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">um</span>
-    <span class="n">lamcube</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">lamlist</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
-    
-    <span class="n">hc</span> <span class="o">=</span> <span class="n">cube_Jy</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">Jansky</span> 
-    
-    <span class="n">hc</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="p">)</span>
+        <span class="n">lamlist</span> <span class="o">=</span> <span class="n">wavlist</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">um</span>
+    <span class="n">lamcube</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span> <span class="n">lamlist</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="n">hc</span> <span class="o">=</span> <span class="n">cube_Jy</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">Jansky</span>
+
+    <span class="n">hc</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">Watt</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">Hertz</span><span class="p">)</span>
     <span class="n">hc</span> <span class="o">*=</span> <span class="n">lamcube</span>
-    <span class="n">hc</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">W</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
-    
+    <span class="n">hc</span> <span class="o">=</span> <span class="n">hc</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">W</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
+
     <span class="c1"># photon energy</span>
-    <span class="n">Eph</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">h</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">/</span><span class="n">lamlist</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">J</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span>
-    <span class="n">hc</span> <span class="o">=</span> <span class="p">(</span><span class="n">hc</span><span class="o">/</span><span class="n">Eph</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
-    
+    <span class="n">Eph</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">h</span> <span class="o">*</span>
+           <span class="n">c</span><span class="o">.</span><span class="n">c</span> <span class="o">/</span>
+           <span class="n">lamlist</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">/</span>
+           <span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">J</span> <span class="o">/</span>
+                        <span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="p">)</span>
+    <span class="n">hc</span> <span class="o">=</span> <span class="p">(</span><span class="n">hc</span> <span class="o">/</span> <span class="n">Eph</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">s</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">hc</span></div>
 
 
-<div class="viewcode-block" id="zodi_cube"><a class="viewcode-back" href="../../tools.html#tools.inputScene.zodi_cube">[docs]</a><span class="k">def</span> <span class="nf">zodi_cube</span><span class="p">(</span><span class="n">krist_cube</span><span class="p">,</span><span class="n">area_per_pixel</span><span class="p">,</span><span class="n">absmag</span><span class="p">,</span><span class="n">Vstarmag</span><span class="p">,</span><span class="n">zodi_surfmag</span><span class="p">,</span><span class="n">exozodi_surfmag</span><span class="p">,</span><span class="n">distAU</span><span class="p">,</span><span class="n">t_zodi</span><span class="p">):</span>
-
+<div class="viewcode-block" id="zodi_cube"><a class="viewcode-back" href="../../tools.html#tools.inputScene.zodi_cube">[docs]</a><span class="k">def</span> <span class="nf">zodi_cube</span><span class="p">(</span>
+        <span class="n">krist_cube</span><span class="p">,</span>
+        <span class="n">area_per_pixel</span><span class="p">,</span>
+        <span class="n">absmag</span><span class="p">,</span>
+        <span class="n">Vstarmag</span><span class="p">,</span>
+        <span class="n">zodi_surfmag</span><span class="p">,</span>
+        <span class="n">exozodi_surfmag</span><span class="p">,</span>
+        <span class="n">distAU</span><span class="p">,</span>
+        <span class="n">t_zodi</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    (obsolete)</span>
-<span class="sd">    </span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cube</span> <span class="o">=</span> <span class="n">krist_cube</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">cube</span> <span class="o">/=</span> <span class="n">cube</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="c1">#*cube.shape[1]*cube.shape[2] # now we consider the cube as a real spectral datacube instead of a multiplication cube</span>
-    <span class="c1"># each pixel now represents the number of photons per pixel per slice if it was uniform across the field</span>
+    <span class="c1"># *cube.shape[1]*cube.shape[2] # now we consider the cube as a real spectral datacube instead of a multiplication cube</span>
+    <span class="n">cube</span> <span class="o">/=</span> <span class="n">cube</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># each pixel now represents the number of photons per pixel per slice if</span>
+    <span class="c1"># it was uniform across the field</span>
     <span class="n">Msun</span> <span class="o">=</span> <span class="mf">4.83</span>
-    <span class="n">zodicube</span> <span class="o">=</span> <span class="n">cube</span><span class="o">*</span> <span class="n">t_zodi</span><span class="o">*</span><span class="n">area_per_pixel</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">zodi_surfmag</span><span class="o">-</span><span class="n">Vstarmag</span><span class="p">))</span> <span class="c1"># where area_per_pixel has to be in square arcsec</span>
-    <span class="n">exozodicube</span> <span class="o">=</span> <span class="n">cube</span><span class="o">*</span> <span class="n">t_zodi</span><span class="o">*</span><span class="n">area_per_pixel</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="p">(</span><span class="n">exozodi_surfmag</span><span class="o">+</span><span class="n">absmag</span><span class="o">-</span><span class="n">Msun</span><span class="o">-</span><span class="n">Vstarmag</span><span class="p">))</span><span class="o">/</span><span class="n">distAU</span><span class="o">**</span><span class="mi">2</span> <span class="c1"># where area_per_pixel has to be in square arcsec</span>
-    <span class="k">return</span> <span class="n">zodicube</span><span class="o">+</span><span class="n">exozodicube</span></div>
-    
+    <span class="c1"># where area_per_pixel has to be in square arcsec</span>
+    <span class="n">zodicube</span> <span class="o">=</span> <span class="n">cube</span> <span class="o">*</span> <span class="n">t_zodi</span> <span class="o">*</span> <span class="n">area_per_pixel</span> <span class="o">*</span> \
+        <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span> <span class="o">*</span> <span class="p">(</span><span class="n">zodi_surfmag</span> <span class="o">-</span> <span class="n">Vstarmag</span><span class="p">))</span>
+    <span class="c1"># where area_per_pixel has to be in square arcsec</span>
+    <span class="n">exozodicube</span> <span class="o">=</span> <span class="n">cube</span> <span class="o">*</span> <span class="n">t_zodi</span> <span class="o">*</span> <span class="n">area_per_pixel</span> <span class="o">*</span> \
+        <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span> <span class="o">*</span> <span class="p">(</span><span class="n">exozodi_surfmag</span> <span class="o">+</span> <span class="n">absmag</span> <span class="o">-</span> <span class="n">Msun</span> <span class="o">-</span> <span class="n">Vstarmag</span><span class="p">))</span> <span class="o">/</span> <span class="n">distAU</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">zodicube</span> <span class="o">+</span> <span class="n">exozodicube</span></div>
 
 
 <div class="viewcode-block" id="calc_contrast_Bijan"><a class="viewcode-back" href="../../tools.html#tools.inputScene.calc_contrast_Bijan">[docs]</a><span class="k">def</span> <span class="nf">calc_contrast_Bijan</span><span class="p">(</span><span class="n">wavelist</span><span class="p">,</span>
-    <span class="c1"># default values are for 47 Uma c</span>
-    <span class="n">albedo</span> <span class="o">=</span> <span class="mf">0.28</span><span class="p">,</span> <span class="c1"># in the continuum; use albedo=0 to use native albedo files from Cahoy et al</span>
-    <span class="n">radius</span> <span class="o">=</span> <span class="mf">1.27</span><span class="p">,</span> <span class="c1"># in Jupiter radius</span>
-    <span class="n">dist</span> <span class="o">=</span> <span class="mf">3.6</span><span class="p">,</span> <span class="c1"># in AU - note that it is different from the distance keyword below because there simply isn&#39;t a Cahoy spectrum for 3.6AU</span>
-    <span class="c1"># this is just to load some spectrum</span>
-    <span class="n">planet_type</span><span class="o">=</span><span class="s1">&#39;Jupiter&#39;</span><span class="p">,</span>
-    <span class="n">abundance</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">distance</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-    <span class="n">phase</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> 
-    <span class="n">folder</span><span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/Science/Haystacks/Cahoy_Spectra/albedo_spectra/&#39;</span><span class="p">):</span>
-    
+                        <span class="c1"># default values are for 47 Uma c</span>
+                        <span class="n">albedo</span><span class="o">=</span><span class="mf">0.28</span><span class="p">,</span>  <span class="c1"># in the continuum; use albedo=0 to use native albedo files from Cahoy et al</span>
+                        <span class="n">radius</span><span class="o">=</span><span class="mf">1.27</span><span class="p">,</span>  <span class="c1"># in Jupiter radius</span>
+                        <span class="n">dist</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span>  <span class="c1"># in AU - note that it is different from the distance keyword below because there simply isn&#39;t a Cahoy spectrum for 3.6AU</span>
+                        <span class="c1"># this is just to load some spectrum</span>
+                        <span class="n">planet_type</span><span class="o">=</span><span class="s1">&#39;Jupiter&#39;</span><span class="p">,</span>
+                        <span class="n">abundance</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">distance</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                        <span class="n">phase</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+                        <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/Science/Haystacks/Cahoy_Spectra/albedo_spectra/&#39;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Function calc_contrast_Bijan (obsolete)</span>
-<span class="sd">    </span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wavelist</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">folder</span><span class="o">+</span><span class="n">planet_type</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">abundance</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;x_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;AU_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;deg.dat&#39;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">folder</span> <span class="o">+</span> <span class="n">planet_type</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="n">abundance</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;x_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;AU_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;deg.dat&#39;</span>
         <span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="n">spec_func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">spectrum</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">1000.</span><span class="p">,</span><span class="n">spectrum</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">spec_func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">spectrum</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1000.</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">spec_func</span><span class="p">(</span><span class="n">wavelist</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">albedo</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">albedo</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">vals</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">albedo</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
-        <span class="n">vals</span><span class="o">*=</span><span class="n">albedo</span>
-    <span class="n">vals</span> <span class="o">*=</span> <span class="p">(</span><span class="n">radius</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">R_jup</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">dist</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">if</span> <span class="n">albedo</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">vals</span> <span class="o">*=</span> <span class="n">albedo</span>
+    <span class="n">vals</span> <span class="o">*=</span> <span class="p">(</span><span class="n">radius</span> <span class="o">*</span> <span class="n">c</span><span class="o">.</span><span class="n">R_jup</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">dist</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
     <span class="k">return</span> <span class="n">vals</span></div>
-            
-<div class="viewcode-block" id="calc_contrast"><a class="viewcode-back" href="../../tools.html#tools.inputScene.calc_contrast">[docs]</a><span class="k">def</span> <span class="nf">calc_contrast</span><span class="p">(</span><span class="n">wavelist</span><span class="p">,</span><span class="n">distance</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">albedo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
+
+<div class="viewcode-block" id="calc_contrast"><a class="viewcode-back" href="../../tools.html#tools.inputScene.calc_contrast">[docs]</a><span class="k">def</span> <span class="nf">calc_contrast</span><span class="p">(</span><span class="n">wavelist</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">albedo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Function calcContrast</span>
-<span class="sd">    </span>
-<span class="sd">    Returns the flux ratio Fplanet/Fstar at given wavelengths. </span>
-<span class="sd">    </span>
+
+<span class="sd">    Returns the flux ratio Fplanet/Fstar at given wavelengths.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    wavelist :   1D array, list</span>
-<span class="sd">            Array of wavelengths in nm at which the contrast is computed. </span>
+<span class="sd">            Array of wavelengths in nm at which the contrast is computed.</span>
 <span class="sd">    distance : float</span>
 <span class="sd">            Distance in AU between the planet and the star</span>
 <span class="sd">    radius: float</span>
@@ -319,17 +360,17 @@
 <span class="sd">    -------</span>
 <span class="sd">    vals : 1D array</span>
 <span class="sd">            Array of flux ratio at the desired wavelengths.</span>
-<span class="sd">    </span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
-    
+
     <span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="n">spec_func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">spectrum</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">1000.</span><span class="p">,</span><span class="n">spectrum</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">spec_func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">spectrum</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1000.</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
     <span class="n">vals</span> <span class="o">=</span> <span class="n">spec_func</span><span class="p">(</span><span class="n">wavelist</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">albedo</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">albedo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">vals</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
         <span class="n">vals</span> <span class="o">*=</span> <span class="n">albedo</span>
-    
-    <span class="n">vals</span> <span class="o">*=</span> <span class="p">(</span><span class="n">radius</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">R_jup</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">distance</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">vals</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius</span> <span class="o">*</span> <span class="n">c</span><span class="o">.</span><span class="n">R_jup</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">distance</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
     <span class="k">return</span> <span class="n">vals</span></div>
 </pre></div>
 
@@ -349,8 +390,8 @@
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

@@ -1,0 +1,982 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Analytical model &#8212; crispy 0.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body>
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.2.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+</style>
+<div class="section" id="Analytical-model">
+<h1>Analytical model<a class="headerlink" href="#Analytical-model" title="Permalink to this headline">¶</a></h1>
+<p>This is an analytical model to construct a simple SNR of a given
+spectrum.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s1">&#39;serif&#39;</span><span class="p">,</span> <span class="n">serif</span><span class="o">=</span><span class="s1">&#39;Times&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick.major&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick.major&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;figure&#39;</span><span class="p">,</span><span class="n">titlesize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
+<span class="kn">import</span> <span class="nn">astropy.constants</span> <span class="kn">as</span> <span class="nn">c</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="kn">as</span> <span class="nn">log</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/WFIRST/&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span><span class="n">QTable</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.detutils</span> <span class="kn">import</span> <span class="n">rebin</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">IFSModel</span><span class="p">(</span><span class="n">datafile</span><span class="p">,</span>
+             <span class="n">minlam</span><span class="o">=</span><span class="mi">700</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">,</span>
+             <span class="n">maxlam</span><span class="o">=</span><span class="mi">841</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">,</span>
+             <span class="n">Vmag</span> <span class="o">=</span> <span class="mf">4.83</span><span class="p">,</span>
+             <span class="n">R</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+             <span class="n">QEfile</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">QELosses</span> <span class="o">=</span> <span class="mf">0.9</span><span class="o">*</span><span class="mf">0.97</span><span class="o">*</span><span class="mf">0.9</span><span class="o">*</span><span class="mf">0.78</span><span class="p">,</span> <span class="c1"># losses on top of QE</span>
+             <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+             <span class="n">cic</span><span class="o">=</span><span class="mf">2e-2</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">ct</span><span class="p">,</span> <span class="c1"># CIC</span>
+             <span class="n">dark</span> <span class="o">=</span> <span class="mf">2.24e-4</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">ct</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="c1"># dark current</span>
+             <span class="n">zodi</span> <span class="o">=</span> <span class="mf">7.6e-4</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">ct</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="c1"># total zodiacal contribution</span>
+             <span class="n">CFcontrast</span> <span class="o">=</span> <span class="mf">2.6e-9</span><span class="p">,</span>
+             <span class="n">I_pk</span> <span class="o">=</span> <span class="mf">1.4e-3</span><span class="p">,</span>
+             <span class="n">mpix</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="c1"># Noise equivalent pixels</span>
+             <span class="n">cgi_mpix</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="c1"># used for speckle estimates (will ask Bijan)</span>
+             <span class="n">sp_tau</span> <span class="o">=</span> <span class="mf">0.34</span><span class="p">,</span> <span class="c1"># speckle throughput</span>
+             <span class="n">tau</span><span class="o">=</span><span class="mf">0.0116</span><span class="p">,</span> <span class="c1"># planet throughput</span>
+             <span class="n">A</span> <span class="o">=</span> <span class="mf">3.68</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="c1"># aperture size</span>
+             <span class="n">mult</span><span class="o">=</span><span class="mf">1.32</span><span class="p">,</span>
+             <span class="n">fpp</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+             <span class="n">obstime</span><span class="o">=</span><span class="mi">100</span><span class="o">*</span><span class="mi">3600</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="p">,</span>
+             <span class="n">ftime</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="c1"># frame exposure time</span>
+             <span class="n">forceSNR</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+             <span class="n">ntrials</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="p">):</span>
+    <span class="c1"># load QE</span>
+    <span class="n">loadQE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">QEfile</span><span class="p">)</span>
+    <span class="n">QE</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">loadQE</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span><span class="n">loadQE</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Load Sergi&#39;s table</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">datafile</span><span class="p">,</span>
+                     <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">,</span><span class="s1">&#39;albedo&#39;</span><span class="p">,</span><span class="s1">&#39;contrast&#39;</span><span class="p">,</span><span class="s1">&#39;star&#39;</span><span class="p">,</span><span class="s1">&#39;flux&#39;</span><span class="p">),</span>
+                     <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">],</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;albedo&#39;</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Albedo&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength  (um)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Albedo&#39;</span><span class="p">)</span>
+
+    <span class="c1"># load stellar spectra</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/ETC/Spectra.csv&#39;</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="n">skip_blank_lines</span><span class="o">=</span><span class="bp">True</span><span class="p">,)</span>
+    <span class="n">stars</span> <span class="o">=</span> <span class="n">QTable</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">st</span><span class="p">)</span>
+    <span class="n">stars</span><span class="p">[</span><span class="s1">&#39;Wavelength (m) &#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">m</span>
+    <span class="n">stars</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">&#39;Wavelength (m) &#39;</span><span class="p">,</span> <span class="s1">&#39;Wavelength&#39;</span><span class="p">)</span>
+    <span class="n">stars</span><span class="p">[</span><span class="s1">&#39;E_ph (J)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">J</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">ph</span>
+    <span class="n">stars</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="s1">&#39;E_ph (J)&#39;</span><span class="p">,</span> <span class="s1">&#39;E_ph&#39;</span><span class="p">)</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a0v&#39;</span><span class="p">,</span><span class="s1">&#39;a5v&#39;</span><span class="p">,</span><span class="s1">&#39;f5v&#39;</span><span class="p">,</span><span class="s1">&#39;g0v&#39;</span><span class="p">,</span><span class="s1">&#39;g5v&#39;</span><span class="p">,</span><span class="s1">&#39;k0v&#39;</span><span class="p">,</span><span class="s1">&#39;k5v&#39;</span><span class="p">,</span><span class="s1">&#39;m0v&#39;</span><span class="p">,</span><span class="s1">&#39;m5v&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+        <span class="n">stars</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">W</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span>
+    <span class="n">star_ph_flux</span> <span class="o">=</span> <span class="p">(</span><span class="n">stars</span><span class="p">[</span><span class="s1">&#39;g0v&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">stars</span><span class="p">[</span><span class="s1">&#39;E_ph&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ph</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Adjust for stellar magnitude</span>
+    <span class="n">star_ph_flux</span> <span class="o">*=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">Vmag</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stars</span><span class="p">[</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">),</span><span class="n">star_ph_flux</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Stellar flux&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (um)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;{:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">star_ph_flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+
+    <span class="c1"># Compute photons from planet</span>
+    <span class="c1"># first, need to make sure both wavelength axes boundaries are compatible</span>
+    <span class="n">albedo</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">],</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;contrast&#39;</span><span class="p">])</span>
+    <span class="n">wl</span> <span class="o">=</span> <span class="n">stars</span><span class="p">[</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span>
+    <span class="n">star_ph_flux</span> <span class="o">=</span> <span class="n">star_ph_flux</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&gt;</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">])]</span>
+    <span class="n">wl</span> <span class="o">=</span> <span class="n">wl</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&gt;</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">])]</span>
+    <span class="n">star_ph_flux</span> <span class="o">=</span> <span class="n">star_ph_flux</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&lt;</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">])]</span>
+    <span class="n">wl</span> <span class="o">=</span> <span class="n">wl</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&lt;</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">])]</span>
+    <span class="c1"># then we can multiply simply</span>
+    <span class="n">planet_ph_flux</span> <span class="o">=</span> <span class="n">star_ph_flux</span><span class="o">*</span><span class="n">albedo</span><span class="p">(</span><span class="n">wl</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span><span class="n">planet_ph_flux</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Planet flux&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (um)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;{:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">planet_ph_flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+
+    <span class="c1"># Focus on IFS band</span>
+    <span class="n">wmax</span> <span class="o">=</span> <span class="n">maxlam</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">wmin</span><span class="o">=</span><span class="n">minlam</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">planet_ph_flux</span> <span class="o">=</span> <span class="n">planet_ph_flux</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&gt;</span><span class="n">wmin</span><span class="p">]</span>
+    <span class="n">star_ph_flux</span> <span class="o">=</span> <span class="n">star_ph_flux</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&gt;</span><span class="n">wmin</span><span class="p">]</span>
+    <span class="n">wl</span> <span class="o">=</span> <span class="n">wl</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&gt;</span><span class="n">wmin</span><span class="p">]</span>
+    <span class="n">planet_ph_flux</span> <span class="o">=</span> <span class="n">planet_ph_flux</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&lt;</span><span class="n">wmax</span><span class="p">]</span>
+    <span class="n">star_ph_flux</span> <span class="o">=</span> <span class="n">star_ph_flux</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&lt;</span><span class="n">wmax</span><span class="p">]</span>
+    <span class="n">wl</span> <span class="o">=</span> <span class="n">wl</span><span class="p">[</span><span class="n">wl</span><span class="o">.</span><span class="n">value</span><span class="o">&lt;</span><span class="n">wmax</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span><span class="n">planet_ph_flux</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Planet flux&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (um)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;{:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">planet_ph_flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+
+    <span class="c1"># convolve with IFS line spread function</span>
+    <span class="n">dlam</span> <span class="o">=</span> <span class="n">wl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">wl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">midlam</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">maxlam</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">minlam</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">Dlam</span> <span class="o">=</span> <span class="n">midlam</span><span class="o">/</span><span class="n">R</span>
+    <span class="n">FWHM</span> <span class="o">=</span> <span class="n">Dlam</span><span class="o">/</span><span class="n">dlam</span>
+    <span class="n">nbins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="n">maxlam</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="o">-</span><span class="n">minlam</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">um</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">/</span><span class="n">Dlam</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;FWHM is {:} original bins&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">FWHM</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Number of IFS bins is {:}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nbins</span><span class="p">))</span>
+    <span class="n">pl_ph_flux2</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter1d</span><span class="p">(</span><span class="n">planet_ph_flux</span><span class="p">,</span><span class="n">FWHM</span><span class="o">.</span><span class="n">value</span><span class="o">/</span><span class="mf">2.35</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+    <span class="n">pl_ph_flux</span> <span class="o">=</span> <span class="n">pl_ph_flux2</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nbins</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">pl_ph_flux2</span><span class="p">)</span><span class="o">/</span><span class="n">nbins</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">planet_ph_flux</span><span class="o">.</span><span class="n">unit</span>
+    <span class="n">st_ph_flux2</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter1d</span><span class="p">(</span><span class="n">star_ph_flux</span><span class="p">,</span><span class="n">FWHM</span><span class="o">.</span><span class="n">value</span><span class="o">/</span><span class="mf">2.35</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+    <span class="n">st_ph_flux</span> <span class="o">=</span> <span class="n">st_ph_flux2</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nbins</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">star_ph_flux</span><span class="p">)</span><span class="o">/</span><span class="n">nbins</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">star_ph_flux</span><span class="o">.</span><span class="n">unit</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nbins</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">planet_ph_flux</span><span class="p">)</span><span class="o">/</span><span class="n">nbins</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span><span class="n">pl_ph_flux2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Convolved planet flux&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (um)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;{:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">planet_ph_flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">pl_ph_flux</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Convolved and binned planet flux&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (um)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;{:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">planet_ph_flux</span><span class="o">.</span><span class="n">unit</span><span class="p">))</span>
+
+    <span class="c1"># calculate rates</span>
+    <span class="n">pl_ph</span> <span class="o">=</span> <span class="n">pl_ph_flux</span><span class="o">*</span><span class="n">A</span><span class="o">*</span><span class="n">tau</span>
+    <span class="n">effQE</span> <span class="o">=</span> <span class="n">QE</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">*</span><span class="n">QELosses</span>
+    <span class="n">pl_e_rate</span> <span class="o">=</span> <span class="n">pl_ph</span><span class="o">*</span><span class="n">effQE</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">count</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">ph</span>
+    <span class="n">st_e_rate</span> <span class="o">=</span> <span class="n">st_ph_flux</span><span class="o">*</span><span class="n">A</span><span class="o">*</span><span class="n">effQE</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">count</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">ph</span>
+    <span class="n">speckle</span> <span class="o">=</span> <span class="n">st_e_rate</span><span class="o">*</span><span class="n">cgi_mpix</span><span class="o">*</span><span class="n">sp_tau</span><span class="o">*</span><span class="n">I_pk</span><span class="o">*</span><span class="n">CFcontrast</span>
+    <span class="n">phconv_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">zodi</span><span class="o">+</span><span class="n">speckle</span><span class="o">+</span><span class="n">pl_e_rate</span><span class="p">)</span>
+    <span class="n">perpxrate</span> <span class="o">=</span> <span class="n">dark</span><span class="o">+</span><span class="n">phconv_rate</span><span class="o">/</span><span class="n">mpix</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Rate per pixel: {:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">perpxrate</span><span class="p">))</span>
+
+    <span class="c1"># determine contributions and SNR</span>
+    <span class="n">shotnoise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">pl_e_rate</span><span class="o">+</span><span class="n">mult</span><span class="o">*</span><span class="p">(</span><span class="n">speckle</span><span class="o">+</span><span class="n">zodi</span><span class="p">))</span><span class="o">*</span><span class="n">obstime</span><span class="p">)</span>
+    <span class="n">elecnoise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mult</span><span class="o">*</span><span class="n">mpix</span><span class="o">*</span><span class="p">(</span><span class="n">dark</span><span class="o">+</span><span class="n">cic</span><span class="o">/</span><span class="n">ftime</span><span class="p">)</span><span class="o">*</span><span class="n">obstime</span><span class="p">)</span>
+    <span class="n">spnoise</span> <span class="o">=</span> <span class="n">fpp</span><span class="o">*</span><span class="n">speckle</span><span class="o">*</span><span class="n">obstime</span>
+    <span class="n">SNR</span> <span class="o">=</span> <span class="n">pl_e_rate</span><span class="o">*</span><span class="n">obstime</span><span class="o">/</span><span class="p">(</span><span class="n">shotnoise</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">elecnoise</span><span class="o">.</span><span class="n">value</span><span class="o">+</span><span class="n">spnoise</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+<span class="c1">#         print(&#39;Signal counts: {:}&#39;.format(pl_e_rate*obstime))</span>
+<span class="c1">#         print(&#39;Shot noise: {:}&#39;.format(shotnoise))</span>
+<span class="c1">#         print(&#39;Detector noise: {:}&#39;.format(elecnoise))</span>
+<span class="c1">#         print(&#39;Speckle noise: {:}&#39;.format(spnoise))</span>
+<span class="c1">#         print(&#39;SNR: {:}&#39;.format(SNR))</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">:</span><span class="n">w</span><span class="p">,</span>
+                           <span class="s1">&#39;Signal&#39;</span><span class="p">:</span> <span class="n">pl_e_rate</span><span class="o">*</span><span class="n">obstime</span><span class="p">,</span>
+                           <span class="s1">&#39;Shot noise&#39;</span><span class="p">:</span> <span class="n">shotnoise</span><span class="p">,</span>
+                           <span class="s1">&#39;Detector noise&#39;</span><span class="p">:</span> <span class="n">elecnoise</span><span class="p">,</span>
+                           <span class="s1">&#39;Speckle noise&#39;</span><span class="p">:</span> <span class="n">spnoise</span><span class="p">,</span>
+                           <span class="s1">&#39;Total noise&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">shotnoise</span><span class="o">.</span><span class="n">value</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">elecnoise</span><span class="o">.</span><span class="n">value</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">spnoise</span><span class="o">.</span><span class="n">value</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span>
+                           <span class="s1">&#39;Signal&#39;</span><span class="p">:</span> <span class="n">pl_e_rate</span><span class="o">*</span><span class="n">obstime</span><span class="p">,</span>
+                           <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="n">SNR</span><span class="p">,</span>
+                          <span class="p">})</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">)</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Wavelength&#39;</span><span class="p">,</span><span class="s1">&#39;Shot noise&#39;</span><span class="p">,</span><span class="s1">&#39;Detector noise&#39;</span><span class="p">,</span><span class="s1">&#39;Speckle noise&#39;</span><span class="p">,</span><span class="s1">&#39;Total noise&#39;</span><span class="p">,</span><span class="s1">&#39;Signal&#39;</span><span class="p">,</span><span class="s1">&#39;SNR&#39;</span><span class="p">]])</span>
+
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">albedo</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">forceSNR</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">SNR</span><span class="p">)</span>
+        <span class="n">SNRnorm</span> <span class="o">=</span> <span class="n">SNR</span><span class="o">.</span><span class="n">value</span><span class="o">*</span><span class="n">forceSNR</span><span class="o">/</span><span class="n">SNR</span><span class="p">[</span><span class="n">N</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">SNRnorm</span> <span class="o">=</span> <span class="n">SNR</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span><span class="n">vals</span><span class="o">/</span><span class="n">SNRnorm</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="n">output</span><span class="p">,</span><span class="n">yerr</span><span class="o">=</span><span class="n">vals</span><span class="o">/</span><span class="n">SNRnorm</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Recovered albedo&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="n">vals</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;True albedo&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Recovered albedo&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (um)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Albedo&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">ntrials</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">ntrials</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ntrials</span><span class="p">):</span>
+            <span class="n">sim</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span><span class="n">vals</span><span class="o">/</span><span class="n">SNRnorm</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="n">sim</span><span class="p">[:,</span><span class="n">ntrials</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span><span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Recovered albedo&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="n">vals</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;True albedo&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">SNRnorm</span><span class="p">,</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">SNRnorm</span><span class="p">,</span>
+                             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Theoretical error bar&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Recovered albedo&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (um)&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Albedo&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">sim</span>
+    <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">output</span> <span class="o">=</span> <span class="n">IFSModel</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/Inputs/LAS_spectra_for_exospec_bright_comparison_0deg_g0.0_EDC_012618_by_SRH.txt&quot;</span><span class="p">,</span>
+             <span class="n">minlam</span><span class="o">=</span><span class="mi">700</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">,</span>
+             <span class="n">maxlam</span><span class="o">=</span><span class="mi">841</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">,</span>
+             <span class="n">Vmag</span> <span class="o">=</span> <span class="mf">4.83</span><span class="p">,</span>
+             <span class="n">R</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+             <span class="n">QEfile</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/QE_CCD201.txt&quot;</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/Downloads/770.txt&quot;</span><span class="p">,</span><span class="n">output</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+FWHM is 15.41 original bins
+Number of IFS bins is 10
+Rate per pixel: [ 0.00047046  0.00045194  0.00044611  0.00043245  0.00041695  0.00040974
+  0.00039666  0.00038722  0.00037705  0.00036233] ct / s
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Wavelength</th>
+      <th>Shot noise</th>
+      <th>Detector noise</th>
+      <th>Speckle noise</th>
+      <th>Total noise</th>
+      <th>Signal</th>
+      <th>SNR</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.7075</td>
+      <td>48.457534</td>
+      <td>69.538732</td>
+      <td>40.988660</td>
+      <td>94.147959</td>
+      <td>1445.930294</td>
+      <td>9.094763</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.7215</td>
+      <td>46.688310</td>
+      <td>69.538732</td>
+      <td>38.379618</td>
+      <td>92.132668</td>
+      <td>1312.035382</td>
+      <td>8.486280</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.7355</td>
+      <td>46.101200</td>
+      <td>69.538732</td>
+      <td>37.106560</td>
+      <td>91.311843</td>
+      <td>1274.362027</td>
+      <td>8.342987</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.7495</td>
+      <td>44.682688</td>
+      <td>69.538732</td>
+      <td>33.747331</td>
+      <td>89.280794</td>
+      <td>1189.925857</td>
+      <td>8.041738</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.7635</td>
+      <td>43.050884</td>
+      <td>69.538732</td>
+      <td>30.859930</td>
+      <td>87.414810</td>
+      <td>1084.875535</td>
+      <td>7.562767</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.7775</td>
+      <td>42.279086</td>
+      <td>69.538732</td>
+      <td>29.744725</td>
+      <td>86.648168</td>
+      <td>1033.738733</td>
+      <td>7.302346</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.7915</td>
+      <td>40.829298</td>
+      <td>69.538732</td>
+      <td>27.403450</td>
+      <td>85.168162</td>
+      <td>944.154027</td>
+      <td>6.853044</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.8055</td>
+      <td>39.741595</td>
+      <td>69.538732</td>
+      <td>25.501463</td>
+      <td>84.055662</td>
+      <td>881.623088</td>
+      <td>6.541114</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.8195</td>
+      <td>38.531735</td>
+      <td>69.538732</td>
+      <td>23.375352</td>
+      <td>82.865777</td>
+      <td>814.987983</td>
+      <td>6.200182</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.8335</td>
+      <td>36.721643</td>
+      <td>69.538732</td>
+      <td>20.552893</td>
+      <td>81.280598</td>
+      <td>716.028854</td>
+      <td>5.646324</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_2.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_3.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_4.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_5.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_6.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_6.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_7.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_7.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_8.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_8.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_9.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_4_9.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">output</span> <span class="o">=</span> <span class="n">IFSModel</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/Inputs/LAS_spectra_for_exospec_bright_comparison_0deg_g0.0_EDC_012618_by_SRH.txt&quot;</span><span class="p">,</span>
+             <span class="n">minlam</span><span class="o">=</span><span class="mi">600</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">,</span>
+             <span class="n">maxlam</span><span class="o">=</span><span class="mi">721</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span><span class="p">,</span>
+             <span class="n">Vmag</span> <span class="o">=</span> <span class="mf">4.83</span><span class="p">,</span>
+             <span class="n">R</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+             <span class="n">QEfile</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/QE_CCD201.txt&quot;</span><span class="p">,</span>
+             <span class="n">QELosses</span> <span class="o">=</span> <span class="mf">0.9</span><span class="o">*</span><span class="mf">0.97</span><span class="o">*</span><span class="mf">0.9</span><span class="o">*</span><span class="mf">0.81</span><span class="p">,</span> <span class="c1"># losses on top of QE</span>
+             <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+             <span class="n">cic</span><span class="o">=</span><span class="mf">2e-2</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">ct</span><span class="p">,</span> <span class="c1"># CIC</span>
+             <span class="n">dark</span> <span class="o">=</span> <span class="mf">2.24e-4</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">ct</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="c1"># dark current</span>
+             <span class="n">zodi</span> <span class="o">=</span> <span class="mf">1.1e-3</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">ct</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="c1"># total zodiacal contribution</span>
+             <span class="n">CFcontrast</span> <span class="o">=</span> <span class="mf">2.2e-9</span><span class="p">,</span>
+             <span class="n">I_pk</span> <span class="o">=</span> <span class="mf">1.4e-3</span><span class="p">,</span>
+             <span class="n">mpix</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="c1"># Noise equivalent pixels</span>
+             <span class="n">cgi_mpix</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="c1"># used for speckle estimates (will ask Bijan)</span>
+             <span class="n">sp_tau</span> <span class="o">=</span> <span class="mf">0.34</span><span class="p">,</span> <span class="c1"># speckle throughput</span>
+             <span class="n">tau</span><span class="o">=</span><span class="mf">0.0144</span><span class="p">,</span> <span class="c1"># planet throughput</span>
+             <span class="n">A</span> <span class="o">=</span> <span class="mf">3.68</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="c1"># aperture size</span>
+             <span class="n">mult</span><span class="o">=</span><span class="mf">1.32</span><span class="p">,</span>
+             <span class="n">fpp</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+             <span class="n">ftime</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="p">,</span>
+             <span class="n">obstime</span><span class="o">=</span><span class="mi">100</span><span class="o">*</span><span class="mi">3600</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">s</span><span class="p">,</span>
+             <span class="n">forceSNR</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+             <span class="n">ntrials</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/Downloads/660.txt&quot;</span><span class="p">,</span><span class="n">output</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+FWHM is 13.21 original bins
+Number of IFS bins is 10
+Rate per pixel: [ 0.00059654  0.00058734  0.00059149  0.00059135  0.00057608  0.00057532
+  0.00057835  0.00057064  0.00055371  0.00053182] ct / s
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Wavelength</th>
+      <th>Shot noise</th>
+      <th>Detector noise</th>
+      <th>Speckle noise</th>
+      <th>Total noise</th>
+      <th>Signal</th>
+      <th>SNR</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.6065</td>
+      <td>54.074869</td>
+      <td>63.479887</td>
+      <td>35.955632</td>
+      <td>90.810764</td>
+      <td>1926.757105</td>
+      <td>12.551314</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.6185</td>
+      <td>53.445697</td>
+      <td>63.479887</td>
+      <td>35.519613</td>
+      <td>90.265062</td>
+      <td>1864.863588</td>
+      <td>12.233010</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.6305</td>
+      <td>53.725229</td>
+      <td>63.479887</td>
+      <td>35.538038</td>
+      <td>90.438092</td>
+      <td>1894.578180</td>
+      <td>12.403686</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.6425</td>
+      <td>53.708975</td>
+      <td>63.479887</td>
+      <td>35.310242</td>
+      <td>90.339157</td>
+      <td>1895.838789</td>
+      <td>12.431803</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.6545</td>
+      <td>52.631492</td>
+      <td>63.479887</td>
+      <td>33.870532</td>
+      <td>89.145852</td>
+      <td>1800.262982</td>
+      <td>12.003201</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.6665</td>
+      <td>52.582523</td>
+      <td>63.479887</td>
+      <td>33.971384</td>
+      <td>89.155329</td>
+      <td>1793.779438</td>
+      <td>11.955836</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.6785</td>
+      <td>52.795588</td>
+      <td>63.479887</td>
+      <td>34.177945</td>
+      <td>89.359958</td>
+      <td>1813.505261</td>
+      <td>12.053599</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.6905</td>
+      <td>52.243623</td>
+      <td>63.479887</td>
+      <td>33.399684</td>
+      <td>88.739118</td>
+      <td>1765.800316</td>
+      <td>11.841218</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.7025</td>
+      <td>51.013388</td>
+      <td>63.479887</td>
+      <td>31.801822</td>
+      <td>87.426641</td>
+      <td>1659.861657</td>
+      <td>11.345983</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.7145</td>
+      <td>49.377715</td>
+      <td>63.479887</td>
+      <td>29.723788</td>
+      <td>85.740063</td>
+      <td>1523.084761</td>
+      <td>10.682213</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_2.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_3.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_4.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_5.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_6.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_6.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_7.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_7.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_8.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_8.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_9.png" src="../_images/notebooks_Analytical_Model_Spectrum_Cleaned_5_9.png" />
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Analytical model</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/Analytical_Model_Spectrum_Cleaned.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
+  </p>
+</footer>
+  </body>
+</html>
