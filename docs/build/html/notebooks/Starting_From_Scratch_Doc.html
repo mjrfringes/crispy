@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Starting an IFS simulation from scratch &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,7 +33,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -245,15 +242,19 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="Starting-an-IFS-simulation-from-scratch">
 <h1>Starting an IFS simulation from scratch<a class="headerlink" href="#Starting-an-IFS-simulation-from-scratch" title="Permalink to this headline">¶</a></h1>
-<p>Let&#8217;s suppose that you want to model the ideal IFS and don&#8217;t have any
-idea (or don&#8217;t really care) about what the PSFLets look like and where
-they are located. In that case, you don&#8217;t need any datafile and can get
+<p>Let’s suppose that you want to model the ideal IFS and don’t have any
+idea (or don’t really care) about what the PSFLets look like and where
+they are located. In that case, you don’t need any datafile and can get
 started ASAP!</p>
-<p>Let&#8217;s load things first.</p>
+<p>Let’s load things first.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [1]:
@@ -308,7 +309,7 @@ Populating the interactive namespace from numpy and matplotlib
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/WFIRST_SC/&#39;</span><span class="p">)</span>
+<span></span><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/WFIRST/&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -344,16 +345,17 @@ COMMENT ************************************************************
 COMMENT
 NLENS   =                  108 / # lenslets across array
 PITCH   =             0.000174 / Lenslet pitch (meters)
-INTERLAC=                    3 / Interlacing
-PHILENS =    18.43494882292201 / Rotation angle of the lenslets (deg)
+INTERLAC=                  2.0 / Interlacing
+PHILENS =    26.56505117707799 / Rotation angle of the lenslets (deg)
 PIXSIZE =              1.3E-05 / Pixel size (meters)
 LENSAMP =                  0.5 / Lenslet sampling (lam/D)
 LSAMPWAV=                660.0 / Lenslet sampling wavelength (nm)
 FWHM    =                  2.0 / FHWM of PSFLet at detector (pixels)
 FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
 NPIX    =                 1024 / Number of detector pixels
-BW      =                 0.34 / Bandwidth
+BW      =                 0.18 / Bandwidth
 PIXPRLAM=                  2.0 / Pixels per resolution element
+RESLSTSQ=                  2.0 / Nspec per Nyq. sample for lstsq extraction
 R       =                   50 / Spectral resolution
 </pre></div>
 </div>
@@ -362,12 +364,12 @@ R       =                   50 / Spectral resolution
 calibration. This is usually important because in the real world, the
 wavelength calibration is the step that ensures that you can get good
 data out of your IFS images. For this exercise, you are going to use an
-a priori wavelength calibration (it&#8217;s built into crispy) to generate
+a priori wavelength calibration (it’s built into crispy) to generate
 monochromatic flatfields. From these flatfields, you are going to build
 up your wavelength calibration - just like in real life!</p>
 <div class="section" id="Generate-monochromatic-flats">
 <h3>Generate monochromatic flats<a class="headerlink" href="#Generate-monochromatic-flats" title="Permalink to this headline">¶</a></h3>
-<p>So, what&#8217;s our wavelength range? We are going to use the fiducial case
+<p>So, what’s our wavelength range? We are going to use the fiducial case
 of 600nm - 720nm, which is the first band of the WFIRST IFS. We are
 going to construct a few monochromatic flats across that range. The
 function we need is in the IFS module (that one has a lot of important
@@ -403,6 +405,13 @@ createWavecalFiles(par, lamlist, dlam=1.0)
             Width in nm of the small band for each of the monochromatic wavelengths.
             Default is 1 nm. This has no effect unless we are trying to add any noise.
 
+    Notes
+    -----
+    This function populates the fields par.lamlist and par.filelist which are subsequently
+    used by the buildcalibrations function. If this createWavecalFiles is not called, the
+    two fields need to be populated manually with the set of files and wavelengths that
+    you want to use for the calibration.
+
 </pre></div></div>
 </div>
 <p>So here we go:</p>
@@ -412,8 +421,9 @@ createWavecalFiles(par, lamlist, dlam=1.0)
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">lamc</span><span class="o">=</span><span class="mf">720.</span>
-<span class="n">lamlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lamc</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">),</span><span class="n">lamc</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">),</span><span class="mf">5.</span><span class="p">)</span>
+<span></span><span class="n">lamc</span><span class="o">=</span><span class="mf">660.</span>
+<span class="n">lamlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lamc</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">),</span><span class="n">lamc</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">+</span><span class="mf">5.</span><span class="p">,</span><span class="mf">5.</span><span class="p">)</span>
+<span class="c1"># lamlist = lamc*np.linspace(1.-BW/2.,1.+BW/2.,fileshape[0])</span>
 
 <span class="c1"># let&#39;s create our new wavelength calibration directory to not mess up anything</span>
 <span class="c1"># comment this out if this was already done and you are fine overriding the files in your folder</span>
@@ -424,6 +434,7 @@ createWavecalFiles(par, lamlist, dlam=1.0)
 <span class="c1">#     raise</span>
 
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Wavecal folder is: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">lamlist</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -432,7 +443,10 @@ createWavecalFiles(par, lamlist, dlam=1.0)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Wavecal folder is: ..//ReferenceFiles/wavecalR50_SC/
+crispy - INFO - Wavecal folder is: ..//ReferenceFiles/wavecalR50_660/
+crispy - INFO - [ 600.6  605.6  610.6  615.6  620.6  625.6  630.6  635.6  640.6  645.6
+  650.6  655.6  660.6  665.6  670.6  675.6  680.6  685.6  690.6  695.6
+  700.6  705.6  710.6  715.6  720.6]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -445,428 +459,262 @@ crispy - INFO - Wavecal folder is: ..//ReferenceFiles/wavecalR50_SC/
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_597.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_600.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_602.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_605.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_607.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_610.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_612.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_615.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_617.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_620.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_622.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_625.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_627.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_630.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_632.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_635.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_637.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_640.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_642.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_645.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_647.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_650.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_652.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_655.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_657.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_660.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_662.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_667.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_672.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_677.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_682.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_687.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_692.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_697.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_702.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 5 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_707.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_665.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_712.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_670.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_717.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_675.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_722.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_680.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_727.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_685.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_732.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Performance: 5 seconds total
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_690.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_737.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_695.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_742.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Performance: 5 seconds total
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_700.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_747.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_705.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_752.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_710.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_757.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_715.fits
+crispy - INFO - The number of input pixels per lenslet is 4.995459
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
 crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
 crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_762.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_767.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_772.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_777.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_782.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_787.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_792.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_797.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_802.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_807.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_812.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_817.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_822.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_827.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_832.fits
-crispy - INFO - The number of input pixels per lenslet is 4.598662
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 4 seconds total
-crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_837.fits
+crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_660/det_720.fits
 </pre></div></div>
 </div>
-<div class="nbinput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [26]:
+<span></span>Out[7]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>[&#39;..//ReferenceFiles/wavecalR50_660/det_600.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_605.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_610.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_615.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_620.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_625.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_630.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_635.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_640.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_645.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_650.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_655.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_660.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_665.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_670.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_675.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_680.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_685.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_690.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_695.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_700.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_705.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_710.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_715.fits&#39;,
+ &#39;..//ReferenceFiles/wavecalR50_660/det_720.fits&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">par</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="c1"># par.wavecalDir = &#39;&#39;</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-70
-</pre></div></div>
-</div>
-<p>Let&#8217;s take a look at what we did.</p>
+<p>Let’s take a look at what we did.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [8]:
+<span></span>In [9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -880,14 +728,14 @@ crispy - INFO - Writing data to ..//ReferenceFiles/wavecalR50_SC/det_837.fits
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;..//ReferenceFiles/wavecalR50_SC/det_597.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_602.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_607.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_612.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_617.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_622.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_627.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_632.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_637.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_642.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_647.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_652.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_657.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_662.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_667.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_672.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_677.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_682.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_687.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_692.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_697.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_702.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_707.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_712.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_717.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_722.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_727.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_732.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_737.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_742.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_747.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_752.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_757.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_762.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_767.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_772.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_777.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_782.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_787.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_792.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_797.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_802.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_807.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_812.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_817.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_822.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_827.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_832.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_837.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam597.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam602.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam607.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam612.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam617.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam622.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam627.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam632.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam637.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam642.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam647.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam652.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam657.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam662.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam667.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam672.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam677.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam682.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam687.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam692.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam697.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam702.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam707.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam712.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam717.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam722.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam727.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam732.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam737.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam742.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam747.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam752.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam757.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam762.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam767.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam772.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam777.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam782.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam787.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam792.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam797.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam802.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam807.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam812.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam817.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam822.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam827.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam832.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/hires_psflets_lam837.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/polychromekeyR50.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/polychromeR50.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/polychromeR50stack.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/PSFloc.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/PSFwidths.fits&#39;]
+[&#39;..//ReferenceFiles/wavecalR50_660/det_600.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_605.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_610.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_615.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_620.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_625.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_630.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_635.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_640.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_645.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_650.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_655.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_660.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_665.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_670.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_675.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_680.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_685.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_690.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_695.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_700.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_705.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_710.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_715.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_720.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam600.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam605.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam610.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam615.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam620.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam625.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam630.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam635.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam640.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam645.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam650.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam655.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam660.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam665.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam670.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam675.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam680.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam685.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam690.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam695.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam700.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam705.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam710.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam715.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/hires_psflets_lam720.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/polychromekeyR50.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/polychromeR50.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/PSFloc.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/PSFwidths.fits&#39;]
 </pre></div></div>
 </div>
-<p>Now let&#8217;s show some images. We use the Image module of crispy for
+<p>Now let’s show some images. We use the Image module of crispy for
 convenience.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [9]:
+<span></span>In [10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -904,20 +752,20 @@ convenience.</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_597.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_600.fits
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Starting_From_Scratch_Doc_22_1.png" src="../_images/notebooks_Starting_From_Scratch_Doc_22_1.png" />
+<img alt="../_images/notebooks_Starting_From_Scratch_Doc_21_1.png" src="../_images/notebooks_Starting_From_Scratch_Doc_21_1.png" />
 </div>
 </div>
 <p>And a little zoom in:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [10]:
+<span></span>In [11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -933,14 +781,14 @@ crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_597
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_597.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_600.fits
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Starting_From_Scratch_Doc_24_1.png" src="../_images/notebooks_Starting_From_Scratch_Doc_24_1.png" />
+<img alt="../_images/notebooks_Starting_From_Scratch_Doc_23_1.png" src="../_images/notebooks_Starting_From_Scratch_Doc_23_1.png" />
 </div>
 </div>
 <p>The PSFLets are slowly changing because the geometry that we chose
@@ -956,13 +804,11 @@ calibration, just like one would do in any IFS. The function we need is
 in crispy.tools.wavecal. This is a much more complicated function.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [11]:
+<span></span>In [12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">crispy.tools.wavecal</span> <span class="kn">import</span> <span class="n">buildcalibrations</span>
-
-
 <span class="n">help</span><span class="p">(</span><span class="n">buildcalibrations</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -974,7 +820,7 @@ in crispy.tools.wavecal. This is a much more complicated function.</p>
 <div class="highlight"><pre>
 Help on function buildcalibrations in module crispy.tools.wavecal:
 
-buildcalibrations(par, filelist=None, lamlist=None, order=3, inspect=False, genwavelengthsol=False, makehiresPSFlets=False, makePolychrome=False, makehiresPolychrome=False, makePSFWidths=False, savehiresimages=True, borderpix=4, upsample=5, nsubarr=3, parallel=True, inspect_first=True, apodize=False, lamsol=None)
+buildcalibrations(par, filelist=None, lamlist=None, order=3, inspect=False, genwavelengthsol=False, makehiresPSFlets=False, makePolychrome=False, makehiresPolychrome=False, makePSFWidths=False, savehiresimages=True, borderpix=4, upsample=5, nsubarr=3, parallel=True, inspect_first=True, apodize=False, lamsol=None, threshold=0.0)
     Master wavelength calibration function
 
     Parameters
@@ -1029,6 +875,10 @@ buildcalibrations(par, filelist=None, lamlist=None, order=3, inspect=False, genw
     lamsol: 2D array
             Optional argument that, if not None and if genwavelengthsol==False, will take the argument
             and use it as the current wavelength calibration to build the polychrome.
+    threshold: float
+            Threshold under which to zero out the polychrome. This is only useful for reducing
+            the file size of the polychrome, and has only very little impact on the extraction.
+            To be safe, for science extractions threshold should be kept at its default value of 0.0
 
     Notes
     -----
@@ -1054,7 +904,7 @@ buildcalibrations(par, filelist=None, lamlist=None, order=3, inspect=False, genw
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [12]:
+<span></span>In [13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1068,7 +918,7 @@ buildcalibrations(par, filelist=None, lamlist=None, order=3, inspect=False, genw
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Wavecal files: [&#39;..//ReferenceFiles/wavecalR50_SC/det_597.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_602.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_607.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_612.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_617.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_622.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_627.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_632.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_637.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_642.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_647.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_652.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_657.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_662.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_667.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_672.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_677.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_682.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_687.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_692.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_697.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_702.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_707.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_712.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_717.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_722.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_727.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_732.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_737.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_742.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_747.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_752.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_757.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_762.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_767.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_772.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_777.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_782.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_787.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_792.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_797.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_802.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_807.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_812.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_817.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_822.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_827.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_832.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_SC/det_837.fits&#39;]
+crispy - INFO - Wavecal files: [&#39;..//ReferenceFiles/wavecalR50_660/det_600.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_605.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_610.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_615.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_620.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_625.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_630.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_635.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_640.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_645.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_650.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_655.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_660.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_665.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_670.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_675.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_680.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_685.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_690.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_695.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_700.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_705.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_710.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_715.fits&#39;, &#39;..//ReferenceFiles/wavecalR50_660/det_720.fits&#39;]
 </pre></div></div>
 </div>
 <p>One important aspect is that we can choose to use the same models for
@@ -1077,51 +927,41 @@ flatfields. This basically assumes that we have 100% knowledge of all
 the PSFLets, and can be set if par.gaussian_hires=True. Otherwise, we
 can actually use the deconvolution functions within crispy to
 approximate the lenslet PSFLets, by dividing up the detector into
-nsubarr^2 regions and averaging the PSFLets over these regions. Let&#8217;s
+nsubarr^2 regions and averaging the PSFLets over these regions. Let’s
 assume for now that we have excellent models of our PSFLets.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [13]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">par</span><span class="o">.</span><span class="n">gaussian_hires</span><span class="o">=</span><span class="bp">False</span> <span class="c1"># assuming we know the PSFLets perfectly a priori</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
-<p>If you choose to change that to False, you should also change the
-following nsubarr parameter to &gt;4 since there is likely variation of the
-PSFLet across the field of view. Let&#8217;s go! This takes a few minutes. It
-will finish by a parallel process so don&#8217;t worry if your computer heats
-up a bit.</p>
-<div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">par</span><span class="o">.</span><span class="n">nchanperspec_lstsq</span><span class="o">=</span><span class="mf">1.2</span>
-<span class="n">buildcalibrations</span><span class="p">(</span><span class="n">par</span><span class="p">,</span>
+<span></span><span class="n">par</span><span class="o">.</span><span class="n">gaussian_hires</span><span class="o">=</span><span class="bp">True</span> <span class="c1"># assuming we know the PSFLets perfectly a priori</span>
+</pre></div>
+</div>
+</div>
+<p>If you choose to change that to False, you should also change the
+following nsubarr parameter to &gt;4 since there is likely variation of the
+PSFLet across the field of view. Let’s go! This takes a few minutes. It
+will finish by a parallel process so don’t worry if your computer heats
+up a bit.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">buildcalibrations</span><span class="p">(</span><span class="n">par</span><span class="p">,</span>
                     <span class="n">inspect</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>         <span class="c1"># if True, constructs a bunch of images to verify a good calibration</span>
                     <span class="n">genwavelengthsol</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># Compute wavelength at the center of all pixels</span>
                     <span class="n">makehiresPSFlets</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># this requires very high SNR on the monochromatic frames</span>
                     <span class="n">makePSFWidths</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                     <span class="n">makePolychrome</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>   <span class="c1"># This is needed to use least squares extraction</span>
                     <span class="n">upsample</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>            <span class="c1"># upsampling factor of the high-resolution PSFLets</span>
-                    <span class="n">nsubarr</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>             <span class="c1"># the detector is divided into nsubarr^2 regions for PSFLet averaging</span>
+                    <span class="n">nsubarr</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>             <span class="c1"># the detector is divided into nsubarr^2 regions for PSFLet averaging</span>
                     <span class="n">apodize</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>          <span class="c1"># to match PSFlet spot locations, only use the inner circular part of the</span>
                                            <span class="c1">#detector, hence discarding the corners of the detector where lenslets are</span>
                                            <span class="c1">#distorted</span>
+                    <span class="n">threshold</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
                   <span class="p">)</span>
 </pre></div>
 </div>
@@ -1131,172 +971,100 @@ up a bit.</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Building calibration files, placing results in ..//ReferenceFiles/wavecalR50_SC/
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_597.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_597.fits
+crispy - INFO - Building calibration files, placing results in ..//ReferenceFiles/wavecalR50_660/
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_600.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_600.fits
 crispy - INFO - Initializing PSFlet location transformation coefficients
-crispy - INFO - Performing initial optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_597.fits
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_597.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_602.fits
+crispy - INFO - Performing initial optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_600.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_600.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_605.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_602.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_607.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_605.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_610.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_607.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_612.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_610.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_615.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_612.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_617.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_615.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_620.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_617.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_622.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_620.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_625.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_622.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_627.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_625.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_630.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_627.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_632.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_630.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_635.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_632.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_637.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_635.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_640.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_637.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_642.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_640.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_645.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_642.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_647.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_645.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_650.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_647.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_652.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_650.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_655.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_652.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_657.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_655.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_660.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_657.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_662.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_660.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_665.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_662.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_667.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_665.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_670.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_667.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_672.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_670.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_675.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_672.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_677.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_675.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_680.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_677.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_682.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_680.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_685.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_682.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_687.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_685.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_690.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_687.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_692.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_690.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_695.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_692.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_697.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_695.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_700.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_697.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_702.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_700.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_705.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_702.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_707.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_705.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_710.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_707.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_712.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_710.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_715.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_712.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_717.fits
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_715.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_660/det_720.fits
 crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_717.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_722.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_722.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_727.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_727.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_732.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_732.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_737.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_737.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_742.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_742.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_747.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_747.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_752.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_752.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_757.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_757.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_762.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_762.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_767.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_767.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_772.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_772.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_777.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_777.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_782.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_782.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_787.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_787.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_792.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_792.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_797.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_797.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_802.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_802.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_807.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_807.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_812.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_812.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_817.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_817.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_822.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_822.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_827.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_827.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_832.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_832.fits
-crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/wavecalR50_SC/det_837.fits
-crispy - INFO - Initializing transformation coefficients with previous values
-crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_SC/det_837.fits
-crispy - INFO - Saving wavelength solution to ..//ReferenceFiles/wavecalR50_SC/lamsol.dat
+crispy - INFO - Performing final optimization of PSFlet location transformation coefficients for frame ..//ReferenceFiles/wavecalR50_660/det_720.fits
+crispy - INFO - Saving wavelength solution to ..//ReferenceFiles/wavecalR50_660/lamsol.dat
 crispy - INFO - Computing wavelength values at pixel centers
 crispy - INFO - Making high-resolution PSFLet models
 crispy - INFO - Starting parallel computation
 crispy - INFO - Computing PSFLet widths...
-crispy - INFO - Reduced cube will have 21 wavelength bins
+crispy - INFO - Reduced cube will have 19 wavelength bins
 crispy - INFO - Making polychrome cube
 crispy - INFO - Saving polychrome cube
 crispy - INFO - Saving wavelength calibration cube
-crispy - INFO - Total time elapsed: 522 s
+crispy - INFO - Total time elapsed: 264 s
 </pre></div></div>
 </div>
-<p>Let&#8217;s take a look at the files we constructed:</p>
+<p>Let’s take a look at the files we constructed:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [15]:
+<span></span>In [16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1306,114 +1074,67 @@ crispy - INFO - Total time elapsed: 522 s
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[15]:
+<span></span>Out[16]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
 <span></span>[&#39;.DS_Store&#39;,
- &#39;det_597.fits&#39;,
- &#39;det_602.fits&#39;,
- &#39;det_607.fits&#39;,
- &#39;det_612.fits&#39;,
- &#39;det_617.fits&#39;,
- &#39;det_622.fits&#39;,
- &#39;det_627.fits&#39;,
- &#39;det_632.fits&#39;,
- &#39;det_637.fits&#39;,
- &#39;det_642.fits&#39;,
- &#39;det_647.fits&#39;,
- &#39;det_652.fits&#39;,
- &#39;det_657.fits&#39;,
- &#39;det_662.fits&#39;,
- &#39;det_667.fits&#39;,
- &#39;det_672.fits&#39;,
- &#39;det_677.fits&#39;,
- &#39;det_682.fits&#39;,
- &#39;det_687.fits&#39;,
- &#39;det_692.fits&#39;,
- &#39;det_697.fits&#39;,
- &#39;det_702.fits&#39;,
- &#39;det_707.fits&#39;,
- &#39;det_712.fits&#39;,
- &#39;det_717.fits&#39;,
- &#39;det_722.fits&#39;,
- &#39;det_727.fits&#39;,
- &#39;det_732.fits&#39;,
- &#39;det_737.fits&#39;,
- &#39;det_742.fits&#39;,
- &#39;det_747.fits&#39;,
- &#39;det_752.fits&#39;,
- &#39;det_757.fits&#39;,
- &#39;det_762.fits&#39;,
- &#39;det_767.fits&#39;,
- &#39;det_772.fits&#39;,
- &#39;det_777.fits&#39;,
- &#39;det_782.fits&#39;,
- &#39;det_787.fits&#39;,
- &#39;det_792.fits&#39;,
- &#39;det_797.fits&#39;,
- &#39;det_802.fits&#39;,
- &#39;det_807.fits&#39;,
- &#39;det_812.fits&#39;,
- &#39;det_817.fits&#39;,
- &#39;det_822.fits&#39;,
- &#39;det_827.fits&#39;,
- &#39;det_832.fits&#39;,
- &#39;det_837.fits&#39;,
- &#39;hires_psflets_lam597.fits&#39;,
- &#39;hires_psflets_lam602.fits&#39;,
- &#39;hires_psflets_lam607.fits&#39;,
- &#39;hires_psflets_lam612.fits&#39;,
- &#39;hires_psflets_lam617.fits&#39;,
- &#39;hires_psflets_lam622.fits&#39;,
- &#39;hires_psflets_lam627.fits&#39;,
- &#39;hires_psflets_lam632.fits&#39;,
- &#39;hires_psflets_lam637.fits&#39;,
- &#39;hires_psflets_lam642.fits&#39;,
- &#39;hires_psflets_lam647.fits&#39;,
- &#39;hires_psflets_lam652.fits&#39;,
- &#39;hires_psflets_lam657.fits&#39;,
- &#39;hires_psflets_lam662.fits&#39;,
- &#39;hires_psflets_lam667.fits&#39;,
- &#39;hires_psflets_lam672.fits&#39;,
- &#39;hires_psflets_lam677.fits&#39;,
- &#39;hires_psflets_lam682.fits&#39;,
- &#39;hires_psflets_lam687.fits&#39;,
- &#39;hires_psflets_lam692.fits&#39;,
- &#39;hires_psflets_lam697.fits&#39;,
- &#39;hires_psflets_lam702.fits&#39;,
- &#39;hires_psflets_lam707.fits&#39;,
- &#39;hires_psflets_lam712.fits&#39;,
- &#39;hires_psflets_lam717.fits&#39;,
- &#39;hires_psflets_lam722.fits&#39;,
- &#39;hires_psflets_lam727.fits&#39;,
- &#39;hires_psflets_lam732.fits&#39;,
- &#39;hires_psflets_lam737.fits&#39;,
- &#39;hires_psflets_lam742.fits&#39;,
- &#39;hires_psflets_lam747.fits&#39;,
- &#39;hires_psflets_lam752.fits&#39;,
- &#39;hires_psflets_lam757.fits&#39;,
- &#39;hires_psflets_lam762.fits&#39;,
- &#39;hires_psflets_lam767.fits&#39;,
- &#39;hires_psflets_lam772.fits&#39;,
- &#39;hires_psflets_lam777.fits&#39;,
- &#39;hires_psflets_lam782.fits&#39;,
- &#39;hires_psflets_lam787.fits&#39;,
- &#39;hires_psflets_lam792.fits&#39;,
- &#39;hires_psflets_lam797.fits&#39;,
- &#39;hires_psflets_lam802.fits&#39;,
- &#39;hires_psflets_lam807.fits&#39;,
- &#39;hires_psflets_lam812.fits&#39;,
- &#39;hires_psflets_lam817.fits&#39;,
- &#39;hires_psflets_lam822.fits&#39;,
- &#39;hires_psflets_lam827.fits&#39;,
- &#39;hires_psflets_lam832.fits&#39;,
- &#39;hires_psflets_lam837.fits&#39;,
- &#39;inspection_597.png&#39;,
+ &#39;det_600.fits&#39;,
+ &#39;det_605.fits&#39;,
+ &#39;det_610.fits&#39;,
+ &#39;det_615.fits&#39;,
+ &#39;det_620.fits&#39;,
+ &#39;det_625.fits&#39;,
+ &#39;det_630.fits&#39;,
+ &#39;det_635.fits&#39;,
+ &#39;det_640.fits&#39;,
+ &#39;det_645.fits&#39;,
+ &#39;det_650.fits&#39;,
+ &#39;det_655.fits&#39;,
+ &#39;det_660.fits&#39;,
+ &#39;det_665.fits&#39;,
+ &#39;det_670.fits&#39;,
+ &#39;det_675.fits&#39;,
+ &#39;det_680.fits&#39;,
+ &#39;det_685.fits&#39;,
+ &#39;det_690.fits&#39;,
+ &#39;det_695.fits&#39;,
+ &#39;det_700.fits&#39;,
+ &#39;det_705.fits&#39;,
+ &#39;det_710.fits&#39;,
+ &#39;det_715.fits&#39;,
+ &#39;det_720.fits&#39;,
+ &#39;hires_psflets_lam600.fits&#39;,
+ &#39;hires_psflets_lam605.fits&#39;,
+ &#39;hires_psflets_lam610.fits&#39;,
+ &#39;hires_psflets_lam615.fits&#39;,
+ &#39;hires_psflets_lam620.fits&#39;,
+ &#39;hires_psflets_lam625.fits&#39;,
+ &#39;hires_psflets_lam630.fits&#39;,
+ &#39;hires_psflets_lam635.fits&#39;,
+ &#39;hires_psflets_lam640.fits&#39;,
+ &#39;hires_psflets_lam645.fits&#39;,
+ &#39;hires_psflets_lam650.fits&#39;,
+ &#39;hires_psflets_lam655.fits&#39;,
+ &#39;hires_psflets_lam660.fits&#39;,
+ &#39;hires_psflets_lam665.fits&#39;,
+ &#39;hires_psflets_lam670.fits&#39;,
+ &#39;hires_psflets_lam675.fits&#39;,
+ &#39;hires_psflets_lam680.fits&#39;,
+ &#39;hires_psflets_lam685.fits&#39;,
+ &#39;hires_psflets_lam690.fits&#39;,
+ &#39;hires_psflets_lam695.fits&#39;,
+ &#39;hires_psflets_lam700.fits&#39;,
+ &#39;hires_psflets_lam705.fits&#39;,
+ &#39;hires_psflets_lam710.fits&#39;,
+ &#39;hires_psflets_lam715.fits&#39;,
+ &#39;hires_psflets_lam720.fits&#39;,
+ &#39;inspection_600.png&#39;,
  &#39;lamsol.dat&#39;,
  &#39;polychromekeyR50.fits&#39;,
  &#39;polychromeR50.fits&#39;,
- &#39;polychromeR50stack.fits&#39;,
+ &#39;polychromeR50.fits.gz&#39;,
+ &#39;polychromeR50stack.fits.gz&#39;,
  &#39;PSFloc.fits&#39;,
  &#39;PSFwidths.fits&#39;]
 </pre></div>
@@ -1424,11 +1145,11 @@ with this work.</p>
 </div>
 <div class="section" id="Construct-fields-to-extract">
 <h3>Construct fields to extract<a class="headerlink" href="#Construct-fields-to-extract" title="Permalink to this headline">¶</a></h3>
-<p>Now, let&#8217;s construct a field that we will want to extract. For example,
+<p>Now, let’s construct a field that we will want to extract. For example,
 we will use a flatfield.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [16]:
+<span></span>In [17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1468,7 +1189,7 @@ testCreateFlatfield(par, pixsize=0.1, npix=512, pixval=1.0, Nspec=45, outname=&#
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [34]:
+<span></span>In [18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1484,20 +1205,20 @@ testCreateFlatfield(par, pixsize=0.1, npix=512, pixval=1.0, Nspec=45, outname=&#
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 crispy - INFO - Reduced cube will have 44 wavelength bins
-crispy - INFO - The number of input pixels per lenslet is 4.664307
+crispy - INFO - The number of input pixels per lenslet is 5.016181
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming endpoints wavelist is given
 crispy - INFO - Creating Gaussian PSFLet templates
 crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
 crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
 crispy - INFO - Done.
-crispy - INFO - Performance: 44 seconds total
+crispy - INFO - Performance: 50 seconds total
 crispy - INFO - Writing data to ..//unitTestsOutputs/flatfield.fits
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [35]:
+<span></span>In [19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1523,7 +1244,7 @@ crispy - INFO - Read data from HDU 1 of ..//unitTestsOutputs/flatfield.fits
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Starting_From_Scratch_Doc_43_1.png" src="../_images/notebooks_Starting_From_Scratch_Doc_43_1.png" />
+<img alt="../_images/notebooks_Starting_From_Scratch_Doc_40_1.png" src="../_images/notebooks_Starting_From_Scratch_Doc_40_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -1538,7 +1259,7 @@ crispy - INFO - Read data from HDU 1 of ..//unitTestsOutputs/flatfield.fits
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Starting_From_Scratch_Doc_43_3.png" src="../_images/notebooks_Starting_From_Scratch_Doc_43_3.png" />
+<img alt="../_images/notebooks_Starting_From_Scratch_Doc_40_3.png" src="../_images/notebooks_Starting_From_Scratch_Doc_40_3.png" />
 </div>
 </div>
 </div>
@@ -1546,13 +1267,13 @@ crispy - INFO - Read data from HDU 1 of ..//unitTestsOutputs/flatfield.fits
 <h3>Reduce the flatfield!<a class="headerlink" href="#Reduce-the-flatfield!" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [44]:
+<span></span>In [20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
 <span class="n">help</span><span class="p">(</span><span class="n">reduceIFSMap</span><span class="p">)</span>
-<span class="n">detector</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">,</span><span class="n">smoothbad</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">detector</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq_conv&#39;</span><span class="p">,</span><span class="n">smoothbad</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1563,7 +1284,7 @@ crispy - INFO - Read data from HDU 1 of ..//unitTestsOutputs/flatfield.fits
 <div class="highlight"><pre>
 Help on function reduceIFSMap in module crispy.IFS:
 
-reduceIFSMap(par, IFSimageName, method=&#39;optext&#39;, smoothbad=True, name=None, hires=False)
+reduceIFSMap(par, IFSimageName, method=&#39;optext&#39;, smoothbad=True, name=None, hires=False, dy=3, fitbkgnd=True, specialPolychrome=None, returnall=False, niter=10, pixnoise=0.0, normpsflets=False)
     Main reduction function
 
     Uses various routines to extract an IFS detector map into a spectral-spatial cube.
@@ -1587,16 +1308,16 @@ reduceIFSMap(par, IFSimageName, method=&#39;optext&#39;, smoothbad=True, name=No
         Reduced IFS cube
 
 crispy - INFO - Read data from HDU 1 of ..//unitTestsOutputs/flatfield.fits
-crispy - INFO - Reduced cube will have 21 wavelength bins
-crispy - INFO - Writing data to ..//SimResults/flatfield_red_lstsq_resid.fits
-crispy - INFO - Writing data to ..//SimResults/flatfield_red_lstsq_model.fits
-crispy - INFO - Elapsed time: 6.623860s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/flatfield_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/flatfield_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.791295s
 </pre></div></div>
 </div>
-<p>Let&#8217;s plot what we have got</p>
+<p>Let’s plot what we have got</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [45]:
+<span></span>In [21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1625,12 +1346,12 @@ crispy - INFO - Read inverse variance from HDU 2 of ..//SimResults/flatfield_red
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Starting_From_Scratch_Doc_47_1.png" src="../_images/notebooks_Starting_From_Scratch_Doc_47_1.png" />
+<img alt="../_images/notebooks_Starting_From_Scratch_Doc_44_1.png" src="../_images/notebooks_Starting_From_Scratch_Doc_44_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [46]:
+<span></span>In [22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1663,7 +1384,7 @@ crispy - INFO - Read inverse variance from HDU 2 of ..//SimResults/flatfield_red
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Starting_From_Scratch_Doc_48_0.png" src="../_images/notebooks_Starting_From_Scratch_Doc_48_0.png" />
+<img alt="../_images/notebooks_Starting_From_Scratch_Doc_45_0.png" src="../_images/notebooks_Starting_From_Scratch_Doc_45_0.png" />
 </div>
 </div>
 <p>The residuals are caused by an imperfect wavelength calibration (small
@@ -1675,7 +1396,7 @@ by using an IFS flat field.</p>
 can do the following</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [22]:
+<span></span>In [23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1694,38 +1415,28 @@ can do the following</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Reduced cube will have 21 wavelength bins
-(&#39;Wavelengths at midpoints for lstsq (nm): &#39;, array([ 602.4231962 ,  612.18668602,  622.108413  ,  632.19094169,
-        642.43687821,  652.84887091,  663.42961107,  674.18183359,
-        685.10831768,  696.21188761,  707.49541341,  718.96181164,
-        730.61404611,  742.45512867,  754.48811999,  766.71613034,
-        779.14232041,  791.76990209,  804.60213934,  817.64234903,
-        830.89390176]))
-(&#39;Wavelengths at endpoints for lstsq (nm): &#39;, array([ 597.6       ,  607.28532014,  617.12761055,  627.12941523,
-        637.29331944,  647.62195034,  658.11797765,  668.78411438,
-        679.62311748,  690.63778862,  701.83097484,  713.20556935,
-        724.76451224,  736.51079124,  748.44744251,  760.57755144,
-        772.90425338,  785.43073453,  798.16023271,  811.09603823,
-        824.24149472,  837.6       ]))
-crispy - INFO - Reduced cube will have 34 wavelength bins
-(&#39;Wavelengths at midpoints for optext (nm): &#39;, array([ 600.57445339,  606.56784837,  612.62105407,  618.73466734,
-        624.90929104,  631.14553401,  637.44401117,  643.80534359,
-        650.23015852,  656.7190895 ,  663.27277635,  669.8918653 ,
-        676.57700904,  683.32886675,  690.1481042 ,  697.0353938 ,
-        703.99141467,  711.01685272,  718.11240068,  725.27875822,
-        732.51663197,  739.82673563,  747.20979001,  754.66652311,
-        762.19767021,  769.80397393,  777.48618427,  785.24505875,
-        793.08136242,  800.995868  ,  808.98935589,  817.06261428,
-        825.21643925,  833.45163481]))
-(&#39;Wavelengths at endpoints for optext (nm): &#39;, array([ 597.6       ,  603.56371161,  609.58693771,  615.67027222,
-        621.81431498,  628.01967183,  634.28695464,  640.61678142,
-        647.0097763 ,  653.46656967,  659.9877982 ,  666.57410492,
-        673.22613928,  679.94455719,  686.73002114,  693.58320019,
-        700.50477012,  707.49541341,  714.55581939,  721.68668425,
-        728.88871113,  736.16261018,  743.50909865,  750.92890093,
-        758.42274867,  765.99138079,  773.6355436 ,  781.35599085,
-        789.15348382,  797.02879138,  804.98269008,  813.0159642 ,
-        821.12940588,  829.32381515,  837.6       ]))
+crispy - INFO - Reduced cube will have 19 wavelength bins
+(&#39;Wavelengths at midpoints for lstsq (nm): &#39;, array([ 603.48591977,  609.29942699,  615.16893696,  621.09498916,
+        627.07812827,  633.11890422,  639.21787224,  645.37559291,
+        651.5926322 ,  657.86956154,  664.20695787,  670.60540367,
+        677.06548705,  683.58780178,  690.17294734,  696.821529  ,
+        703.53415785,  710.31145087,  717.15403098]))
+(&#39;Wavelengths at endpoints for lstsq (nm): &#39;, array([ 600.6       ,  606.38570655,  612.22714804,  618.12486136,
+        624.0793886 ,  630.09127706,  636.16107931,  642.28935325,
+        648.47666214,  654.72357468,  661.03066505,  667.39851296,
+        673.82770368,  680.31882816,  686.87248301,  693.4892706 ,
+        700.1697991 ,  706.91468254,  713.72454087,  720.6       ]))
+crispy - INFO - Reduced cube will have 19 wavelength bins
+(&#39;Wavelengths at midpoints for optext (nm): &#39;, array([ 603.48591977,  609.29942699,  615.16893696,  621.09498916,
+        627.07812827,  633.11890422,  639.21787224,  645.37559291,
+        651.5926322 ,  657.86956154,  664.20695787,  670.60540367,
+        677.06548705,  683.58780178,  690.17294734,  696.821529  ,
+        703.53415785,  710.31145087,  717.15403098]))
+(&#39;Wavelengths at endpoints for optext (nm): &#39;, array([ 600.6       ,  606.38570655,  612.22714804,  618.12486136,
+        624.0793886 ,  630.09127706,  636.16107931,  642.28935325,
+        648.47666214,  654.72357468,  661.03066505,  667.39851296,
+        673.82770368,  680.31882816,  686.87248301,  693.4892706 ,
+        700.1697991 ,  706.91468254,  713.72454087,  720.6       ]))
 </pre></div></div>
 </div>
 </div>
@@ -1735,11 +1446,11 @@ crispy - INFO - Reduced cube will have 34 wavelength bins
 measurements), we can set this up with par.PSFLetPositions = True</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [23]:
+<span></span>In [24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">par</span><span class="o">.</span><span class="n">PSFLetPositions</span> <span class="o">=</span> <span class="bp">True</span>
+<span></span><span class="c1"># par.PSFLetPositions = True</span>
 <span class="c1"># par.wavecalDir = par.prefix+&#39;/Calibra_170425/&#39;</span>
 
 <span class="c1"># watch out to be sure you have the correct R that matches the wavecal! In this case, it is R=70</span>
@@ -1748,9 +1459,9 @@ measurements), we can set this up with par.PSFLetPositions = True</p>
 </div>
 </div>
 <p>Repeat the flatfield exercise</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [24]:
+<span></span>In [25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1759,95 +1470,41 @@ measurements), we can set this up with par.PSFLetPositions = True</p>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [26]:
+</pre></div>
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-crispy - INFO - Reduced cube will have 44 wavelength bins
-crispy - INFO - The number of input pixels per lenslet is 4.982718
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming endpoints wavelist is given
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 40 seconds total
-crispy - INFO - Writing data to ..//unitTestsOutputs/flatfield.fits
-</pre></div></div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="c1"># par.PSFLetPositions = False</span>
+<span class="c1"># par.R=50</span>
+<span class="c1"># par.wavecalDir = par.prefix+&#39;/wavecalR50_SC/&#39;</span>
+</pre></div>
+</div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [31]:
+<span></span>In [27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">par</span><span class="o">.</span><span class="n">PSFLetPositions</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="o">=</span><span class="mi">50</span>
-<span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;/wavecalR50_SC/&#39;</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [43]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">crispy.unitTests</span> <span class="kn">import</span> <span class="n">testCrosstalk</span>
-<span class="n">testCrosstalk</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">pixval</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">,</span><span class="n">useQE</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<span class="n">extracted</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/crosstalk.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">,</span><span class="n">smoothbad</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span></span><span class="c1"># from crispy.unitTests import testCrosstalk</span>
+<span class="c1"># testCrosstalk(par,pixval=25,method=&#39;optext&#39;,useQE=False)</span>
+<span class="c1"># extracted = reduceIFSMap(par,par.unitTestsOutputs+&#39;/crosstalk.fits&#39;,method=&#39;lstsq&#39;,smoothbad=False)</span>
 
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-crispy - INFO - Reduced cube will have 44 wavelength bins
-crispy - INFO - The number of input pixels per lenslet is 4.664307
-crispy - INFO - Using PSFlet gaussian approximation
-crispy - WARNING - Assuming endpoints wavelist is given
-crispy - INFO - Creating Gaussian PSFLet templates
-crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
-crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
-crispy - INFO - Done.
-crispy - INFO - Performance: 5 seconds total
-crispy - INFO - Writing data to ..//unitTestsOutputs/crosstalk.fits
-crispy - INFO - Read data from HDU 1 of ..//unitTestsOutputs/crosstalk.fits
-crispy - INFO - Reduced cube will have 21 wavelength bins
-crispy - INFO - Writing data to ..//SimResults/crosstalk_red_lstsq_resid.fits
-crispy - INFO - Writing data to ..//SimResults/crosstalk_red_lstsq_model.fits
-crispy - INFO - Elapsed time: 6.550549s
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [42]:
+<span></span>In [28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">extracted</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">unitTestsOutputs</span><span class="o">+</span><span class="s1">&#39;/flatfield.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">,</span><span class="n">smoothbad</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span></span><span class="c1"># extracted = reduceIFSMap(par,par.unitTestsOutputs+&#39;/flatfield.fits&#39;,method=&#39;lstsq&#39;,smoothbad=False)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ..//unitTestsOutputs/flatfield.fits
-crispy - INFO - Reduced cube will have 21 wavelength bins
-crispy - INFO - Writing data to ..//SimResults/flatfield_red_lstsq_resid.fits
-crispy - INFO - Writing data to ..//SimResults/flatfield_red_lstsq_model.fits
-crispy - INFO - Elapsed time: 6.738324s
-</pre></div></div>
-</div>
-<p>We can also use the PSFLet models that were determined experimentally,
-or externally-generated, as long as they are in the same format as the
-one that crispy&#8217;s calibration routine uses.</p>
 </div>
 </div>
 </div>
@@ -1886,8 +1543,8 @@ one that crispy&#8217;s calibration routine uses.</p>
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

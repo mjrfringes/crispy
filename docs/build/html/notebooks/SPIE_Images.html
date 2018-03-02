@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Plots and images for papers &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,7 +33,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -245,7 +242,11 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="Plots-and-images-for-papers">
 <h1>Plots and images for papers<a class="headerlink" href="#Plots-and-images-for-papers" title="Permalink to this headline">¶</a></h1>
@@ -254,7 +255,7 @@ publications and slide decks. It is not well-documented, but provides
 tips that show how to plot various things.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [8]:
+<span></span>In [1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -273,21 +274,15 @@ tips that show how to plot various things.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span>
 
-<span class="c1"># import sys</span>
-<span class="c1"># codefolder = &#39;../../../../crispy&#39;</span>
-<span class="c1"># if codefolder not in sys.path: sys.path.append(codefolder)</span>
 <span class="kn">import</span> <span class="nn">logging</span> <span class="kn">as</span> <span class="nn">log</span>
 <span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/PISCES/&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
-<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
-<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
+
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -295,34 +290,26 @@ tips that show how to plot various things.</p>
 Populating the interactive namespace from numpy and matplotlib
 </pre></div></div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[8]:
+<span></span>In [2]:
 </pre></div>
 </div>
-<div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>SIMPLE  =                    T / conforms to FITS standard
-BITPIX  =                    8 / array data type
-NAXIS   =                    0 / number of array dimensions
-EXTEND  =                    T
-COMMENT
-COMMENT ************************************************************
-COMMENT ********************** General parameters ******************
-COMMENT ************************************************************
-COMMENT
-NLENS   =                  108 / # lenslets across array
-PITCH   =             0.000174 / Lenslet pitch (meters)
-INTERLAC=                    2 / Interlacing
-PHILENS =    26.56505117707799 / Rotation angle of the lenslets (deg)
-PIXSIZE =              1.3E-05 / Pixel size (meters)
-LENSAMP =                  0.5 / Lenslet sampling (lam/D)
-LSAMPWAV=                600.0 / Lenslet sampling wavelength (nm)
-FWHM    =                    2 / FHWM of PSFLet at detector (pixels)
-FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
-NPIX    =                 1024 / Number of detector pixels
-DISPDIST=                    F / Use PISCES distortion/dispersion?
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/PISCES/&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.7
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
@@ -331,6 +318,7 @@ DISPDIST=                    F / Use PISCES distortion/dispersion?
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;RdBu&#39;</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;plasma&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -373,14 +361,14 @@ DISPDIST=                    F / Use PISCES distortion/dispersion?
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">lenslet_flat</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/lenslet_flat.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
-<span class="n">lenslet_mask</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;/lenslet_mask.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span></span><span class="n">lenslet_flat</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s2">&quot;/lenslet_flat.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">lenslet_mask</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s2">&quot;/lenslet_mask.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">lenslet_flat</span><span class="o">*</span><span class="n">lenslet_mask</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/Downloads/PISCESthroughput.png&quot;</span><span class="p">)</span>
-
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 </pre></div>
@@ -391,15 +379,15 @@ DISPDIST=                    F / Use PISCES distortion/dispersion?
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/lenslet_flat.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/lenslet_mask.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/Calibra_170425//lenslet_flat.fits
+crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/Calibra_170425//lenslet_mask.fits
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_7_1.png" src="../_images/notebooks_SPIE_Images_7_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_8_1.png" src="../_images/notebooks_SPIE_Images_8_1.png" />
 </div>
 </div>
 </div>
@@ -411,7 +399,7 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/lenslet_mask.
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">psflets</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s2">&quot;/hires_psflets_lam605.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span></span><span class="n">psflets</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s2">&quot;/hires_psflets_lam715.fits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axarr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">psflets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">psflets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
@@ -431,14 +419,14 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/lenslet_mask.
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170425//hires_psflets_lam605.fits
+crispy - INFO - Read data from HDU 0 of ..//ReferenceFiles/Calibra_170425//hires_psflets_lam715.fits
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_9_1.png" src="../_images/notebooks_SPIE_Images_9_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_10_1.png" src="../_images/notebooks_SPIE_Images_10_1.png" />
 </div>
 </div>
 </div>
@@ -454,7 +442,7 @@ crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_1
 <span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">get_cutout</span>
 <span class="kn">from</span> <span class="nn">crispy.unitTests</span> <span class="kn">import</span> <span class="n">testCutout</span>
 <span class="n">lensnum</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">subim</span> <span class="o">=</span> <span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">lensnum</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span>
+<span class="n">subim</span> <span class="o">=</span> <span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">lensX</span><span class="o">=</span><span class="n">lensnum</span><span class="p">,</span><span class="n">lensY</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span>
 <span class="n">polychrome</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;/polychromeR70.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
 <span class="n">polyshape</span> <span class="o">=</span> <span class="n">polychrome</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axarr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
@@ -462,7 +450,7 @@ crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_1
 <span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">subim</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">polyshape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">polychrome</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">lensnum</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">polychrome</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">lensX</span><span class="o">=</span><span class="n">lensnum</span><span class="p">,</span><span class="n">lensY</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
     <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/Downloads/Microspectrum.png&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
@@ -475,40 +463,40 @@ crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
-crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170425//polychromeR70.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
+crispy - INFO - Read data from HDU 0 of ..//ReferenceFiles/Calibra_170425//polychromeR70.fits
 (12,)
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_11_1.png" src="../_images/notebooks_SPIE_Images_11_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_12_1.png" src="../_images/notebooks_SPIE_Images_12_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -522,9 +510,9 @@ crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
 <span class="kn">from</span> <span class="nn">crispy.unitTests</span> <span class="kn">import</span> <span class="n">testCutout</span><span class="p">,</span><span class="n">testFitCutout</span>
 <span class="n">lensnum</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
-<span class="n">subim</span> <span class="o">=</span> <span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">lensnum</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span>
-<span class="n">spectrum</span> <span class="o">=</span> <span class="n">testFitCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">lensnum</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span>
-
+<span class="n">subim</span> <span class="o">=</span> <span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">lensX</span><span class="o">=</span><span class="n">lensnum</span><span class="p">,</span><span class="n">lensY</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span>
+<span class="n">spectrum</span> <span class="o">=</span> <span class="n">testFitCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">lensX</span><span class="o">=</span><span class="n">lensnum</span><span class="p">,</span><span class="n">lensY</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Spectrum&quot;</span><span class="p">,</span><span class="n">spectrum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">polychrome</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="o">+</span><span class="s1">&#39;/polychromeR70.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
 <span class="n">polyshape</span> <span class="o">=</span> <span class="n">polychrome</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axarr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
@@ -533,7 +521,7 @@ crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
 <span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;Microspectrum&#39;</span><span class="p">,</span><span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mi">33</span><span class="p">,</span><span class="mf">2.5</span><span class="p">),</span><span class="n">annotation_clip</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">polyshape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">spectrum</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">polychrome</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">lensnum</span><span class="o">=</span><span class="n">lensnum</span><span class="p">),</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">subim</span><span class="p">))</span>
+    <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">spectrum</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">polychrome</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">lensX</span><span class="o">=</span><span class="n">lensnum</span><span class="p">,</span><span class="n">lensY</span><span class="o">=</span><span class="n">lensnum</span><span class="p">),</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">subim</span><span class="p">))</span>
     <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.1f</span><span class="s1">-</span><span class="si">%.1f</span><span class="s1"> nm&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lam_endpts</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">lam_endpts</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span><span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mi">33</span><span class="p">,</span><span class="mf">2.5</span><span class="p">),</span><span class="n">annotation_clip</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
     <span class="n">axarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
@@ -547,42 +535,45 @@ crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Reduced cube will have 11 wavelength bins
-crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
+crispy - INFO - Reduced cube will have 23 wavelength bins
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
-crispy - INFO - Read data from HDU 0 of ../../../crispy/ReferenceFiles/Calibra_170425//polychromeR70.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
+Spectrum [ 258.86676159  298.12528886  290.42239038  403.19205797  462.7638815
+  476.37566957  530.84311221  458.47346772  419.55180325  454.847684
+  117.46899576]
+crispy - INFO - Read data from HDU 0 of ..//ReferenceFiles/Calibra_170425//polychromeR70.fits
 (12,)
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_12_1.png" src="../_images/notebooks_SPIE_Images_12_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_13_1.png" src="../_images/notebooks_SPIE_Images_13_1.png" />
 </div>
 </div>
 </div>
@@ -590,32 +581,42 @@ crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
 <h2>Test fit cutout<a class="headerlink" href="#Test-fit-cutout" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [8]:
+<span></span>In [20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">crispy.unitTests</span> <span class="kn">import</span> <span class="n">testFitCutout</span>
 <span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
-<span class="n">spectral_cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
-<span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectral_cube</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">]</span>
+<span class="n">niter</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">spectral_cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+<span class="n">spectral_cube2</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq_conv&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+<span class="n">RL_cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;RL&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="n">niter</span><span class="p">)</span>
+<span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectral_cube</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="mi">54</span><span class="p">,</span><span class="mi">54</span><span class="p">]</span>
+<span class="n">spectrum2</span> <span class="o">=</span> <span class="n">spectral_cube2</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="mi">54</span><span class="p">,</span><span class="mi">54</span><span class="p">]</span>
+<span class="n">spectrumRL</span> <span class="o">=</span> <span class="n">RL_cube</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="mi">54</span><span class="p">,</span><span class="mi">54</span><span class="p">]</span>
 <span class="n">optspect</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">optspect</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="mi">54</span><span class="p">,</span><span class="mi">54</span><span class="p">]</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
 <span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">lam_midpts</span>
 <span class="c1"># plt.plot(lam_midpts,spectrum,linewidth=2,color=&#39;#1f77b4&#39;)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">spectrum</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#1f77b4&#39;</span><span class="p">)</span>
+<span class="c1"># plt.plot(lam_midpts,spectrum,&#39;o-&#39;,color=&#39;#1f77b4&#39;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">spectrum</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">spectrum2</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spectrum2</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spectrumRL</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">spectrumRL</span><span class="o">*</span><span class="n">ratio</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">)</span>
 <span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;optext&quot;</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">lam_midpts</span>
 <span class="n">spect</span> <span class="o">=</span> <span class="n">optspect</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="mi">54</span><span class="p">,</span><span class="mi">54</span><span class="p">]</span>
-<span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spect</span><span class="p">)</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spectrum2</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spect</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">ratio</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">spect</span><span class="o">*</span><span class="n">ratio</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#d62728&#39;</span><span class="p">)</span>
+<span class="c1"># plt.plot(lam_midpts,spect*ratio,&#39;o-&#39;,color=&#39;#d62728&#39;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">spect</span><span class="o">*</span><span class="n">ratio</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Counts (arbitrary)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Optimal and least squares methods&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;Least squares extraction&quot;</span><span class="p">,</span><span class="s2">&quot;Optimal extraction&quot;</span><span class="p">],</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;Least squares extraction&quot;</span><span class="p">,</span><span class="s2">&quot;Least squares smoothed&quot;</span><span class="p">,</span><span class="s2">&quot;Richardson-Lucy, n=</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">niter</span><span class="p">,</span><span class="s2">&quot;Optimal extraction&quot;</span><span class="p">],</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/Downloads/OptimalVSlstsq.png&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -626,41 +627,78 @@ crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
-crispy - INFO - Reduced cube will have 11 wavelength bins
-crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq.fits
-crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_resid.fits
-crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_lstsq_model.fits
-crispy - INFO - Elapsed time: 3.942860s
-crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
-crispy - INFO - Reduced cube will have 26 wavelength bins
-crispy - INFO - Writing data to ../../../crispy/SimResults/BB_red_optext.fits
-crispy - INFO - Elapsed time: 1.575390s
-[  709.79148909   877.66751242  1007.85876998  1091.71198625  1130.21669437
-  1152.97189108  1212.19484587  1335.52753127  1574.56883724  1698.23212949
-  1753.2636447   1830.19850575  1916.58142738  2023.31571129  2037.32482301
-  2164.32821445  2210.22836009  2032.92731047  1939.36155509  1977.25413784
-  2012.95929796  2002.24151255  1822.13978     1553.69329229  1088.44415334
-   525.95026354]
-crispy - INFO - Reduced cube will have 11 wavelength bins
-[ 609.9964569   620.11350281  630.39834414  640.85376386  651.48259108
-  662.28770183  673.27201986  684.43851739  695.79021595  707.33018716
-  719.06155361]
-crispy - INFO - Reduced cube will have 26 wavelength bins
-[ 607.10887147  611.34869295  615.61812376  619.91737068  624.24664194
-  628.6061472   632.99609763  637.41670582  641.86818589  646.35075344
-  650.86462556  655.41002088  659.98715953  664.59626322  669.23755516
-  673.91126015  678.61760456  683.35681631  688.12912494  692.9347616
-  697.77395902  702.64695159  707.55397533  712.49526788  717.47106857
-  722.48161839]
-0.248834361447
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
+crispy - INFO - Reduced cube will have 23 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/BB_red_lstsq_resid.fits
+crispy - INFO - Writing data to ..//SimResults/BB_red_lstsq_model.fits
+crispy - INFO - Elapsed time: 9.811288s
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
+crispy - INFO - Reduced cube will have 23 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/BB_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/BB_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 86.092133s
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
+crispy - INFO - Reduced cube will have 23 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/BB_red_RL_resid.fits
+crispy - INFO - Writing data to ..//SimResults/BB_red_RL_model.fits
+crispy - INFO - Elapsed time: 9.496640s
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
+crispy - INFO - Reduced cube will have 23 wavelength bins
+crispy - INFO - Elapsed time: 1.851557s
+[  966.72715824  1181.13275563  1336.82460971  1429.66716317  1449.88065036
+  1520.06275589  1659.48795903  1982.06303647  2137.83299707  2202.92063354
+  2295.18410426  2416.95325151  2441.46158831  2555.72005129  2651.14485437
+  2414.65131713  2303.03554857  2344.38337066  2357.46086189  2226.14746258
+  1914.69159057  1379.19412664   659.5318317 ]
+crispy - INFO - Reduced cube will have 23 wavelength bins
+[ 607.38448306  612.18168006  617.01676591  621.89003987  626.80180353
+  631.75236091  636.7420184   641.77108481  646.8398714   651.94869189
+  657.09786247  662.28770183  667.51853118  672.79067426  678.10445737
+  683.46020938  688.85826179  694.29894867  699.78260676  705.30957546
+  710.88019683  716.49481565  722.15377942]
+crispy - INFO - Reduced cube will have 23 wavelength bins
+[ 607.38448306  612.18168006  617.01676591  621.89003987  626.80180353
+  631.75236091  636.7420184   641.77108481  646.8398714   651.94869189
+  657.09786247  662.28770183  667.51853118  672.79067426  678.10445737
+  683.46020938  688.85826179  694.29894867  699.78260676  705.30957546
+  710.88019683  716.49481565  722.15377942]
+0.178905387765
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_14_1.png" src="../_images/notebooks_SPIE_Images_14_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_15_1.png" src="../_images/notebooks_SPIE_Images_15_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">spectral_cube2</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span><span class="n">vmin</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[21]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x18179bb790&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_SPIE_Images_16_1.png" src="../_images/notebooks_SPIE_Images_16_1.png" />
 </div>
 </div>
 </div>
@@ -668,7 +706,7 @@ crispy - INFO - Reduced cube will have 26 wavelength bins
 <h2>Optimal extraction<a class="headerlink" href="#Optimal-extraction" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [9]:
+<span></span>In [22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -683,7 +721,7 @@ crispy - INFO - Reduced cube will have 26 wavelength bins
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">slicenum_list</span><span class="p">)):</span>
     <span class="n">slicenum</span><span class="o">=</span><span class="n">slicenum_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
-    <span class="n">subim</span> <span class="o">=</span> <span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">lensnum</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span>
+    <span class="n">subim</span> <span class="o">=</span> <span class="n">testCutout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">lensX</span><span class="o">=</span><span class="n">lensnum</span><span class="p">,</span><span class="n">lensY</span><span class="o">=</span><span class="n">lensnum</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subim</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">slicenum</span><span class="p">]))</span><span class="o">-</span><span class="mf">0.5</span>
     <span class="n">sig</span><span class="o">=</span><span class="mi">2</span><span class="o">/</span><span class="mf">2.35</span>
@@ -709,27 +747,27 @@ crispy - INFO - Reduced cube will have 26 wavelength bins
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Reduced cube will have 11 wavelength bins
-crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
+crispy - INFO - Reduced cube will have 23 wavelength bins
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
 [518, 524, 537, 569]
-crispy - INFO - Writing data to ../../../crispy/unitTestsOutputs/cutout.fits
+crispy - INFO - Writing data to ..//unitTestsOutputs/cutout.fits
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_16_1.png" src="../_images/notebooks_SPIE_Images_16_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_18_1.png" src="../_images/notebooks_SPIE_Images_18_1.png" />
 </div>
 </div>
 </div>
 <div class="section" id="Plot-distortion-map">
 <h2>Plot distortion map<a class="headerlink" href="#Plot-distortion-map" title="Permalink to this headline">¶</a></h2>
 <p>After thinking more about this, this is maybe not the correct way to
-calculate the distortion map...</p>
+calculate the distortion map…</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [10]:
+<span></span>In [23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -794,76 +832,78 @@ calculate the distortion map...</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_19_1.png" src="../_images/notebooks_SPIE_Images_19_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_21_1.png" src="../_images/notebooks_SPIE_Images_21_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_19_2.png" src="../_images/notebooks_SPIE_Images_19_2.png" />
+<img alt="../_images/notebooks_SPIE_Images_21_2.png" src="../_images/notebooks_SPIE_Images_21_2.png" />
 </div>
 </div>
-<div class="section" id="Generic-SPIE-images">
-<h3>Generic SPIE images<a class="headerlink" href="#Generic-SPIE-images" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [11]:
+<span></span>In [24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">crispy.params</span> <span class="kn">import</span> <span class="n">Params</span>
-<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.locate_psflets</span> <span class="kn">import</span> <span class="n">PSFLets</span>
+<span class="n">psftool</span> <span class="o">=</span> <span class="n">PSFLets</span><span class="p">()</span>
+<span class="n">lamlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/IFS/charis-dep/code/calibrations/lowres/lamsol.dat&quot;</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">allcoef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/IFS/charis-dep/code/calibrations/lowres/lamsol.dat&quot;</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">:]</span>
+<span class="k">print</span> <span class="n">lamlist</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">psftool</span><span class="o">.</span><span class="n">geninterparray</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span> <span class="n">allcoef</span><span class="p">)</span>
+<span class="n">newcoefs</span> <span class="o">=</span> <span class="n">psftool</span><span class="o">.</span><span class="n">monochrome_coef</span><span class="p">(</span><span class="mf">1550.</span><span class="p">,</span> <span class="n">lamlist</span><span class="p">,</span> <span class="n">allcoef</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">newcoefs</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[ 1096.63315843  1107.6545049   1118.78661775  1130.03061019  1141.38760663
+  1152.85874278  1164.44516577  1176.14803425  1187.96851851  1199.90780061
+  1211.96707449  1224.14754609  1236.45043347  1248.87696691  1261.4283891
+  1274.10595517  1286.91093291  1299.8446028   1312.90825825  1326.10320561
+  1339.43076439  1352.89226737  1366.48906071  1380.22250409  1394.09397087
+  1408.1048482   1422.2565372   1436.55045304  1450.98802511  1465.5706972
+  1480.29992758  1495.17718919  1510.20396976  1525.38177199  1540.71211367
+  1556.19652784  1571.83656296  1587.63378304  1603.58976783  1619.70611293
+  1635.98443     1652.42634686  1669.03350774  1685.80757337  1702.75022115
+  1719.86314538  1737.14805735  1754.60668558  1772.24077593  1790.05209184
+  1808.04241446  1826.21354282  1844.56729405  1863.10550356  1881.83002516
+  1900.74273134  1919.84551337  1939.14028156  1958.62896539  1978.31351375
+  1998.1958951   2018.27809772  2038.56212982  2059.05001984  2079.74381657
+  2100.64558942  2121.75742858  2143.08144525  2164.61977185  2186.37456223
+  2208.34799189  2230.54225819  2252.95958057  2275.60220079  2298.47238312
+  2321.57241461  2344.90460528  2368.47128836  2392.27482054  2416.31758219
+  2440.60197762]
+[  1.02809860e+03  -6.91921134e+00  -3.48952882e-04   5.25813509e-07
+  -1.36282008e+01  -5.30316402e-04   1.14037045e-06   3.55879515e-04
+   1.11823024e-06   9.28878964e-07   1.02061218e+03   1.33163261e+01
+   6.95924235e-04  -9.96713088e-07  -6.76149699e+00  -6.20708415e-04
+   1.61432926e-07   2.71700650e-04  -9.64295074e-07   3.38415501e-07]
+</pre></div></div>
+</div>
+<div class="section" id="Generic-SPIE-images">
+<h3>Generic SPIE images<a class="headerlink" href="#Generic-SPIE-images" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[11]:
+<span></span>In [25]:
 </pre></div>
 </div>
-<div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>SIMPLE  =                    T / conforms to FITS standard
-BITPIX  =                    8 / array data type
-NAXIS   =                    0 / number of array dimensions
-EXTEND  =                    T
-COMMENT
-COMMENT ************************************************************
-COMMENT ********************** General parameters ******************
-COMMENT ************************************************************
-COMMENT
-NLENS   =                  108 / # lenslets across array
-PITCH   =             0.000174 / Lenslet pitch (meters)
-INTERLAC=                    2 / Interlacing
-PHILENS =    26.56505117707799 / Rotation angle of the lenslets (deg)
-PIXSIZE =              1.3E-05 / Pixel size (meters)
-LENSAMP =                  0.5 / Lenslet sampling (lam/D)
-LSAMPWAV=                600.0 / Lenslet sampling wavelength (nm)
-FWHM    =                    2 / FHWM of PSFLet at detector (pixels)
-FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
-NPIX    =                 1024 / Number of detector pixels
-DISPDIST=                    F / Use PISCES distortion/dispersion?
-COMMENT
-COMMENT ************************************************************
-COMMENT ********************** Cube Extraction *********************
-COMMENT ************************************************************
-COMMENT
-R       =                   70 / Spectral resolution of final cube
-CALDIR  = &#39;Calibra_170425&#39;     / Directory of wavelength solution
-CUBEMODE= &#39;Least squares&#39;      / Method used to extract data cube
-LAM_MIN =    610.4545454545455 / Minimum (central) wavelength of extracted cube
-LAM_MAX =    719.5454545454545 / Maximum (central) wavelength of extracted cube
-DLOGLAM =  0.01771264020071195 / Log spacing of extracted wavelength bins
-NLAM    =                   11 / Number of extracted wavelengths
-FLAT    =                    T / Applied lenslet flatfield
-MASK    =                    T / Applied lenslet mask
-SMOOTHED=                    T / Cube smoothed over bad lenslets
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [12]:
+<span></span>In [26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -878,7 +918,7 @@ SMOOTHED=                    T / Cube smoothed over bad lenslets
 <span class="n">cube</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/with_lowfc/os5_spc_031.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
 <span class="k">print</span> <span class="n">cube</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cube</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">70</span><span class="p">:</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="o">-</span><span class="mi">40</span><span class="p">]))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cube</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">70</span><span class="p">:</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="o">-</span><span class="mi">40</span><span class="p">]),</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">cube</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">70</span><span class="p">:</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="o">-</span><span class="mi">40</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">h</span><span class="p">,</span><span class="n">w</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">70</span><span class="p">:</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="o">-</span><span class="mi">40</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">outarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="o">*</span><span class="mi">3</span><span class="p">))</span>
@@ -886,7 +926,7 @@ SMOOTHED=                    T / Cube smoothed over bad lenslets
 <span class="n">outarray</span><span class="p">[:,</span><span class="n">w</span><span class="p">:</span><span class="n">w</span><span class="o">*</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[</span><span class="mi">22</span><span class="p">,</span><span class="mi">70</span><span class="p">:</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="o">-</span><span class="mi">40</span><span class="p">]</span>
 <span class="n">outarray</span><span class="p">[:,</span><span class="n">w</span><span class="o">*</span><span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="n">cube</span><span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="mi">70</span><span class="p">:</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span><span class="mi">40</span><span class="p">:</span><span class="o">-</span><span class="mi">40</span><span class="p">]</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">outarray</span><span class="p">),</span><span class="n">vmin</span><span class="o">=</span><span class="mf">1e-14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">outarray</span><span class="p">),</span><span class="n">vmin</span><span class="o">=</span><span class="mf">1e-14</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;611 nm&#39;</span><span class="p">,</span><span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="o">/</span><span class="mf">2.</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">26</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;660 nm&#39;</span><span class="p">,</span><span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="o">+</span><span class="n">w</span><span class="o">/</span><span class="mf">2.</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">26</span><span class="p">)</span>
@@ -904,13 +944,12 @@ SMOOTHED=                    T / Cube smoothed over bad lenslets
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Populating the interactive namespace from numpy and matplotlib
-crispy - INFO - Reduced cube will have 26 wavelength bins
-[ 607.10887147  611.34869295  615.61812376  619.91737068  624.24664194
-  628.6061472   632.99609763  637.41670582  641.86818589  646.35075344
-  650.86462556  655.41002088  659.98715953  664.59626322  669.23755516
-  673.91126015  678.61760456  683.35681631  688.12912494  692.9347616
-  697.77395902  702.64695159  707.55397533  712.49526788  717.47106857
-  722.48161839]
+crispy - INFO - Reduced cube will have 23 wavelength bins
+[ 607.38448306  612.18168006  617.01676591  621.89003987  626.80180353
+  631.75236091  636.7420184   641.77108481  646.8398714   651.94869189
+  657.09786247  662.28770183  667.51853118  672.79067426  678.10445737
+  683.46020938  688.85826179  694.29894867  699.78260676  705.30957546
+  710.88019683  716.49481565  722.15377942]
 [ 600.6  603.3  606.   608.7  611.4  614.1  616.8  619.5  622.2  624.9
   627.6  630.3  633.   635.7  638.4  641.1  643.8  646.5  649.2  651.9
   654.6  657.3  660.   662.7  665.4  668.1  670.8  673.5  676.2  678.9
@@ -926,23 +965,24 @@ crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/with_lowfc/os5_spc
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_22_1.png" src="../_images/notebooks_SPIE_Images_22_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_25_1.png" src="../_images/notebooks_SPIE_Images_25_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_22_2.png" src="../_images/notebooks_SPIE_Images_22_2.png" />
+<img alt="../_images/notebooks_SPIE_Images_25_2.png" src="../_images/notebooks_SPIE_Images_25_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [13]:
+<span></span>In [27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">IFS_detector</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5_SIM_2.0_noiseless/average/average_target_star_detector.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span></span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span>
+<span class="n">IFS_detector</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5_SIM_2.0_noiseless/average/average_target_star_detector.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
 <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="kn">as</span> <span class="nn">colors</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">IFS_detector</span><span class="p">[</span><span class="mi">300</span><span class="p">:</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span><span class="mi">200</span><span class="p">:</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span>
@@ -969,12 +1009,12 @@ crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/OS5_SIM_2.0_noiseless/
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_23_1.png" src="../_images/notebooks_SPIE_Images_23_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_26_1.png" src="../_images/notebooks_SPIE_Images_26_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [14]:
+<span></span>In [28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1005,25 +1045,25 @@ crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/OS5_SIM_2.0_t1000/aver
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_24_1.png" src="../_images/notebooks_SPIE_Images_24_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_27_1.png" src="../_images/notebooks_SPIE_Images_27_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [20]:
+<span></span>In [29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">IFS_detector</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/average.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span></span><span class="n">IFS_detector</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5_SIM_2.0_t1000/average_47Umac/average_target.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">IFS_detector</span><span class="p">[</span><span class="mi">400</span><span class="p">:</span><span class="o">-</span><span class="mi">130</span><span class="p">,</span><span class="mi">300</span><span class="p">:</span><span class="o">-</span><span class="mi">300</span><span class="p">]</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">IFS_detector</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">30</span><span class="p">:</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">:</span><span class="o">-</span><span class="mi">30</span><span class="p">]</span>
 <span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/Downloads/NoisyDetectorMap_Starshade.png&quot;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="c1"># plt.savefig(&quot;/Users/mrizzo/Downloads/NoisyDetectorMap_Starshade.png&quot;,dpi=200)</span>
 </pre></div>
 </div>
 </div>
@@ -1032,55 +1072,20 @@ crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/OS5_SIM_2.0_t1000/aver
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 0 of ..//SimResults/average.fits
-9.26658543922e-05
+crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/OS5_SIM_2.0_t1000/average_47Umac/average_target.fits
+-2.66813e-09
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_25_1.png" src="../_images/notebooks_SPIE_Images_25_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_28_1.png" src="../_images/notebooks_SPIE_Images_28_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [38]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">IFS_detector</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/normalized_cube.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
-<span class="n">img</span> <span class="o">=</span> <span class="n">IFS_detector</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">38</span><span class="p">:</span><span class="o">-</span><span class="mi">23</span><span class="p">,</span><span class="mi">36</span><span class="p">:</span><span class="o">-</span><span class="mi">40</span><span class="p">]</span>
-<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span><span class="p">,</span><span class="n">vmin</span><span class="o">=-</span><span class="mf">1e-10</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mf">5e-10</span><span class="p">)</span>
-<span class="c1">#plt.colorbar(fraction=0.046, pad=0.04)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/Downloads/NoisyExtractedCube_Starshade.png&quot;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ..//SimResults/normalized_cube.fits
--8.97380194198e-11
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_26_1.png" src="../_images/notebooks_SPIE_Images_26_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [15]:
+<span></span>In [31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1122,14 +1127,14 @@ crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/OS5_SIM_2.0_noiseless/
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_27_1.png" src="../_images/notebooks_SPIE_Images_27_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_29_1.png" src="../_images/notebooks_SPIE_Images_29_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_27_2.png" src="../_images/notebooks_SPIE_Images_27_2.png" />
+<img alt="../_images/notebooks_SPIE_Images_29_2.png" src="../_images/notebooks_SPIE_Images_29_2.png" />
 </div>
 </div>
 </div>
@@ -1137,7 +1142,7 @@ crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/OS5_SIM_2.0_noiseless/
 <h3>Residuals<a class="headerlink" href="#Residuals" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [16]:
+<span></span>In [32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1164,17 +1169,17 @@ crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/OS5_SIM_2.0_noiseless/
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Read data from HDU 1 of ../../../crispy/Inputs/BB.fits
-crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_resid.fits
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
+crispy - INFO - Read data from HDU 1 of ..//SimResults/BB_red_lstsq_resid.fits
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[16]:
+<span></span>Out[32]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.colorbar.Colorbar at 0x12169c190&gt;
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x1c1c4a7dd0&gt;
 </pre></div>
 </div>
 </div>
@@ -1182,12 +1187,12 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_29_2.png" src="../_images/notebooks_SPIE_Images_29_2.png" />
+<img alt="../_images/notebooks_SPIE_Images_31_2.png" src="../_images/notebooks_SPIE_Images_31_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [17]:
+<span></span>In [34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1212,7 +1217,7 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">BBres</span><span class="p">[</span><span class="mi">850</span><span class="p">:</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span><span class="mi">150</span><span class="p">:</span><span class="mi">300</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">BB</span><span class="p">[</span><span class="mi">850</span><span class="p">:</span><span class="o">-</span><span class="mi">120</span><span class="p">,</span><span class="mi">150</span><span class="p">:</span><span class="mi">300</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Residuals (</span><span class="si">% o</span><span class="s1">f data max)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Residuals (\</span><span class="si">% o</span><span class="s1">f data max)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1222,7 +1227,7 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_30_0.png" src="../_images/notebooks_SPIE_Images_30_0.png" />
+<img alt="../_images/notebooks_SPIE_Images_32_0.png" src="../_images/notebooks_SPIE_Images_32_0.png" />
 </div>
 </div>
 </div>
@@ -1230,7 +1235,7 @@ crispy - INFO - Read data from HDU 1 of ../../../crispy/SimResults/BB_red_lstsq_
 <h3>Simple broadband map<a class="headerlink" href="#Simple-broadband-map" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [39]:
+<span></span>In [35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1263,23 +1268,25 @@ crispy - INFO - Read data from HDU 1 of ..//Inputs/Flat637.fits
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_32_1.png" src="../_images/notebooks_SPIE_Images_32_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_34_1.png" src="../_images/notebooks_SPIE_Images_34_1.png" />
 </div>
 </div>
 </div>
 <div class="section" id="Bijan's-SPC-PSF-explanation">
-<h3>Bijan&#8217;s SPC PSF explanation<a class="headerlink" href="#Bijan's-SPC-PSF-explanation" title="Permalink to this headline">¶</a></h3>
+<h3>Bijan’s SPC PSF explanation<a class="headerlink" href="#Bijan's-SPC-PSF-explanation" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">crispy.params</span> <span class="kn">import</span> <span class="n">Params</span>
-<span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">adjust_krist_header</span>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">adjust_krist_header</span>
 <span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">polychromeIFS</span>
 
-<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="s1">&#39;../../../crispy&#39;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/WFIRST/&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
 <span class="n">offaxis</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span><span class="p">)</span>
 <span class="n">adjust_krist_header</span><span class="p">(</span><span class="n">offaxis</span><span class="p">,</span><span class="n">lamc</span><span class="o">=</span><span class="mf">660.</span><span class="p">)</span>
 <span class="n">fileshape</span> <span class="o">=</span> <span class="n">offaxis</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
@@ -1298,15 +1305,17 @@ crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/offaxis/spc_offaxi
 crispy - INFO - The number of input pixels per lenslet is 5.000000
 crispy - INFO - Using PSFlet gaussian approximation
 crispy - WARNING - Assuming slices are evenly spread in wavelengths
-crispy - INFO - Writing data to ../../../crispy/SimResults/imagePlaneRot.fits
-crispy - INFO - Writing data to ../../../crispy/SimResults/detectorFrame.fits
+crispy - INFO - Creating Gaussian PSFLet templates
+crispy - INFO - Writing data to ..//SimResults/imagePlaneRot.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFrame.fits
 crispy - INFO - Done.
-crispy - INFO - Performance: 28 seconds total
+crispy - INFO - Performance: 37 seconds total
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [6]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1362,12 +1371,12 @@ crispy - INFO - Performance: 28 seconds total
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_35_1.png" src="../_images/notebooks_SPIE_Images_35_1.png" />
+<img alt="../_images/notebooks_SPIE_Images_37_1.png" src="../_images/notebooks_SPIE_Images_37_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [9]:
+<span></span>In [4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1393,10 +1402,110 @@ crispy - INFO - Performance: 28 seconds total
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_SPIE_Images_36_0.png" src="../_images/notebooks_SPIE_Images_36_0.png" />
+<img alt="../_images/notebooks_SPIE_Images_38_0.png" src="../_images/notebooks_SPIE_Images_38_0.png" />
 </div>
 </div>
-</div>
+import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
+matplotlib.use("Agg")
+import matplotlib.animation as animation
+plt.rc('font', family='serif', serif='Times',size=15)
+plt.rc('text', usetex=True)
+plt.rc('xtick', labelsize=20)
+plt.rc('xtick.major', size=10)
+plt.rc('ytick.major', size=10)
+plt.rc('ytick', labelsize=20)
+plt.rc('axes', labelsize=20)
+plt.rc('figure',titlesize=25)
+plt.rcParams['image.origin'] = 'lower'
+plt.rcParams['image.interpolation'] = 'nearest'
+plt.rcParams['axes.linewidth'] = 2.
+
+import logging as log
+from crispy.tools.initLogger import getLogger
+log = getLogger('main')
+from crispy.tools.image import Imageaveragepath = '/Users/mrizzo/IFS/OS5_SIM_2.0_t1000_770/average_47Umac_770/average_target_star_detector_red_optext_flatfielded.fits'
+average = Image(averagepath)
+
+# Set up formatting for the movie files
+Writer = animation.writers['ffmpeg']
+writer = Writer(fps=1, metadata=dict(artist='Maxime Rizzo'), bitrate=1800)
+
+fig = plt.figure(figsize=(10,10),facecolor='black')
+
+ims = []
+trim=5
+plt.axis('off')
+for i in np.arange(average.data.shape[0]):
+    ims.append((plt.imshow(average.data[i,trim:-trim,trim:-trim],cmap='inferno'),))
+
+im_ani = animation.ArtistAnimation(fig, ims, interval=500, repeat_delay=3000)
+im_ani.save('optext.mp4', writer=writer,savefig_kwargs={'facecolor':'black'})averagepath = '/Users/mrizzo/IFS/OS5_SIM_2.0_t1000_770/average_47Umac_770/convolved_normalized.fits'
+average = Image(averagepath)
+
+# Set up formatting for the movie files
+Writer = animation.writers['ffmpeg']
+writer = Writer(fps=1, metadata=dict(artist='Maxime Rizzo'), bitrate=1800)
+
+fig = plt.figure(figsize=(10,10),facecolor='black')
+
+average.data[average.data==0] = np.NaN
+ims = []
+trim=30
+plt.axis('off')
+for i in np.arange(average.data.shape[0]):
+    ims.append((plt.imshow(average.data[i,trim:-trim,trim:-trim],cmap='inferno',vmin=1e-10,vmax=6e-9),))
+
+im_ani = animation.ArtistAnimation(fig, ims, interval=500, repeat_delay=3000)
+im_ani.save('convolved.mp4', writer=writer,savefig_kwargs={'facecolor':'black'})averagefolder = '/Users/mrizzo/IFS/OS5_example_2.0_t1000/average/'
+from scipy import ndimage
+from crispy.tools.inputScene import calc_contrast
+fontsize=25
+# from scipy.interpolate import interp1d
+res = np.loadtxt(averagefolder+'/final_signal_cube_1000.txt')
+dat = np.mean(res,axis=0)
+err = np.std(res,axis=0)
+
+Nlam = 150
+lams=660.*np.linspace(1-par.BW/2.,1+par.BW/2.,Nlam)
+par.wavecalDir = par.prefix+'/wavecalR50_660/'
+lam_midpts660,junk = calculateWaveList(par,method='optext')
+real_spectr660 = calc_contrast(lams,distance=3.6, radius=1.27,filename=par.codeRoot+"/Inputs/Jupiter_1x_5AU_90deg.dat",albedo=0.25)
+plt.figure(figsize=(20,12))
+plt.plot(lams,real_spectr660,color='#1777b4',label='Original spectrum',lw=3)
+smooth = ndimage.filters.gaussian_filter1d(real_spectr660,2.*Nlam/19./2.35,order=0,mode='nearest')
+
+plt.fill_between(lams,0.9*real_spectr660,1.1*real_spectr660,color='Gray',alpha=0.3,label='10% envelope of original spectrum')
+plt.plot(lams,smooth,label='R=50 spectrum',lw=3,color='#d62728',linestyle='--')
+
+ratio660 = np.mean(real_spectr660)/np.mean(dat)
+print("Correction factor due to incorrect photon-counting compensation: ",ratio660)
+plt.errorbar(lam_midpts660,dat*ratio660,yerr=err*ratio660,fmt='o',markersize=15,elinewidth=3,color='#2ca02c',label='Average and 1-$\sigma$ deviation of recovered spectrum')
+locs,labels = plt.yticks()
+plt.yticks(locs, map(lambda x: "%.1f" % x, locs*1e9))
+plt.tick_params(axis='both', which='major', labelsize=fontsize)
+plt.ylabel('Contrast (x1e-9)',fontsize=fontsize)
+plt.xlabel('Wavelength (nm)',fontsize=fontsize)
+plt.title('OS5: 47 Uma c with RDI, 100 ks on target, average',fontsize=35)
+plt.legend(fontsize=fontsize,loc=3)
+plt.tight_layout()
+plt.savefig("/Users/mrizzo/Downloads/OS5_27hrs.png",dpi=200)
+
+plt.figure(figsize=(20,12))
+plt.plot(lams,real_spectr660,color='#1777b4',label='Original spectrum',lw=3)
+plt.fill_between(lams,0.9*real_spectr660,1.1*real_spectr660,color='Gray',alpha=0.3,label='10% envelope of original spectrum')
+plt.plot(lams,smooth,label='R=50 spectrum',lw=3,color='#d62728',linestyle='--')
+plt.errorbar(lam_midpts660,res[60]*ratio660,yerr=err*ratio660,fmt='o',markersize=15,elinewidth=3,color='#2ca02c',label='Recovered spectrum')
+locs,labels = plt.yticks()
+plt.yticks(locs, map(lambda x: "%.1f" % x, locs*1e9))
+plt.tick_params(axis='both', which='major', labelsize=fontsize)
+plt.ylabel('Contrast (x1e-9)',fontsize=fontsize)
+plt.xlabel('Wavelength (nm)',fontsize=fontsize)
+plt.title('OS5: 47 Uma c with RDI, 100 ks on target, single trial',fontsize=35)
+plt.legend(fontsize=fontsize,loc=3)
+plt.tight_layout()
+plt.savefig("/Users/mrizzo/Downloads/OS5_27hrs_single_trial.png",dpi=200)</div>
 </div>
 </div>
 
@@ -1418,7 +1527,7 @@ crispy - INFO - Performance: 28 seconds total
 <li><a class="reference internal" href="#Generic-SPIE-images">Generic SPIE images</a></li>
 <li><a class="reference internal" href="#Residuals">Residuals</a></li>
 <li><a class="reference internal" href="#Simple-broadband-map">Simple broadband map</a></li>
-<li><a class="reference internal" href="#Bijan's-SPC-PSF-explanation">Bijan&#8217;s SPC PSF explanation</a></li>
+<li><a class="reference internal" href="#Bijan's-SPC-PSF-explanation">Bijan’s SPC PSF explanation</a></li>
 </ul>
 </li>
 </ul>
@@ -1437,8 +1546,8 @@ crispy - INFO - Performance: 28 seconds total
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

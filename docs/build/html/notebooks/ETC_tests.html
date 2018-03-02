@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Exposure time calculator tests &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -34,7 +31,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -232,7 +229,11 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="Exposure-time-calculator-tests">
 <h1>Exposure time calculator tests<a class="headerlink" href="#Exposure-time-calculator-tests" title="Permalink to this headline">¶</a></h1>
@@ -509,16 +510,6 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [35]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [64]:
@@ -723,8 +714,7 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 </div>
 <div class="output_area docutils container">
 <div class="math">
-\[[2.6329225 \times 10^{13},~2.9620378 \times 10^{13},~1.9597321 \times 10^{13},~\dots, 4.4879361 \times 10^{13},~4.4879361 \times 10^{13},~4.4879361 \times 10^{13}] \; \mathrm{cm}\]</div>
-</div>
+$[2.6329225 \times 10^{13},~2.9620378 \times 10^{13},~1.9597321 \times 10^{13},~\dots, 4.4879361 \times 10^{13},~4.4879361 \times 10^{13},~4.4879361 \times 10^{13}] \; \mathrm{cm}$</div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
@@ -1658,17 +1648,7 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_ETC_tests_11_0.png" src="../_images/notebooks_ETC_tests_11_0.png" />
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span>
-</pre></div>
+<img alt="../_images/notebooks_ETC_tests_10_0.png" src="../_images/notebooks_ETC_tests_10_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1746,16 +1726,6 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [205]:
 </pre></div>
 </div>
@@ -1771,7 +1741,7 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="k">class</span> <span class="nc">Telescope</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="n">D</span> <span class="o">=</span> <span class="mf">2.37</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="n">D</span> <span class="o">=</span> <span class="mf">2.37</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">,</span>
                     <span class="n">obs</span> <span class="o">=</span> <span class="mf">0.32</span><span class="p">,</span>
                     <span class="n">strut_obs</span> <span class="o">=</span> <span class="mf">0.07</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diam</span> <span class="o">=</span> <span class="n">D</span>
@@ -1792,29 +1762,29 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
                     <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">diam</span><span class="p">,</span>
                     <span class="s1">&#39;Comment&#39;</span><span class="p">:</span> <span class="s1">&#39;Primary mirror diameter&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;Formula&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="s1">r&#39;$$D_\mathrm{PM}$$&#39;</span><span class="p">}</span>
+                    <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$D_\mathrm{PM}$$&#39;</span><span class="p">}</span>
         <span class="n">_cobscuration</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Central obscuration&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cobscuration</span><span class="p">,</span>
                             <span class="s1">&#39;Comment&#39;</span><span class="p">:</span> <span class="s1">&#39;pct of primary mirror diameter&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;Formula&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="s1">r&#39;$$\mathrm{oc}$$&#39;</span><span class="p">}</span>
+                            <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$\mathrm{oc}$$&#39;</span><span class="p">}</span>
         <span class="n">_sobscuration</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Strut obscuration&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sobscuration</span><span class="p">,</span>
                             <span class="s1">&#39;Comment&#39;</span><span class="p">:</span> <span class="s1">&#39;pct of primary mirror area&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;Formula&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="s1">r&#39;$$\mathrm{os}$$&#39;</span><span class="p">}</span>
+                            <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$\mathrm{os}$$&#39;</span><span class="p">}</span>
         <span class="n">_clearApFrac</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Clear aperture fraction&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">clearApFrac</span><span class="p">,</span>
                     <span class="s1">&#39;Comment&#39;</span><span class="p">:</span> <span class="s1">&#39;After obscuration by secondary mirror and struts&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;Formula&#39;</span><span class="p">:</span> <span class="s1">r&#39;$$(1-</span><span class="si">%s</span><span class="s1">)\times (1-</span><span class="si">%s</span><span class="s1">^2)$$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_sobscuration</span><span class="p">[</span><span class="s1">&#39;Symbol&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;Formula&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$(1-</span><span class="si">%s</span><span class="s1">)\times (1-</span><span class="si">%s</span><span class="s1">^2)$$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_sobscuration</span><span class="p">[</span><span class="s1">&#39;Symbol&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
                                                            <span class="n">_cobscuration</span><span class="p">[</span><span class="s1">&#39;Symbol&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)),</span>
-                    <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="s1">r&#39;$$\mathrm{obsc}$$&#39;</span><span class="p">}</span>
+                    <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$\mathrm{obsc}$$&#39;</span><span class="p">}</span>
         <span class="n">_Aeff</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="s1">&#39;Effective aperture&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Aeff</span><span class="p">,</span>
                     <span class="s1">&#39;Comment&#39;</span><span class="p">:</span> <span class="s1">&#39;After obscuration by secondary mirror and struts&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;Formula&#39;</span><span class="p">:</span> <span class="s1">r&#39;$$</span><span class="si">%s</span><span class="s1"> \times</span><span class="si">%s</span><span class="s1">$$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_diam</span><span class="p">[</span><span class="s1">&#39;Symbol&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;Formula&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$</span><span class="si">%s</span><span class="s1"> \times</span><span class="si">%s</span><span class="s1">$$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_diam</span><span class="p">[</span><span class="s1">&#39;Symbol&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
                                                 <span class="n">_clearApFrac</span><span class="p">[</span><span class="s1">&#39;Symbol&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)),</span>
-                    <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="s1">r&#39;$$A_\mathrm{eff}$$&#39;</span><span class="p">}</span>
+                    <span class="s1">&#39;Symbol&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$A_\mathrm{eff}$$&#39;</span><span class="p">}</span>
         <span class="n">tab</span> <span class="o">=</span> <span class="n">QTable</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">_diam</span><span class="p">,</span>
                                                <span class="n">_cobscuration</span><span class="p">,</span>
                                                <span class="n">_sobscuration</span><span class="p">,</span>
@@ -2027,8 +1997,8 @@ None
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

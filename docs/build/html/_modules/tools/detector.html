@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>tools.detector &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -34,7 +31,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -91,148 +88,196 @@
 <span class="kn">from</span> <span class="nn">image</span> <span class="k">import</span> <span class="n">Image</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
 
-<div class="viewcode-block" id="rebinDetector"><a class="viewcode-back" href="../../tools.html#tools.detector.rebinDetector">[docs]</a><span class="k">def</span> <span class="nf">rebinDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">finalFrame</span><span class="p">,</span><span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="rebinDetector"><a class="viewcode-back" href="../../tools.html#tools.detector.rebinDetector">[docs]</a><span class="k">def</span> <span class="nf">rebinDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">finalFrame</span><span class="p">,</span> <span class="n">clip</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Rebins the dense detector map with the correct scaling while conserving flux.</span>
 <span class="sd">    This also works with non-integer ratios.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par :   Parameter instance</span>
 <span class="sd">            Contains all IFS parameters</span>
 <span class="sd">    finalFrame : 2D ndarray</span>
 <span class="sd">            Dense detector map to be rebinned.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    detectorFrame : 2D array</span>
 <span class="sd">            Return the detector frame with correct pixel scale.</span>
-<span class="sd">    </span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">detpixprlenslet</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">pitch</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">pixsize</span> 
+    <span class="n">detpixprlenslet</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">pitch</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">pixsize</span>
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Number of detector pixels per lenslet: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">detpixprlenslet</span><span class="p">)</span>
-        
-    <span class="n">newShape</span> <span class="o">=</span> <span class="p">(</span><span class="n">finalFrame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="p">),</span><span class="n">finalFrame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="p">))</span>
+
+    <span class="n">newShape</span> <span class="o">=</span> <span class="p">(</span><span class="n">finalFrame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span>
+                <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="p">),</span> <span class="n">finalFrame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span>
+                <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">pxperdetpix</span><span class="p">))</span>
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Rebinning final detector. Image has dimensions </span><span class="si">%d</span><span class="s1">x</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">newShape</span><span class="p">)</span>
-    <span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">frebin</span><span class="p">(</span><span class="n">finalFrame</span><span class="p">,</span><span class="n">newShape</span><span class="p">)</span> 
-    
+    <span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">frebin</span><span class="p">(</span><span class="n">finalFrame</span><span class="p">,</span> <span class="n">newShape</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">clip</span><span class="p">:</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">detectorFrame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span><span class="p">))</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">detectorFrame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
         <span class="n">detectorFrame</span> <span class="o">=</span> <span class="n">detectorFrame</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span><span class="o">-</span><span class="n">i</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">detectorFrame</span></div>
 
 
-
-<div class="viewcode-block" id="readDetector"><a class="viewcode-back" href="../../tools.html#tools.detector.readDetector">[docs]</a><span class="k">def</span> <span class="nf">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">IFSimage</span><span class="p">,</span><span class="n">inttime</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="viewcode-block" id="readDetector"><a class="viewcode-back" href="../../tools.html#tools.detector.readDetector">[docs]</a><span class="k">def</span> <span class="nf">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">IFSimage</span><span class="p">,</span> <span class="n">inttime</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Read noise, CIC, dark current; NO TRAPS</span>
 <span class="sd">    Input is IFSimage in average photons per second</span>
 <span class="sd">    Quantum efficiency considerations are already taken care of when</span>
 <span class="sd">    generating IFSimage images</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-        
-    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;RN&#39;</span> <span class="ow">in</span> <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">:</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">22</span> <span class="o">+</span> <span class="s1">&#39; Detector readout &#39;</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">20</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;TRANS&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">losses</span><span class="p">,</span><span class="s1">&#39;IFS Transmission factor&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;POL&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">pol</span><span class="p">,</span><span class="s1">&#39;Polarization losses&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;PHCTEFF&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">PhCountEff</span><span class="p">,</span><span class="s1">&#39;Photon counting efficiency&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;NONOISE&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">nonoise</span><span class="p">,</span><span class="s1">&#39;Ignore all noises?&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
-        <span class="k">if</span> <span class="o">~</span><span class="n">par</span><span class="o">.</span><span class="n">nonoise</span><span class="p">:</span>
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;POISSON&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">poisson</span><span class="p">,</span><span class="s1">&#39;Poisson noise?&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;RN&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">RN</span><span class="p">,</span><span class="s1">&#39;Read noise (electrons/read)&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;CIC&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">CIC</span><span class="p">,</span><span class="s1">&#39;Clock-induced charge&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;DARK&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">dark</span><span class="p">,</span><span class="s1">&#39;Dark current&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;Traps&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">Traps</span><span class="p">,</span><span class="s1">&#39;Use traps? T/F&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;EMSTATS&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">EMStats</span><span class="p">,</span><span class="s1">&#39;EM statistics?&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;EMGAIN&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">EMGain</span><span class="p">,</span><span class="s1">&#39;Gain of the EM stage&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;PCBIAS&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">PCbias</span><span class="p">,</span><span class="s1">&#39;To make RN zero-mean &#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;PCMODE&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">PCmode</span><span class="p">,</span><span class="s1">&#39;Photon counting mode?&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">PCmode</span><span class="p">:</span>
-                <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;THRESH&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span><span class="s1">&#39;Photon counting threshold&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;LIFEFRAC&#39;</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">lifefraction</span><span class="p">,</span><span class="s1">&#39;Mission life fraction (changes CTE if &gt;0)&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;INTTIME&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">inttime</span>
 
-    <span class="c1"># just to deal with small numerical errors - normally there is nothing there</span>
-    <span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mf">0.0</span>
-    
-    <span class="n">eff</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">losses</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">PhCountEff</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">pol</span>
-    
-    <span class="n">photoelectrons</span> <span class="o">=</span> <span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span><span class="o">*</span><span class="n">eff</span><span class="o">*</span><span class="n">inttime</span>
-    
+    <span class="k">if</span> <span class="s1">&#39;RN&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">:</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;*&#39;</span> <span class="o">*</span>
+             <span class="mi">22</span> <span class="o">+</span>
+             <span class="s1">&#39; Detector readout &#39;</span> <span class="o">+</span>
+             <span class="s1">&#39;*&#39;</span> <span class="o">*</span>
+             <span class="mi">20</span><span class="p">),</span>
+            <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;comment&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;TRANS&#39;</span><span class="p">,</span>
+             <span class="n">par</span><span class="o">.</span><span class="n">losses</span><span class="p">,</span>
+             <span class="s1">&#39;IFS Transmission factor&#39;</span><span class="p">),</span>
+            <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;POL&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">pol</span><span class="p">,</span> <span class="s1">&#39;Polarization losses&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;PHCTEFF&#39;</span><span class="p">,</span>
+             <span class="n">par</span><span class="o">.</span><span class="n">PhCountEff</span><span class="p">,</span>
+             <span class="s1">&#39;Photon counting efficiency&#39;</span><span class="p">),</span>
+            <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;NONOISE&#39;</span><span class="p">,</span>
+             <span class="n">par</span><span class="o">.</span><span class="n">nonoise</span><span class="p">,</span>
+             <span class="s1">&#39;Ignore all noises?&#39;</span><span class="p">),</span>
+            <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="o">~</span><span class="n">par</span><span class="o">.</span><span class="n">nonoise</span><span class="p">:</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;POISSON&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">poisson</span><span class="p">,</span> <span class="s1">&#39;Poisson noise?&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;RN&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">RN</span><span class="p">,</span> <span class="s1">&#39;Read noise (electrons/read)&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;CIC&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">CIC</span><span class="p">,</span> <span class="s1">&#39;Clock-induced charge&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;DARK&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">dark</span><span class="p">,</span> <span class="s1">&#39;Dark current&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;Traps&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">Traps</span><span class="p">,</span> <span class="s1">&#39;Use traps? T/F&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;EMSTATS&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">EMStats</span><span class="p">,</span> <span class="s1">&#39;EM statistics?&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;EMGAIN&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">EMGain</span><span class="p">,</span> <span class="s1">&#39;Gain of the EM stage&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;PCBIAS&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">PCbias</span><span class="p">,</span> <span class="s1">&#39;To make RN zero-mean &#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;PCMODE&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">PCmode</span><span class="p">,</span> <span class="s1">&#39;Photon counting mode?&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">PCmode</span><span class="p">:</span>
+                <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span><span class="s1">&#39;THRESH&#39;</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span> <span class="s1">&#39;Photon counting threshold&#39;</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;LIFEFRAC&#39;</span><span class="p">,</span>
+                 <span class="n">par</span><span class="o">.</span><span class="n">lifefraction</span><span class="p">,</span>
+                 <span class="s1">&#39;Mission life fraction (changes CTE if &gt;0)&#39;</span><span class="p">),</span>
+                <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;INTTIME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inttime</span>
+
+    <span class="c1"># just to deal with small numerical errors - normally there is nothing</span>
+    <span class="c1"># there</span>
+    <span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="n">eff</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">losses</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">PhCountEff</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">pol</span>
+
+    <span class="n">photoelectrons</span> <span class="o">=</span> <span class="n">IFSimage</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">eff</span> <span class="o">*</span> <span class="n">inttime</span>
+
     <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">nonoise</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">photoelectrons</span>
     <span class="k">else</span><span class="p">:</span>
-    
-        <span class="c1"># verify with Bijan that the CIC/dark doesn&#39;t contribute to this formula</span>
-        <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">lifefraction</span><span class="o">&gt;</span><span class="mf">0.0</span><span class="p">:</span>
-            <span class="n">photoelectrons</span><span class="p">[</span><span class="n">photoelectrons</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">photoelectrons</span><span class="p">[</span><span class="n">photoelectrons</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span><span class="mi">1</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">lifefraction</span><span class="o">*</span><span class="mf">0.51296</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">photoelectrons</span><span class="p">[</span><span class="n">photoelectrons</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mf">0.0147233</span><span class="p">))</span>    
 
-        <span class="n">average</span> <span class="o">=</span> <span class="n">photoelectrons</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">dark</span><span class="o">*</span><span class="n">inttime</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">CIC</span>
-    
+        <span class="c1"># verify with Bijan that the CIC/dark doesn&#39;t contribute to this</span>
+        <span class="c1"># formula</span>
+        <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">lifefraction</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">photoelectrons</span><span class="p">[</span><span class="n">photoelectrons</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">photoelectrons</span><span class="p">[</span><span class="n">photoelectrons</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+                                                             <span class="mi">1</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">lifefraction</span> <span class="o">*</span> <span class="mf">0.51296</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">photoelectrons</span><span class="p">[</span><span class="n">photoelectrons</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.0147233</span><span class="p">))</span>
+
+        <span class="n">average</span> <span class="o">=</span> <span class="n">photoelectrons</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">dark</span> <span class="o">*</span> <span class="n">inttime</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">CIC</span>
+
         <span class="c1"># calculate electron generation in the CCD frame</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">poisson</span><span class="p">:</span>
             <span class="n">atEMRegister</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">average</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">atEMRegister</span> <span class="o">=</span> <span class="n">average</span>
-        
+
         <span class="c1"># calculate the number of electrons after the EM register</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">EMStats</span><span class="p">:</span>
-            <span class="n">EMmask</span> <span class="o">=</span> <span class="n">atEMRegister</span><span class="o">&gt;</span><span class="mi">0</span>
+            <span class="n">EMmask</span> <span class="o">=</span> <span class="n">atEMRegister</span> <span class="o">&gt;</span> <span class="mi">0</span>
             <span class="n">afterEMRegister</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">atEMRegister</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-            <span class="n">afterEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">atEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">],</span><span class="n">par</span><span class="o">.</span><span class="n">EMGain</span><span class="p">,</span><span class="n">atEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">afterEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span>
+                <span class="n">atEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">],</span> <span class="n">par</span><span class="o">.</span><span class="n">EMGain</span><span class="p">,</span> <span class="n">atEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">afterEMRegister</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">EMGain</span><span class="o">*</span><span class="n">atEMRegister</span>
-        
+            <span class="n">afterEMRegister</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">EMGain</span> <span class="o">*</span> <span class="n">atEMRegister</span>
+
         <span class="c1"># add read noise</span>
-        <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">EMStats</span> <span class="ow">and</span> <span class="n">par</span><span class="o">.</span><span class="n">RN</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-            <span class="n">afterRN</span> <span class="o">=</span> <span class="n">afterEMRegister</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">PCbias</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">RN</span><span class="p">,</span><span class="n">afterEMRegister</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">EMStats</span> <span class="ow">and</span> <span class="n">par</span><span class="o">.</span><span class="n">RN</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">afterRN</span> <span class="o">=</span> <span class="n">afterEMRegister</span> <span class="o">+</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">PCbias</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">RN</span><span class="p">,</span> <span class="n">afterEMRegister</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="c1"># clip at zero</span>
-            <span class="n">afterRN</span><span class="p">[</span><span class="n">afterRN</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+            <span class="n">afterRN</span><span class="p">[</span><span class="n">afterRN</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">afterRN</span> <span class="o">=</span> <span class="n">afterEMRegister</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">PCbias</span>
+            <span class="n">afterRN</span> <span class="o">=</span> <span class="n">afterEMRegister</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">PCbias</span>
 
         <span class="c1"># add photon counting thresholding</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">PCmode</span><span class="p">:</span>
-            <span class="n">PCmask</span> <span class="o">=</span> <span class="n">afterRN</span><span class="o">&gt;</span><span class="n">par</span><span class="o">.</span><span class="n">PCbias</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">threshold</span><span class="o">*</span><span class="n">par</span><span class="o">.</span><span class="n">RN</span>
-            <span class="n">afterRN</span><span class="p">[</span><span class="n">PCmask</span><span class="p">]</span><span class="o">=</span><span class="mf">1.0</span>
-            <span class="n">afterRN</span><span class="p">[</span><span class="o">~</span><span class="n">PCmask</span><span class="p">]</span><span class="o">=</span><span class="mf">0.</span>
+            <span class="n">PCmask</span> <span class="o">=</span> <span class="n">afterRN</span> <span class="o">&gt;</span> <span class="n">par</span><span class="o">.</span><span class="n">PCbias</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">threshold</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">RN</span>
+            <span class="n">afterRN</span><span class="p">[</span><span class="n">PCmask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">afterRN</span><span class="p">[</span><span class="o">~</span><span class="n">PCmask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">afterRN</span> <span class="o">-=</span> <span class="n">par</span><span class="o">.</span><span class="n">PCbias</span>
             <span class="n">afterRN</span> <span class="o">/=</span> <span class="n">par</span><span class="o">.</span><span class="n">EMGain</span>
-    
+
         <span class="k">return</span> <span class="n">afterRN</span></div>
 
-<div class="viewcode-block" id="averageDetectorReadout"><a class="viewcode-back" href="../../tools.html#tools.detector.averageDetectorReadout">[docs]</a><span class="k">def</span> <span class="nf">averageDetectorReadout</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">filelist</span><span class="p">,</span><span class="n">detectorFolderOut</span><span class="p">,</span><span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;detector&#39;</span><span class="p">,</span><span class="n">offaxis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">averageDivide</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">zodi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">forced_inttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">forced_tottime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;	</span>
+
+<div class="viewcode-block" id="averageDetectorReadout"><a class="viewcode-back" href="../../tools.html#tools.detector.averageDetectorReadout">[docs]</a><span class="k">def</span> <span class="nf">averageDetectorReadout</span><span class="p">(</span>
+        <span class="n">par</span><span class="p">,</span>
+        <span class="n">filelist</span><span class="p">,</span>
+        <span class="n">detectorFolderOut</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;detector&#39;</span><span class="p">,</span>
+        <span class="n">offaxis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">averageDivide</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">zodi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">forced_inttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">forced_tottime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Process a list of files and creates individual detector readouts</span>
 <span class="sd">    If we want only one file, we can just make a list of 1</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">det_outlist</span> <span class="o">=</span> <span class="p">[]</span>
-	
+
     <span class="k">for</span> <span class="n">reffile</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">:</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Apply detector readout on &#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Apply detector readout on &#39;</span> <span class="o">+</span> <span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">reffile</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">offaxis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">off</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">offaxis</span><span class="p">)</span>
-            <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="n">factor</span> <span class="c1"># Multiplies by post-processing factor</span>
-            <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">+=</span><span class="n">off</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">*=</span> <span class="n">factor</span>  <span class="c1"># Multiplies by post-processing factor</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">off</span><span class="o">.</span><span class="n">data</span>
         <span class="k">if</span> <span class="n">zodi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">zodi</span><span class="p">)</span>
-            <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">+=</span><span class="n">z</span><span class="o">.</span><span class="n">data</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">makeHeader</span><span class="p">()</span>        
-        
+            <span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">z</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">makeHeader</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">forced_inttime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">inttime</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">timeframe</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">Nreads</span>
+            <span class="n">inttime</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">Nreads</span>
             <span class="n">nreads</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">Nreads</span><span class="p">)</span>
             <span class="n">exptime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">timeframe</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>  
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">inttime</span> <span class="o">=</span> <span class="n">forced_inttime</span>
-            <span class="n">nreads</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">forced_tottime</span><span class="o">/</span><span class="n">forced_inttime</span><span class="p">)</span>
+            <span class="n">nreads</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">forced_tottime</span> <span class="o">/</span> <span class="n">forced_inttime</span><span class="p">)</span>
             <span class="n">exptime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">forced_tottime</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Nreads: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">nreads</span><span class="p">)</span>
 
@@ -240,46 +285,66 @@
         <span class="n">varframe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="c1"># averaging reads</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nreads</span><span class="p">):</span>
-            <span class="n">newread</span> <span class="o">=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">inttime</span><span class="o">=</span><span class="n">inttime</span><span class="p">)</span>
+            <span class="n">newread</span> <span class="o">=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">inttime</span><span class="o">=</span><span class="n">inttime</span><span class="p">)</span>
             <span class="n">frame</span> <span class="o">+=</span> <span class="n">newread</span>
             <span class="n">varframe</span> <span class="o">+=</span> <span class="n">newread</span><span class="o">**</span><span class="mi">2</span>
         <span class="k">if</span> <span class="n">averageDivide</span><span class="p">:</span>
             <span class="n">frame</span> <span class="o">/=</span> <span class="n">nreads</span>
             <span class="n">varframe</span> <span class="o">/=</span> <span class="n">nreads</span>
             <span class="n">varframe</span> <span class="o">-=</span> <span class="n">frame</span><span class="o">**</span><span class="mi">2</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;NREADS&quot;</span> <span class="ow">in</span> <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">:</span>
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;NREADS&#39;</span><span class="p">,</span><span class="n">nreads</span><span class="p">,</span><span class="s1">&#39;Number of subframes co-added  per image&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">,</span><span class="n">exptime</span><span class="p">,</span><span class="s1">&#39;Total exposure time for number of frames&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;NREADS&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">nreads</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">exptime</span>
-            
-        <span class="n">outimg</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span><span class="n">ivar</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="n">varframe</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;NREADS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">:</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;NREADS&#39;</span><span class="p">,</span>
+                 <span class="n">nreads</span><span class="p">,</span>
+                 <span class="s1">&#39;Number of subframes co-added  per image&#39;</span><span class="p">),</span>
+                <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">,</span>
+                 <span class="n">exptime</span><span class="p">,</span>
+                 <span class="s1">&#39;Total exposure time for number of frames&#39;</span><span class="p">),</span>
+                <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;NREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nreads</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exptime</span>
+
+        <span class="n">outimg</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span> <span class="n">ivar</span><span class="o">=</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">varframe</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span>
         <span class="c1"># append &#39;_suffix&#39; to the file name</span>
-        <span class="n">outimg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">detectorFolderOut</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">det_outlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">detectorFolderOut</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span><span class="p">)</span>
+        <span class="n">outimg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">detectorFolderOut</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                     <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">suffix</span> <span class="o">+</span> <span class="s1">&#39;.fits&#39;</span><span class="p">,</span> <span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">det_outlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">detectorFolderOut</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">reffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">suffix</span> <span class="o">+</span> <span class="s1">&#39;.fits&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">det_outlist</span></div>
 
 
-<div class="viewcode-block" id="multipleReadouts"><a class="viewcode-back" href="../../tools.html#tools.detector.multipleReadouts">[docs]</a><span class="k">def</span> <span class="nf">multipleReadouts</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">detectorFolderOut</span><span class="p">,</span><span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;detector&#39;</span><span class="p">,</span><span class="n">offaxis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">averageDivide</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">zodi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">forced_inttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">forced_tottime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="multipleReadouts"><a class="viewcode-back" href="../../tools.html#tools.detector.multipleReadouts">[docs]</a><span class="k">def</span> <span class="nf">multipleReadouts</span><span class="p">(</span>
+        <span class="n">par</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">,</span>
+        <span class="n">detectorFolderOut</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;detector&#39;</span><span class="p">,</span>
+        <span class="n">offaxis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">averageDivide</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">zodi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">forced_inttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">forced_tottime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Apply detector readout on &#39;</span><span class="o">+</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Apply detector readout on &#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">offaxis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">off</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">offaxis</span><span class="p">)</span>
-        <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">*=</span><span class="n">factor</span> <span class="c1"># Multiplies by post-processing factor</span>
-        <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">+=</span><span class="n">off</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">*=</span> <span class="n">factor</span>  <span class="c1"># Multiplies by post-processing factor</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">off</span><span class="o">.</span><span class="n">data</span>
     <span class="k">if</span> <span class="n">zodi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">zodi</span><span class="p">)</span>
-        <span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">+=</span><span class="n">z</span><span class="o">.</span><span class="n">data</span>
-    <span class="n">par</span><span class="o">.</span><span class="n">makeHeader</span><span class="p">()</span>        
-    
+        <span class="n">img</span><span class="o">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">z</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">makeHeader</span><span class="p">()</span>
+
     <span class="k">if</span> <span class="n">forced_inttime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">inttime</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">timeframe</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">Nreads</span>
+        <span class="n">inttime</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">Nreads</span>
         <span class="n">nreads</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">Nreads</span><span class="p">)</span>
         <span class="n">exptime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">timeframe</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>  
+    <span class="k">else</span><span class="p">:</span>
         <span class="n">inttime</span> <span class="o">=</span> <span class="n">forced_inttime</span>
-        <span class="n">nreads</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">forced_tottime</span><span class="o">/</span><span class="n">forced_inttime</span><span class="p">)</span>
+        <span class="n">nreads</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">forced_tottime</span> <span class="o">/</span> <span class="n">forced_inttime</span><span class="p">)</span>
         <span class="n">exptime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">forced_tottime</span><span class="p">)</span>
     <span class="c1">#log.info(&quot;Nreads: %d&quot; % nreads)</span>
 
@@ -287,44 +352,75 @@
     <span class="n">varframe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="c1"># averaging reads</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nreads</span><span class="p">):</span>
-        <span class="n">newread</span> <span class="o">=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">inttime</span><span class="o">=</span><span class="n">inttime</span><span class="p">)</span>
+        <span class="n">newread</span> <span class="o">=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">inttime</span><span class="o">=</span><span class="n">inttime</span><span class="p">)</span>
         <span class="n">frame</span> <span class="o">+=</span> <span class="n">newread</span>
         <span class="n">varframe</span> <span class="o">+=</span> <span class="n">newread</span><span class="o">**</span><span class="mi">2</span>
     <span class="k">if</span> <span class="n">averageDivide</span><span class="p">:</span>
         <span class="n">frame</span> <span class="o">/=</span> <span class="n">nreads</span>
         <span class="n">varframe</span> <span class="o">/=</span> <span class="n">nreads</span>
         <span class="n">varframe</span> <span class="o">-=</span> <span class="n">frame</span><span class="o">**</span><span class="mi">2</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;NREADS&quot;</span> <span class="ow">in</span> <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">:</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;NREADS&#39;</span><span class="p">,</span><span class="n">nreads</span><span class="p">,</span><span class="s1">&#39;Number of subframes co-added  per image&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">,</span><span class="n">exptime</span><span class="p">,</span><span class="s1">&#39;Total exposure time for number of frames&#39;</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;NREADS&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">nreads</span>
-    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">exptime</span>
-        
-    <span class="n">outimg</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span><span class="n">ivar</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="n">varframe</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;NREADS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">:</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;NREADS&#39;</span><span class="p">,</span>
+             <span class="n">nreads</span><span class="p">,</span>
+             <span class="s1">&#39;Number of subframes co-added  per image&#39;</span><span class="p">),</span>
+            <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">,</span>
+             <span class="n">exptime</span><span class="p">,</span>
+             <span class="s1">&#39;Total exposure time for number of frames&#39;</span><span class="p">),</span>
+            <span class="n">end</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;NREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nreads</span>
+    <span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">[</span><span class="s1">&#39;EXPTIME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exptime</span>
+
+    <span class="n">outimg</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span> <span class="n">ivar</span><span class="o">=</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">varframe</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">hdr</span><span class="p">)</span>
     <span class="c1"># append &#39;_suffix&#39; to the file name</span>
-    <span class="n">outimg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">detectorFolderOut</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span><span class="p">,</span><span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">detectorFolderOut</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="s1">&#39;.fits&#39;</span></div>
+    <span class="n">outimg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">detectorFolderOut</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                 <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">suffix</span> <span class="o">+</span> <span class="s1">&#39;.fits&#39;</span><span class="p">,</span> <span class="n">clobber</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">detectorFolderOut</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> \
+        <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">suffix</span> <span class="o">+</span> <span class="s1">&#39;.fits&#39;</span></div>
 
 
-<div class="viewcode-block" id="averageDetectorReadoutParallel"><a class="viewcode-back" href="../../tools.html#tools.detector.averageDetectorReadoutParallel">[docs]</a><span class="k">def</span> <span class="nf">averageDetectorReadoutParallel</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">filelist</span><span class="p">,</span><span class="n">detectorFolderOut</span><span class="p">,</span><span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;detector&#39;</span><span class="p">,</span><span class="n">offaxis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">averageDivide</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">zodi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">forced_inttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">forced_tottime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;	</span>
+<div class="viewcode-block" id="averageDetectorReadoutParallel"><a class="viewcode-back" href="../../tools.html#tools.detector.averageDetectorReadoutParallel">[docs]</a><span class="k">def</span> <span class="nf">averageDetectorReadoutParallel</span><span class="p">(</span>
+        <span class="n">par</span><span class="p">,</span>
+        <span class="n">filelist</span><span class="p">,</span>
+        <span class="n">detectorFolderOut</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;detector&#39;</span><span class="p">,</span>
+        <span class="n">offaxis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">averageDivide</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">zodi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">forced_inttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">forced_tottime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Process a list of files and creates individual detector readouts</span>
 <span class="sd">    If we want only one file, we can just make a list of 1</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">det_outlist</span> <span class="o">=</span> <span class="p">[]</span>
-	
+
     <span class="n">tasks</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
     <span class="n">ncpus</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
-    <span class="n">consumers</span> <span class="o">=</span> <span class="p">[</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
-                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncpus</span><span class="p">)</span> <span class="p">]</span>
+    <span class="n">consumers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Consumer</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncpus</span><span class="p">)]</span>
     <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">consumers</span><span class="p">:</span>
         <span class="n">w</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filelist</span><span class="p">)):</span>
-        <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">Task</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">multipleReadouts</span><span class="p">,</span> <span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">filelist</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">detectorFolderOut</span><span class="p">,</span><span class="s1">&#39;detector&#39;</span><span class="p">,</span>
-                                            <span class="n">offaxis</span><span class="p">,</span><span class="n">averageDivide</span><span class="p">,</span><span class="n">factor</span><span class="p">,</span><span class="n">zodi</span><span class="p">,</span>
-                                            <span class="n">forced_inttime</span><span class="p">,</span><span class="n">forced_tottime</span><span class="p">)))</span>
+        <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+            <span class="n">Task</span><span class="p">(</span>
+                <span class="n">i</span><span class="p">,</span>
+                <span class="n">multipleReadouts</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">par</span><span class="p">,</span>
+                 <span class="n">filelist</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                 <span class="n">detectorFolderOut</span><span class="p">,</span>
+                 <span class="s1">&#39;detector&#39;</span><span class="p">,</span>
+                 <span class="n">offaxis</span><span class="p">,</span>
+                 <span class="n">averageDivide</span><span class="p">,</span>
+                 <span class="n">factor</span><span class="p">,</span>
+                 <span class="n">zodi</span><span class="p">,</span>
+                 <span class="n">forced_inttime</span><span class="p">,</span>
+                 <span class="n">forced_tottime</span><span class="p">)))</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncpus</span><span class="p">):</span>
         <span class="n">tasks</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
@@ -335,138 +431,153 @@
     <span class="k">return</span> <span class="n">det_outlist</span></div>
 
 
-<div class="viewcode-block" id="calculateDark"><a class="viewcode-back" href="../../tools.html#tools.detector.calculateDark">[docs]</a><span class="k">def</span> <span class="nf">calculateDark</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">filelist</span><span class="p">):</span>
+<div class="viewcode-block" id="calculateDark"><a class="viewcode-back" href="../../tools.html#tools.detector.calculateDark">[docs]</a><span class="k">def</span> <span class="nf">calculateDark</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">filelist</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Process a series of dark frames to get an estimate of the dark current frame that matches the exposures.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    
+
     <span class="n">fileshape</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filelist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">darkframe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">fileshape</span><span class="p">)</span>
     <span class="n">blankframe</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">fileshape</span><span class="p">))</span>
-    <span class="n">inttime</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">timeframe</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">Nreads</span>
+    <span class="n">inttime</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">Nreads</span>
     <span class="n">par</span><span class="o">.</span><span class="n">makeHeader</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">Nreads</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">filelist</span><span class="p">)):</span>
-        <span class="n">darkframe</span> <span class="o">+=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">blankframe</span><span class="p">,</span><span class="n">inttime</span><span class="o">=</span><span class="n">inttime</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">darkframe</span>    </div>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">Nreads</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">filelist</span><span class="p">)):</span>
+        <span class="n">darkframe</span> <span class="o">+=</span> <span class="n">readDetector</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">blankframe</span><span class="p">,</span> <span class="n">inttime</span><span class="o">=</span><span class="n">inttime</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">darkframe</span></div>
+
 
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">stats</span>
-<div class="viewcode-block" id="photonCounting"><a class="viewcode-back" href="../../tools.html#tools.detector.photonCounting">[docs]</a><span class="k">def</span> <span class="nf">photonCounting</span><span class="p">(</span><span class="n">average</span><span class="p">,</span>
-                <span class="n">EMGain</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-                <span class="n">RN</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                <span class="n">PCbias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                <span class="n">threshold</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
-                <span class="n">poisson</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">EMStats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">PCmode</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
+
+<div class="viewcode-block" id="photonCounting"><a class="viewcode-back" href="../../tools.html#tools.detector.photonCounting">[docs]</a><span class="k">def</span> <span class="nf">photonCounting</span><span class="p">(</span><span class="n">average</span><span class="p">,</span>
+                   <span class="n">EMGain</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                   <span class="n">RN</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                   <span class="n">PCbias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                   <span class="n">threshold</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                   <span class="n">poisson</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">EMStats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">PCmode</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="c1"># calculate electron generation in the CCD frame</span>
-        <span class="k">if</span> <span class="n">poisson</span><span class="p">:</span>
-            <span class="n">atEMRegister</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">average</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">atEMRegister</span> <span class="o">=</span> <span class="n">average</span>
-        
-    
-        <span class="c1"># calculate the number of electrons after the EM register</span>
-        <span class="k">if</span> <span class="n">EMStats</span><span class="p">:</span>
-            <span class="n">EMmask</span> <span class="o">=</span> <span class="n">atEMRegister</span><span class="o">&gt;</span><span class="mi">0</span>
-            <span class="n">afterEMRegister</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">atEMRegister</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-            <span class="n">afterEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">atEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">],</span><span class="n">EMGain</span><span class="p">,</span><span class="n">atEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">afterEMRegister</span> <span class="o">=</span> <span class="n">EMGain</span><span class="o">*</span><span class="n">atEMRegister</span>
-        
-        <span class="c1"># add read noise</span>
-        <span class="k">if</span> <span class="n">EMStats</span> <span class="ow">and</span> <span class="n">RN</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-            <span class="n">afterRN</span> <span class="o">=</span> <span class="n">afterEMRegister</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">PCbias</span><span class="p">,</span><span class="n">RN</span><span class="p">,</span><span class="n">afterEMRegister</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-            <span class="c1"># clip at zero</span>
-            <span class="n">afterRN</span><span class="p">[</span><span class="n">afterRN</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">afterRN</span> <span class="o">=</span> <span class="n">afterEMRegister</span><span class="o">+</span><span class="n">PCbias</span>
+    <span class="k">if</span> <span class="n">poisson</span><span class="p">:</span>
+        <span class="n">atEMRegister</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">average</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">atEMRegister</span> <span class="o">=</span> <span class="n">average</span>
 
-        <span class="c1"># add photon counting thresholding</span>
-        <span class="k">if</span> <span class="n">PCmode</span><span class="p">:</span>
-            <span class="n">PCmask</span> <span class="o">=</span> <span class="n">afterRN</span><span class="o">&gt;</span><span class="n">PCbias</span><span class="o">+</span><span class="n">threshold</span><span class="o">*</span><span class="n">RN</span>
-            <span class="n">afterRN</span><span class="p">[</span><span class="n">PCmask</span><span class="p">]</span><span class="o">=</span><span class="mf">1.0</span>
-            <span class="n">afterRN</span><span class="p">[</span><span class="o">~</span><span class="n">PCmask</span><span class="p">]</span><span class="o">=</span><span class="mf">0.</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">afterRN</span> <span class="o">-=</span> <span class="n">PCbias</span>
-            <span class="n">afterRN</span> <span class="o">/=</span> <span class="n">EMGain</span>
-    
-        <span class="k">return</span> <span class="n">afterRN</span></div>
+    <span class="c1"># calculate the number of electrons after the EM register</span>
+    <span class="k">if</span> <span class="n">EMStats</span><span class="p">:</span>
+        <span class="n">EMmask</span> <span class="o">=</span> <span class="n">atEMRegister</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">afterEMRegister</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">atEMRegister</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">afterEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span>
+            <span class="n">atEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">],</span> <span class="n">EMGain</span><span class="p">,</span> <span class="n">atEMRegister</span><span class="p">[</span><span class="n">EMmask</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">afterEMRegister</span> <span class="o">=</span> <span class="n">EMGain</span> <span class="o">*</span> <span class="n">atEMRegister</span>
+
+    <span class="c1"># add read noise</span>
+    <span class="k">if</span> <span class="n">EMStats</span> <span class="ow">and</span> <span class="n">RN</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">afterRN</span> <span class="o">=</span> <span class="n">afterEMRegister</span> <span class="o">+</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">PCbias</span><span class="p">,</span> <span class="n">RN</span><span class="p">,</span> <span class="n">afterEMRegister</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="c1"># clip at zero</span>
+        <span class="n">afterRN</span><span class="p">[</span><span class="n">afterRN</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">afterRN</span> <span class="o">=</span> <span class="n">afterEMRegister</span> <span class="o">+</span> <span class="n">PCbias</span>
+
+    <span class="c1"># add photon counting thresholding</span>
+    <span class="k">if</span> <span class="n">PCmode</span><span class="p">:</span>
+        <span class="n">PCmask</span> <span class="o">=</span> <span class="n">afterRN</span> <span class="o">&gt;</span> <span class="n">PCbias</span> <span class="o">+</span> <span class="n">threshold</span> <span class="o">*</span> <span class="n">RN</span>
+        <span class="n">afterRN</span><span class="p">[</span><span class="n">PCmask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">afterRN</span><span class="p">[</span><span class="o">~</span><span class="n">PCmask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">afterRN</span> <span class="o">-=</span> <span class="n">PCbias</span>
+        <span class="n">afterRN</span> <span class="o">/=</span> <span class="n">EMGain</span>
+
+    <span class="k">return</span> <span class="n">afterRN</span></div>
 
 
 <div class="viewcode-block" id="readoutPhotonFluxMapWFIRST"><a class="viewcode-back" href="../../tools.html#tools.detector.readoutPhotonFluxMapWFIRST">[docs]</a><span class="k">def</span> <span class="nf">readoutPhotonFluxMapWFIRST</span><span class="p">(</span>
-                <span class="n">fluxMap</span><span class="p">,</span> 
-                <span class="n">tottime</span><span class="p">,</span>
-                <span class="n">inttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">QE</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-                <span class="n">darkBOL</span><span class="o">=</span><span class="mf">1.4e-4</span><span class="p">,</span> 
-                <span class="n">darkEOL</span><span class="o">=</span><span class="mf">2.8e-4</span><span class="p">,</span> 
-                <span class="n">CIC</span><span class="o">=</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span>
-                <span class="n">eff</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-                <span class="n">EMGain</span><span class="o">=</span><span class="mf">2500.</span><span class="p">,</span>
-                <span class="n">RN</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
-                <span class="n">PCbias</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">,</span>
-                <span class="n">threshold</span><span class="o">=</span><span class="mf">6.</span><span class="p">,</span>
-                <span class="n">lifefraction</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                <span class="n">dqeKnee</span><span class="o">=</span><span class="mf">0.858</span><span class="p">,</span>
-                <span class="n">dqeFluxSlope</span><span class="o">=</span><span class="mf">3.24</span><span class="p">,</span>
-                <span class="n">dqeKneeFlux</span><span class="o">=</span><span class="mf">0.089</span><span class="p">,</span>
-                <span class="n">nonoise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">poisson</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">EMStats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">PCmode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">PCcorrect</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-   
-    <span class="n">photoElectronsRate</span> <span class="o">=</span> <span class="n">QE</span><span class="o">*</span><span class="n">eff</span><span class="o">*</span><span class="n">fluxMap</span>
-    
-    <span class="k">if</span> <span class="n">nonoise</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">photoElectronsRate</span><span class="o">*</span><span class="n">tottime</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># if inttime is None, determine the exposure time so that the brightest pixel is only 0.1 electrons  </span>
-        <span class="k">if</span> <span class="n">inttime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">exptime</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">QE</span><span class="o">*</span><span class="n">eff</span><span class="o">*</span><span class="n">fluxMap</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Individual exposure time: </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">exptime</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">exptime</span><span class="o">=</span><span class="n">inttime</span>
-            
-        <span class="n">nreads</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tottime</span><span class="o">/</span><span class="n">exptime</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of reads: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">nreads</span><span class="p">)</span>
-            
-        <span class="n">photoElectrons</span> <span class="o">=</span> <span class="n">photoElectronsRate</span><span class="o">*</span><span class="n">exptime</span>
-        
-        <span class="k">if</span> <span class="n">lifefraction</span><span class="o">&gt;</span><span class="mf">0.0</span><span class="p">:</span>
-            <span class="n">photoElectrons</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">photoElectrons</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">photoElectrons</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">+</span><span class="n">lifefraction</span><span class="o">*</span><span class="p">(</span><span class="n">dqeKnee</span><span class="o">-</span><span class="mf">1.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">photoelectrons</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">+</span><span class="n">lifefraction</span><span class="o">*</span><span class="p">(</span><span class="n">dqeKnee</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">lifefraction</span><span class="o">*</span><span class="n">dqeFluxSlope</span><span class="o">*</span><span class="p">(</span><span class="n">photoElectrons</span><span class="o">-</span><span class="n">dqeKneeFlux</span><span class="p">)))</span>
+        <span class="n">fluxMap</span><span class="p">,</span>
+        <span class="n">tottime</span><span class="p">,</span>
+        <span class="n">inttime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">QE</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">darkBOL</span><span class="o">=</span><span class="mf">1.4e-4</span><span class="p">,</span>
+        <span class="n">darkEOL</span><span class="o">=</span><span class="mf">2.8e-4</span><span class="p">,</span>
+        <span class="n">CIC</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+        <span class="n">eff</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">EMGain</span><span class="o">=</span><span class="mf">2500.</span><span class="p">,</span>
+        <span class="n">RN</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">PCbias</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="mf">6.</span><span class="p">,</span>
+        <span class="n">lifefraction</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">dqeKnee</span><span class="o">=</span><span class="mf">0.858</span><span class="p">,</span>
+        <span class="n">dqeFluxSlope</span><span class="o">=</span><span class="mf">3.24</span><span class="p">,</span>
+        <span class="n">dqeKneeFlux</span><span class="o">=</span><span class="mf">0.089</span><span class="p">,</span>
+        <span class="n">nonoise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">poisson</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">EMStats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">PCmode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">PCcorrect</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
-        <span class="n">dark</span> <span class="o">=</span> <span class="n">darkBOL</span><span class="o">+</span><span class="n">lifefraction</span><span class="o">*</span><span class="p">(</span><span class="n">darkEOL</span><span class="o">-</span><span class="n">darkBOL</span><span class="p">)</span>
-        <span class="n">average</span> <span class="o">=</span> <span class="n">photoElectrons</span><span class="o">+</span><span class="n">dark</span><span class="o">*</span><span class="n">exptime</span><span class="o">+</span><span class="n">CIC</span>
-    
+    <span class="n">photoElectronsRate</span> <span class="o">=</span> <span class="n">QE</span> <span class="o">*</span> <span class="n">eff</span> <span class="o">*</span> <span class="n">fluxMap</span>
+
+    <span class="k">if</span> <span class="n">nonoise</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">photoElectronsRate</span> <span class="o">*</span> <span class="n">tottime</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># if inttime is None, determine the exposure time so that the brightest</span>
+        <span class="c1"># pixel is only 0.1 electrons</span>
+        <span class="k">if</span> <span class="n">inttime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">exptime</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">QE</span> <span class="o">*</span> <span class="n">eff</span> <span class="o">*</span> <span class="n">fluxMap</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Individual exposure time: </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">exptime</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exptime</span> <span class="o">=</span> <span class="n">inttime</span>
+
+        <span class="n">nreads</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tottime</span> <span class="o">/</span> <span class="n">exptime</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of reads: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">nreads</span><span class="p">)</span>
+
+        <span class="n">photoElectrons</span> <span class="o">=</span> <span class="n">photoElectronsRate</span> <span class="o">*</span> <span class="n">exptime</span>
+
+        <span class="k">if</span> <span class="n">lifefraction</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">photoElectrons</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="n">photoElectrons</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+                        <span class="n">photoElectrons</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="n">lifefraction</span> <span class="o">*</span> <span class="p">(</span>
+                        <span class="n">dqeKnee</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+                        <span class="n">photoelectrons</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="n">lifefraction</span> <span class="o">*</span> <span class="p">(</span>
+                        <span class="n">dqeKnee</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">lifefraction</span> <span class="o">*</span> <span class="n">dqeFluxSlope</span> <span class="o">*</span> <span class="p">(</span>
+                        <span class="n">photoElectrons</span> <span class="o">-</span> <span class="n">dqeKneeFlux</span><span class="p">)))</span>
+
+        <span class="n">dark</span> <span class="o">=</span> <span class="n">darkBOL</span> <span class="o">+</span> <span class="n">lifefraction</span> <span class="o">*</span> <span class="p">(</span><span class="n">darkEOL</span> <span class="o">-</span> <span class="n">darkBOL</span><span class="p">)</span>
+        <span class="n">average</span> <span class="o">=</span> <span class="n">photoElectrons</span> <span class="o">+</span> <span class="n">dark</span> <span class="o">*</span> <span class="n">exptime</span> <span class="o">+</span> <span class="n">CIC</span>
+
         <span class="n">frame</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">average</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-        
+
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nreads</span><span class="p">):</span>
             <span class="n">newread</span> <span class="o">=</span> <span class="n">photonCounting</span><span class="p">(</span><span class="n">average</span><span class="p">,</span>
-                                    <span class="n">EMGain</span><span class="o">=</span><span class="n">EMGain</span><span class="p">,</span>
-                                    <span class="n">RN</span><span class="o">=</span><span class="n">RN</span><span class="p">,</span>
-                                    <span class="n">PCbias</span><span class="o">=</span><span class="n">PCbias</span><span class="p">,</span>
-                                    <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
-                                    <span class="n">poisson</span><span class="o">=</span><span class="n">poisson</span><span class="p">,</span>
-                                    <span class="n">EMStats</span><span class="o">=</span><span class="n">EMStats</span><span class="p">,</span>
-                                    <span class="n">PCmode</span><span class="o">=</span><span class="n">PCmode</span><span class="p">)</span>
+                                     <span class="n">EMGain</span><span class="o">=</span><span class="n">EMGain</span><span class="p">,</span>
+                                     <span class="n">RN</span><span class="o">=</span><span class="n">RN</span><span class="p">,</span>
+                                     <span class="n">PCbias</span><span class="o">=</span><span class="n">PCbias</span><span class="p">,</span>
+                                     <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+                                     <span class="n">poisson</span><span class="o">=</span><span class="n">poisson</span><span class="p">,</span>
+                                     <span class="n">EMStats</span><span class="o">=</span><span class="n">EMStats</span><span class="p">,</span>
+                                     <span class="n">PCmode</span><span class="o">=</span><span class="n">PCmode</span><span class="p">)</span>
             <span class="n">frame</span> <span class="o">+=</span> <span class="n">newread</span>
         <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
-            <span class="n">frame</span><span class="o">/=</span><span class="nb">float</span><span class="p">(</span><span class="n">nreads</span><span class="p">)</span>
+            <span class="n">frame</span> <span class="o">/=</span> <span class="nb">float</span><span class="p">(</span><span class="n">nreads</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">PCcorrect</span><span class="p">:</span>
-                <span class="n">frame</span><span class="o">*=</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">RN</span><span class="o">*</span><span class="n">threshold</span><span class="o">/</span><span class="n">EMGain</span><span class="p">)</span>
-                <span class="n">frame</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">frame</span><span class="p">)</span>
-            <span class="n">frame</span><span class="o">/=</span><span class="n">exptime</span>
+                <span class="n">frame</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">RN</span> <span class="o">*</span> <span class="n">threshold</span> <span class="o">/</span> <span class="n">EMGain</span><span class="p">)</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">frame</span><span class="p">)</span>
+            <span class="n">frame</span> <span class="o">/=</span> <span class="n">exptime</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">PCcorrect</span><span class="p">:</span>
-                <span class="n">frame</span><span class="o">*=</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">RN</span><span class="o">*</span><span class="n">threshold</span><span class="o">/</span><span class="n">EMGain</span><span class="p">)</span>
-                <span class="n">frame</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">frame</span><span class="p">)</span>
+                <span class="n">frame</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">RN</span> <span class="o">*</span> <span class="n">threshold</span> <span class="o">/</span> <span class="n">EMGain</span><span class="p">)</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">frame</span><span class="p">)</span>
 
-            
         <span class="k">return</span> <span class="n">frame</span></div>
 </pre></div>
 
@@ -486,8 +597,8 @@
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

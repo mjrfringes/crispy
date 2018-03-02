@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>PISCES wavelength calibration &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,7 +33,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -245,7 +242,11 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="PISCES-wavelength-calibration">
 <h1>PISCES wavelength calibration<a class="headerlink" href="#PISCES-wavelength-calibration" title="Permalink to this headline">¶</a></h1>
@@ -253,7 +254,7 @@ div.nboutput div.output_area.stderr {
 to build a new wavelength calibration</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [8]:
+<span></span>In [1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -288,7 +289,7 @@ Populating the interactive namespace from numpy and matplotlib
 <h2>Import crispy-related stuff<a class="headerlink" href="#Import-crispy-related-stuff" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [9]:
+<span></span>In [5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -298,7 +299,7 @@ Populating the interactive namespace from numpy and matplotlib
 <span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="kn">from</span> <span class="nn">PISCESparams</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
 <span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
 <span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
 </pre></div>
@@ -306,7 +307,7 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[9]:
+<span></span>Out[5]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
@@ -337,7 +338,7 @@ DISPDIST=                    F / Use PISCES distortion/dispersion?
 <h3>Build wavelength calibration files<a class="headerlink" href="#Build-wavelength-calibration-files" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [3]:
+<span></span>In [6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -384,11 +385,11 @@ crispy - INFO - Read data from HDU 1 of ..//ReferenceFiles/Calibra_170425/det725
 crispy - INFO - Loading wavelength solution from ..//ReferenceFiles/Calibra_170425/lamsol.dat
 crispy - INFO - Computing wavelength values at pixel centers
 crispy - INFO - Computing PSFLet widths...
-crispy - INFO - Reduced cube will have 11 wavelength bins
+crispy - INFO - Reduced cube will have 23 wavelength bins
 crispy - INFO - Making polychrome cube
 crispy - INFO - Saving polychrome cube
 crispy - INFO - Saving wavelength calibration cube
-crispy - INFO - Total time elapsed: 33 s
+crispy - INFO - Total time elapsed: 86 s
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -893,8 +894,8 @@ attributes automatically get reset.</p>
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

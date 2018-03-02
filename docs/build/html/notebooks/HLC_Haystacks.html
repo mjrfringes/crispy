@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Rapid propagation of an input scene through an HLC coronagraph model &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,7 +33,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -245,7 +242,11 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="Rapid-propagation-of-an-input-scene-through-an-HLC-coronagraph-model">
 <h1>Rapid propagation of an input scene through an HLC coronagraph model<a class="headerlink" href="#Rapid-propagation-of-an-input-scene-through-an-HLC-coronagraph-model" title="Permalink to this headline">¶</a></h1>
@@ -315,7 +316,7 @@ Populating the interactive namespace from numpy and matplotlib
 <span></span><span class="n">hlc_psf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/Science/Haystacks/hlc_haystacks_scene_last&#39;</span><span class="p">)</span>
 <span class="n">haystacks_path</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/Inputs/&#39;</span>
 <span class="n">exportDir</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/Downloads/&#39;</span>
-<span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span>
+<span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -347,14 +348,16 @@ Populating the interactive namespace from numpy and matplotlib
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">haystacks_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">haystacks_path</span><span class="p">,</span><span class="s1">&#39;hay_cube_bandavg_ph.fits.gz&#39;</span><span class="p">)</span>
-<span class="n">hay_cube_bandavg_ph</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="n">haystacks_fname</span><span class="p">)</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span>
+<span></span><span class="c1"># haystacks_fname = os.path.join(haystacks_path,&#39;hay_cube_bandavg_ph.fits.gz&#39;)</span>
+<span class="n">haystacks_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">haystacks_path</span><span class="p">,</span><span class="s1">&#39;BertrandCube.fits.gz&#39;</span><span class="p">)</span>
+<span class="n">hay_cube_bandavg_ph</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">haystacks_fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">s</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hay_cube_bandavg_ph</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">2e-1</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
-<span class="c1">#plt.colorbar(fraction=0.046, pad=0.04)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hay_cube_bandavg_ph</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="c1">#plt.title(&#39;Haystacks scene in ph/s, before coronagraph&#39;,fontsize=25)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">exportDir</span><span class="o">+</span><span class="s2">&quot;Input_Slice.png&quot;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
 </pre></div>
 </div>
 </div>
@@ -371,7 +374,36 @@ Populating the interactive namespace from numpy and matplotlib
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Photon flux from planet before coronagraph: {:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hay_cube_bandavg_ph</span><span class="p">[:,</span><span class="mi">36</span><span class="p">,</span><span class="mi">48</span><span class="p">]))</span>
+<span></span><span class="k">print</span> <span class="n">hay_cube_bandavg_ph</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(71, 71)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">ply</span><span class="p">,</span><span class="n">plx</span> <span class="o">=</span> <span class="mi">36</span><span class="p">,</span><span class="mi">46</span> <span class="c1">#</span>
+<span class="c1"># ply,plx = 36,48</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Photon flux from planet before coronagraph: {:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hay_cube_bandavg_ph</span><span class="p">[:,</span><span class="n">ply</span><span class="p">,</span><span class="n">plx</span><span class="p">]))</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Typically planet fluxes at the detector will be ~a few percent of this&#39;</span><span class="p">)</span>
 
 
@@ -383,13 +415,13 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Photon flux from planet before coronagraph: [ 18.13174951  21.66746931   5.99120679   1.89377553   0.34145874] ph / s
+crispy - INFO - Photon flux from planet before coronagraph: [ 18.43178092  20.99457165  22.09357535  10.24825766   5.62347613] ph / s
 crispy - INFO - Typically planet fluxes at the detector will be ~a few percent of this
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [7]:
+<span></span>In [9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -403,19 +435,19 @@ crispy - INFO - Typically planet fluxes at the detector will be ~a few percent o
 <h2>Add optical losses &amp; QE<a class="headerlink" href="#Add-optical-losses-&-QE" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [8]:
+<span></span>In [10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">losses</span> <span class="o">=</span> <span class="mf">0.566</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="c1"># from Bijan&#39;s spreadsheet, does not include PSF throughput</span>
+<span></span><span class="n">losses</span> <span class="o">=</span> <span class="mf">0.566</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="c1"># from Bijan&#39;s spreadsheet, does not include PSF throughput (that&#39;s in the PSFs directly)</span>
 <span class="n">qe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.92</span><span class="p">,</span> <span class="mf">0.92</span><span class="p">,</span> <span class="mf">0.92</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.37</span><span class="p">])</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">count</span><span class="o">/</span><span class="n">u</span><span class="o">.</span><span class="n">photon</span>
 <span class="n">hay_cube_bandavg_ph</span> <span class="o">*=</span> <span class="n">losses</span><span class="o">*</span><span class="n">qe</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Applied losses and QE&#39;</span><span class="p">)</span>
 <span class="c1"># The user may choose to dim the planet at will by multiplying that pixel by a constant</span>
-<span class="n">fudge</span> <span class="o">=</span> <span class="mf">0.5</span>
-<span class="n">hay_cube_bandavg_ph</span><span class="p">[:,</span><span class="mi">36</span><span class="p">,</span><span class="mi">48</span><span class="p">]</span> <span class="o">*=</span> <span class="n">fudge</span>
+<span class="n">fudge</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="n">hay_cube_bandavg_ph</span><span class="p">[:,</span><span class="n">ply</span><span class="p">,</span><span class="n">plx</span><span class="p">]</span> <span class="o">*=</span> <span class="n">fudge</span>
 
-<span class="n">contrast</span> <span class="o">=</span> <span class="n">hay_cube_bandavg_ph</span><span class="p">[:,</span><span class="mi">36</span><span class="p">,</span><span class="mi">48</span><span class="p">]</span><span class="o">/</span><span class="n">hay_cube_bandavg_ph</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">cx</span><span class="p">,</span> <span class="n">cx</span><span class="p">]</span>
+<span class="n">contrast</span> <span class="o">=</span> <span class="n">hay_cube_bandavg_ph</span><span class="p">[:,</span><span class="n">ply</span><span class="p">,</span><span class="n">plx</span><span class="p">]</span><span class="o">/</span><span class="n">hay_cube_bandavg_ph</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">cx</span><span class="p">,</span> <span class="n">cx</span><span class="p">]</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Contrast: {:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">contrast</span><span class="p">))</span>
 
 </pre></div>
@@ -427,8 +459,8 @@ crispy - INFO - Typically planet fluxes at the detector will be ~a few percent o
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 crispy - INFO - Applied losses and QE
-crispy - INFO - Contrast: [  2.22611779e-08   2.66021427e-08   7.35567849e-09   1.89544141e-09
-   1.68601159e-10]
+crispy - INFO - Contrast: [  1.49927863e-08   1.70774125e-08   1.79713645e-08   6.79576767e-09
+   1.83964407e-09]
 </pre></div></div>
 </div>
 </div>
@@ -436,7 +468,7 @@ crispy - INFO - Contrast: [  2.22611779e-08   2.66021427e-08   7.35567849e-09   
 <h2>Load the sequence of stellar PSFs<a class="headerlink" href="#Load-the-sequence-of-stellar-PSFs" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [9]:
+<span></span>In [11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -485,7 +517,7 @@ crispy - INFO - Pixel scale in binned OS5 PSF series: 0.0208 arcsec = 0.4743 lam
 <h2>Load the offaxis PSF cube<a class="headerlink" href="#Load-the-offaxis-PSF-cube" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [10]:
+<span></span>In [12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -500,7 +532,7 @@ crispy - INFO - Pixel scale in binned OS5 PSF series: 0.0208 arcsec = 0.4743 lam
 <h2>Define the angles of IWA and OWA for the various bands<a class="headerlink" href="#Define-the-angles-of-IWA-and-OWA-for-the-various-bands" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [11]:
+<span></span>In [13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -525,7 +557,7 @@ crispy - INFO - Pixel scale in binned OS5 PSF series: 0.0208 arcsec = 0.4743 lam
 <h2>Convolve the maps<a class="headerlink" href="#Convolve-the-maps" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [12]:
+<span></span>In [14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -538,7 +570,7 @@ crispy - INFO - Pixel scale in binned OS5 PSF series: 0.0208 arcsec = 0.4743 lam
 <h3>Quick test to determine photon fluence at the planet location<a class="headerlink" href="#Quick-test-to-determine-photon-fluence-at-the-planet-location" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [13]:
+<span></span>In [15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -552,7 +584,7 @@ crispy - INFO - Pixel scale in binned OS5 PSF series: 0.0208 arcsec = 0.4743 lam
         <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">cx</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">cx</span><span class="p">:</span>
             <span class="n">test_scene</span> <span class="o">+=</span> <span class="n">hay_cube_bandavg_ph</span><span class="p">[</span><span class="n">wavebin</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">xy_to_psf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">offax_psf</span><span class="p">[</span><span class="n">wavebin</span><span class="p">]))</span> <span class="o">*</span> <span class="n">exptime</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">test_scene</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">test_scene</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Haystacks scene in counts per </span><span class="si">%s</span><span class="s1">, </span><span class="se">\n</span><span class="s1"> after coronagraph, w/o noise, w/o star&#39;</span> <span class="o">%</span> <span class="n">exptime</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
 </pre></div>
@@ -560,11 +592,11 @@ crispy - INFO - Pixel scale in binned OS5 PSF series: 0.0208 arcsec = 0.4743 lam
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[13]:
+<span></span>Out[15]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.text.Text at 0x1112ebbd0&gt;
+<span></span>Text(0.5,1,u&#39;Haystacks scene in counts per 100.0 s, \n after coronagraph, w/o noise, w/o star&#39;)
 </pre></div>
 </div>
 </div>
@@ -572,12 +604,12 @@ crispy - INFO - Pixel scale in binned OS5 PSF series: 0.0208 arcsec = 0.4743 lam
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_HLC_Haystacks_23_1.png" src="../_images/notebooks_HLC_Haystacks_23_1.png" />
+<img alt="../_images/notebooks_HLC_Haystacks_25_1.png" src="../_images/notebooks_HLC_Haystacks_25_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [14]:
+<span></span>In [16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -591,10 +623,10 @@ crispy - INFO - Pixel scale in binned OS5 PSF series: 0.0208 arcsec = 0.4743 lam
 <span class="c1"># add to scene</span>
 <span class="n">test_scene</span><span class="o">+=</span> <span class="n">sci_psf_series</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">test_scene</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">test_scene</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Haystacks scene in counts per </span><span class="si">%s</span><span class="s1">, </span><span class="se">\n</span><span class="s1"> after coronagraph, w/o noise, w/ star&#39;</span> <span class="o">%</span> <span class="n">exptime</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Number of counts per pixel in 100 seconds at the planet location: {:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_scene</span><span class="p">[</span><span class="mi">36</span><span class="p">,</span><span class="mi">48</span><span class="p">]))</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Number of counts per pixel in 100 seconds at the planet location: {:}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_scene</span><span class="p">[</span><span class="n">ply</span><span class="p">,</span><span class="n">plx</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
@@ -603,14 +635,14 @@ crispy - INFO - Pixel scale in binned OS5 PSF series: 0.0208 arcsec = 0.4743 lam
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Number of counts per pixel in 100 seconds at the planet location: 6.180753709 ct
+crispy - INFO - Number of counts per pixel in 100 seconds at the planet location: 3.26995657558 ct
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_HLC_Haystacks_24_1.png" src="../_images/notebooks_HLC_Haystacks_24_1.png" />
+<img alt="../_images/notebooks_HLC_Haystacks_26_1.png" src="../_images/notebooks_HLC_Haystacks_26_1.png" />
 </div>
 </div>
 </div>
@@ -623,7 +655,7 @@ the bands with lower signal as we will accumulate CIC noise too much, so
 feel free to change that to a different exposure time for each band.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [15]:
+<span></span>In [17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -649,7 +681,7 @@ crispy - INFO - 1000.0 s
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [16]:
+<span></span>In [18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -692,7 +724,7 @@ crispy - INFO - 1000.0 s
 <h3>Now the big guns<a class="headerlink" href="#Now-the-big-guns" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [17]:
+<span></span>In [19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -777,20 +809,20 @@ crispy - INFO - 1000.0 s
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - F506.0 total stellar count rate excluding coronagraph masks: 1.587e+11 photoelectrons per exposure
-crispy - INFO - F575.0 total stellar count rate excluding coronagraph masks: 1.909e+11 photoelectrons per exposure
-crispy - INFO - F661.0 total stellar count rate excluding coronagraph masks: 2.113e+11 photoelectrons per exposure
-crispy - INFO - F721.0 total stellar count rate excluding coronagraph masks: 7.336e+10 photoelectrons per exposure
-crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.912e+10 photoelectrons per exposure
+crispy - INFO - F506.0 total stellar count rate excluding coronagraph masks: 4.965e+11 photoelectrons per exposure
+crispy - INFO - F575.0 total stellar count rate excluding coronagraph masks: 5.761e+11 photoelectrons per exposure
+crispy - INFO - F661.0 total stellar count rate excluding coronagraph masks: 6.178e+11 photoelectrons per exposure
+crispy - INFO - F721.0 total stellar count rate excluding coronagraph masks: 2.718e+11 photoelectrons per exposure
+crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.357e+11 photoelectrons per exposure
 </pre></div></div>
 </div>
 </div>
 </div>
 <div class="section" id="Now-let's-explore-what-we-have-done...">
-<h2>Now let&#8217;s explore what we have done...<a class="headerlink" href="#Now-let's-explore-what-we-have-done..." title="Permalink to this headline">¶</a></h2>
+<h2>Now let’s explore what we have done…<a class="headerlink" href="#Now-let's-explore-what-we-have-done..." title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [18]:
+<span></span>In [20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -805,7 +837,7 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [19]:
+<span></span>In [21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -813,32 +845,33 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
                                    <span class="n">ImageNormalize</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">simple_norm</span>
 
-<span class="n">dist_scene</span> <span class="o">=</span> <span class="mf">3.6</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">pc</span>
+<span class="c1"># dist_scene = 3.6*u.pc</span>
+<span class="n">dist_scene</span> <span class="o">=</span> <span class="mf">8.07</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">pc</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;OS5 HLC / Haystacks scene: G8V star at {:.2f} pc, 1 AU Jovian, 10 zodi debris</span><span class="se">\n</span><span class="s1">Flux scale in units of counts / s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dist_scene</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;OS5 HLC / Haystacks scene: F6V star at {:.2f} pc, 1 AU Jovian, 10 zodi debris</span><span class="se">\n</span><span class="s1">Flux scale in units of counts / s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dist_scene</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span> <span class="n">wspace</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.80</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
            <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
-           <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.5e-3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.5e-2</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+           <span class="n">vmin</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">6e-2</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Arcsec&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;F506, {:.1f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Nint_use</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">exptime</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hour</span><span class="p">)),</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.08</span><span class="p">)</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="n">cb</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">cb</span><span class="o">.</span><span class="n">update_ticks</span><span class="p">()</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
            <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
-           <span class="n">vmin</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.5e-2</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+           <span class="n">vmin</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">6e-2</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelleft</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
 <span class="c1">#plt.axes(&#39;off&#39;, which=&#39;y&#39;)</span>
 <span class="c1">#plt.colorbar()</span>
 <span class="c1">#plt.xlabel(&#39;Arcsec&#39;)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;F575, {:.1f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Nint_use</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">exptime</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hour</span><span class="p">)),</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.08</span><span class="p">)</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
 <span class="n">cb</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">cb</span><span class="o">.</span><span class="n">update_ticks</span><span class="p">()</span>
 
@@ -850,12 +883,12 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_HLC_Haystacks_33_0.png" src="../_images/notebooks_HLC_Haystacks_33_0.png" />
+<img alt="../_images/notebooks_HLC_Haystacks_35_0.png" src="../_images/notebooks_HLC_Haystacks_35_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [20]:
+<span></span>In [22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -864,7 +897,7 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span> <span class="n">wspace</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.80</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
 <span class="n">tavg_noiseless_sci_scene</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">data_mask_nan_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noiseless_sci_scene</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noiseless_sci_scene</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
            <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
            <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.5e-3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.5e-2</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
@@ -876,7 +909,7 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
 <span class="n">tavg_noiseless_sci_scene</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">data_mask_nan_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noiseless_sci_scene</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noiseless_sci_scene</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
            <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
            <span class="n">vmin</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.5e-2</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelleft</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
@@ -895,12 +928,67 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_HLC_Haystacks_34_0.png" src="../_images/notebooks_HLC_Haystacks_34_0.png" />
+<img alt="../_images/notebooks_HLC_Haystacks_36_0.png" src="../_images/notebooks_HLC_Haystacks_36_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [21]:
+<span></span>In [33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="p">(</span><span class="n">MinMaxInterval</span><span class="p">,</span> <span class="n">SqrtStretch</span><span class="p">,</span>
+                                   <span class="n">ImageNormalize</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">astropy.visualization</span> <span class="kn">import</span> <span class="n">simple_norm</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">cw</span> <span class="o">=</span> <span class="mi">16</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+
+<span class="c1"># norm = simple_norm(tavg_noisy_sci_scene[1, cw:-cw, cw:-cw].value, &#39;sqrt&#39;)</span>
+<span class="c1"># plt.suptitle(&#39;OS5 HLC / Haystacks scene: F6V star at {:.2f}, 1.6 AU Jovian, 10 zodi debris\n\</span>
+<span class="c1">#               Scale unit is count / s&#39;.format(dist_scene))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span> <span class="n">wspace</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_sci_scene</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">cw</span><span class="p">:</span><span class="o">-</span><span class="n">cw</span><span class="p">,</span> <span class="n">cw</span><span class="p">:</span><span class="o">-</span><span class="n">cw</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+           <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs_as</span><span class="p">[</span><span class="n">cw</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="n">cw</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="n">cw</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="n">cw</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+           <span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Arcsec&#39;</span><span class="p">)</span>
+<span class="c1"># plt.title(&#39;F575, {:.1f}, raw&#39;.format(Nint_use[0]*exptime.to(u.hour)),fontsize=25)</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.08</span><span class="p">)</span>
+<span class="n">cb</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">cb</span><span class="o">.</span><span class="n">update_ticks</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+
+<span class="c1"># norm = simple_norm(tavg_noisy_resid_sci_scene[1, cw:-cw, cw:-cw].value, &#39;sqrt&#39;)</span>
+<span class="c1">#plt.suptitle(&#39;OS5 HLC / Haystacks scene: G8V star at {:.2f} pc, 1 AU Jovian, 10 zodi debris\nFlux scale in units of photoelectron / s&#39;.format(dist_scene))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span> <span class="n">wspace</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">cw</span><span class="p">:</span><span class="o">-</span><span class="n">cw</span><span class="p">,</span> <span class="n">cw</span><span class="p">:</span><span class="o">-</span><span class="n">cw</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+           <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs_as</span><span class="p">[</span><span class="n">cw</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="n">cw</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="n">cw</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="n">cw</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+           <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">6e-2</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Arcsec&#39;</span><span class="p">)</span>
+<span class="c1"># plt.title(&#39;F575, {:.1f}, subtracted&#39;.format(Nint_use[0]*exptime.to(u.hour)),fontsize=25)</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">shrink</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.08</span><span class="p">)</span>
+<span class="n">cb</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">cb</span><span class="o">.</span><span class="n">update_ticks</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;os5_hlc_1Ori_Bertrand_WP.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_HLC_Haystacks_37_0.png" src="../_images/notebooks_HLC_Haystacks_37_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -908,7 +996,7 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;OS5 HLC / Haystacks scene: G8V star at {:.2f}, 1 AU Jovian, 10 zodi debris</span><span class="se">\n</span><span class="s1">Flux scale in units of counts / s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dist_scene</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span> <span class="n">wspace</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.92</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
            <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
            <span class="n">vmin</span><span class="o">=</span><span class="mf">0e-2</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.5e-2</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
@@ -919,7 +1007,7 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 <span class="n">cb</span><span class="o">.</span><span class="n">update_ticks</span><span class="p">()</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
            <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
            <span class="n">vmin</span><span class="o">=-</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">5e-3</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelleft</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
@@ -933,7 +1021,7 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 
 
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tavg_noisy_resid_sci_scene</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
            <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xs_as</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
            <span class="n">vmin</span><span class="o">=-</span><span class="mf">3e-3</span><span class="p">,</span><span class="n">vmax</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelleft</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">)</span>
@@ -952,14 +1040,14 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_HLC_Haystacks_35_0.png" src="../_images/notebooks_HLC_Haystacks_35_0.png" />
+<img alt="../_images/notebooks_HLC_Haystacks_38_0.png" src="../_images/notebooks_HLC_Haystacks_38_0.png" />
 </div>
 </div>
 <div class="section" id="Plot-Haystacks-counts-before-convolution-with-coronagraph">
 <h3>Plot Haystacks counts before convolution with coronagraph<a class="headerlink" href="#Plot-Haystacks-counts-before-convolution-with-coronagraph" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [22]:
+<span></span>In [25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1010,11 +1098,148 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_HLC_Haystacks_37_0.png" src="../_images/notebooks_HLC_Haystacks_37_0.png" />
+<div class="highlight"><pre>
+<span class="ansi-red-fg">----------------------------------------------------------------</span>
+<span class="ansi-red-fg">UnitTypeError</span>                  Traceback (most recent call last)
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/IPython/core/formatters.pyc</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, obj)</span>
+<span class="ansi-green-intense-fg ansi-bold">    332</span>                 <span class="ansi-green-fg">pass</span>
+<span class="ansi-green-intense-fg ansi-bold">    333</span>             <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 334</span><span class="ansi-red-fg">                 </span><span class="ansi-green-fg">return</span> printer<span class="ansi-blue-fg">(</span>obj<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    335</span>             <span class="ansi-red-fg"># Finally look for special method names</span>
+<span class="ansi-green-intense-fg ansi-bold">    336</span>             method <span class="ansi-blue-fg">=</span> get_real_method<span class="ansi-blue-fg">(</span>obj<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>print_method<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/IPython/core/pylabtools.pyc</span> in <span class="ansi-cyan-fg">&lt;lambda&gt;</span><span class="ansi-blue-fg">(fig)</span>
+<span class="ansi-green-intense-fg ansi-bold">    238</span>
+<span class="ansi-green-intense-fg ansi-bold">    239</span>     <span class="ansi-green-fg">if</span> <span class="ansi-blue-fg">&#39;png&#39;</span> <span class="ansi-green-fg">in</span> formats<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 240</span><span class="ansi-red-fg">         </span>png_formatter<span class="ansi-blue-fg">.</span>for_type<span class="ansi-blue-fg">(</span>Figure<span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">lambda</span> fig<span class="ansi-blue-fg">:</span> print_figure<span class="ansi-blue-fg">(</span>fig<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;png&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    241</span>     <span class="ansi-green-fg">if</span> <span class="ansi-blue-fg">&#39;retina&#39;</span> <span class="ansi-green-fg">in</span> formats <span class="ansi-green-fg">or</span> <span class="ansi-blue-fg">&#39;png2x&#39;</span> <span class="ansi-green-fg">in</span> formats<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    242</span>         png_formatter<span class="ansi-blue-fg">.</span>for_type<span class="ansi-blue-fg">(</span>Figure<span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">lambda</span> fig<span class="ansi-blue-fg">:</span> retina_figure<span class="ansi-blue-fg">(</span>fig<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/IPython/core/pylabtools.pyc</span> in <span class="ansi-cyan-fg">print_figure</span><span class="ansi-blue-fg">(fig, fmt, bbox_inches, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    122</span>
+<span class="ansi-green-intense-fg ansi-bold">    123</span>     bytes_io <span class="ansi-blue-fg">=</span> BytesIO<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 124</span><span class="ansi-red-fg">     </span>fig<span class="ansi-blue-fg">.</span>canvas<span class="ansi-blue-fg">.</span>print_figure<span class="ansi-blue-fg">(</span>bytes_io<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kw<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    125</span>     data <span class="ansi-blue-fg">=</span> bytes_io<span class="ansi-blue-fg">.</span>getvalue<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    126</span>     <span class="ansi-green-fg">if</span> fmt <span class="ansi-blue-fg">==</span> <span class="ansi-blue-fg">&#39;svg&#39;</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/backend_bases.pyc</span> in <span class="ansi-cyan-fg">print_figure</span><span class="ansi-blue-fg">(self, filename, dpi, facecolor, edgecolor, orientation, format, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2206</span>                     orientation<span class="ansi-blue-fg">=</span>orientation<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">   2207</span>                     dryrun<span class="ansi-blue-fg">=</span>True<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-fg">-&gt; 2208</span><span class="ansi-red-fg">                     **kwargs)
+</span><span class="ansi-green-intense-fg ansi-bold">   2209</span>                 renderer <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>figure<span class="ansi-blue-fg">.</span>_cachedRenderer
+<span class="ansi-green-intense-fg ansi-bold">   2210</span>                 bbox_inches <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>figure<span class="ansi-blue-fg">.</span>get_tightbbox<span class="ansi-blue-fg">(</span>renderer<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/backends/backend_agg.pyc</span> in <span class="ansi-cyan-fg">print_png</span><span class="ansi-blue-fg">(self, filename_or_obj, *args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    505</span>
+<span class="ansi-green-intense-fg ansi-bold">    506</span>     <span class="ansi-green-fg">def</span> print_png<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> filename_or_obj<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 507</span><span class="ansi-red-fg">         </span>FigureCanvasAgg<span class="ansi-blue-fg">.</span>draw<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    508</span>         renderer <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>get_renderer<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    509</span>         original_dpi <span class="ansi-blue-fg">=</span> renderer<span class="ansi-blue-fg">.</span>dpi
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/backends/backend_agg.pyc</span> in <span class="ansi-cyan-fg">draw</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    428</span>             <span class="ansi-green-fg">if</span> toolbar<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    429</span>                 toolbar<span class="ansi-blue-fg">.</span>set_cursor<span class="ansi-blue-fg">(</span>cursors<span class="ansi-blue-fg">.</span>WAIT<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 430</span><span class="ansi-red-fg">             </span>self<span class="ansi-blue-fg">.</span>figure<span class="ansi-blue-fg">.</span>draw<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>renderer<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    431</span>         <span class="ansi-green-fg">finally</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    432</span>             <span class="ansi-green-fg">if</span> toolbar<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/artist.pyc</span> in <span class="ansi-cyan-fg">draw_wrapper</span><span class="ansi-blue-fg">(artist, renderer, *args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">     53</span>                 renderer<span class="ansi-blue-fg">.</span>start_filter<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     54</span>
+<span class="ansi-green-fg">---&gt; 55</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> draw<span class="ansi-blue-fg">(</span>artist<span class="ansi-blue-fg">,</span> renderer<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     56</span>         <span class="ansi-green-fg">finally</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     57</span>             <span class="ansi-green-fg">if</span> artist<span class="ansi-blue-fg">.</span>get_agg_filter<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> None<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/figure.pyc</span> in <span class="ansi-cyan-fg">draw</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1293</span>
+<span class="ansi-green-intense-fg ansi-bold">   1294</span>             mimage._draw_list_compositing_images(
+<span class="ansi-green-fg">-&gt; 1295</span><span class="ansi-red-fg">                 renderer, self, artists, self.suppressComposite)
+</span><span class="ansi-green-intense-fg ansi-bold">   1296</span>
+<span class="ansi-green-intense-fg ansi-bold">   1297</span>             renderer<span class="ansi-blue-fg">.</span>close_group<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;figure&#39;</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/image.pyc</span> in <span class="ansi-cyan-fg">_draw_list_compositing_images</span><span class="ansi-blue-fg">(renderer, parent, artists, suppress_composite)</span>
+<span class="ansi-green-intense-fg ansi-bold">    136</span>     <span class="ansi-green-fg">if</span> not_composite <span class="ansi-green-fg">or</span> <span class="ansi-green-fg">not</span> has_images<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    137</span>         <span class="ansi-green-fg">for</span> a <span class="ansi-green-fg">in</span> artists<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 138</span><span class="ansi-red-fg">             </span>a<span class="ansi-blue-fg">.</span>draw<span class="ansi-blue-fg">(</span>renderer<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    139</span>     <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    140</span>         <span class="ansi-red-fg"># Composite any adjacent images together</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/artist.pyc</span> in <span class="ansi-cyan-fg">draw_wrapper</span><span class="ansi-blue-fg">(artist, renderer, *args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">     53</span>                 renderer<span class="ansi-blue-fg">.</span>start_filter<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     54</span>
+<span class="ansi-green-fg">---&gt; 55</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> draw<span class="ansi-blue-fg">(</span>artist<span class="ansi-blue-fg">,</span> renderer<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     56</span>         <span class="ansi-green-fg">finally</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     57</span>             <span class="ansi-green-fg">if</span> artist<span class="ansi-blue-fg">.</span>get_agg_filter<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> None<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/axes/_base.pyc</span> in <span class="ansi-cyan-fg">draw</span><span class="ansi-blue-fg">(self, renderer, inframe)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2397</span>             renderer<span class="ansi-blue-fg">.</span>stop_rasterizing<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2398</span>
+<span class="ansi-green-fg">-&gt; 2399</span><span class="ansi-red-fg">         </span>mimage<span class="ansi-blue-fg">.</span>_draw_list_compositing_images<span class="ansi-blue-fg">(</span>renderer<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">,</span> artists<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2400</span>
+<span class="ansi-green-intense-fg ansi-bold">   2401</span>         renderer<span class="ansi-blue-fg">.</span>close_group<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;axes&#39;</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/image.pyc</span> in <span class="ansi-cyan-fg">_draw_list_compositing_images</span><span class="ansi-blue-fg">(renderer, parent, artists, suppress_composite)</span>
+<span class="ansi-green-intense-fg ansi-bold">    136</span>     <span class="ansi-green-fg">if</span> not_composite <span class="ansi-green-fg">or</span> <span class="ansi-green-fg">not</span> has_images<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    137</span>         <span class="ansi-green-fg">for</span> a <span class="ansi-green-fg">in</span> artists<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 138</span><span class="ansi-red-fg">             </span>a<span class="ansi-blue-fg">.</span>draw<span class="ansi-blue-fg">(</span>renderer<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    139</span>     <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    140</span>         <span class="ansi-red-fg"># Composite any adjacent images together</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/artist.pyc</span> in <span class="ansi-cyan-fg">draw_wrapper</span><span class="ansi-blue-fg">(artist, renderer, *args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">     53</span>                 renderer<span class="ansi-blue-fg">.</span>start_filter<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     54</span>
+<span class="ansi-green-fg">---&gt; 55</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> draw<span class="ansi-blue-fg">(</span>artist<span class="ansi-blue-fg">,</span> renderer<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     56</span>         <span class="ansi-green-fg">finally</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     57</span>             <span class="ansi-green-fg">if</span> artist<span class="ansi-blue-fg">.</span>get_agg_filter<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> None<span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/image.pyc</span> in <span class="ansi-cyan-fg">draw</span><span class="ansi-blue-fg">(self, renderer, *args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    546</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    547</span>             im, l, b, trans = self.make_image(
+<span class="ansi-green-fg">--&gt; 548</span><span class="ansi-red-fg">                 renderer, renderer.get_image_magnification())
+</span><span class="ansi-green-intense-fg ansi-bold">    549</span>             <span class="ansi-green-fg">if</span> im <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> None<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    550</span>                 renderer<span class="ansi-blue-fg">.</span>draw_image<span class="ansi-blue-fg">(</span>gc<span class="ansi-blue-fg">,</span> l<span class="ansi-blue-fg">,</span> b<span class="ansi-blue-fg">,</span> im<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/image.pyc</span> in <span class="ansi-cyan-fg">make_image</span><span class="ansi-blue-fg">(self, renderer, magnification, unsampled)</span>
+<span class="ansi-green-intense-fg ansi-bold">    772</span>         return self._make_image(
+<span class="ansi-green-intense-fg ansi-bold">    773</span>             self<span class="ansi-blue-fg">.</span>_A<span class="ansi-blue-fg">,</span> bbox<span class="ansi-blue-fg">,</span> transformed_bbox<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>axes<span class="ansi-blue-fg">.</span>bbox<span class="ansi-blue-fg">,</span> magnification<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-fg">--&gt; 774</span><span class="ansi-red-fg">             unsampled=unsampled)
+</span><span class="ansi-green-intense-fg ansi-bold">    775</span>
+<span class="ansi-green-intense-fg ansi-bold">    776</span>     <span class="ansi-green-fg">def</span> _check_unsampled_image<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> renderer<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/matplotlib/image.pyc</span> in <span class="ansi-cyan-fg">_make_image</span><span class="ansi-blue-fg">(self, A, in_bbox, out_bbox, clip_bbox, magnification, unsampled, round_to_pixel_border)</span>
+<span class="ansi-green-intense-fg ansi-bold">    381</span>                 A_scaled <span class="ansi-blue-fg">-=</span> a_min
+<span class="ansi-green-intense-fg ansi-bold">    382</span>                 <span class="ansi-green-fg">if</span> a_min <span class="ansi-blue-fg">!=</span> a_max<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 383</span><span class="ansi-red-fg">                     </span>A_scaled <span class="ansi-blue-fg">/=</span> <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">(</span>a_max <span class="ansi-blue-fg">-</span> a_min<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">/</span> <span class="ansi-cyan-fg">0.8</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    384</span>                 A_scaled <span class="ansi-blue-fg">+=</span> <span class="ansi-cyan-fg">0.1</span>
+<span class="ansi-green-intense-fg ansi-bold">    385</span>                 A_resampled = np.zeros((out_height, out_width),
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/astropy-2.0.2-py2.7-macosx-10.6-x86_64.egg/astropy/units/quantity.pyc</span> in <span class="ansi-cyan-fg">__array_ufunc__</span><span class="ansi-blue-fg">(self, function, method, *inputs, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    628</span>             <span class="ansi-green-fg">if</span> function<span class="ansi-blue-fg">.</span>nout <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    629</span>                 out <span class="ansi-blue-fg">=</span> out<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span>
+<span class="ansi-green-fg">--&gt; 630</span><span class="ansi-red-fg">             </span>out_array <span class="ansi-blue-fg">=</span> check_output<span class="ansi-blue-fg">(</span>out<span class="ansi-blue-fg">,</span> unit<span class="ansi-blue-fg">,</span> inputs<span class="ansi-blue-fg">,</span> function<span class="ansi-blue-fg">=</span>function<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    631</span>             <span class="ansi-red-fg"># Ensure output argument remains a tuple.</span>
+<span class="ansi-green-intense-fg ansi-bold">    632</span>             kwargs<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;out&#39;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">(</span>out_array<span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">if</span> function<span class="ansi-blue-fg">.</span>nout <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">1</span> <span class="ansi-green-fg">else</span> out_array
+
+<span class="ansi-green-fg">/Users/mrizzo/anaconda2/lib/python2.7/site-packages/astropy-2.0.2-py2.7-macosx-10.6-x86_64.egg/astropy/units/quantity_helper.pyc</span> in <span class="ansi-cyan-fg">check_output</span><span class="ansi-blue-fg">(output, unit, inputs, function)</span>
+<span class="ansi-green-intense-fg ansi-bold">    629</span>                                 .format(&#34;&#34; if function is None else
+<span class="ansi-green-intense-fg ansi-bold">    630</span>                                         <span class="ansi-blue-fg">&#34;resulting from {0} function &#34;</span>
+<span class="ansi-green-fg">--&gt; 631</span><span class="ansi-red-fg">                                         .format(function.__name__)))
+</span><span class="ansi-green-intense-fg ansi-bold">    632</span>
+<span class="ansi-green-intense-fg ansi-bold">    633</span>     <span class="ansi-red-fg"># check we can handle the dtype (e.g., that we are not int</span>
+
+<span class="ansi-red-fg">UnitTypeError</span>: Cannot store quantity with dimension resulting from true_divide function in a non-Quantity instance.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.figure.Figure at 0x11b5fb210&gt;
+</pre></div>
 </div>
 </div>
 </div>
@@ -1042,7 +1267,7 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
 <li><a class="reference internal" href="#Now-the-big-guns">Now the big guns</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#Now-let's-explore-what-we-have-done...">Now let&#8217;s explore what we have done...</a><ul>
+<li><a class="reference internal" href="#Now-let's-explore-what-we-have-done...">Now let’s explore what we have done…</a><ul>
 <li><a class="reference internal" href="#Plot-Haystacks-counts-before-convolution-with-coronagraph">Plot Haystacks counts before convolution with coronagraph</a></li>
 </ul>
 </li>
@@ -1062,8 +1287,8 @@ crispy - INFO - F883.0 total stellar count rate excluding coronagraph masks: 1.9
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

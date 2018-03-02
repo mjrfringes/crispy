@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>tools package &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
     <link rel="shortcut icon" href="_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -35,7 +32,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -184,7 +181,7 @@ total: Boolean</p>
 </div></blockquote>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <blockquote class="last">
 <div><p>new_array: new rebinned array with dimensions: shape</p>
 </div></blockquote>
@@ -197,7 +194,7 @@ total: Boolean</p>
 <dl class="function">
 <dt id="tools.detutils.rebin">
 <code class="descclassname">tools.detutils.</code><code class="descname">rebin</code><span class="sig-paren">(</span><em>a</em>, <em>shape</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/detutils.html#rebin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.detutils.rebin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resizes a 2d array by averaging or repeating elements, 
+<dd><p>Resizes a 2d array by averaging or repeating elements,
 new dimensions must be integral factors of original dimensions</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -215,7 +212,7 @@ new dimensions must be integral factors of original dimensions</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>rebinned_array</strong> : ndarray</p>
 <blockquote class="last">
-<div><p>If the new shape is smaller of the input array, the data are averaged, 
+<div><p>If the new shape is smaller of the input array, the data are averaged,
 if the new shape is bigger array elements are repeated</p>
 </div></blockquote>
 </td>
@@ -231,8 +228,8 @@ if the new shape is bigger array elements are repeated</p>
 <dt id="tools.image.Image">
 <em class="property">class </em><code class="descclassname">tools.image.</code><code class="descname">Image</code><span class="sig-paren">(</span><em>filename=''</em>, <em>data=None</em>, <em>ivar=None</em>, <em>header=None</em>, <em>extraheader=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/image.html#Image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.image.Image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Image is the basic class for images</p>
-<p>self.data, self.ivar, and self.header should be numpy ndarrays, 
-which can be read from and written to a fits file with the load 
+<p>self.data, self.ivar, and self.header should be numpy ndarrays,
+which can be read from and written to a fits file with the load
 and write methods.  If not ndarrays, they should be None.</p>
 <p>Image may be initialized with the name of the raw file to read,
 through a call to Image.load().</p>
@@ -250,7 +247,7 @@ self.ivar.</p>
 <code class="descname">write</code><span class="sig-paren">(</span><em>outfilename</em>, <em>clobber=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/image.html#Image.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.image.Image.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a primary HDU using self.data and self.header, and
 attempts to write to outfilename.  If self.ivar is not None,
-append self.ivar as a second HDU before writing to a file.       
+append self.ivar as a second HDU before writing to a file.
 clobber is provided as a keyword to fits.HDUList.writeto.</p>
 </dd></dl>
 
@@ -374,7 +371,7 @@ If False, returns one single mask</p>
 <dt id="tools.imgtools.scale2imgs">
 <code class="descclassname">tools.imgtools.</code><code class="descname">scale2imgs</code><span class="sig-paren">(</span><em>target</em>, <em>ref</em>, <em>bowtie_mask</em>, <em>returndiff=True</em>, <em>returnest=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/imgtools.html#scale2imgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.imgtools.scale2imgs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the slice-by-slice best-fit scale factor between two images.
-Optionally returns the difference between the two. 
+Optionally returns the difference between the two.
 Images can be cubes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -385,7 +382,7 @@ Images can be cubes.</p>
 <div><p>Bowtie mask</p>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <p><strong>coefs: float array</strong></p>
 <blockquote>
 <div><p>Coefficient(s) of the best fit between the two images or cubes</p>
@@ -416,9 +413,9 @@ Images can be cubes.</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>log (crispyLogger object): A crispyLogger object that was freshly </dt>
+<dt>log (crispyLogger object): A crispyLogger object that was freshly</dt>
 <dd>instantiated.</dd>
-<dt>lvl (int): The severity level of messages printed to the file with </dt>
+<dt>lvl (int): The severity level of messages printed to the file with</dt>
 <dd>the file handler, default = 1.</dd>
 </dl>
 </dd>
@@ -428,12 +425,12 @@ Images can be cubes.</p>
 <dl class="function">
 <dt id="tools.initLogger.addFitsStyleHandler">
 <code class="descclassname">tools.initLogger.</code><code class="descname">addFitsStyleHandler</code><span class="sig-paren">(</span><em>log</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#addFitsStyleHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.addFitsStyleHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will add a file handler with a string format ideal for 
+<dd><p>This function will add a file handler with a string format ideal for
 directly loading into a FITS header.</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>log (crispyLogger object): A crispyLogger object that was freshly </dt>
+<dt>log (crispyLogger object): A crispyLogger object that was freshly</dt>
 <dd>instantiated.</dd>
 </dl>
 </dd>
@@ -447,9 +444,9 @@ directly loading into a FITS header.</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>log (crispyLogger object): A crispyLogger object that was freshly </dt>
+<dt>log (crispyLogger object): A crispyLogger object that was freshly</dt>
 <dd>instantiated.</dd>
-<dt>lvl (int): The severity level of messages printed to the screen with </dt>
+<dt>lvl (int): The severity level of messages printed to the screen with</dt>
 <dd>the stream handler, default = 20.</dd>
 </dl>
 </dd>
@@ -459,13 +456,13 @@ directly loading into a FITS header.</p>
 <dl class="class">
 <dt id="tools.initLogger.crispyLogger">
 <em class="property">class </em><code class="descclassname">tools.initLogger.</code><code class="descname">crispyLogger</code><span class="sig-paren">(</span><em>name</em>, <em>level=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/logging.html#logging.Logger" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">logging.Logger</span></code></a></p>
-<p>This is the advanced logging object used for crispy. 
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">logging.Logger</span></code></a></p>
+<p>This is the advanced logging object used for crispy.
 It is almost a carbon copy of the CHARIS DRP logger routine.
-It inherits from the standard 
-Python library &#8216;logging&#8217; and provides added features.
+It inherits from the standard
+Python library ‘logging’ and provides added features.
 The default log level for the output file will be 1, ie ALL messages;
-while the default for the screen will be INFO, and can be changed easily 
+while the default for the screen will be INFO, and can be changed easily
 using the setStreamLevel(lvl) member function.</p>
 <p>Initialize the logger with a name and an optional level.</p>
 <dl class="attribute">
@@ -603,12 +600,12 @@ using the setStreamLevel(lvl) member function.</p>
 <code class="descname">setStreamLevel</code><span class="sig-paren">(</span><em>lvl=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#crispyLogger.setStreamLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.crispyLogger.setStreamLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set/change the level for the stream handler for a logging object.
 Any file handlers will be left alone.
-All messages of a higher severity level than &#8216;lvl&#8217; will be printed 
+All messages of a higher severity level than ‘lvl’ will be printed
 to the screen.</p>
 <dl class="docutils">
-<dt>Args:    </dt>
+<dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>lvl (int): The severity level of messages printed to the screen with </dt>
+<dt>lvl (int): The severity level of messages printed to the screen with</dt>
 <dd>the stream handler, default = 20.</dd>
 </dl>
 </dd>
@@ -661,8 +658,8 @@ to the screen.</p>
 <td>PRIMCRITICAL</td>
 <td>55</td>
 </tr>
-<tr class="row-odd"><td rowspan="10">&nbsp;</td>
-<td rowspan="10">&nbsp;</td>
+<tr class="row-odd"><td rowspan="10">&#160;</td>
+<td rowspan="10">&#160;</td>
 <td>PRIMERROR</td>
 <td>49</td>
 </tr>
@@ -733,28 +730,28 @@ to the screen.</p>
 <dt id="tools.initLogger.getLogger">
 <code class="descclassname">tools.initLogger.</code><code class="descname">getLogger</code><span class="sig-paren">(</span><em>name='generalLoggerName'</em>, <em>lvl=20</em>, <em>addFH=True</em>, <em>addSH=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#getLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.getLogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>This will either return the logging object already
-instantiated, or instantiate a new one and return it.  
-<strong>Use this function to both create and return any logger</strong> to avoid 
-accidentally adding additional handlers by using the setUpLogger function 
+instantiated, or instantiate a new one and return it.
+<strong>Use this function to both create and return any logger</strong> to avoid
+accidentally adding additional handlers by using the setUpLogger function
 instead.</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>name (str): The name for the logging object and </dt>
+<dt>name (str): The name for the logging object and</dt>
 <dd>name.log will be the output file written to disk.</dd>
-<dt>lvl (int): The severity level of messages printed to the screen with </dt>
+<dt>lvl (int): The severity level of messages printed to the screen with</dt>
 <dd>the stream handler, default = 20.</dd>
-<dt>addFH (boolean): Add a file handler to this logger?  Default severity </dt>
+<dt>addFH (boolean): Add a file handler to this logger?  Default severity</dt>
 <dd>level for it will be 1, and it will be named following
-name+&#8217;.log&#8217;.  Default = True.</dd>
-<dt>addSH (boolean): Add a stream handler to this logger? Severity set with </dt>
+name+’.log’.  Default = True.</dd>
+<dt>addSH (boolean): Add a stream handler to this logger? Severity set with</dt>
 <dd>the lvl argument.  Default = True.</dd>
 </dl>
 </dd>
 <dt>Returns:</dt>
 <dd><dl class="first last docutils">
-<dt>log (CharisLogger object): A CharisLogger object that was either </dt>
-<dd>freshly instantiated or determined to 
+<dt>log (CharisLogger object): A CharisLogger object that was either</dt>
+<dd>freshly instantiated or determined to
 already exist, then returned.</dd>
 </dl>
 </dd>
@@ -765,30 +762,30 @@ already exist, then returned.</dd>
 <dt id="tools.initLogger.setUpLogger">
 <code class="descclassname">tools.initLogger.</code><code class="descname">setUpLogger</code><span class="sig-paren">(</span><em>name='generalLoggerName'</em>, <em>lvl=20</em>, <em>addFH=True</em>, <em>addSH=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/initLogger.html#setUpLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.initLogger.setUpLogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function is utilized by getLogger to set up a new logging object.
-It will have the default name &#8216;generalLoggerName&#8217; and stream handler level
-of 20 unless redefined in the function call.  
+It will have the default name ‘generalLoggerName’ and stream handler level
+of 20 unless redefined in the function call.
 NOTE:
-If a file handler is added, it will have the lowest severity level by 
-default (Currently no need for changing this setting, so it will stay 
-this way for now).  Remember that any messages will be passed up to any 
+If a file handler is added, it will have the lowest severity level by
+default (Currently no need for changing this setting, so it will stay
+this way for now).  Remember that any messages will be passed up to any
 parent loggers, so children do not always need their own file handler.</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>name (str): The name for the logging object and </dt>
+<dt>name (str): The name for the logging object and</dt>
 <dd>name.log will be the output file written to disk.</dd>
-<dt>lvl (int): The severity level of messages printed to the screen with </dt>
+<dt>lvl (int): The severity level of messages printed to the screen with</dt>
 <dd>the stream handler, default = 20.</dd>
-<dt>addFH (boolean): Add a file handler to this logger?  Default severity </dt>
+<dt>addFH (boolean): Add a file handler to this logger?  Default severity</dt>
 <dd>level for it will be 1, and it will be named following
-name+&#8217;.log&#8217;.  Default = True.</dd>
-<dt>addSH (boolean): Add a stream handler to this logger? Severity set with </dt>
+name+’.log’.  Default = True.</dd>
+<dt>addSH (boolean): Add a stream handler to this logger? Severity set with</dt>
 <dd>the lvl argument.  Default = True.</dd>
 </dl>
 </dd>
 <dt>Returns:</dt>
 <dd><dl class="first last docutils">
-<dt>log (crispyLogger object): A crispyLogger object that was freshly </dt>
+<dt>log (crispyLogger object): A crispyLogger object that was freshly</dt>
 <dd>instantiated.</dd>
 </dl>
 </dd>
@@ -800,17 +797,17 @@ name+&#8217;.log&#8217;.  Default = True.</dd>
 <span id="tools-inputscene-module"></span><h2>tools.inputScene module<a class="headerlink" href="#module-tools.inputScene" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="tools.inputScene.Jy_to_photons">
-<code class="descclassname">tools.inputScene.</code><code class="descname">Jy_to_photons</code><span class="sig-paren">(</span><em>cube_Jy</em>, <em>wavel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#Jy_to_photons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.Jy_to_photons" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.inputScene.</code><code class="descname">Jy_to_photons</code><span class="sig-paren">(</span><em>cube_Jy</em>, <em>wavlist</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/inputScene.html#Jy_to_photons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.inputScene.Jy_to_photons" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cube_Jy: 3D datacube in Jy</strong></p>
 <blockquote>
-<div><p>wavel: 1D array with wavelengths in microns</p>
+<div><p>wavlist: 1D array with wavelengths in microns</p>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <blockquote class="last">
 <div><p>hc: 3D haystacks cube in photons/m2/um/s</p>
 </div></blockquote>
@@ -901,7 +898,7 @@ in the text file is normalized to have its maximum within the wavelist range to 
 <p>This function calculates the number of photons per second
 entering the WFIRST obscured aperture, given the star <code class="xref py py-obj docutils literal"><span class="pre">Vmag</span></code> and its temperature
 for each slice of the input cube
-This was only tested with John Krist&#8217;s cubes and his normalization.</p>
+This was only tested with John Krist’s cubes and his normalization.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -931,7 +928,7 @@ This was only tested with John Krist&#8217;s cubes and his normalization.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">newcube: 3D array</p>
 <blockquote class="last">
 <div><p>Cube that multiplies an input normalized cube from John Krist to turn it into units
-of photons/s/nm/pixel. Each slice from the product cube subsequently needs to be multiplied by the 
+of photons/s/nm/pixel. Each slice from the product cube subsequently needs to be multiplied by the
 bandwidth of each slice to determine the photons/s/pixel incident on the telescope</p>
 </div></blockquote>
 </td>
@@ -1385,7 +1382,7 @@ to limit the impact of outliers).  Analogous to the trimmed mean.</p>
 </div></blockquote>
 <p><strong>trimfrac: float</strong></p>
 <blockquote>
-<div><p>fraction of outliers (high &amp; low combined) to trim 
+<div><p>fraction of outliers (high &amp; low combined) to trim
 Default 0.1 (5% trimmed on the high end, 5% on the low end)</p>
 </div></blockquote>
 </td>
@@ -1441,7 +1438,7 @@ Default 0.1 (5% trimmed on the high end, 5% on the low end)</p>
 <p class="rubric">Notes</p>
 <p>The list of coefficients has space for a polynomial fit of the
 input order (i.e., for order 3, up to terms like x**3 and x**2*y,
-but not x**3*y).  It is all zeros in the output apart from the 
+but not x**3*y).  It is all zeros in the output apart from the
 rotation matrix given by scale and phi.</p>
 </dd></dl>
 
@@ -1505,12 +1502,12 @@ combined) to trim in the minimization.  Default 0.1
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>the coefficients, if not supplied, are initially set to the 
+<p>the coefficients, if not supplied, are initially set to the
 known pitch angle and scale.  A loop then does a quick check to find
 reasonable offsets in x and y.  With all of the first-order polynomial
 coefficients set, the optimizer refines these and the higher-order
 coefficients.  This routine seems to be relatively robust down to
-per-lenslet signal-to-noise ratios of order unity (or even a little 
+per-lenslet signal-to-noise ratios of order unity (or even a little
 less).</p>
 </dd></dl>
 
@@ -1573,7 +1570,7 @@ order = (order+1)*(order+2)</p>
 <dl class="class">
 <dt id="tools.par_utils.Task">
 <em class="property">class </em><code class="descclassname">tools.par_utils.</code><code class="descname">Task</code><span class="sig-paren">(</span><em>index</em>, <em>func</em>, <em>args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/par_utils.html#Task"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.par_utils.Task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -1586,11 +1583,814 @@ order = (order+1)*(order+2)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-postprocessing-module">
-<h2>tools.postprocessing module<a class="headerlink" href="#tools-postprocessing-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.postprocessing">
+<span id="tools-postprocessing-module"></span><h2>tools.postprocessing module<a class="headerlink" href="#module-tools.postprocessing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.postprocessing.RDI_noise">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">RDI_noise</code><span class="sig-paren">(</span><em>par</em>, <em>xshift</em>, <em>yshift</em>, <em>order=3</em>, <em>rootname='mflib'</em>, <em>outdir_time_series='OS5'</em>, <em>outdir_detector='OS5/OS5_detector'</em>, <em>outdir_average='OS5/OS5_average'</em>, <em>process_cubes=True</em>, <em>process_offaxis_files=True</em>, <em>process_detector=True</em>, <em>take_averages=True</em>, <em>countershift=True</em>, <em>normalize_cubes=True</em>, <em>forced_inttime_ref=50</em>, <em>offaxis_reduced='OS5/OS5_average/offaxis.fits'</em>, <em>psf_time_series_folder='/Users/mrizzo/IFS/OS5/with_lowfc'</em>, <em>Nref=30</em>, <em>ref_only=True</em>, <em>offaxis_psf_filename='/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits'</em>, <em>ref_star_T=&lt;Quantity 9377.0 K&gt;</em>, <em>ref_star_Vmag=2.37</em>, <em>target_star_T=&lt;Quantity 5887.0 K&gt;</em>, <em>target_star_Vmag=5.03</em>, <em>IWA=3</em>, <em>OWA=9</em>, <em>lamc=660.0</em>, <em>BW=0.18</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em>, <em>mflib='/mflib.fits.gz'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#RDI_noise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.RDI_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines the SNR map of a simulation using RDI.
+Here we assume the target PSF time series is already in hand, and already in outdir_time_series.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par: Parameters instance</strong></p>
+<blockquote>
+<div><p>Crispy parameter instance</p>
+</div></blockquote>
+<p><strong>xshift: float</strong></p>
+<blockquote>
+<div><p>The amount to shift the input in X (in final IFS cube pixels)</p>
+</div></blockquote>
+<p><strong>yshift: float</strong></p>
+<blockquote>
+<div><p>The amount to shift the input in Y (in final IFS cube pixels)</p>
+</div></blockquote>
+<p><strong>order: integer</strong></p>
+<blockquote>
+<div><p>The order of the spline transform used for shifting the cubes</p>
+</div></blockquote>
+<p><strong>rootname: string</strong></p>
+<blockquote>
+<div><p>The root name of the final SNR cube maps</p>
+</div></blockquote>
+<p><strong>outdir_time_series: string</strong></p>
+<blockquote>
+<div><p>Path to which we will export the IFS fluxes at the detector</p>
+</div></blockquote>
+<p><strong>outdir_detector: string</strong></p>
+<blockquote>
+<div><p>Path to the folder where we will put the detector maps</p>
+</div></blockquote>
+<p><strong>outdir_average: string</strong></p>
+<blockquote>
+<div><p>Path to the folder where we will put the final results and other byproducts of the function</p>
+</div></blockquote>
+<p><strong>process_cubes: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to process the IFS cubes, or assume that they are already processed</p>
+</div></blockquote>
+<p><strong>countershift: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to countershift the reference star or not</p>
+</div></blockquote>
+<p><strong>normalize_contrast: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to normalize the SNR map to contrast units using off-axis PSF</p>
+</div></blockquote>
+<p><strong>offaxis_reduced: string</strong></p>
+<blockquote>
+<div><p>Path to the offaxis PSF that will be used for contrast normalization</p>
+</div></blockquote>
+<p><strong>psf_time_series_folder: string</strong></p>
+<blockquote>
+<div><p>Path to the folder where all the original files are located</p>
+</div></blockquote>
+<p><strong>Nref: integer</strong></p>
+<blockquote>
+<div><p>Out of the files in John Krist’s folder, how many correspond to observations of the reference star</p>
+</div></blockquote>
+<p><strong>ref_only: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to only process the reference files or also target files</p>
+</div></blockquote>
+<p><strong>ref_star_T: ‘u.K’</strong></p>
+<blockquote>
+<div><p>Temperature of the reference star in u.K</p>
+</div></blockquote>
+<p><strong>target_star_T: ‘u.K’</strong></p>
+<blockquote>
+<div><p>Temperature of the target star in u.K</p>
+</div></blockquote>
+<p><strong>ref_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>V Magnitude of the reference star</p>
+</div></blockquote>
+<p><strong>target_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>V Magnitude of the target star</p>
+</div></blockquote>
+<p><strong>lamc: float</strong></p>
+<blockquote>
+<div><p>Central wavelength of the band, in nm</p>
+</div></blockquote>
+<p><strong>BW: float</strong></p>
+<blockquote>
+<div><p>Bandwidth</p>
+</div></blockquote>
+<p><strong>tel_pupil_area: ‘u.m**2’</strong></p>
+<blockquote>
+<div><p>Collecting area of the telescope, minus obscurations, in u.m**2</p>
+</div></blockquote>
+<p><strong>mflib: string</strong></p>
+<blockquote>
+<div><p>Name of the matched filter library file</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pixstd: array</p>
+<blockquote class="last">
+<div><p>List of slice-by-slice standard deviation of the RDI cube convolved with the matched filter</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.SNR_spectrum">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">SNR_spectrum</code><span class="sig-paren">(</span><em>lam_midpts</em>, <em>signal</em>, <em>noise</em>, <em>filename='Jupiter_1x_5AU_90deg.dat'</em>, <em>planet_radius=1.27</em>, <em>planet_AU=3.6</em>, <em>albedo=0.28</em>, <em>lam_contrast=None</em>, <em>plot=True</em>, <em>outname='SNR.png'</em>, <em>outfolder=''</em>, <em>title='Planet+star'</em>, <em>edges=1</em>, <em>FWHM=2</em>, <em>FWHMdata=2.0</em>, <em>ymargin=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#SNR_spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.SNR_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the outputs of process_SPC_IFS</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.construct_mflib">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">construct_mflib</code><span class="sig-paren">(</span><em>par</em>, <em>planet_cube</em>, <em>threshold</em>, <em>lamc</em>, <em>BW</em>, <em>outdir</em>, <em>mask</em>, <em>trim=30</em>, <em>outname='mflib.fits.gz'</em>, <em>order=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#construct_mflib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.construct_mflib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a library of matched filters for all points within the bowtie mask
+For now, this uses the reduced, ideal offaxis psf already in cube space.
+We could also build a function that offsets the original file, before IFS transformation.</p>
+<p>This particular function saves memory and time by only recording the relevant pixels</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par: Parameters instance</strong></p>
+<blockquote>
+<div><p>Crispy parameter instance</p>
+</div></blockquote>
+<p><strong>planet_cube: string</strong></p>
+<blockquote>
+<div><p>Path to the off-axis planet IFS cube</p>
+</div></blockquote>
+<p><strong>threshold: float</strong></p>
+<blockquote>
+<div><p>Value below which we zero out the matched filter pixels</p>
+</div></blockquote>
+<p><strong>lamc: float</strong></p>
+<blockquote>
+<div><p>Central wavelength in nm</p>
+</div></blockquote>
+<p><strong>BW: float</strong></p>
+<blockquote>
+<div><p>Spectral bandwidth</p>
+</div></blockquote>
+<p><strong>outdir: string</strong></p>
+<blockquote>
+<div><p>Export directory</p>
+</div></blockquote>
+<p><strong>mask: 2D ndarray</strong></p>
+<blockquote>
+<div><p>2D bowtie mask. If left to None, then the bowtie mask is calculated and IWA and OWA need to be specified</p>
+</div></blockquote>
+<p><strong>IWA: float</strong></p>
+<blockquote>
+<div><p>Inner working angle (in terms of lam/D</p>
+</div></blockquote>
+<p><strong>OWA: float</strong></p>
+<blockquote>
+<div><p>Outer working angle (in terms of lam/D</p>
+</div></blockquote>
+<p><strong>trim: integer</strong></p>
+<blockquote>
+<div><p>How much to trim the cubes on each side to save memory space (nominally 30)</p>
+</div></blockquote>
+<p><strong>outname: string</strong></p>
+<blockquote>
+<div><p>Name of the matched filter library file. Highly recommend to compress it to save space</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote class="last">
+<div><p>Order at which we do the spline transformation to move offaxis PSF around.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.convolved_mf">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">convolved_mf</code><span class="sig-paren">(</span><em>incube</em>, <em>mflibname</em>, <em>trim=30</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#convolved_mf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.convolved_mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a pseudo-convolution of the image by the matched filter library</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>incube: 3D ndarray</strong></p>
+<blockquote>
+<div><p>Cube to convolve. Make sure all NaNs have been converted to zeros</p>
+</div></blockquote>
+<p><strong>mflibname: string</strong></p>
+<blockquote>
+<div><p>Path to the Matched Filter library, that was pre-computed</p>
+</div></blockquote>
+<p><strong>trim: integer</strong></p>
+<blockquote>
+<div><p>How much to trim the cubes on each side to save memory space (nominally 30)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">convolvedmap: 3D ndarray</p>
+<blockquote class="last">
+<div><p>Input cube multiplied in each non-zero pixel by the matched filter corresponding to that pixel</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.mf">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">mf</code><span class="sig-paren">(</span><em>cube</em>, <em>mask</em>, <em>threshold</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#mf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.mf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matched filter function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cube: 3D ndarray</strong></p>
+<blockquote>
+<div><p>An IFS cube representing the offaxis PSF, from which to compute the matched filter</p>
+</div></blockquote>
+<p><strong>mask: 2D ndarray</strong></p>
+<blockquote>
+<div><p>This is typically the coronagraphic mask</p>
+</div></blockquote>
+<p><strong>threshold: float</strong></p>
+<blockquote>
+<div><p>Fraction of max below which we crop the normalized PSF</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">matched_filter: 3D ndarray</p>
+<blockquote class="last">
+<div><p>Matched filter with the same dimensions as input cube</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.processReferenceCubes">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">processReferenceCubes</code><span class="sig-paren">(</span><em>par</em>, <em>xshift=0.0</em>, <em>yshift=0.0</em>, <em>order=3</em>, <em>outdir_time_series='OS5'</em>, <em>ref_input_list=[]</em>, <em>process_cubes=True</em>, <em>ref_star_T=&lt;Quantity 9377.0 K&gt;</em>, <em>ref_star_Vmag=2.37</em>, <em>lamc=660.0</em>, <em>BW=0.18</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#processReferenceCubes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.processReferenceCubes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes raw cubes from John Krist into IFS flux cubes just before the IFS.
+Doesn’t take into account the optical losses, but does take into account the detector QE.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par: Parameters instance</strong></p>
+<blockquote>
+<div><p>Crispy parameter instance</p>
+</div></blockquote>
+<p><strong>xshift: float</strong></p>
+<blockquote>
+<div><p>The amount to shift the input in X (in final IFS cube pixels)</p>
+</div></blockquote>
+<p><strong>yshift: float</strong></p>
+<blockquote>
+<div><p>The amount to shift the input in Y (in final IFS cube pixels)</p>
+</div></blockquote>
+<p><strong>order: integer</strong></p>
+<blockquote>
+<div><p>The order of the spline transform used for shifting the cubes</p>
+</div></blockquote>
+<p><strong>outdir_time_series: string</strong></p>
+<blockquote>
+<div><p>Path to which we will export the IFS fluxes at the detector</p>
+</div></blockquote>
+<p><strong>ref_input_list: string</strong></p>
+<blockquote>
+<div><p>List of filenames with the reference cubes</p>
+</div></blockquote>
+<p><strong>Nref: integer</strong></p>
+<blockquote>
+<div><p>Out of the files in John Krist’s folder, how many correspond to observations of the reference star</p>
+</div></blockquote>
+<p><strong>ref_only: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to only process the reference files or also target files</p>
+</div></blockquote>
+<p><strong>ref_star_T: ‘u.K’</strong></p>
+<blockquote>
+<div><p>Temperature of the reference star in u.K</p>
+</div></blockquote>
+<p><strong>ref_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>V Magnitude of the reference star</p>
+</div></blockquote>
+<p><strong>lamc: float</strong></p>
+<blockquote>
+<div><p>Central wavelength of the band, in nm</p>
+</div></blockquote>
+<p><strong>BW: float</strong></p>
+<blockquote>
+<div><p>Bandwidth</p>
+</div></blockquote>
+<p><strong>tel_pupil_area: ‘u.m**2’</strong></p>
+<blockquote>
+<div><p>Collecting area of the telescope, minus obscurations, in u.m**2</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ref_outlist: list of strings</p>
+<blockquote>
+<div><p>List of the filenames corresponding the reference star</p>
+</div></blockquote>
+<p>target_outlist: list of strings</p>
+<blockquote>
+<div><p>List of the filenames corresponding the target star</p>
+</div></blockquote>
+<p>fileshape: tuple</p>
+<blockquote class="last">
+<div><p>Size of the original John Krist cube</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.processTargetCubes">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">processTargetCubes</code><span class="sig-paren">(</span><em>par</em>, <em>target_file_list</em>, <em>outdir_time_series='OS5'</em>, <em>process_cubes=True</em>, <em>target_star_T=&lt;Quantity 5887.0 K&gt;</em>, <em>target_star_Vmag=5.03</em>, <em>lamc=660.0</em>, <em>BW=0.18</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#processTargetCubes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.processTargetCubes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes raw cubes from John Krist into IFS flux cubes just before the IFS.
+Doesn’t take into account the optical losses, but does take into account the detector QE.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par: Parameters instance</strong></p>
+<blockquote>
+<div><p>Crispy parameter instance</p>
+</div></blockquote>
+<p><strong>target_file_list: string</strong></p>
+<blockquote>
+<div><p>List of files</p>
+</div></blockquote>
+<p><strong>outdir_time_series: string</strong></p>
+<blockquote>
+<div><p>Path to which we will export the IFS fluxes at the detector</p>
+</div></blockquote>
+<p><strong>target_star_T: ‘u.K’</strong></p>
+<blockquote>
+<div><p>Temperature of the target star in u.K</p>
+</div></blockquote>
+<p><strong>target_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>V Magnitude of the target star</p>
+</div></blockquote>
+<p><strong>lamc: float</strong></p>
+<blockquote>
+<div><p>Central wavelength of the band, in nm</p>
+</div></blockquote>
+<p><strong>BW: float</strong></p>
+<blockquote>
+<div><p>Bandwidth</p>
+</div></blockquote>
+<p><strong>tel_pupil_area: ‘u.m**2’</strong></p>
+<blockquote>
+<div><p>Collecting area of the telescope, minus obscurations, in u.m**2</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">target_outlist: list of strings</p>
+<blockquote class="last">
+<div><p>List of the filenames corresponding the target star</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.process_SPC_IFS">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">process_SPC_IFS</code><span class="sig-paren">(</span><em>par</em>, <em>psf_time_series_folder</em>, <em>offaxis_psf_filename</em>, <em>planet_radius=&lt;Quantity 90794840.0 m&gt;</em>, <em>planet_AU=3.6</em>, <em>planet_dist_pc=14.1</em>, <em>ref_star_T=&lt;Quantity 9377.0 K&gt;</em>, <em>ref_star_Vmag=2.37</em>, <em>target_star_T=&lt;Quantity 5887.0 K&gt;</em>, <em>target_star_Vmag=5.03</em>, <em>lamc=770.0</em>, <em>BW=0.18</em>, <em>n_ref_star_imgs=30</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em>, <em>IWA=3</em>, <em>OWA=9</em>, <em>xshift=0.0</em>, <em>yshift=0.0</em>, <em>pp_fact=0.05</em>, <em>t_zodi=0.09</em>, <em>useQE=True</em>, <em>subtract_ref_psf=True</em>, <em>outdir_time_series='OS5'</em>, <em>outdir_detector='OS5/OS5_detector'</em>, <em>outdir_average='OS5/OS5_average'</em>, <em>process_cubes=True</em>, <em>process_offaxis=True</em>, <em>process_detector=True</em>, <em>process_noiseless=False</em>, <em>take_averages=True</em>, <em>parallel=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#process_SPC_IFS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.process_SPC_IFS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process SPC PSF cubes from J. Krist through the IFS</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par: Params instance</strong></p>
+<blockquote>
+<div><p>Contains all the parameters of the IFS</p>
+</div></blockquote>
+<p><strong>psf_time_series_folder: string</strong></p>
+<blockquote>
+<div><p>Where the files from Krist are located</p>
+</div></blockquote>
+<p><strong>offaxis_psf_filename: string</strong></p>
+<blockquote>
+<div><p>Where the off-axis PSF is located</p>
+</div></blockquote>
+<p><strong>mean_contrast: float</strong></p>
+<blockquote>
+<div><p>Mean contrast of the planet spectrum</p>
+</div></blockquote>
+<p><strong>ref_star_T: `u.K` float</strong></p>
+<blockquote>
+<div><p>Reference star temperature, float multiplied by astropy.units.K</p>
+</div></blockquote>
+<p><strong>ref_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>Vmag of the reference star</p>
+</div></blockquote>
+<p><strong>target_star_T: `u.K` float</strong></p>
+<blockquote>
+<div><p>Target star temperature, float multiplied by astropy.units.K</p>
+</div></blockquote>
+<p><strong>target_star_T_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>Vmag of the target star</p>
+</div></blockquote>
+<p><strong>lamc: float</strong></p>
+<blockquote>
+<div><p>Band’s central wavelength in nm</p>
+</div></blockquote>
+<p><strong>BW: float</strong></p>
+<blockquote>
+<div><p>Bandwidth</p>
+</div></blockquote>
+<p><strong>n_ref_star_imgs: int</strong></p>
+<blockquote>
+<div><p>Number of reference star images in the list</p>
+</div></blockquote>
+<p><strong>tel_pupil_area: `u.m**2` float</strong></p>
+<blockquote>
+<div><p>Effective surface area of telescope, including all geometric losses. Float
+multiplied by astropy.units.m**2</p>
+</div></blockquote>
+<p><strong>IWA: float</strong></p>
+<blockquote>
+<div><p>Inner working angle defined at par.lenslet_wav</p>
+</div></blockquote>
+<p><strong>OWA: float</strong></p>
+<blockquote>
+<div><p>Outer working angle defined at par.lenslet_wav</p>
+</div></blockquote>
+<p><strong>pp_fact: float</strong></p>
+<blockquote>
+<div><p>Post-processing factor - multiplies the target star PSF</p>
+</div></blockquote>
+<p><strong>t_zodi = float</strong></p>
+<blockquote>
+<div><p>Zodi transmission</p>
+</div></blockquote>
+<p><strong>outdir_time_series: string</strong></p>
+<blockquote>
+<div><p>Where to store the noiseless IFS detector images</p>
+</div></blockquote>
+<p><strong>outdir_detector: string</strong></p>
+<blockquote>
+<div><p>Where to store the noisy IFS detector images</p>
+</div></blockquote>
+<p><strong>outdir_average: string</strong></p>
+<blockquote>
+<div><p>Where to store the averages of the time series</p>
+</div></blockquote>
+<p><strong>process_cubes: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to process the raw images from Krist, or skip this step if it was already done</p>
+</div></blockquote>
+<p><strong>process_offaxis: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to process the offaxis images and add it to the images</p>
+</div></blockquote>
+<p><strong>process_detector: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to add detector QE, IFS losses and noise to the IFS images</p>
+</div></blockquote>
+<p><strong>process_noiseless: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to add detector QE, IFS losses but no detector noise to the IFS images</p>
+</div></blockquote>
+<p><strong>take_averages: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to average all IFS detector images in the time series to create averages</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">signal: ndarray</p>
+<blockquote>
+<div><p>Array with the matched-filtered flux at each of the final cube’s wavelengths;
+The background is already subtracted</p>
+</div></blockquote>
+<p>noise: ndarray</p>
+<blockquote class="last">
+<div><p>Noise estimate using the pixel-to-pixel variance within the dark hole, multiplied
+by the number of effective pixels within the matched filter (sum of matched filter
+cube)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.process_SPC_IFS2">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">process_SPC_IFS2</code><span class="sig-paren">(</span><em>par</em>, <em>psf_time_series_folder</em>, <em>offaxis_psf_filename</em>, <em>xshift=0.0</em>, <em>yshift=0.0</em>, <em>order=3</em>, <em>albedo_filename='Jupiter_1x_5AU_90deg.dat'</em>, <em>planet_radius=1.27</em>, <em>planet_AU=3.6</em>, <em>planet_dist_pc=14.1</em>, <em>albedo=0.28</em>, <em>ref_star_T=&lt;Quantity 9377.0 K&gt;</em>, <em>ref_star_Vmag=2.37</em>, <em>target_star_T=&lt;Quantity 5887.0 K&gt;</em>, <em>target_star_Vmag=5.03</em>, <em>lamc=770.0</em>, <em>BW=0.18</em>, <em>n_ref_star_imgs=30</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em>, <em>IWA=3</em>, <em>OWA=9</em>, <em>forced_inttime_ref=10.0</em>, <em>forced_tottime_ref=1000.0</em>, <em>pp_fact=1.0</em>, <em>RDI=True</em>, <em>subtract_dark=False</em>, <em>normalize_cubes=True</em>, <em>t_zodi=0.09</em>, <em>useQE=True</em>, <em>mflib='/mflib.fits.gz'</em>, <em>outdir_time_series='OS5'</em>, <em>outdir_detector='OS5/OS5_detector'</em>, <em>outdir_average='OS5/OS5_average'</em>, <em>process_cubes=True</em>, <em>process_offaxis_files=True</em>, <em>process_detector=True</em>, <em>take_averages=True</em>, <em>take_ref_average=True</em>, <em>nosource=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#process_SPC_IFS2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.process_SPC_IFS2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process SPC PSF cubes from J. Krist through the IFS</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par: Params instance</strong></p>
+<blockquote>
+<div><p>Contains all the parameters of the IFS</p>
+</div></blockquote>
+<p><strong>psf_time_series_folder: string</strong></p>
+<blockquote>
+<div><p>Where the files from Krist are located</p>
+</div></blockquote>
+<p><strong>offaxis_psf_filename: string</strong></p>
+<blockquote>
+<div><p>Where the off-axis PSF is located</p>
+</div></blockquote>
+<p><strong>xshift: float</strong></p>
+<blockquote>
+<div><p>X-shift of the reference star with respect to the target star(pixels)</p>
+</div></blockquote>
+<p><strong>yshift: float</strong></p>
+<blockquote>
+<div><p>Y-shift of the reference star with respect to the target star(pixels)</p>
+</div></blockquote>
+<p><strong>order: int</strong></p>
+<blockquote>
+<div><p>Order of all interpolations (3 recommended)</p>
+</div></blockquote>
+<p><strong>albedo_filename: string</strong></p>
+<blockquote>
+<div><p>Name of file containing the geometric albedo of the planet, located in Inputs/ folder</p>
+</div></blockquote>
+<p><strong>planet_radius: float</strong></p>
+<blockquote>
+<div><p>Radius of planet in Jupiter radii</p>
+</div></blockquote>
+<p><strong>planet_AU: float</strong></p>
+<blockquote>
+<div><p>Distance of the planet from its star in AU</p>
+</div></blockquote>
+<p><strong>planet_dist_pc: float</strong></p>
+<blockquote>
+<div><p>Distance of the star system in pc</p>
+</div></blockquote>
+<p><strong>albedo: float</strong></p>
+<blockquote>
+<div><p>Overrides the albedo. If None, then the original albedo curve is used. If not None,
+then the maximum of the albedo curve is normalized to the new albedo, while keeping
+overall albedo shape</p>
+</div></blockquote>
+<p><strong>ref_star_T: `u.K` float</strong></p>
+<blockquote>
+<div><p>Reference star temperature, float multiplied by astropy.units.K</p>
+</div></blockquote>
+<p><strong>ref_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>Vmag of the reference star</p>
+</div></blockquote>
+<p><strong>target_star_T: `u.K` float</strong></p>
+<blockquote>
+<div><p>Target star temperature, float multiplied by astropy.units.K</p>
+</div></blockquote>
+<p><strong>target_star_T_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>Vmag of the target star</p>
+</div></blockquote>
+<p><strong>lamc: float</strong></p>
+<blockquote>
+<div><p>Band’s central wavelength in nm</p>
+</div></blockquote>
+<p><strong>BW: float</strong></p>
+<blockquote>
+<div><p>Bandwidth</p>
+</div></blockquote>
+<p><strong>n_ref_star_imgs: int</strong></p>
+<blockquote>
+<div><p>Number of reference star images in the list</p>
+</div></blockquote>
+<p><strong>tel_pupil_area: `u.m**2` float</strong></p>
+<blockquote>
+<div><p>Effective surface area of telescope, including all geometric losses. Float
+multiplied by astropy.units.m**2</p>
+</div></blockquote>
+<p><strong>IWA: float</strong></p>
+<blockquote>
+<div><p>Inner working angle defined at par.lenslet_wav</p>
+</div></blockquote>
+<p><strong>OWA: float</strong></p>
+<blockquote>
+<div><p>Outer working angle defined at par.lenslet_wav</p>
+</div></blockquote>
+<p><strong>forced_inttime_ref: float</strong></p>
+<blockquote>
+<div><p>Forced time of a single integration for the reference star. This should be smaller
+than the individual integration time for the target since the reference star
+is typically brighter</p>
+</div></blockquote>
+<p><strong>forced_tottime_ref: float</strong></p>
+<blockquote>
+<div><p>Forced time spent for a single input cube for the reference. Typically, this is the
+same as the time for a single input cube for the target</p>
+</div></blockquote>
+<p><strong>pp_fact: float</strong></p>
+<blockquote>
+<div><p>Post-processing factor - artificially multiplies the target star PSF. Note that
+this is NOT the same as Bijan’s f_pp</p>
+</div></blockquote>
+<p><strong>RDI: Boolean</strong></p>
+<blockquote>
+<div><p>If True, run an RDI function to clean up the raw cubes.</p>
+</div></blockquote>
+<p><strong>mflib: String</strong></p>
+<blockquote>
+<div><p>Path towards an already-existing matched filter library. If empty string is given,
+the software will construct the library each time</p>
+</div></blockquote>
+<p><strong>subtract_dark: Boolean</strong></p>
+<blockquote>
+<div><p>If True, estimate the mean dark region (bottom of the detector) and subtract from
+map. Default: True. For different kinds of input maps that might cover the entire
+defector, this might be more tricky.</p>
+</div></blockquote>
+<p><strong>normalize_cubes: Boolean</strong></p>
+<blockquote>
+<div><p>If True, all cubes are normalized to contrast units. Default is True.</p>
+</div></blockquote>
+<p><strong>t_zodi: float</strong></p>
+<blockquote>
+<div><p>Zodi transmission (not operational for now)</p>
+</div></blockquote>
+<p><strong>useQE: Boolean</strong></p>
+<blockquote>
+<div><p>If True, the QE is applied when constructing the IFS maps. Note that in this case
+the QE file should represent both the actual detector QE, and the wavelength-dependent
+optical losses</p>
+</div></blockquote>
+<p><strong>outdir_time_series: string</strong></p>
+<blockquote>
+<div><p>Where to store the noiseless IFS detector images</p>
+</div></blockquote>
+<p><strong>outdir_detector: string</strong></p>
+<blockquote>
+<div><p>Where to store the noisy IFS detector images</p>
+</div></blockquote>
+<p><strong>outdir_average: string</strong></p>
+<blockquote>
+<div><p>Where to store the averages of the time series</p>
+</div></blockquote>
+<p><strong>process_cubes: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to process the raw images from Krist, or skip this step if it was already done</p>
+</div></blockquote>
+<p><strong>process_offaxis: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to process the offaxis images and add it to the images</p>
+</div></blockquote>
+<p><strong>process_detector: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to add detector QE, IFS losses and noise to the IFS images</p>
+</div></blockquote>
+<p><strong>process_noiseless: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to add detector QE, IFS losses but no detector noise to the IFS images</p>
+</div></blockquote>
+<p><strong>take_averages: Boolean</strong></p>
+<blockquote>
+<div><p>Whether to average all IFS detector images in the time series to create averages</p>
+</div></blockquote>
+<p><strong>nosource: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to process everything without actually adding the planet</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">signal: ndarray</p>
+<blockquote>
+<div><p>Array with the matched-filtered flux at each of the final cube’s wavelengths;
+The background is already subtracted</p>
+</div></blockquote>
+<p>noise: ndarray</p>
+<blockquote class="last">
+<div><p>Noise estimate using the pixel-to-pixel variance within the dark hole, multiplied
+by the number of effective pixels within the matched filter (sum of matched filter
+cube)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.process_offaxis">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">process_offaxis</code><span class="sig-paren">(</span><em>par</em>, <em>offaxis_psf_filename</em>, <em>fileshape</em>, <em>lamlist</em>, <em>lamc</em>, <em>outdir_average</em>, <em>Nave=1</em>, <em>inttime=1</em>, <em>Nreads=1</em>, <em>filename='Jupiter_1x_5AU_90deg.dat'</em>, <em>planet_radius=1.27</em>, <em>planet_AU=3.6</em>, <em>planet_dist_pc=14.1</em>, <em>albedo=0.28</em>, <em>target_star_T=&lt;Quantity 5887.0 K&gt;</em>, <em>target_star_Vmag=5.03</em>, <em>ref_star_T=&lt;Quantity 9377.0 K&gt;</em>, <em>ref_star_Vmag=2.37</em>, <em>tel_pupil_area=&lt;Quantity 3.650265060424805 m2&gt;</em>, <em>order=3</em>, <em>useQE=True</em>, <em>polychromeOut=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#process_offaxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.process_offaxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes an off-axis PSF cube from John Krist. This is used to to construct an ideal cube of the planet</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>par: Parameters instance</strong></p>
+<blockquote>
+<div><p>Crispy parameter instance</p>
+</div></blockquote>
+<p><strong>offaxis_psf_filename: string</strong></p>
+<blockquote>
+<div><p>Path to the off-axis cube from J. Krist</p>
+</div></blockquote>
+<p><strong>fileshape: tuple</strong></p>
+<blockquote>
+<div><p>Size of the original John Krist cube</p>
+</div></blockquote>
+<p><strong>lamlist: list</strong></p>
+<blockquote>
+<div><p>List of wavelengths corresponding to each slice</p>
+</div></blockquote>
+<p><strong>lamc: float</strong></p>
+<blockquote>
+<div><p>Central wavelength</p>
+</div></blockquote>
+<p><strong>outdir_average: string</strong></p>
+<blockquote>
+<div><p>Path to which we will export the off-axis IFS flux maps at the detector</p>
+</div></blockquote>
+<p><strong>Nave: integer</strong></p>
+<blockquote>
+<div><p>Number of files to average. This needs to be the same number as the number of times the target is averaged (nominally 100)</p>
+</div></blockquote>
+<p><strong>target_star_T: ‘u.K’</strong></p>
+<blockquote>
+<div><p>Temperature of the target star in u.K</p>
+</div></blockquote>
+<p><strong>target_star_Vmag: float</strong></p>
+<blockquote>
+<div><p>V Magnitude of the target star</p>
+</div></blockquote>
+<p><strong>tel_pupil_area: ‘u.m**2’</strong></p>
+<blockquote>
+<div><p>Collecting area of the telescope, minus obscurations, in u.m**2</p>
+</div></blockquote>
+<p><strong>polychromeOut: Boolean</strong></p>
+<blockquote>
+<div><p>Whether or not to export a polychrome cube weighted by the PSF</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">offaxis_reduced: 3D ndarray</p>
+<blockquote class="last">
+<div><p>Reduced cube</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.postprocessing.recenter_offaxis">
+<code class="descclassname">tools.postprocessing.</code><code class="descname">recenter_offaxis</code><span class="sig-paren">(</span><em>offaxis_file</em>, <em>threshold</em>, <em>outname='centered_offaxis.fits'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/postprocessing.html#recenter_offaxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.postprocessing.recenter_offaxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Example: recenter_offaxis(‘/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits’,0.01,par.exportDir+’/centered_offaxis.fits’)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>offaxis_file: string</strong></p>
+<blockquote>
+<div><p>Path to off-axis file from John Krist</p>
+</div></blockquote>
+<p><strong>threshold: float</strong></p>
+<blockquote>
+<div><p>Threshold under which we don’t care about the values</p>
+</div></blockquote>
+<p><strong>outname: string</strong></p>
+<blockquote>
+<div><p>The path to the centered off axis cube</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">outkey: HDUList</p>
+<blockquote class="last">
+<div><p>HDU list of the recentered cube</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tools.reduction">
 <span id="tools-reduction-module"></span><h2>tools.reduction module<a class="headerlink" href="#module-tools.reduction" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tools.reduction.RL">
+<code class="descclassname">tools.reduction.</code><code class="descname">RL</code><span class="sig-paren">(</span><em>img</em>, <em>psflets</em>, <em>niter=10</em>, <em>guess=None</em>, <em>eps=1e-10</em>, <em>prior=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#RL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.RL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Richardson-Lucy deconvolution</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="tools.reduction.calculateWaveList">
 <code class="descclassname">tools.reduction.</code><code class="descname">calculateWaveList</code><span class="sig-paren">(</span><em>par</em>, <em>lam_list=None</em>, <em>Nspec=None</em>, <em>method='lstsq'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#calculateWaveList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.calculateWaveList" title="Permalink to this definition">¶</a></dt>
@@ -1634,9 +2434,9 @@ on lam_midpts</p>
 
 <dl class="function">
 <dt id="tools.reduction.fit_cutout">
-<code class="descclassname">tools.reduction.</code><code class="descname">fit_cutout</code><span class="sig-paren">(</span><em>subim</em>, <em>psflets</em>, <em>mode='lstsq'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#fit_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.fit_cutout" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.reduction.</code><code class="descname">fit_cutout</code><span class="sig-paren">(</span><em>subim</em>, <em>psflets</em>, <em>mode='lstsq'</em>, <em>niter=5</em>, <em>pixnoise=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#fit_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.fit_cutout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a series of PSFlets to an image, recover the best-fit coefficients.
-This is currently little more than a wrapper for np.linalg.lstsq, but 
+This is currently little more than a wrapper for np.linalg.lstsq, but
 could be more complex if/when we regularize the problem or adopt some
 other approach.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1650,7 +2450,7 @@ other approach.</p>
 <p><strong>psflets: 3D ndarray</strong></p>
 <blockquote>
 <div><dl class="docutils">
-<dt>First dimension is wavelength.  psflets[0] </dt>
+<dt>First dimension is wavelength.  psflets[0]</dt>
 <dd><p class="first last">must match the shape of subim.</p>
 </dd>
 </dl>
@@ -1658,7 +2458,7 @@ other approach.</p>
 <p><strong>mode:    string</strong></p>
 <blockquote>
 <div><dl class="docutils">
-<dt>Method to use.  Currently limited to lstsq (a </dt>
+<dt>Method to use.  Currently limited to lstsq (a</dt>
 <dd><p class="first last">simple least-squares fit using linalg.lstsq), this can
 be expanded to include an arbitrary approach.</p>
 </dd>
@@ -1775,8 +2575,8 @@ implement regularization.</p>
 
 <dl class="function">
 <dt id="tools.reduction.get_cutout">
-<code class="descclassname">tools.reduction.</code><code class="descname">get_cutout</code><span class="sig-paren">(</span><em>im</em>, <em>x</em>, <em>y</em>, <em>psflets</em>, <em>dy=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#get_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.get_cutout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cut out a microspectrum for fitting.  Return the inputs to 
+<code class="descclassname">tools.reduction.</code><code class="descname">get_cutout</code><span class="sig-paren">(</span><em>im</em>, <em>x</em>, <em>y</em>, <em>psflets</em>, <em>dy=3</em>, <em>normpsflets=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#get_cutout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.get_cutout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cut out a microspectrum for fitting.  Return the inputs to
 linalg.lstsq or to whatever regularization scheme we adopt.
 Assumes that spectra are dispersed in the -y direction.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1802,7 +2602,7 @@ Assumes that spectra are dispersed in the -y direction.</p>
 <p><strong>dy: int</strong></p>
 <blockquote>
 <div><p>vertical length to cut out, default 3.  This is the length to cut out in the
-+/-y direction; the lengths cut out in the +x direction (beyond the shortest 
++/-y direction; the lengths cut out in the +x direction (beyond the shortest
 and longest wavelengths) are also dy.</p>
 </div></blockquote>
 </td>
@@ -1813,7 +2613,7 @@ and longest wavelengths) are also dy.</p>
 </div></blockquote>
 <p>psflet_subarr: 2D ndarray</p>
 <blockquote class="last">
-<div><p>first dimension is wavelength, second dimension is spatial, and is the same 
+<div><p>first dimension is wavelength, second dimension is spatial, and is the same
 shape as the flattened subimage.</p>
 </div></blockquote>
 </td>
@@ -1822,7 +2622,7 @@ shape as the flattened subimage.</p>
 </table>
 <p class="rubric">Notes</p>
 <p>Both subim and psflet_subarr are scaled by the inverse
-standard deviation if it is given for the input Image.  This 
+standard deviation if it is given for the input Image.  This
 will make the fit chi2 and properly handle bad/masked pixels.</p>
 </dd></dl>
 
@@ -1856,7 +2656,7 @@ will make the fit chi2 and properly handle bad/masked pixels.</p>
 
 <dl class="function">
 <dt id="tools.reduction.lstsqExtract">
-<code class="descclassname">tools.reduction.</code><code class="descname">lstsqExtract</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>ifsimage</em>, <em>smoothandmask=True</em>, <em>ivar=True</em>, <em>dy=2</em>, <em>refine=False</em>, <em>hires=False</em>, <em>upsample=3</em>, <em>fitbkgnd=False</em>, <em>specialPolychrome=None</em>, <em>returnall=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#lstsqExtract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.lstsqExtract" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.reduction.</code><code class="descname">lstsqExtract</code><span class="sig-paren">(</span><em>par</em>, <em>name</em>, <em>ifsimage</em>, <em>smoothandmask=True</em>, <em>ivar=True</em>, <em>dy=2</em>, <em>refine=False</em>, <em>hires=False</em>, <em>upsample=3</em>, <em>fitbkgnd=False</em>, <em>specialPolychrome=None</em>, <em>returnall=False</em>, <em>mode='lstsq'</em>, <em>niter=10</em>, <em>pixnoise=0.0</em>, <em>normpsflets=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/reduction.html#lstsqExtract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.reduction.lstsqExtract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Least squares extraction, inspired by T. Brandt and making use of some of his code.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1921,7 +2721,7 @@ will make the fit chi2 and properly handle bad/masked pixels.</p>
 <dl class="function">
 <dt id="tools.rotate.Rotate">
 <code class="descclassname">tools.rotate.</code><code class="descname">Rotate</code><span class="sig-paren">(</span><em>image</em>, <em>phi</em>, <em>clip=True</em>, <em>order=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/rotate.html#Rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.rotate.Rotate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rotate the input image by phi about its center.  Do not resize the 
+<dd><p>Rotate the input image by phi about its center.  Do not resize the
 image, but pad with zeros.  Function originally from Tim Brandt</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2138,7 +2938,7 @@ top right</p>
 <span id="tools-wavecal-module"></span><h2>tools.wavecal module<a class="headerlink" href="#module-tools.wavecal" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="tools.wavecal.buildcalibrations">
-<code class="descclassname">tools.wavecal.</code><code class="descname">buildcalibrations</code><span class="sig-paren">(</span><em>par</em>, <em>filelist=None</em>, <em>lamlist=None</em>, <em>order=3</em>, <em>inspect=False</em>, <em>genwavelengthsol=False</em>, <em>makehiresPSFlets=False</em>, <em>makePolychrome=False</em>, <em>makehiresPolychrome=False</em>, <em>makePSFWidths=False</em>, <em>savehiresimages=True</em>, <em>borderpix=4</em>, <em>upsample=5</em>, <em>nsubarr=3</em>, <em>parallel=True</em>, <em>inspect_first=True</em>, <em>apodize=False</em>, <em>lamsol=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#buildcalibrations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.buildcalibrations" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.wavecal.</code><code class="descname">buildcalibrations</code><span class="sig-paren">(</span><em>par</em>, <em>filelist=None</em>, <em>lamlist=None</em>, <em>order=3</em>, <em>inspect=False</em>, <em>genwavelengthsol=False</em>, <em>makehiresPSFlets=False</em>, <em>makePolychrome=False</em>, <em>makehiresPolychrome=False</em>, <em>makePSFWidths=False</em>, <em>savehiresimages=True</em>, <em>borderpix=4</em>, <em>upsample=5</em>, <em>nsubarr=3</em>, <em>parallel=True</em>, <em>inspect_first=True</em>, <em>apodize=False</em>, <em>lamsol=None</em>, <em>threshold=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools/wavecal.html#buildcalibrations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.wavecal.buildcalibrations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Master wavelength calibration function</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2226,9 +3026,15 @@ each wavelength uses the previous wavelength solution as a guess input.</p>
 the detector</p>
 </div></blockquote>
 <p><strong>lamsol: 2D array</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Optional argument that, if not None and if genwavelengthsol==False, will take the argument
 and use it as the current wavelength calibration to build the polychrome.</p>
+</div></blockquote>
+<p><strong>threshold: float</strong></p>
+<blockquote class="last">
+<div><p>Threshold under which to zero out the polychrome. This is only useful for reducing
+the file size of the polychrome, and has only very little impact on the extraction.
+To be safe, for science extractions threshold should be kept at its default value of 0.0</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2238,17 +3044,17 @@ and use it as the current wavelength calibration to build the polychrome.</p>
 <p>This function generates all the files required to process IFS cubes:
 lamsol.dat: contains a list of the wavelengths and the polynomial coefficients that</p>
 <blockquote>
-<div>describe the X,Y positions of all lenslets on the detector as a function 
+<div>describe the X,Y positions of all lenslets on the detector as a function
 of lenslet position on the lenslet array.</div></blockquote>
 <dl class="docutils">
 <dt>polychromekeyRXX.fits:  where XX is replaced by the spectral resolution defined in the</dt>
-<dd>parameters file. This is a multi-extension fits file with: 
+<dd>parameters file. This is a multi-extension fits file with:
 - a list of the central wavelengths at which the final cube will be reduced to
 - an array of the X positions of all lenslets
 - an array of the Y positions of all lenslets
 - an array of booleans indicating whether that lenslet is good or not
 (e.g. when it is outside of the detector area)</dd>
-<dt>polychromeRXX.fits: 3D arrays of size Nspec x Npix x Npix with maps of the PSFLets put in their correct </dt>
+<dt>polychromeRXX.fits: 3D arrays of size Nspec x Npix x Npix with maps of the PSFLets put in their correct</dt>
 <dd>positions for each wavelength bins that we want in the output cube. Each PSFLet
 in each wavelength slice is used for least-squares fitting.</dd>
 </dl>
@@ -2328,7 +3134,7 @@ monochromatic frames.</p>
 <li><a class="reference internal" href="#module-tools.locate_psflets">tools.locate_psflets module</a></li>
 <li><a class="reference internal" href="#module-tools.par_utils">tools.par_utils module</a></li>
 <li><a class="reference internal" href="#module-tools.plotting">tools.plotting module</a></li>
-<li><a class="reference internal" href="#tools-postprocessing-module">tools.postprocessing module</a></li>
+<li><a class="reference internal" href="#module-tools.postprocessing">tools.postprocessing module</a></li>
 <li><a class="reference internal" href="#module-tools.reduction">tools.reduction module</a></li>
 <li><a class="reference internal" href="#module-tools.rotate">tools.rotate module</a></li>
 <li><a class="reference internal" href="#module-tools.spectrograph">tools.spectrograph module</a></li>
@@ -2350,8 +3156,8 @@ monochromatic frames.</p>
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

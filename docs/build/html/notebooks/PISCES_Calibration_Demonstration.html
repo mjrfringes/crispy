@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>This notebook is an attempt to prove a new calibration technique for the IFS &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -34,7 +31,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -232,15 +229,19 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="This-notebook-is-an-attempt-to-prove-a-new-calibration-technique-for-the-IFS">
 <h1>This notebook is an attempt to prove a new calibration technique for the IFS<a class="headerlink" href="#This-notebook-is-an-attempt-to-prove-a-new-calibration-technique-for-the-IFS" title="Permalink to this headline">¶</a></h1>
-<p>It uses DM probes to create an artificial &#8220;broadband flatfield&#8221; over the
+<p>It uses DM probes to create an artificial “broadband flatfield” over the
 region of interest.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [6]:
+<span></span>In [1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -277,7 +278,7 @@ Populating the interactive namespace from numpy and matplotlib
 <h2>First, we need to build a wavelength calibration for least squares<a class="headerlink" href="#First,-we-need-to-build-a-wavelength-calibration-for-least-squares" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [137]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -290,7 +291,7 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[137]:
+<span></span>Out[3]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
@@ -537,7 +538,7 @@ crispy - INFO - Rms residuals over total map are: 0.656857192516%
 <h2>Average probes<a class="headerlink" href="#Average-probes" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [109]:
+<span></span>In [4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -559,7 +560,7 @@ crispy - INFO - [&#39;/Users/mrizzo/IFS/PISCES/Maxime_data/Maxime_IFS_data/it037
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [110]:
+<span></span>In [5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -572,7 +573,7 @@ crispy - INFO - [&#39;/Users/mrizzo/IFS/PISCES/Maxime_data/Maxime_IFS_data/it037
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -585,6 +586,14 @@ crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/PISCES/Maxime_data/Max
 crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/PISCES/Maxime_data/Maxime_IFS_data/it03750_PISCES5_170517_051830_353145.fits
 crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/PISCES/Maxime_data/Maxime_IFS_data/it03750_PISCES6_170517_051855_213515.fits
 crispy - INFO - Writing data to ..//SimResults/average_probes.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+WARNING: AstropyDeprecationWarning: &#34;clobber&#34; was deprecated in version 2.0 and will be removed in a future version. Use argument &#34;overwrite&#34; instead. [astropy.utils.decorators]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1919,10 +1928,10 @@ dxdy,std(resid): [0.71999999999999997, -6.0],309.018737793
 </div>
 </div>
 <div class="section" id="Plots...">
-<h1>Plots...<a class="headerlink" href="#Plots..." title="Permalink to this headline">¶</a></h1>
+<h1>Plots…<a class="headerlink" href="#Plots..." title="Permalink to this headline">¶</a></h1>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [214]:
+<span></span>In [35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -1931,26 +1940,42 @@ dxdy,std(resid): [0.71999999999999997, -6.0],309.018737793
 <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">580</span><span class="p">,</span><span class="mi">660</span><span class="p">)</span>
 <span class="n">vmin</span><span class="o">=-</span><span class="mi">300</span>
 <span class="n">vmax</span><span class="o">=</span><span class="mi">3000</span>
+<span class="n">ftsize</span><span class="o">=</span><span class="mi">20</span>
 <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
 <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axarr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">average</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span>
 <span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">average</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;6-probe average&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span><span class="s1">&#39;Max: {:.0f}</span><span class="se">\n</span><span class="s1">Min: {:.0f}</span><span class="se">\n</span><span class="s1">RMS: {:.0f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">img</span><span class="p">)),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">set_bbox</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
 
-<span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_PISCES_sum_probes_old_wavecal_red_lstsq_resid.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_PISCES_sum_probes_old_wavecal_red_lstsq_resid.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span>
+<span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+<span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Residuals </span><span class="se">\n</span><span class="s1">Extraction with old wavecal&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span><span class="s1">&#39;Max: {:.0f}</span><span class="se">\n</span><span class="s1">Min: {:.0f}</span><span class="se">\n</span><span class="s1">RMS: {:.0f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">img</span><span class="p">)),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">set_bbox</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
 
-<span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_PISCES_sum_probes_VARIA_red_lstsq_resid.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_PISCES_sum_probes_VARIA_red_lstsq_resid.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span>
+<span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+<span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Residuals </span><span class="se">\n</span><span class="s1">Extraction with new wavecal&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span><span class="s1">&#39;Max: {:.0f}</span><span class="se">\n</span><span class="s1">Min: {:.0f}</span><span class="se">\n</span><span class="s1">RMS: {:.0f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">img</span><span class="p">)),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">set_bbox</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
 
-
-<span class="n">im</span> <span class="o">=</span> <span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/shifted_resid_fine2bis.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/shifted_resid_fine2bis.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Extraction with old wavecal,</span><span class="se">\n</span><span class="s1"> residual minimization&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">ftsize</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span><span class="s1">&#39;Max: {:.0f}</span><span class="se">\n</span><span class="s1">Min: {:.0f}</span><span class="se">\n</span><span class="s1">RMS: {:.0f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">img</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">img</span><span class="p">)),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">t</span><span class="o">.</span><span class="n">set_bbox</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
 
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_PISCES_sum_probes_old_wavecal_red_lstsq_resid.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/test_PISCES_sum_probes_VARIA_red_lstsq_resid.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">exportDir</span><span class="o">+</span><span class="s1">&#39;/shifted_resid_fine2bis.fits&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]))</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">right</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.00</span><span class="p">)</span>
 <span class="n">cbar_ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.66</span><span class="p">])</span>
@@ -1969,6 +1994,12 @@ dxdy,std(resid): [0.71999999999999997, -6.0],309.018737793
 crispy - INFO - Read data from HDU 1 of ..//SimResults/test_PISCES_sum_probes_old_wavecal_red_lstsq_resid.fits
 crispy - INFO - Read data from HDU 1 of ..//SimResults/test_PISCES_sum_probes_VARIA_red_lstsq_resid.fits
 crispy - INFO - Read data from HDU 1 of ..//SimResults/shifted_resid_fine2bis.fits
+crispy - INFO - Read data from HDU 1 of ..//SimResults/test_PISCES_sum_probes_old_wavecal_red_lstsq_resid.fits
+308.571
+crispy - INFO - Read data from HDU 1 of ..//SimResults/test_PISCES_sum_probes_VARIA_red_lstsq_resid.fits
+63.1417
+crispy - INFO - Read data from HDU 1 of ..//SimResults/shifted_resid_fine2bis.fits
+94.2731
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -2069,16 +2100,6 @@ crispy - INFO - Read data from HDU 1 of ..//SimResults/BB_red_lstsq_resid.fits
 </div>
 <div class="section" id="Attempt-2:-Move-wavecal,-reconstruct-polychrome-each-time">
 <h1>Attempt 2: Move wavecal, reconstruct polychrome each time<a class="headerlink" href="#Attempt-2:-Move-wavecal,-reconstruct-polychrome-each-time" title="Permalink to this headline">¶</a></h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
 </div>
 
 
@@ -2112,7 +2133,7 @@ crispy - INFO - Read data from HDU 1 of ..//SimResults/BB_red_lstsq_resid.fits
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#Plots...">Plots...</a></li>
+<li><a class="reference internal" href="#Plots...">Plots…</a></li>
 <li><a class="reference internal" href="#Attempt-2:-Move-wavecal,-reconstruct-polychrome-each-time">Attempt 2: Move wavecal, reconstruct polychrome each time</a></li>
 </ul>
 
@@ -2128,8 +2149,8 @@ crispy - INFO - Read data from HDU 1 of ..//SimResults/BB_red_lstsq_resid.fits
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

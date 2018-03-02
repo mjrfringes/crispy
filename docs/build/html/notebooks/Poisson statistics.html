@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Maximum likelihood retrieval techniques in the presence of Poisson noise &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -34,7 +31,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -232,7 +229,11 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="Maximum-likelihood-retrieval-techniques-in-the-presence-of-Poisson-noise">
 <h1>Maximum likelihood retrieval techniques in the presence of Poisson noise<a class="headerlink" href="#Maximum-likelihood-retrieval-techniques-in-the-presence-of-Poisson-noise" title="Permalink to this headline">¶</a></h1>
@@ -250,11 +251,12 @@ deviation of the estimates.</p>
 quantify how much. We are going to try to defer this to a later date.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [1]:
+<span></span>In [9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="o">%</span><span class="k">pylab</span> inline --no-import-all
 <span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s1">&#39;serif&#39;</span><span class="p">,</span> <span class="n">serif</span><span class="o">=</span><span class="s1">&#39;Times&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
@@ -282,7 +284,7 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [3]:
+<span></span>In [10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -293,7 +295,7 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [13]:
+<span></span>In [11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -320,11 +322,11 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[13]:
+<span></span>Out[11]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.colorbar.Colorbar at 0x112afae90&gt;
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x10f7c7ad0&gt;
 </pre></div>
 </div>
 </div>
@@ -337,7 +339,7 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [94]:
+<span></span>In [12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -353,11 +355,11 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[94]:
+<span></span>Out[12]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.colorbar.Colorbar at 0x119c0bb50&gt;
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x10fb25b90&gt;
 </pre></div>
 </div>
 </div>
@@ -372,7 +374,7 @@ Populating the interactive namespace from numpy and matplotlib
 <h2>Naive matched filter attempt assuming perfect centroid<a class="headerlink" href="#Naive-matched-filter-attempt-assuming-perfect-centroid" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [95]:
+<span></span>In [13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -383,7 +385,7 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [96]:
+<span></span>In [14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -396,16 +398,18 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - 47.6549738183
+crispy - INFO - 56.1339408386
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [117]:
+<span></span>In [17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">niter</span> <span class="o">=</span> <span class="mi">10000</span>
+<span></span><span class="kn">import</span> <span class="nn">scipy.stats</span>
+<span class="kn">import</span> <span class="nn">statsmodel</span> <span class="kn">as</span> <span class="nn">sm</span>
+<span class="n">niter</span> <span class="o">=</span> <span class="mi">10000</span>
 <span class="n">tsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">niter</span><span class="p">)</span>
 <span class="n">matched_filtered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">niter</span><span class="p">)</span>
 <span class="n">linregress</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">niter</span><span class="p">)</span>
@@ -424,22 +428,22 @@ crispy - INFO - 47.6549738183
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[117]:
-</pre></div>
-</div>
-<div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>[&lt;matplotlib.lines.Line2D at 0x119bc0d50&gt;]
-</pre></div>
-</div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Poisson_statistics_11_1.png" src="../_images/notebooks_Poisson_statistics_11_1.png" />
-</div>
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ImportError</span>                               Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-17-cafba6645e77&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">import</span> scipy<span class="ansi-blue-fg">.</span>stats
+<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">import</span> statsmodel <span class="ansi-green-fg">as</span> sm
+<span class="ansi-green-intense-fg ansi-bold">      3</span> niter <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">10000</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span> tsum <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>zeros<span class="ansi-blue-fg">(</span>niter<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span> matched_filtered <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>zeros<span class="ansi-blue-fg">(</span>niter<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">ImportError</span>: No module named statsmodel
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
@@ -465,22 +469,12 @@ crispy - INFO - Linear regression | Mean: 50.103, Std: 8.29, sqrt(Mean): 7.08, S
 crispy - INFO - Poisson-weighted lstsq | Mean: 50.127, Std: 7.18, sqrt(Mean): 7.08, SNR: 6.98
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
 </div>
 <div class="section" id="Now-with-two-sources">
 <h2>Now with two sources<a class="headerlink" href="#Now-with-two-sources" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [225]:
+<span></span>In [18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -517,11 +511,11 @@ crispy - INFO - Poisson-weighted lstsq | Mean: 50.127, Std: 7.18, sqrt(Mean): 7.
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[225]:
+<span></span>Out[18]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.colorbar.Colorbar at 0x11ee56990&gt;
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x1a1430b3d0&gt;
 </pre></div>
 </div>
 </div>
@@ -529,12 +523,12 @@ crispy - INFO - Poisson-weighted lstsq | Mean: 50.127, Std: 7.18, sqrt(Mean): 7.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Poisson_statistics_15_1.png" src="../_images/notebooks_Poisson_statistics_15_1.png" />
+<img alt="../_images/notebooks_Poisson_statistics_14_1.png" src="../_images/notebooks_Poisson_statistics_14_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [323]:
+<span></span>In [19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -551,11 +545,11 @@ crispy - INFO - Poisson-weighted lstsq | Mean: 50.127, Std: 7.18, sqrt(Mean): 7.
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[323]:
+<span></span>Out[19]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.colorbar.Colorbar at 0x1233e3d10&gt;
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x1a146670d0&gt;
 </pre></div>
 </div>
 </div>
@@ -563,12 +557,12 @@ crispy - INFO - Poisson-weighted lstsq | Mean: 50.127, Std: 7.18, sqrt(Mean): 7.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Poisson_statistics_16_1.png" src="../_images/notebooks_Poisson_statistics_16_1.png" />
+<img alt="../_images/notebooks_Poisson_statistics_15_1.png" src="../_images/notebooks_Poisson_statistics_15_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [214]:
+<span></span>In [20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -581,7 +575,7 @@ crispy - INFO - Poisson-weighted lstsq | Mean: 50.127, Std: 7.18, sqrt(Mean): 7.
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [324]:
+<span></span>In [21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -592,7 +586,7 @@ crispy - INFO - Poisson-weighted lstsq | Mean: 50.127, Std: 7.18, sqrt(Mean): 7.
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [325]:
+<span></span>In [22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -605,7 +599,7 @@ crispy - INFO - Poisson-weighted lstsq | Mean: 50.127, Std: 7.18, sqrt(Mean): 7.
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[ 18.90414523  66.34216507]
+[ 21.4315023   75.52610038]
 </pre></div></div>
 </div>
 </div>
@@ -616,11 +610,11 @@ according to Snyder et al 1993 Eq. 4 3. Stop at some point (e.g. when
 change from step to step is under a threshold</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [331]:
+<span></span>In [33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="k">def</span> <span class="nf">RL</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">psflets</span><span class="p">,</span><span class="n">eps</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
+<span></span><span class="k">def</span> <span class="nf">RL</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">psflets</span><span class="p">,</span><span class="n">eps</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span><span class="n">prior</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
     <span class="c1">#1.</span>
     <span class="n">psflets_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">psflets</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="p">(</span><span class="n">psflets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
     <span class="n">img_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
@@ -641,7 +635,7 @@ change from step to step is under a threshold</p>
         <span class="n">ll</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">)</span><span class="o">*</span><span class="n">img_flat</span><span class="p">)</span>
         <span class="n">loglike</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ll</span><span class="p">)</span>
         <span class="c1">#2. update</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="n">prev</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflets_flat</span><span class="o">*</span><span class="n">img_flat</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">prev</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflets_flat</span><span class="o">*</span><span class="n">img_flat</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-10</span><span class="o">+</span><span class="n">prior</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">val</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">loglike</span><span class="p">),</span><span class="n">count</span>
@@ -650,14 +644,15 @@ change from step to step is under a threshold</p>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [357]:
+<span></span>In [87]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">niter</span> <span class="o">=</span> <span class="mi">10000</span>
+<span></span><span class="n">niter</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">lstsq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="n">niter</span><span class="p">))</span>
 <span class="n">lucy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="n">niter</span><span class="p">))</span>
 <span class="n">true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="n">niter</span><span class="p">))</span>
+<span class="n">pnoise</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">niter</span><span class="p">):</span>
 <span class="c1">#     min_num_int = max(np.amax(psflet1)*Nphot1/0.1,np.amax(psflet2)*Nphot2/0.1)</span>
 <span class="c1">#     img1 = np.zeros_like(psflet1)</span>
@@ -669,11 +664,11 @@ change from step to step is under a threshold</p>
 <span class="c1">#         img2 += val</span>
     <span class="n">img1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">psflet1</span><span class="o">*</span><span class="n">Nphot1</span><span class="p">)</span>
     <span class="n">img2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">psflet2</span><span class="o">*</span><span class="n">Nphot2</span><span class="p">)</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">img1</span><span class="o">+</span><span class="n">img2</span>
-    <span class="n">subim_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">img</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">psflet1</span><span class="o">+</span><span class="n">psflet2</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">sumpsflets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">psflet1</span><span class="o">+</span><span class="n">psflet2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img1</span><span class="o">+</span><span class="n">img2</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">pnoise</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">subim_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">img</span><span class="o">-</span><span class="n">pnoise</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">psflet1</span><span class="o">+</span><span class="n">psflet2</span><span class="o">+</span><span class="mf">1e-10</span><span class="o">+</span><span class="n">pnoise</span><span class="p">)),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sumpsflets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">psflet1</span><span class="o">+</span><span class="n">psflet2</span><span class="o">+</span><span class="n">pnoise</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">lstsq</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">psflets_flat</span><span class="o">.</span><span class="n">T</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sumpsflets</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">)),</span> <span class="n">subim_flat</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">lucy</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">lucy</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">,</span><span class="n">prior</span><span class="o">=</span><span class="mi">10</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">true</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img1</span><span class="p">)</span>
     <span class="n">true</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img2</span><span class="p">)</span>
 
@@ -690,16 +685,17 @@ change from step to step is under a threshold</p>
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-/Users/mrizzo/anaconda/lib/python2.7/site-packages/ipykernel/__main__.py:11: RuntimeWarning: invalid value encountered in log
+/Users/mrizzo/anaconda2/lib/python2.7/site-packages/ipykernel_launcher.py:11: RuntimeWarning: invalid value encountered in log
+  # This is added back by InteractiveShellApp.init_path()
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[357]:
+<span></span>Out[87]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>[&lt;matplotlib.lines.Line2D at 0x127b90b10&gt;]
+<span></span>[&lt;matplotlib.lines.Line2D at 0x1a14a54590&gt;]
 </pre></div>
 </div>
 </div>
@@ -707,12 +703,32 @@ change from step to step is under a threshold</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Poisson_statistics_23_2.png" src="../_images/notebooks_Poisson_statistics_23_2.png" />
+<img alt="../_images/notebooks_Poisson_statistics_22_2.png" src="../_images/notebooks_Poisson_statistics_22_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [358]:
+<span></span>In [91]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[91]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>19.92394236884433
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [90]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -722,6 +738,16 @@ change from step to step is under a threshold</p>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Lstsq 2  | Mean: {:.3F}, Std: {:.3}, sqrt(Mean): {:.3}, SNR: {:.3}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lstsq</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lstsq</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;lucy 1  | Mean: {:.3F}, Std: {:.3}, sqrt(Mean): {:.3}, SNR: {:.3}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;lucy 2  | Mean: {:.3F}, Std: {:.3}, sqrt(Mean): {:.3}, SNR: {:.3}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lucy</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;mse lstsq  | {:.3F}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(((</span><span class="n">arr</span><span class="o">-</span><span class="n">lstsq</span><span class="p">)</span><span class="o">/</span><span class="n">true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])))</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;mse lstsq  | {:.3F}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(((</span><span class="n">arr</span><span class="o">-</span><span class="n">lstsq</span><span class="p">)</span><span class="o">/</span><span class="n">true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])))</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;mse lucy  | {:.3F}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(((</span><span class="n">arr</span><span class="o">-</span><span class="n">lucy</span><span class="p">)</span><span class="o">/</span><span class="n">true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])))</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;mse lucy  | {:.3F}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(((</span><span class="n">arr</span><span class="o">-</span><span class="n">lucy</span><span class="p">)</span><span class="o">/</span><span class="n">true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])))</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="n">niter</span><span class="p">))</span>
+<span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">Nphot1</span>
+<span class="n">arr</span><span class="p">[</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">Nphot2</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;mse true  | {:.3F}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(((</span><span class="n">true</span><span class="o">-</span><span class="n">arr</span><span class="p">)</span><span class="o">/</span><span class="n">true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])))</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;mse true  | {:.3F}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(((</span><span class="n">true</span><span class="o">-</span><span class="n">arr</span><span class="p">)</span><span class="o">/</span><span class="n">true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])))</span>
+
 
 </pre></div>
 </div>
@@ -731,72 +757,54 @@ change from step to step is under a threshold</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - True 1  | Mean: 19.990, Std: 4.47, sqrt(Mean): 4.47, SNR: 4.47
-crispy - INFO - True 2  | Mean: 79.949, Std: 8.84, sqrt(Mean): 8.94, SNR: 9.04
-crispy - INFO - Lstsq 1  | Mean: 19.992, Std: 5.9, sqrt(Mean): 4.47, SNR: 3.39
-crispy - INFO - Lstsq 2  | Mean: 79.947, Std: 9.66, sqrt(Mean): 8.94, SNR: 8.27
-crispy - INFO - lucy 1  | Mean: 19.983, Std: 5.95, sqrt(Mean): 4.47, SNR: 3.36
-crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
+crispy - INFO - True 1  | Mean: 20.131, Std: 4.49, sqrt(Mean): 4.49, SNR: 4.49
+crispy - INFO - True 2  | Mean: 80.446, Std: 8.93, sqrt(Mean): 8.97, SNR: 9.01
+crispy - INFO - Lstsq 1  | Mean: 19.927, Std: 12.4, sqrt(Mean): 4.46, SNR: 1.6
+crispy - INFO - Lstsq 2  | Mean: 80.722, Std: 15.4, sqrt(Mean): 8.98, SNR: 5.25
+crispy - INFO - lucy 1  | Mean: 19.924, Std: 12.4, sqrt(Mean): 4.46, SNR: 1.6
+crispy - INFO - lucy 2  | Mean: 80.657, Std: 15.1, sqrt(Mean): 8.98, SNR: 5.34
+crispy - INFO - mse lstsq  | 0.679
+crispy - INFO - mse lstsq  | 0.195
+crispy - INFO - mse lucy  | 0.679
+crispy - INFO - mse lucy  | 0.192
+crispy - INFO - mse true  | 0.269
+crispy - INFO - mse true  | 0.116
 </pre></div></div>
 </div>
+</div>
+<div class="section" id="Now-using-a-full-microspectrum-of-N-PSFs">
+<h2>Now using a full microspectrum of N PSFs<a class="headerlink" href="#Now-using-a-full-microspectrum-of-N-PSFs" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [224]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">coef</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">),</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[224]:
-</pre></div>
-</div>
-<div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.image.AxesImage at 0x11ecfd210&gt;
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_Poisson_statistics_25_1.png" src="../_images/notebooks_Poisson_statistics_25_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [222]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="k">print</span> <span class="n">coef</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[ 48.1825016   39.69909826]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [223]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">img_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">new</span> <span class="o">=</span> <span class="n">coef</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflets_flat</span><span class="o">*</span><span class="n">img_flat</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">coef</span><span class="p">,</span><span class="n">new</span>
-<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">coef</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">coef</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">),</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/PISCES/&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
 
+<span class="kn">from</span> <span class="nn">crispy.unitTests</span> <span class="kn">import</span> <span class="n">testFitCutout</span>
+<span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">spectral_cube</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">smoothbad</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectral_cube</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="mi">54</span><span class="p">,</span><span class="mi">54</span><span class="p">]</span>
+<span class="n">optspect</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">spectrum</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#1f77b4&#39;</span><span class="p">)</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;optext&quot;</span><span class="p">)</span>
+<span class="n">spect</span> <span class="o">=</span> <span class="n">optspect</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="mi">54</span><span class="p">,</span><span class="mi">54</span><span class="p">]</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spect</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">ratio</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">spect</span><span class="o">*</span><span class="n">ratio</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#d62728&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Counts (arbitrary)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Optimal and least squares methods&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;Least squares extraction&quot;</span><span class="p">,</span><span class="s2">&quot;Optimal extraction&quot;</span><span class="p">],</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -805,17 +813,77 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[ 48.1825016   39.69909826] [ 56.57013885  42.42986115]
-(400,)
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
+crispy - INFO - Reduced cube will have 11 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/BB_red_lstsq_resid.fits
+crispy - INFO - Writing data to ..//SimResults/BB_red_lstsq_model.fits
+crispy - INFO - Elapsed time: 4.067425s
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
+crispy - INFO - Reduced cube will have 26 wavelength bins
+crispy - INFO - Elapsed time: 1.530765s
+crispy - INFO - Reduced cube will have 11 wavelength bins
+crispy - INFO - Reduced cube will have 26 wavelength bins
+0.20249073478
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[223]:
+<span></span>Out[3]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.image.AxesImage at 0x11eb82f10&gt;
+<span></span>&lt;matplotlib.legend.Legend at 0x1082621d0&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Poisson_statistics_26_2.png" src="../_images/notebooks_Poisson_statistics_26_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">RL</span><span class="p">,</span><span class="n">get_cutout</span><span class="p">,</span><span class="n">fit_cutout</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+
+<span class="n">polychromeR</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s1">&#39;polychromeR</span><span class="si">%d</span><span class="s1">.fits&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="p">))</span>
+<span class="n">psflets</span> <span class="o">=</span> <span class="n">polychromeR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+<span class="n">polychromekey</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s1">&#39;polychromekeyR</span><span class="si">%d</span><span class="s1">.fits&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="p">))</span>
+<span class="n">xindx</span> <span class="o">=</span> <span class="n">polychromekey</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">yindx</span> <span class="o">=</span> <span class="n">polychromekey</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">good</span> <span class="o">=</span> <span class="n">polychromekey</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">ifsimage</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/BB.fits&#39;</span><span class="p">)</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">54</span>
+<span class="n">j</span> <span class="o">=</span> <span class="mi">54</span>
+<span class="n">dy</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">subim</span><span class="p">,</span> <span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_cutout</span><span class="p">(</span><span class="n">ifsimage</span><span class="p">,</span><span class="n">xindx</span><span class="p">[:,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span><span class="n">yindx</span><span class="p">[:,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span><span class="n">psflets</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">subim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of ..//Inputs/BB.fits
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[4]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x112f63850&gt;
 </pre></div>
 </div>
 </div>
@@ -828,12 +896,17 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [301]:
+<span></span>In [27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">val</span><span class="p">,</span><span class="n">chain</span><span class="p">,</span><span class="n">loglike</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">psflets</span><span class="p">,</span><span class="n">nit</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">val</span>
+<span></span><span class="n">subim_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">subim</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">psflets_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">(</span><span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">psflets_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">psflets_flat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflets_flat</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">leastsq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">psflets_flat</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">subim_flat</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">lucy</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">subim_flat</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflets_flat</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -842,18 +915,32 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[ 58.13090417  40.86909582]
+1.0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [302]:
+<span></span>In [28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="k">print</span> <span class="n">chain</span><span class="o">.</span><span class="n">shape</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">lam_midpts</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">leastsq</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Least squares extraction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">lucy</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Richardson-Lucy&#39;</span><span class="p">)</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;optext&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">lam_midpts</span>
+<span class="n">spect</span> <span class="o">=</span> <span class="n">optspect</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span><span class="mi">54</span><span class="p">,</span><span class="mi">54</span><span class="p">]</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">leastsq</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spect</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">ratio</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">spect</span><span class="o">*</span><span class="n">ratio</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Optimal extraction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Counts (arbitrary)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Optimal and least squares methods&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
 </pre></div>
 </div>
 </div>
@@ -862,16 +949,27 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(13, 2)
+crispy - INFO - Reduced cube will have 11 wavelength bins
+[ 609.9964569   620.11350281  630.39834414  640.85376386  651.48259108
+  662.28770183  673.27201986  684.43851739  695.79021595  707.33018716
+  719.06155361]
+crispy - INFO - Reduced cube will have 26 wavelength bins
+[ 607.10887147  611.34869295  615.61812376  619.91737068  624.24664194
+  628.6061472   632.99609763  637.41670582  641.86818589  646.35075344
+  650.86462556  655.41002088  659.98715953  664.59626322  669.23755516
+  673.91126015  678.61760456  683.35681631  688.12912494  692.9347616
+  697.77395902  702.64695159  707.55397533  712.49526788  717.47106857
+  722.48161839]
+2.18546151924
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[302]:
+<span></span>Out[28]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>[&lt;matplotlib.lines.Line2D at 0x120d5af10&gt;]
+<span></span>&lt;matplotlib.legend.Legend at 0x1154aee50&gt;
 </pre></div>
 </div>
 </div>
@@ -882,23 +980,60 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
 <img alt="../_images/notebooks_Poisson_statistics_29_2.png" src="../_images/notebooks_Poisson_statistics_29_2.png" />
 </div>
 </div>
+</div>
+<div class="section" id="Take-the-least-squares-solution,-and-recreate-a-Poisson-distributed-micro-spectrum">
+<h2>Take the least squares solution, and recreate a Poisson-distributed micro-spectrum<a class="headerlink" href="#Take-the-least-squares-solution,-and-recreate-a-Poisson-distributed-micro-spectrum" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [303]:
+<span></span>In [29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">loglike</span><span class="p">)</span>
+<span></span><span class="n">newvect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">subim</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">psflets_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">newvect</span> <span class="o">+=</span> <span class="n">psflet_subarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">leastsq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">newvect</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">newvect</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+45800.6
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Poisson_statistics_31_1.png" src="../_images/notebooks_Poisson_statistics_31_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">Nphot</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">newvect</span> <span class="o">*=</span> <span class="n">Nphot</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">newvect</span><span class="p">)</span>
+
+<span class="n">new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">newvect</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[303]:
+<span></span>Out[30]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>[&lt;matplotlib.lines.Line2D at 0x12144de50&gt;]
+<span></span>&lt;matplotlib.image.AxesImage at 0x11579f3d0&gt;
 </pre></div>
 </div>
 </div>
@@ -906,138 +1041,33 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Poisson_statistics_30_1.png" src="../_images/notebooks_Poisson_statistics_30_1.png" />
+<img alt="../_images/notebooks_Poisson_statistics_32_1.png" src="../_images/notebooks_Poisson_statistics_32_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">new_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">leastsq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">psflets_flat</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">new_flat</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">lucy</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">new_flat</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+</pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [292]:
+<span></span>In [26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="k">print</span> <span class="n">chain</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[[ 57.94294441  43.13597979]
- [ 57.56976204  41.43023795]
- [ 57.90232254  41.09767746]
- [ 58.03773666  40.96226333]
- [ 58.09292922  40.90707077]
- [ 58.11543399  40.884566  ]
- [ 58.12461185  40.87538814]
- [ 58.12835501  40.87164498]
- [ 58.12988169  40.8701183 ]
- [ 58.13050437  40.86949562]
- [ 58.13075834  40.86924166]
- [ 58.13086192  40.86913807]
- [ 58.13090417  40.86909582]
- [ 58.1309214   40.86907859]
- [ 58.13092843  40.86907156]
- [ 58.1309313   40.8690687 ]
- [ 58.13093246  40.86906753]
- [ 58.13093294  40.86906705]
- [ 58.13093314  40.86906686]
- [ 58.13093322  40.86906678]
- [ 58.13093325  40.86906674]
- [ 58.13093326  40.86906673]
- [ 58.13093327  40.86906673]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]
- [ 58.13093327  40.86906672]]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [251]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="k">print</span> <span class="n">psflets_flat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
-<span class="n">vals</span> <span class="o">=</span> <span class="n">psflets_flat</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">fsize</span><span class="p">,</span><span class="n">fsize</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">T</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">lam_midpts</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">leastsq</span><span class="p">,</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Least squares extraction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">lucy</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Richardson-Lucy&#39;</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -1047,16 +1077,19 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(400,)
+crispy - INFO - Reduced cube will have 11 wavelength bins
+[ 609.9964569   620.11350281  630.39834414  640.85376386  651.48259108
+  662.28770183  673.27201986  684.43851739  695.79021595  707.33018716
+  719.06155361]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>Out[251]:
+<span></span>Out[26]:
 </pre></div>
 </div>
 <div class="output_area highlight-none"><div class="highlight"><pre>
-<span></span>&lt;matplotlib.colorbar.Colorbar at 0x12020b610&gt;
+<span></span>[&lt;matplotlib.lines.Line2D at 0x11508bf10&gt;]
 </pre></div>
 </div>
 </div>
@@ -1064,10 +1097,22 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Poisson_statistics_32_2.png" src="../_images/notebooks_Poisson_statistics_32_2.png" />
+<img alt="../_images/notebooks_Poisson_statistics_34_2.png" src="../_images/notebooks_Poisson_statistics_34_2.png" />
 </div>
 </div>
-</div>
+plt.imshow(np.reshape(np.dot(coef.T,psflets_flat),img.shape))print coefimg_flat = np.reshape(img, -1)
+new = coef*np.sum(psflets_flat*img_flat/(np.dot(coef,psflets_flat)+1e-10),axis=1)
+print coef,new
+print np.dot(coef.T,psflets_flat).shape
+plt.figure()
+plt.imshow(np.reshape(np.dot(coef.T,psflets_flat),img.shape))val,chain,loglike = RL(img,psflets,nit=12)
+print valprint chain.shape
+plt.plot(chain[:,0])
+plt.plot(chain[:,1])plt.plot(loglike)print chainprint psflets_flat[0].shape
+vals = psflets_flat/(np.dot(coef,psflets_flat)+1e-10)
+plt.figure(figsize=(fsize,fsize))
+plt.imshow(np.reshape(vals.T[:,1],img.shape))
+plt.colorbar(fraction=0.046, pad=0.04)</div>
 </div>
 
 
@@ -1081,6 +1126,8 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
 <li><a class="reference internal" href="#Naive-matched-filter-attempt-assuming-perfect-centroid">Naive matched filter attempt assuming perfect centroid</a></li>
 <li><a class="reference internal" href="#Now-with-two-sources">Now with two sources</a></li>
 <li><a class="reference internal" href="#Richardson-Lucy-method-in-the-presence-of-Poisson-noise">Richardson-Lucy method in the presence of Poisson noise</a></li>
+<li><a class="reference internal" href="#Now-using-a-full-microspectrum-of-N-PSFs">Now using a full microspectrum of N PSFs</a></li>
+<li><a class="reference internal" href="#Take-the-least-squares-solution,-and-recreate-a-Poisson-distributed-micro-spectrum">Take the least squares solution, and recreate a Poisson-distributed micro-spectrum</a></li>
 </ul>
 </li>
 </ul>
@@ -1097,8 +1144,8 @@ crispy - INFO - lucy 2  | Mean: 79.953, Std: 9.69, sqrt(Mean): 8.94, SNR: 8.25
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>tools.detutils &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -34,7 +31,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -79,68 +76,68 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-
 <div class="viewcode-block" id="rebin"><a class="viewcode-back" href="../../tools.html#tools.detutils.rebin">[docs]</a><span class="k">def</span> <span class="nf">rebin</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Resizes a 2d array by averaging or repeating elements, </span>
+<span class="sd">    Resizes a 2d array by averaging or repeating elements,</span>
 <span class="sd">    new dimensions must be integral factors of original dimensions</span>
-<span class="sd"> </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    a : array_like</span>
 <span class="sd">        Input array.</span>
 <span class="sd">    new_shape : tuple of int</span>
 <span class="sd">        Shape of the output array (y, x)</span>
-<span class="sd"> </span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    rebinned_array : ndarray</span>
-<span class="sd">        If the new shape is smaller of the input array, the data are averaged, </span>
+<span class="sd">        If the new shape is smaller of the input array, the data are averaged,</span>
 <span class="sd">        if the new shape is bigger array elements are repeated</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-        
-    <span class="n">sh</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">sh</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sh</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="frebin"><a class="viewcode-back" href="../../tools.html#tools.detutils.frebin">[docs]</a><span class="k">def</span> <span class="nf">frebin</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function that performs flux-conservative</span>
 <span class="sd">    rebinning of an array. Found at https://github.com/benjaminpope/pysco/blob/master/frebin.py</span>
 
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    array: ndarray</span>
 <span class="sd">        Numpy array to be rebinned</span>
 <span class="sd">    shape: tuple</span>
 <span class="sd">        (x,y) of new array size</span>
-<span class="sd">	total: Boolean</span>
-<span class="sd">	    when True flux is conserved</span>
+<span class="sd">        total: Boolean</span>
+<span class="sd">            when True flux is conserved</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">	new_array: new rebinned array with dimensions: shape</span>
+<span class="sd">        new_array: new rebinned array with dimensions: shape</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1">#Determine size of input image</span>
+    <span class="c1"># Determine size of input image</span>
     <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span>
 
-    <span class="n">y1</span> <span class="o">=</span> <span class="n">y</span><span class="o">-</span><span class="mi">1</span>
-    <span class="n">x1</span> <span class="o">=</span> <span class="n">x</span><span class="o">-</span><span class="mi">1</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span>
 
-    <span class="n">xbox</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">ybox</span> <span class="o">=</span> <span class="n">y</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">xbox</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ybox</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="c1">#Determine if integral contraction so we can use rebin</span>
+    <span class="c1"># Determine if integral contraction so we can use rebin</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">%</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">rebin</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span><span class="o">*</span><span class="n">xbox</span><span class="o">*</span><span class="n">ybox</span>
+            <span class="k">return</span> <span class="n">rebin</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">*</span> <span class="n">xbox</span> <span class="o">*</span> <span class="n">ybox</span>
 
-    <span class="c1">#Otherwise if not integral contraction</span>
-    <span class="c1">#First bin in y dimension</span>
-    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="c1">#Loop on output image lines</span>
+    <span class="c1"># Otherwise if not integral contraction</span>
+    <span class="c1"># First bin in y dimension</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1"># Loop on output image lines</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">rstart</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">ybox</span>
+        <span class="n">rstart</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">ybox</span>
         <span class="n">istart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rstart</span><span class="p">)</span>
         <span class="n">rstop</span> <span class="o">=</span> <span class="n">rstart</span> <span class="o">+</span> <span class="n">ybox</span>
         <span class="n">istop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rstop</span><span class="p">)</span>
@@ -148,24 +145,24 @@
             <span class="n">istop</span> <span class="o">=</span> <span class="n">y1</span>
         <span class="n">frac1</span> <span class="o">=</span> <span class="n">rstart</span> <span class="o">-</span> <span class="n">istart</span>
         <span class="n">frac2</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">rstop</span> <span class="o">-</span> <span class="n">istop</span><span class="p">)</span>
-        
-    <span class="c1">#Add pixel values from istart to istop an subtract</span>
-    <span class="c1">#fracion pixel from istart to rstart and fraction</span>
-    <span class="c1">#fraction pixel from rstop to istop.</span>
+
+    <span class="c1"># Add pixel values from istart to istop an subtract</span>
+    <span class="c1"># fracion pixel from istart to rstart and fraction</span>
+    <span class="c1"># fraction pixel from rstop to istop.</span>
         <span class="k">if</span> <span class="n">istart</span> <span class="o">==</span> <span class="n">istop</span><span class="p">:</span>
-            <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac1</span> <span class="o">-</span> <span class="n">frac2</span><span class="p">)</span><span class="o">*</span><span class="n">array</span><span class="p">[</span><span class="n">istart</span><span class="p">,:]</span>
+            <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">frac1</span> <span class="o">-</span> <span class="n">frac2</span><span class="p">)</span> <span class="o">*</span> <span class="n">array</span><span class="p">[</span><span class="n">istart</span><span class="p">,</span> <span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">istart</span><span class="p">:</span><span class="n">istop</span><span class="o">+</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>\
-                        <span class="o">-</span> <span class="n">frac1</span><span class="o">*</span><span class="n">array</span><span class="p">[</span><span class="n">istart</span><span class="p">,:]</span>\
-                        <span class="o">-</span> <span class="n">frac2</span><span class="o">*</span><span class="n">array</span><span class="p">[</span><span class="n">istop</span><span class="p">,:]</span>
-            
+            <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">istart</span><span class="p">:</span><span class="n">istop</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>\
+                <span class="o">-</span> <span class="n">frac1</span> <span class="o">*</span> <span class="n">array</span><span class="p">[</span><span class="n">istart</span><span class="p">,</span> <span class="p">:]</span>\
+                <span class="o">-</span> <span class="n">frac2</span> <span class="o">*</span> <span class="n">array</span><span class="p">[</span><span class="n">istop</span><span class="p">,</span> <span class="p">:]</span>
+
     <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
 
-    <span class="c1">#Bin in x dimension</span>
+    <span class="c1"># Bin in x dimension</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="c1">#Loop on output image samples</span>
+    <span class="c1"># Loop on output image samples</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">rstart</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">xbox</span>
+        <span class="n">rstart</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">xbox</span>
         <span class="n">istart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rstart</span><span class="p">)</span>
         <span class="n">rstop</span> <span class="o">=</span> <span class="n">rstart</span> <span class="o">+</span> <span class="n">xbox</span>
         <span class="n">istop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rstop</span><span class="p">)</span>
@@ -173,20 +170,20 @@
             <span class="n">istop</span> <span class="o">=</span> <span class="n">x1</span>
         <span class="n">frac1</span> <span class="o">=</span> <span class="n">rstart</span> <span class="o">-</span> <span class="n">istart</span>
         <span class="n">frac2</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">rstop</span> <span class="o">-</span> <span class="n">istop</span><span class="p">)</span>
-    <span class="c1">#Add pixel values from istart to istop an subtract</span>
-    <span class="c1">#fracion pixel from istart to rstart and fraction</span>
-    <span class="c1">#fraction pixel from rstop to istop.</span>
+    <span class="c1"># Add pixel values from istart to istop an subtract</span>
+    <span class="c1"># fracion pixel from istart to rstart and fraction</span>
+    <span class="c1"># fraction pixel from rstop to istop.</span>
         <span class="k">if</span> <span class="n">istart</span> <span class="o">==</span> <span class="n">istop</span><span class="p">:</span>
-            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">frac1</span><span class="o">-</span><span class="n">frac2</span><span class="p">)</span><span class="o">*</span><span class="n">temp</span><span class="p">[</span><span class="n">istart</span><span class="p">,:]</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">frac1</span> <span class="o">-</span> <span class="n">frac2</span><span class="p">)</span> <span class="o">*</span> <span class="n">temp</span><span class="p">[</span><span class="n">istart</span><span class="p">,</span> <span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">istart</span><span class="p">:</span><span class="n">istop</span><span class="o">+</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>\
-                          <span class="o">-</span> <span class="n">frac1</span><span class="o">*</span><span class="n">temp</span><span class="p">[</span><span class="n">istart</span><span class="p">,:]</span>\
-                          <span class="o">-</span> <span class="n">frac2</span><span class="o">*</span><span class="n">temp</span><span class="p">[</span><span class="n">istop</span><span class="p">,:]</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">istart</span><span class="p">:</span><span class="n">istop</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>\
+                <span class="o">-</span> <span class="n">frac1</span> <span class="o">*</span> <span class="n">temp</span><span class="p">[</span><span class="n">istart</span><span class="p">,</span> <span class="p">:]</span>\
+                <span class="o">-</span> <span class="n">frac2</span> <span class="o">*</span> <span class="n">temp</span><span class="p">[</span><span class="n">istop</span><span class="p">,</span> <span class="p">:]</span>
 
     <span class="k">if</span> <span class="n">total</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">total</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">xbox</span><span class="o">*</span><span class="n">ybox</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">xbox</span> <span class="o">*</span> <span class="n">ybox</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -205,8 +202,8 @@
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

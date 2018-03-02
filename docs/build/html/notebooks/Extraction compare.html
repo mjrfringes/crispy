@@ -1,0 +1,1597 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>&lt;no title&gt; &#8212; crispy 0.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body>
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.2.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+</style>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">glob</span><span class="o">,</span><span class="nn">os</span>
+<span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s1">&#39;serif&#39;</span><span class="p">,</span> <span class="n">serif</span><span class="o">=</span><span class="s1">&#39;Times&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick.major&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick.major&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;figure&#39;</span><span class="p">,</span><span class="n">titlesize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
+<span class="kn">import</span> <span class="nn">astropy.constants</span> <span class="kn">as</span> <span class="nn">c</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="kn">as</span> <span class="nn">log</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/WFIRST/&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
+
+<span class="n">offaxis_psf_filename</span><span class="o">=</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits&#39;</span>
+<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/Extraction/&#39;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t create master folder&quot;</span><span class="p">)</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">process_offaxis</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="n">filelist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/OS5/with_lowfc/*.fits&#39;</span><span class="p">)</span>
+<span class="n">reffiles</span> <span class="o">=</span> <span class="n">filelist</span><span class="p">[:</span><span class="mi">30</span><span class="p">]</span>
+<span class="n">fileshape</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">reffiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">BW</span><span class="o">=</span><span class="mf">0.18</span>
+<span class="n">lamc</span><span class="o">=</span><span class="mi">660</span>
+<span class="n">lamlist</span> <span class="o">=</span> <span class="n">lamc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mf">1.</span><span class="o">+</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">fileshape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">nm</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+main - ERROR - Couldn&#39;t create master folder
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">process_offaxis</span><span class="p">(</span><span class="n">par</span><span class="p">,</span>
+                <span class="n">offaxis_psf_filename</span><span class="o">=</span><span class="n">offaxis_psf_filename</span><span class="p">,</span>
+                <span class="n">fileshape</span><span class="o">=</span><span class="n">fileshape</span><span class="p">,</span>
+                <span class="n">lamlist</span><span class="o">=</span><span class="n">lamlist</span><span class="p">,</span><span class="n">lamc</span><span class="o">=</span><span class="n">lamc</span><span class="p">,</span>
+                <span class="n">outdir_average</span><span class="o">=</span><span class="n">folder</span><span class="p">,</span>
+                <span class="n">Nave</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">inttime</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">Nreads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">filename</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/&#39;</span><span class="o">+</span><span class="s1">&#39;Jupiter_1x_5AU_90deg.dat&#39;</span><span class="p">,</span>
+                <span class="n">planet_radius</span> <span class="o">=</span> <span class="mf">1.27</span><span class="p">,</span> <span class="c1"># in R_jup</span>
+                <span class="n">planet_AU</span> <span class="o">=</span> <span class="mf">3.6</span><span class="p">,</span><span class="n">planet_dist_pc</span><span class="o">=</span><span class="mf">14.1</span><span class="p">,</span>
+                <span class="n">albedo</span><span class="o">=</span><span class="mf">0.28</span><span class="p">,</span>
+                <span class="n">target_star_T</span><span class="o">=</span><span class="mi">5887</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">target_star_Vmag</span><span class="o">=</span><span class="mf">5.03</span><span class="p">,</span>
+                <span class="n">ref_star_T</span><span class="o">=</span><span class="mi">9377</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="n">ref_star_Vmag</span><span class="o">=</span><span class="mf">2.37</span><span class="p">,</span>
+                <span class="n">tel_pupil_area</span><span class="o">=</span><span class="mf">3.650265060424805</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                <span class="n">useQE</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">polychromeOut</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Recentering off-axis cube
+crispy - INFO - Read data from HDU 0 of /Users/mrizzo/IFS/OS5/offaxis/spc_offaxis_psf.fits
+crispy - INFO - The number of input pixels per lenslet is 5.000000
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxiscube.fits
+crispy - INFO - Constructing off-axis cube at planet separation: 4.44 lam/D (0.26 arcsec, 8.89 lenslets)
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxiscube_shifted.fits
+crispy - INFO - The number of input pixels per lenslet is 5.000000
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Creating Gaussian PSFLet templates
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFrame.fits
+crispy - INFO - Done.
+crispy - INFO - Performance: 43 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxis_star.fits
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxis_star_detector.fits
+crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/Extraction//offaxis_star_detector.fits
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Elapsed time: 1.649038s
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxis_star_red_optext.fits
+crispy - INFO - The number of input pixels per lenslet is 5.000000
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Creating Gaussian PSFLet templates
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
+crispy - INFO - Writing data to ..//SimResults/detectorFrame.fits
+crispy - INFO - Done.
+crispy - INFO - Performance: 49 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxis_ref_star.fits
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxis_ref_star_detector.fits
+crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/Extraction//offaxis_ref_star_detector.fits
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Elapsed time: 1.855059s
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxis_ref_star_red_optext.fits
+crispy - INFO - The number of input pixels per lenslet is 5.000000
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Creating Gaussian PSFLet templates
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
+crispy - INFO - Done.
+crispy - INFO - Performance: 46 seconds total
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxis_planet.fits
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxis_planet_detector.fits
+crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/Extraction//offaxis_planet_detector.fits
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Elapsed time: 1.710959s
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction//offaxis_planet_red_optext.fits
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - The number of input pixels per lenslet is 5.000000
+crispy - INFO - Using PSFlet gaussian approximation
+crispy - WARNING - Assuming slices are evenly spread in wavelengths
+crispy - INFO - Creating Gaussian PSFLet templates
+crispy - INFO - Writing data to ..//SimResults/detectorFramepoly.fits
+crispy - INFO - Done.
+crispy - INFO - Performance: 20 seconds total
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[2]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;crispy.tools.image.Image instance at 0x10491d5a8&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">PSF_cube</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;/PSF_cube.fits&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">PSF_cube_cut</span> <span class="o">=</span> <span class="n">PSF_cube</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">PSF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">PSF_cube_cut</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">PSF</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">PSF</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">PSF_cube_cut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">PSF_cube_cut</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">PSF</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">PSF</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">vmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0193086
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[3]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x1064dbc90&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_2_2.png" src="../_images/notebooks_Extraction_compare_2_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">img</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;offaxis_planet_detector.fits&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">imgstar</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;offaxis_star_detector.fits&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[5]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x1c257ba0d0&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_3_1.png" src="../_images/notebooks_Extraction_compare_3_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">RL</span><span class="p">,</span><span class="n">calculateWaveList</span>
+<span class="n">psflets_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">PSF</span><span class="p">,</span> <span class="p">(</span><span class="n">PSF</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="mi">100</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">star</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">imgstar</span><span class="p">,</span><span class="n">psflets_flat</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="mi">100</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[11]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>[&lt;matplotlib.lines.Line2D at 0x1c12a43dd0&gt;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_5_1.png" src="../_images/notebooks_Extraction_compare_5_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">spec</span><span class="o">/</span><span class="n">star</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">calc_contrast</span>
+<span class="n">contrast</span><span class="o">=</span><span class="n">calc_contrast</span><span class="p">(</span><span class="n">wavelist</span><span class="o">=</span><span class="n">lamlist</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="n">distance</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mf">1.27</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/&#39;</span><span class="o">+</span><span class="s1">&#39;Jupiter_1x_5AU_90deg.dat&#39;</span><span class="p">,</span><span class="n">albedo</span><span class="o">=</span><span class="mf">0.28</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">contrast</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[11]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.collections.PathCollection at 0x11100b550&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_6_1.png" src="../_images/notebooks_Extraction_compare_6_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.IFS</span> <span class="kn">import</span> <span class="n">reduceIFSMap</span>
+<span class="n">niter</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">imgRES</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq_conv&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="n">niter</span><span class="p">)</span>
+<span class="n">imgStar</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">imgstar</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq_conv&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="n">niter</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170600_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170600_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.861826s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170612_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170612_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.517492s
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">imgRES</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+<span class="n">imgRES</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;planet_cube.fits&#39;</span><span class="p">)</span>
+<span class="n">imgStar</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;star_cube.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction/planet_cube.fits
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction/star_cube.fits
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_8_1.png" src="../_images/notebooks_Extraction_compare_8_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.postprocessing</span> <span class="kn">import</span> <span class="n">construct_mflib</span><span class="p">,</span><span class="n">convolved_mf</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.imgtools</span> <span class="kn">import</span> <span class="n">bowtie</span>
+<span class="n">ydim</span><span class="p">,</span><span class="n">xdim</span> <span class="o">=</span> <span class="n">imgRES</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">IWA</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">OWA</span><span class="o">=</span><span class="mi">9</span>
+<span class="n">mask</span><span class="p">,</span><span class="n">scratch</span> <span class="o">=</span> <span class="n">bowtie</span><span class="p">(</span><span class="n">imgRES</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">ydim</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">xdim</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">openingAngle</span><span class="o">=</span><span class="mi">65</span><span class="p">,</span>
+        <span class="n">clocking</span><span class="o">=-</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span>
+        <span class="n">IWApix</span><span class="o">=</span><span class="n">IWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span>
+        <span class="n">OWApix</span><span class="o">=</span><span class="n">OWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span>
+        <span class="n">export</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">twomasks</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">construct_mflib</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">planet_cube</span><span class="o">=</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;planet_cube.fits&#39;</span><span class="p">,</span>
+                <span class="n">threshold</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                <span class="n">lamc</span><span class="o">=</span><span class="n">lamc</span><span class="p">,</span>
+                <span class="n">BW</span><span class="o">=</span><span class="n">BW</span><span class="p">,</span>
+                <span class="n">outdir</span><span class="o">=</span><span class="n">folder</span><span class="p">,</span>
+                <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+                <span class="n">trim</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                <span class="n">outname</span> <span class="o">=</span> <span class="s1">&#39;mflib.fits.gz&#39;</span><span class="p">,</span>
+                <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mflib</span> <span class="o">=</span> <span class="n">folder</span><span class="o">+</span><span class="s1">&#39;mflib.fits.gz&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/Extraction/planet_cube.fits
+crispy - INFO - Read inverse variance from HDU 2 of /Users/mrizzo/IFS/Extraction/planet_cube.fits
+crispy - INFO - Coordinates of the planet in lenslets: 61.00, 50.00
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">convolved</span> <span class="o">=</span> <span class="n">convolved_mf</span><span class="p">(</span><span class="n">imgRES</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">mflib</span><span class="p">)</span>
+<span class="n">convolvedstar</span> <span class="o">=</span> <span class="n">convolved_mf</span><span class="p">(</span><span class="n">imgStar</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">mflib</span><span class="p">)</span>
+<span class="n">yp</span><span class="p">,</span><span class="n">xp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanargmax</span><span class="p">(</span><span class="n">convolved</span><span class="p">[</span><span class="n">convolved</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">convolved</span><span class="p">[</span><span class="n">convolved</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Coordinates of the planet in lenslets: </span><span class="si">%.2f</span><span class="s2">, </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span><span class="n">yp</span><span class="p">))</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="n">convolved</span><span class="p">[:,</span><span class="n">yp</span><span class="p">,</span><span class="n">xp</span><span class="p">]</span>
+<span class="n">star</span> <span class="o">=</span> <span class="n">convolvedstar</span><span class="p">[:,</span><span class="n">yp</span><span class="p">,</span><span class="n">xp</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+main - INFO - Coordinates of the planet in lenslets: 61.00, 50.00
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">calc_contrast</span>
+<span class="n">contrast</span><span class="o">=</span><span class="n">calc_contrast</span><span class="p">(</span><span class="n">wavelist</span><span class="o">=</span><span class="n">lamlist</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="n">distance</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mf">1.27</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s1">&#39;/Inputs/&#39;</span><span class="o">+</span><span class="s1">&#39;Jupiter_1x_5AU_90deg.dat&#39;</span><span class="p">,</span><span class="n">albedo</span><span class="o">=</span><span class="mf">0.28</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">signal</span><span class="o">/</span><span class="n">star</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lamlist</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="n">contrast</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 19 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[14]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>[&lt;matplotlib.lines.Line2D at 0x1c24b8d450&gt;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_11_2.png" src="../_images/notebooks_Extraction_compare_11_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">par</span><span class="o">.</span><span class="n">npixperdlam</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">imgOptExt</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="n">niter</span><span class="p">)</span>
+
+<span class="n">ydim</span><span class="p">,</span><span class="n">xdim</span> <span class="o">=</span> <span class="n">imgOptExt</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">IWA</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">OWA</span><span class="o">=</span><span class="mi">9</span>
+<span class="n">mask</span><span class="p">,</span><span class="n">scratch</span> <span class="o">=</span> <span class="n">bowtie</span><span class="p">(</span><span class="n">imgOptExt</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">ydim</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">xdim</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">openingAngle</span><span class="o">=</span><span class="mi">65</span><span class="p">,</span>
+        <span class="n">clocking</span><span class="o">=-</span><span class="n">par</span><span class="o">.</span><span class="n">philens</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span>
+        <span class="n">IWApix</span><span class="o">=</span><span class="n">IWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span>
+        <span class="n">OWApix</span><span class="o">=</span><span class="n">OWA</span><span class="o">*</span><span class="n">lamc</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_wav</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">lenslet_sampling</span><span class="p">,</span>
+        <span class="n">export</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">twomasks</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">imgOptExt</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;planet_cube_optext.fits&#39;</span><span class="p">)</span>
+<span class="n">construct_mflib</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">planet_cube</span><span class="o">=</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;planet_cube_optext.fits&#39;</span><span class="p">,</span>
+                <span class="n">threshold</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                <span class="n">lamc</span><span class="o">=</span><span class="n">lamc</span><span class="p">,</span>
+                <span class="n">BW</span><span class="o">=</span><span class="n">BW</span><span class="p">,</span>
+                <span class="n">outdir</span><span class="o">=</span><span class="n">folder</span><span class="p">,</span>
+                <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+                <span class="n">trim</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                <span class="n">outname</span> <span class="o">=</span> <span class="s1">&#39;mflib_optext.fits.gz&#39;</span><span class="p">,</span>
+                <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mflibOptExt</span> <span class="o">=</span> <span class="n">folder</span><span class="o">+</span><span class="s1">&#39;mflib_optext.fits.gz&#39;</span>
+<span class="n">imgOptExt</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="n">niter</span><span class="p">)</span>
+<span class="n">imgStarOptExt</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">imgstar</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="n">niter</span><span class="p">)</span>
+<span class="n">convolvedOptext</span> <span class="o">=</span> <span class="n">convolved_mf</span><span class="p">(</span><span class="n">imgOptExt</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">mflibOptExt</span><span class="p">)</span>
+<span class="n">convolvedStarOptext</span> <span class="o">=</span> <span class="n">convolved_mf</span><span class="p">(</span><span class="n">imgStarOptExt</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">mflibOptExt</span><span class="p">)</span>
+<span class="n">signalOptext</span> <span class="o">=</span> <span class="n">convolvedOptext</span><span class="p">[:,</span><span class="n">yp</span><span class="p">,</span><span class="n">xp</span><span class="p">]</span>
+<span class="n">signalStarOptext</span> <span class="o">=</span> <span class="n">convolvedStarOptext</span><span class="p">[:,</span><span class="n">yp</span><span class="p">,</span><span class="n">xp</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Elapsed time: 1.884929s
+crispy - INFO - Writing data to /Users/mrizzo/IFS/Extraction/planet_cube_optext.fits
+crispy - INFO - Read data from HDU 1 of /Users/mrizzo/IFS/Extraction/planet_cube_optext.fits
+crispy - INFO - Read inverse variance from HDU 2 of /Users/mrizzo/IFS/Extraction/planet_cube_optext.fits
+crispy - INFO - Coordinates of the planet in lenslets: 61.00, 50.00
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Elapsed time: 1.540007s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Elapsed time: 1.519300s
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">signal</span><span class="o">/</span><span class="n">star</span><span class="p">)</span>
+<span class="n">lam_midpts</span><span class="p">,</span><span class="n">lam_endpts</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">signalOptext</span><span class="o">/</span><span class="n">signalStarOptext</span><span class="p">,</span><span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lamlist</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="n">contrast</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Reduced cube will have 19 wavelength bins
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[16]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>[&lt;matplotlib.lines.Line2D at 0x1c266a7990&gt;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_13_2.png" src="../_images/notebooks_Extraction_compare_13_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[17]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>[&lt;matplotlib.lines.Line2D at 0x1c2474d2d0&gt;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_14_1.png" src="../_images/notebooks_Extraction_compare_14_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">SNR_microspectra</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">Nelec</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">Ntrials</span><span class="p">,</span><span class="n">niter</span><span class="p">):</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">19</span><span class="p">,</span><span class="n">Ntrials</span><span class="p">))</span>
+    <span class="c1"># construct appropriate image</span>
+    <span class="n">imgsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Ntrials</span><span class="p">):</span>
+        <span class="n">poissonImage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">img</span><span class="o">*</span><span class="n">Nelec</span><span class="o">/</span><span class="n">imgsum</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">imgout</span> <span class="o">=</span> <span class="n">reduceIFSMap</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">poissonImage</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq_conv&#39;</span><span class="p">,</span><span class="n">smoothbad</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span><span class="n">fitbkgnd</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="n">niter</span><span class="p">)</span>
+        <span class="n">convolved</span> <span class="o">=</span> <span class="n">convolved_mf</span><span class="p">(</span><span class="n">imgout</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">mflib</span><span class="p">)</span>
+        <span class="n">yp</span><span class="p">,</span><span class="n">xp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanargmax</span><span class="p">(</span><span class="n">convolved</span><span class="p">[</span><span class="n">convolved</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">convolved</span><span class="p">[</span><span class="n">convolved</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">S</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">convolved</span><span class="p">[:,</span><span class="n">yp</span><span class="p">,</span><span class="n">xp</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">poissonImage</span><span class="p">[</span><span class="mi">400</span><span class="p">:</span><span class="mi">620</span><span class="p">,</span><span class="mi">570</span><span class="p">:</span><span class="mi">690</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">S</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">Nelec</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">Ntrials</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">niter</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">SNR_microspectra</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">Nelec</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">Ntrials</span><span class="p">,</span><span class="n">niter</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170738_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170738_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.878977s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170753_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170753_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.297049s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170808_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170808_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.364696s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170822_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170822_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.367578s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170837_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170837_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.364418s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170851_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170851_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.383334s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170905_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170905_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.352316s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170920_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170920_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.299649s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170934_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170934_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.463082s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-170948_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-170948_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.310773s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171003_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171003_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.380134s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171017_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171017_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.454055s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171032_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171032_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.335533s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171046_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171046_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.465420s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171101_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171101_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.357110s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171115_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171115_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.351576s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171130_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171130_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.406243s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171144_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171144_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.408302s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171158_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171158_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.527357s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171213_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171213_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.423162s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171227_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171227_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.460502s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171242_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171242_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.400190s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171257_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171257_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.447117s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171311_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171311_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.339768s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171325_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171325_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.390659s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171340_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171340_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.506209s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171354_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171354_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.407616s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171408_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171408_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.090314s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171424_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171424_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.395309s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171438_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171438_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.392805s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171452_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171452_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.430919s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171507_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171507_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.458021s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171521_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171521_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.650235s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171536_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171536_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.411128s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171550_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171550_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.391860s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171605_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171605_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.601643s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171619_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171619_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.425597s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171634_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171634_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.552628s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171648_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171648_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.441047s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171703_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171703_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.482230s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171717_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171717_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.511194s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171732_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171732_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.517892s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171746_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171746_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.678915s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171801_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171801_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.850779s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171816_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171816_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.521043s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171831_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171831_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.739461s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171845_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171845_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.565051s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171900_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171900_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.516598s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171914_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171914_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.591545s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171929_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171929_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.107817s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171944_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171944_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.529532s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-171958_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-171958_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.913911s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172013_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172013_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.702172s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172028_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172028_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.554382s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172043_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172043_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.703811s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172058_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172058_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.592446s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172112_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172112_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.615337s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172127_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172127_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.594722s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172141_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172141_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.659301s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172156_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172156_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.809900s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172211_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172211_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.603763s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172225_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172225_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.662348s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172240_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172240_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.698763s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172255_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172255_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.275985s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172310_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172310_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.673867s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172326_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172326_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.672974s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172342_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172342_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.467986s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172358_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172358_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.345812s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172413_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172413_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.420857s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172429_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172429_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.182280s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172444_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172444_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.121362s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172500_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172500_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.169357s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172515_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172515_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.832137s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172531_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172531_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 13.983445s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172549_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172549_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.895736s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172605_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172605_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.709574s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172621_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172621_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.822281s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172637_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172637_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.760890s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172653_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172653_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 13.110258s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172710_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172710_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 14.209859s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172727_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172727_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 13.501816s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172744_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172744_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.928143s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172800_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172800_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.863541s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172816_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172816_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.975475s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172833_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172833_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 13.046125s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172849_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172849_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.776127s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172905_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172905_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 13.169485s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172922_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172922_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.401849s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172937_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172937_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.975326s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-172952_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-172952_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.134055s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173007_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173007_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.055086s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173022_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173022_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.998202s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173037_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173037_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.996770s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173052_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173052_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 11.981164s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173107_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173107_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.004951s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173122_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173122_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.040255s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173137_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173137_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.078809s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173153_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173153_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.226873s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173208_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173208_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.164489s
+crispy - INFO - Reduced cube will have 19 wavelength bins
+crispy - INFO - Writing data to ..//SimResults/20180119-173223_red_lstsq_conv_resid.fits
+crispy - INFO - Writing data to ..//SimResults/20180119-173223_red_lstsq_conv_model.fits
+crispy - INFO - Elapsed time: 12.064669s
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_16_1.png" src="../_images/notebooks_Extraction_compare_16_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">S</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">S</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lam_midpts</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">S</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[20]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>[&lt;matplotlib.lines.Line2D at 0x10e30e510&gt;]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_17_1.png" src="../_images/notebooks_Extraction_compare_17_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">ave</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">9</span><span class="p">,:]</span><span class="o">+</span><span class="n">S</span><span class="p">[</span><span class="mi">10</span><span class="p">,:])</span>
+<span class="n">ave</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">8</span><span class="p">,:]</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ave</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ave</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+19.2664655041
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+
+<span></span><span class="n">PSF_polychrome</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;/PSF_polychrome.fits&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">PSF_polychrome_cut</span> <span class="o">=</span> <span class="n">PSF_polychrome</span><span class="p">[:,</span><span class="mi">400</span><span class="p">:</span><span class="mi">620</span><span class="p">,</span><span class="mi">570</span><span class="p">:</span><span class="mi">690</span><span class="p">]</span>
+<span class="n">PSF</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">PSF_polychrome_cut</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">PSF</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">PSF</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">PSF_polychrome_cut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">PSF_polychrome_cut</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">PSF</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">PSF</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">vmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0180089
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[2]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x1c243f3650&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_19_2.png" src="../_images/notebooks_Extraction_compare_19_2.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">RL</span><span class="p">,</span><span class="n">calculateWaveList</span>
+
+<span class="k">def</span> <span class="nf">calcSNRtotal</span><span class="p">(</span><span class="n">Nelec</span><span class="p">,</span><span class="n">subim</span><span class="p">,</span><span class="n">psflet_subarr</span><span class="p">,</span><span class="n">pixnoise</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">npix</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">Niter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span><span class="n">plot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">indspec</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">vect</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c1">#sumpsflets = subim*Nelec+pixnoise+1e-10</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">lstsq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">Niter</span><span class="p">))</span>
+    <span class="n">varlstsq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">Niter</span><span class="p">))</span>
+    <span class="n">Rvect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">Niter</span><span class="p">))</span>
+    <span class="n">RLvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">Niter</span><span class="p">))</span>
+
+    <span class="n">psflets_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">(</span><span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">psflets_flat</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Niter</span><span class="p">):</span>
+        <span class="c1"># subtract mean of background (assumed known)</span>
+        <span class="k">if</span> <span class="n">j</span><span class="o">%</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">Niter</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span> <span class="k">print</span> <span class="n">j</span><span class="p">,</span><span class="s2">&quot;/&quot;</span><span class="p">,</span><span class="n">Niter</span>
+<span class="c1">#         Nit = np.amax((subim*Nelec+pixnoise)/0.1).astype(int)</span>
+<span class="c1">#         if j%(max(Niter/10,1))==0: print j,&quot;/&quot;,Niter,&quot;, Nit=&quot;,Nit</span>
+
+<span class="c1">#         img = np.zeros_like(subim)</span>
+<span class="c1">#         var = np.zeros_like(subim)</span>
+<span class="c1">#         for h in range(Nit):</span>
+<span class="c1">#             frame = np.random.poisson((subim*Nelec+pixnoise)/Nit.astype(float))</span>
+<span class="c1">#             img+= frame</span>
+<span class="c1">#             var += frame**2</span>
+<span class="c1">#         var /= Nit.astype(float)</span>
+<span class="c1">#         var -= (img/Nit.astype(float))**2</span>
+<span class="c1">#         var*=Nit</span>
+<span class="c1">#         img -= pixnoise</span>
+<span class="c1">#         img = np.random.poisson(subim*Nelec+pixnoise)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">subim</span><span class="o">*</span><span class="n">Nelec</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">subim</span><span class="p">)</span><span class="o">+</span><span class="n">pixnoise</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1">### WATCH OUT, USING NELEC HERE IS CHEATING ###</span>
+        <span class="n">sumpix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img</span><span class="o">-</span><span class="n">pixnoise</span><span class="p">)</span>
+        <span class="n">guess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">*</span><span class="n">sumpix</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+        <span class="n">rl</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">psflets</span><span class="o">=</span><span class="n">psflet_subarr</span><span class="p">,</span><span class="n">prior</span><span class="o">=</span><span class="n">pixnoise</span><span class="p">,</span><span class="n">guess</span><span class="o">=</span><span class="n">guess</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="c1">#np.dot(R,RL(img,psflets=psflet_subarr)[0])</span>
+        <span class="n">RLvals</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">rl</span>
+        <span class="n">variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="o">*</span><span class="n">rl</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">+</span><span class="n">pixnoise</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#         variance = np.reshape(img,-1)</span>
+        <span class="n">img</span> <span class="o">-=</span> <span class="n">pixnoise</span>
+
+<span class="c1">#         variance = np.reshape(var,-1)</span>
+<span class="c1">#         variance = np.reshape(img,-1)</span>
+<span class="c1">#         img-=pixnoise</span>
+        <span class="n">Ninv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">variance</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">))</span>
+        <span class="n">Cinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ninv</span><span class="p">,</span><span class="n">A</span><span class="p">))</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">Cinv</span><span class="p">)</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">sqrtm</span><span class="p">(</span><span class="n">Cinv</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">Q</span><span class="o">/</span><span class="n">s</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="c1">#Ctilde = np.diag(1./(s**2+1e-10)</span>
+        <span class="n">varlstsq</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">s</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ninv</span><span class="p">,</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="n">right</span><span class="p">)</span>
+<span class="c1">#         rl = RL(img,psflets=psflet_subarr)[0]#np.dot(R,RL(img,psflets=psflet_subarr)[0])</span>
+<span class="c1">#         RLvals[:,j] = rl</span>
+
+<span class="c1">#         lstsq[:,j] = np.dot(C,right)#np.dot(R,f)</span>
+        <span class="n">lstsq</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+        <span class="c1">#RLvals[:,j] = RL(img+pixnoise,psflets=psflet_subarr,prior=pixnoise,guess=lstsq[:,j],niter=10)[0]#np.dot(R,RL(img,psflets=psflet_subarr)[0])</span>
+
+<span class="c1">#         RLvals[:,j] = np.dot(R,RLvals[:,j])</span>
+        <span class="k">if</span> <span class="n">vect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span> <span class="n">Rvect</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">vect</span><span class="p">)</span>
+
+
+    <span class="n">estSNRlstsq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">estSNRRL</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">RLvals</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">RLvals</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#     estSNROptExt = np.mean(0.5*(optext[13,:]+optext[14,:]))/np.std(0.5*(optext[13,:]+optext[14,:]))</span>
+    <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">img</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">lstsq</span><span class="p">[:,</span><span class="n">j</span><span class="p">]),</span><span class="n">subim</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="n">Npix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Residuals with lstsq algorithm: $\chi^2$=</span><span class="si">%.2f</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">np</span>.sum(res**2/np.reshape(np.dot(A,lstsq[:,j])+pixnoise,subim.shape)/Npix))
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">img</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">RLvals</span><span class="p">[:,</span><span class="n">j</span><span class="p">]),</span><span class="n">subim</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Residuals with EM algorithm: $\chi^2$=</span><span class="si">%.2f</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">np</span>.sum(res**2/np.reshape(np.dot(A,RLvals[:,j])+pixnoise,subim.shape)/Npix))
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="c1">#         plt.subplot(121)</span>
+<span class="c1">#         lamlist,_ = calculateWaveList(par,method=&#39;lstsq&#39;)</span>
+<span class="c1">#         plt.plot(lstsq[:,-1])</span>
+<span class="c1">#         plt.plot(RLvals[:,-1])</span>
+<span class="c1">#         scale = np.mean(RLvals[:,-1])/np.mean(optext[4:-4,-1])</span>
+<span class="c1">#         plt.plot(lamlist,scale*optext[3:-3,-1])</span>
+<span class="c1">#         print np.mean(RLvals[:,-1]),np.mean(optext[4:-4,-1])</span>
+
+        <span class="n">SNR</span> <span class="o">=</span> <span class="n">Nelec</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Nelec</span><span class="o">+</span><span class="n">npix</span><span class="o">*</span><span class="n">pixnoise</span><span class="p">))</span>
+        <span class="k">print</span> <span class="s2">&quot;Expected SNR:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Rvect</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">indspec</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Rvect</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">indspec</span><span class="p">]</span><span class="o">+</span><span class="n">npix</span><span class="o">*</span><span class="n">pixnoise</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s2">&quot;Estimated SNR lstsq:&quot;</span><span class="p">,</span><span class="n">estSNRlstsq</span><span class="p">[</span><span class="n">indspec</span><span class="p">]</span>
+        <span class="k">print</span> <span class="s2">&quot;Estimated SNR RL:&quot;</span><span class="p">,</span><span class="n">estSNRRL</span><span class="p">[</span><span class="n">indspec</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">vect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">varray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vect</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-10</span>
+            <span class="n">fchi2</span> <span class="o">=</span> <span class="n">Rvect</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1">#             plt.subplot(122)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fchi2</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Input&#39;</span><span class="p">)</span>
+<span class="c1">#             plt.plot(lstsq[:,-1])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="n">lstsq</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">varlstsq</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;last lstsq trial&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;lstsq samp. mean&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;Gray&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;lstsq samp. 1sigma&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">RLvals</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">RLvals</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;EM samp. mean&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">RLvals</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;last EM trial&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1">#             print &quot;MSE lstsq:&quot;,np.sum((estSNRlstsq-fchi2)**2)/np.sum(fchi2**2)</span>
+<span class="c1">#             print &quot;MSE RL:&quot;,np.sum((estSNRRL-fchi2)**2)/np.sum(fchi2**2)</span>
+<span class="c1">#             print &quot;MSE lstsq estimated:&quot;,np.mean(np.sum((lstsq-Rvect)**2,axis=0)/np.sum(Rvect**2,axis=0))</span>
+<span class="c1">#             print &quot;MSE RL estimated:&quot;,np.mean(np.sum((RLvals-Rvect)**2,axis=0)/np.sum(Rvect**2,axis=0))</span>
+            <span class="k">print</span> <span class="s2">&quot;Average $\chi^2$ lstsq estimated:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">lstsq</span><span class="o">-</span><span class="n">Rvect</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">varlstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">/</span><span class="n">N</span>
+            <span class="k">print</span> <span class="s2">&quot;Average $\chi^2$ RL estimated:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">RLvals</span><span class="o">-</span><span class="n">Rvect</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">varlstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">/</span><span class="n">N</span>
+<span class="c1">#             print &quot;MSRE lstsq normalized:&quot;,np.std((estSNRlstsq-varray)/varray)</span>
+<span class="c1">#             print &quot;MSRE RL normalized:&quot;,np.std((estSNRRL-varray)/varray)</span>
+
+
+<span class="c1">#         print &quot;Estimated SNR OptExt:&quot;,estSNROptExt</span>
+        <span class="k">if</span> <span class="n">vect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span> <span class="k">print</span> <span class="s2">&quot;Expected mean:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Rvect</span><span class="p">[</span><span class="n">indspec</span><span class="p">])</span>
+        <span class="k">print</span> <span class="s2">&quot;Estimated mean lstsq:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">indspec</span><span class="p">]</span>
+        <span class="k">print</span> <span class="s2">&quot;Estimated mean RL:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">RLvals</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">indspec</span><span class="p">]</span>
+<span class="c1">#         print pd.DataFrame(R)</span>
+<span class="c1">#         print np.sum(R,axis=0)</span>
+<span class="c1">#         print R[0],np.sum(R[0])</span>
+<span class="c1">#         print &quot;Estimated mean:&quot;,np.mean(0.5*(optext[13,:]+optext[14,:]))</span>
+
+    <span class="k">return</span> <span class="n">estSNRlstsq</span><span class="p">,</span><span class="n">estSNRRL</span><span class="p">,</span><span class="n">Rvect</span><span class="c1">#,estSNROptExtS</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">Nelec</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">Ntrials</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">niter</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">estSNRlstsq</span><span class="p">,</span><span class="n">estSNRRL</span><span class="p">,</span><span class="n">rvect</span><span class="o">=</span><span class="n">calcSNRtotal</span><span class="p">(</span><span class="n">Nelec</span><span class="o">=</span><span class="n">Nelec</span><span class="p">,</span>
+        <span class="n">subim</span><span class="o">=</span><span class="n">img</span><span class="p">[</span><span class="mi">400</span><span class="p">:</span><span class="mi">620</span><span class="p">,</span><span class="mi">570</span><span class="p">:</span><span class="mi">690</span><span class="p">],</span>
+        <span class="n">psflet_subarr</span><span class="o">=</span><span class="n">PSF</span><span class="p">,</span>
+        <span class="n">pixnoise</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">npix</span><span class="o">=</span><span class="mi">28</span><span class="p">,</span>
+        <span class="n">plot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">Niter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">indspec</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">vect</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0 / 100
+10 / 100
+20 / 100
+30 / 100
+40 / 100
+50 / 100
+60 / 100
+70 / 100
+80 / 100
+90 / 100
+Expected SNR: nan
+Estimated SNR lstsq: 22.2016504303
+Estimated SNR RL: 38.5302377725
+Estimated mean lstsq: 532.052537426
+Estimated mean RL: 529.968623119
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_21_1.png" src="../_images/notebooks_Extraction_compare_21_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Extraction_compare_21_2.png" src="../_images/notebooks_Extraction_compare_21_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.figure.Figure at 0x1c266f7710&gt;
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul class="simple">
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/Extraction compare.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
+  </p>
+</footer>
+  </body>
+</html>

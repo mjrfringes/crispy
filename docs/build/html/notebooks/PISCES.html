@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>PISCES Wavelength calibration &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -34,7 +31,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -232,7 +229,11 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="PISCES-Wavelength-calibration">
 <h1>PISCES Wavelength calibration<a class="headerlink" href="#PISCES-Wavelength-calibration" title="Permalink to this headline">¶</a></h1>
@@ -275,7 +276,7 @@ names if necessary in the first part of the file.</p>
 <h2>Define wavelengths and list of wavelength calibration files<a class="headerlink" href="#Define-wavelengths-and-list-of-wavelength-calibration-files" title="Permalink to this headline">¶</a></h2>
 <p>Watch out, the two lists need to be in the same order. The default
 location of the calibration files is in
-par.wavecalDir=&#8217;./ReferenceFiles/VARIAWavecal/&#8217;</p>
+par.wavecalDir=’./ReferenceFiles/VARIAWavecal/’</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
 <span></span>In [3]:
@@ -385,10 +386,10 @@ Total time elapsed: 673 s
 <h1>Reduce PISCES data<a class="headerlink" href="#Reduce-PISCES-data" title="Permalink to this headline">¶</a></h1>
 <p>This is the standard reduction routine. This will work as long as the
 calibration files can be found within par.wavecalDir</p>
-<p>The available methods for PISCES are: - &#8216;simple&#8217;: sums pixel columns
-across the microspectrum - &#8216;dense&#8217;: densifies the image and pixel
-columns across the microspectrum - &#8216;apphot&#8217;: aperture photometry using
-photutils package to pixel columns across the microspectrum - &#8216;intopt&#8217;:
+<p>The available methods for PISCES are: - ‘simple’: sums pixel columns
+across the microspectrum - ‘dense’: densifies the image and pixel
+columns across the microspectrum - ‘apphot’: aperture photometry using
+photutils package to pixel columns across the microspectrum - ‘intopt’:
 RECOMMENDED. Optimal extraction: uses inverse wavelength solution to fit
 gaussian values to each pixel column within the microspectrum, then
 remaps results on desired wavelength bins. There is no reason to use
@@ -491,8 +492,8 @@ changed and tweaked by changing the parameter par.R</p>
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

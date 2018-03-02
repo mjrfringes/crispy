@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>OS5 Observing Scenario &#8212; crispy 0.2.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -24,7 +21,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -36,7 +33,7 @@
 
 
   </head>
-  <body role="document">
+  <body>
 <div class="topbar">
   <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
   <ul>
@@ -245,7 +242,11 @@ div.nboutput div.output_area.stderr {
 .ansi-white-intense-fg { color: #A1A6B2; }
 .ansi-white-intense-bg { background-color: #A1A6B2; }
 
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
 .ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
 </style>
 <div class="section" id="OS5-Observing-Scenario">
 <h1>OS5 Observing Scenario<a class="headerlink" href="#OS5-Observing-Scenario" title="Permalink to this headline">¶</a></h1>
@@ -255,7 +256,7 @@ datacubes, each of them corresponding to some amount of time (typically
 ~1000 seconds).</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [1]:
+<span></span>In [8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
@@ -264,17 +265,12 @@ datacubes, each of them corresponding to some amount of time (typically
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
 <span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
-
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;../../../../crispy&#39;</span>
-<span class="k">print</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">folder</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">crispy.params</span> <span class="kn">import</span> <span class="n">Params</span>
-<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;../../../crispy&#39;</span>
-<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/WFIRST&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
 
 <span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;crispy&#39;</span><span class="p">)</span>
@@ -288,18 +284,18 @@ datacubes, each of them corresponding to some amount of time (typically
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Populating the interactive namespace from numpy and matplotlib
-../../../../crispy
+params.py   params.pyc
 </pre></div></div>
 </div>
 <div class="section" id="Initialize-environment-in-which-the-computations-will-occur">
 <h2>Initialize environment in which the computations will occur<a class="headerlink" href="#Initialize-environment-in-which-the-computations-will-occur" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [26]:
+<span></span>In [9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="n">lamc</span><span class="o">=</span><span class="mf">660.</span>      <span class="c1"># central wavelength in nm</span>
+<span></span><span class="n">lamc</span><span class="o">=</span><span class="mf">770.</span>      <span class="c1"># central wavelength in nm</span>
 <span class="n">par</span><span class="o">.</span><span class="n">BW</span> <span class="o">=</span> <span class="mf">0.18</span>  <span class="c1"># ensure fractional bandwidth is right</span>
 <span class="n">par</span><span class="o">.</span><span class="n">nonoise</span><span class="o">=</span><span class="bp">False</span> <span class="c1"># Turn this to True to turn all of the noise contributions off</span>
 <span class="n">sampling</span><span class="o">=</span><span class="mf">2.0</span>   <span class="c1"># Number of lenslet per lambda/D, defined at lamc</span>
@@ -1377,7 +1373,7 @@ crispy - INFO - Total time: 245.591
 <img alt="../_images/notebooks_OS5_Scenario_doc_12_0.png" src="../_images/notebooks_OS5_Scenario_doc_12_0.png" />
 </div>
 </div>
-<p>However, runnin only one simulation doesn&#8217;t yield the best results since
+<p>However, runnin only one simulation doesn’t yield the best results since
 the errors would be very hard to determine. In order to get good error
 bars, we can run a large number of these individual simulations in order
 to get relevant 1-sigma deviations.</p>
@@ -2351,23 +2347,90 @@ Time elapsed: 23967.197949
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none"><div class="highlight"><pre>
-<span></span>In [33]:
+<span></span>In [23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
+<span></span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">calculateWaveList</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
 <span class="kn">from</span> <span class="nn">crispy.tools.inputScene</span> <span class="kn">import</span> <span class="n">calc_contrast</span>
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="kn">as</span> <span class="nn">u</span>
+<span class="kn">import</span> <span class="nn">astropy.constants</span> <span class="kn">as</span> <span class="nn">c</span>
 <span class="n">fontsize</span><span class="o">=</span><span class="mi">25</span>
 <span class="c1"># from scipy.interpolate import interp1d</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">averagefolder</span><span class="o">+</span><span class="s1">&#39;/final_signal_cube_1000.txt&#39;</span><span class="p">)</span>
+<span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/mrizzo/IFS/OS5_SIM_2.0_t1000_770/average_47Umac_770/&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="s1">&#39;/final_signal_cube_1000.txt&#39;</span><span class="p">)</span>
 <span class="n">dat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">Nlam</span> <span class="o">=</span> <span class="mi">150</span>
-<span class="n">lams</span><span class="o">=</span><span class="mf">660.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">Nlam</span><span class="p">)</span>
-<span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;/wavecalR50_660/&#39;</span>
+<span class="n">lams</span><span class="o">=</span><span class="n">lamc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="n">par</span><span class="o">.</span><span class="n">BW</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span><span class="n">Nlam</span><span class="p">)</span>
+<span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;/wavecalR50_770/&#39;</span>
 <span class="n">lam_midpts660</span><span class="p">,</span><span class="n">junk</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;optext&#39;</span><span class="p">)</span>
-<span class="n">real_spectr660</span> <span class="o">=</span> <span class="n">calc_contrast</span><span class="p">(</span><span class="n">lams</span><span class="p">,</span><span class="n">distance</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.27</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/Inputs/Jupiter_1x_5AU_90deg.dat&quot;</span><span class="p">,</span><span class="n">albedo</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">codeRoot</span><span class="o">+</span><span class="s2">&quot;/Inputs/Jupiter_1x_5AU_90deg.dat&quot;</span><span class="p">)</span>
+<span class="n">spec_func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">spectrum</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">1000.</span><span class="p">,</span><span class="n">spectrum</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">vals</span> <span class="o">=</span> <span class="n">spec_func</span><span class="p">(</span><span class="n">lams</span><span class="p">)</span>
+<span class="n">vals</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
+<span class="n">vals</span> <span class="o">*=</span> <span class="mf">0.25</span>
+<span class="n">vals</span> <span class="o">=</span> <span class="n">vals</span><span class="o">*</span><span class="p">(</span><span class="mf">1.27</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">R_jup</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">3.6</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">AU</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">m</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+<span class="k">print</span> <span class="n">vals</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 19 wavelength bins
+[  6.79519745e-09   6.46350224e-09   6.65415374e-09   6.77568227e-09
+   6.75912160e-09   6.82901794e-09   6.87984748e-09   6.87058956e-09
+   6.96369299e-09   6.98704988e-09   6.99316179e-09   7.04627981e-09
+   7.05092082e-09   7.01923286e-09   7.04077544e-09   7.01897907e-09
+   6.91045944e-09   6.63331785e-09   6.35147347e-09   5.85042313e-09
+   5.51722664e-09   5.36614071e-09   5.15988424e-09   5.05775653e-09
+   4.76408813e-09   4.41611400e-09   4.10447171e-09   3.92895792e-09
+   3.89123099e-09   3.80277910e-09   4.24775495e-09   4.46653797e-09
+   4.51769559e-09   5.07965497e-09   5.40484731e-09   5.75720427e-09
+   5.96899932e-09   6.21680582e-09   5.93501921e-09   6.11176794e-09
+   6.44634984e-09   6.66579703e-09   6.75767214e-09   6.89772804e-09
+   7.02565418e-09   7.07409874e-09   7.09878462e-09   7.08725321e-09
+   7.10070523e-09   7.10569428e-09   7.08893053e-09   7.08691122e-09
+   7.07637038e-09   7.05657302e-09   7.06163558e-09   7.06240359e-09
+   7.05401890e-09   7.02737148e-09   7.02936352e-09   7.03578026e-09
+   7.02043305e-09   6.99449793e-09   6.95756089e-09   6.91619393e-09
+   6.87445721e-09   6.84907389e-09   6.80199509e-09   6.73852866e-09
+   6.71441257e-09   6.71063067e-09   6.69916463e-09   6.66283947e-09
+   6.63824993e-09   6.62766902e-09   6.58975738e-09   6.55570868e-09
+   6.50456574e-09   6.41853317e-09   6.30284175e-09   6.26634036e-09
+   6.20922494e-09   6.12235994e-09   6.02708885e-09   5.92069057e-09
+   5.79389193e-09   5.64210363e-09   5.41707138e-09   5.32823589e-09
+   5.28980935e-09   5.23689222e-09   5.30603730e-09   5.41133653e-09
+   5.49041279e-09   5.57320220e-09   5.68161164e-09   5.72357802e-09
+   5.70946471e-09   5.56207682e-09   5.52760479e-09   5.45618390e-09
+   5.39904972e-09   5.30671222e-09   5.19955274e-09   5.24831289e-09
+   5.23441526e-09   5.28487187e-09   5.32554209e-09   5.37072109e-09
+   5.38665233e-09   5.39475063e-09   5.40055344e-09   5.37027104e-09
+   5.39778978e-09   5.45746112e-09   5.46816092e-09   5.41982338e-09
+   5.37233511e-09   5.33921167e-09   5.29407846e-09   5.24040708e-09
+   5.23322444e-09   5.17012402e-09   5.09905875e-09   4.92307589e-09
+   4.85519710e-09   5.04340516e-09   5.20193445e-09   5.32714497e-09
+   5.02088786e-09   5.35584673e-09   5.62372899e-09   5.57954496e-09
+   5.52586249e-09   5.79524943e-09   5.52926938e-09   5.59272952e-09
+   5.53497550e-09   5.66066493e-09   5.96785494e-09   6.02243765e-09
+   6.05661945e-09   6.02808837e-09   5.94108381e-09   6.02479658e-09
+   6.16223772e-09   6.10640689e-09   6.02337584e-09   5.92915351e-09
+   5.77254133e-09   5.75502896e-09]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">real_spectr660</span> <span class="o">=</span> <span class="n">vals</span><span class="c1">#calc_contrast(lams,distance=3.6, radius=1.27,filename=par.codeRoot+&quot;/Inputs/Jupiter_1x_5AU_90deg.dat&quot;,albedo=0.25)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lams</span><span class="p">,</span><span class="n">real_spectr660</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#1777b4&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original spectrum&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">smooth</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter1d</span><span class="p">(</span><span class="n">real_spectr660</span><span class="p">,</span><span class="mf">2.</span><span class="o">*</span><span class="n">Nlam</span><span class="o">/</span><span class="mf">19.</span><span class="o">/</span><span class="mf">2.35</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
@@ -2388,20 +2451,31 @@ Time elapsed: 23967.197949
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/Downloads/OS5_27hrs.png&quot;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lams</span><span class="p">,</span><span class="n">real_spectr660</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#1777b4&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original spectrum&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">lams</span><span class="p">,</span><span class="mf">0.9</span><span class="o">*</span><span class="n">real_spectr660</span><span class="p">,</span><span class="mf">1.1</span><span class="o">*</span><span class="n">real_spectr660</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;Gray&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;10</span><span class="si">% e</span><span class="s1">nvelope of original spectrum&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lams</span><span class="p">,</span><span class="n">smooth</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;R=50 spectrum&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#d62728&#39;</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">lam_midpts660</span><span class="p">,</span><span class="n">res</span><span class="p">[</span><span class="mi">60</span><span class="p">]</span><span class="o">*</span><span class="n">ratio660</span><span class="p">,</span><span class="n">yerr</span><span class="o">=</span><span class="n">err</span><span class="o">*</span><span class="n">ratio660</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">elinewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#2ca02c&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Recovered spectrum&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">12</span><span class="p">),</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">((</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">axisbg</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_tick_params</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_tick_params</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">spine</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="n">spine</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">fontsize</span><span class="o">=</span><span class="mi">45</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lams</span><span class="p">,</span><span class="n">real_spectr660</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original spectrum&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1">#plt.fill_between(lams,0.9*real_spectr660,1.1*real_spectr660,color=&#39;white&#39;,alpha=0.5,label=&#39;10% envelope of original spectrum&#39;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lams</span><span class="p">,</span><span class="n">smooth</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;R=50 spectrum&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#d62728&#39;</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">lam_midpts660</span><span class="p">,</span><span class="n">res</span><span class="p">[</span><span class="mi">60</span><span class="p">]</span><span class="o">*</span><span class="n">ratio660</span><span class="p">,</span><span class="n">yerr</span><span class="o">=</span><span class="n">err</span><span class="o">*</span><span class="n">ratio660</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">elinewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkorange&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Recovered spectrum&#39;</span><span class="p">)</span>
 <span class="n">locs</span><span class="p">,</span><span class="n">labels</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%.1f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">x</span><span class="p">,</span> <span class="n">locs</span><span class="o">*</span><span class="mf">1e9</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Contrast (x1e-9)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;OS5: 47 Uma c with RDI, 100 ks on target, single trial&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span><span class="n">loc</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/Downloads/OS5_27hrs_single_trial.png&quot;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Contrast (x1e-9)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="c1"># plt.title(&#39;OS5: 47 Uma c with RDI, 100 ks on target, single trial&#39;,fontsize=35,color=&#39;white&#39;)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span><span class="n">loc</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="n">legend</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span>
+<span class="n">frame</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">frame</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">legend</span><span class="o">.</span><span class="n">get_texts</span><span class="p">():</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="c1">#plt.tight_layout()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;/Users/mrizzo/Downloads/OS5_27hrs_single_trial.png&quot;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2410,22 +2484,21 @@ Time elapsed: 23967.197949
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-crispy - INFO - Reduced cube will have 19 wavelength bins
-0.991236165773
+(&#39;Correction factor due to incorrect photon-counting compensation: &#39;, &lt;Quantity 0.9775171770913671&gt;)
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_OS5_Scenario_doc_17_1.png" src="../_images/notebooks_OS5_Scenario_doc_17_1.png" />
+<img alt="../_images/notebooks_OS5_Scenario_doc_18_1.png" src="../_images/notebooks_OS5_Scenario_doc_18_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_OS5_Scenario_doc_17_2.png" src="../_images/notebooks_OS5_Scenario_doc_17_2.png" />
+<img alt="../_images/notebooks_OS5_Scenario_doc_18_2.png" src="../_images/notebooks_OS5_Scenario_doc_18_2.png" />
 </div>
 </div>
 </div>
@@ -2458,8 +2531,8 @@ crispy - INFO - Reduced cube will have 19 wavelength bins
     <a href="#">Back to Top</a></p>
   <p>
     &copy; Copyright 2017, Maxime J. Rizzo.<br/>
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.1. &nbsp;
-    Last built 14 Nov 2017. <br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
   </p>
 </footer>
   </body>

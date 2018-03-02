@@ -1,0 +1,843 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Study of the RL algorithm with prior &#8212; crispy 0.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-astropy.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="shortcut icon" href="../_static/astropy_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600' rel='stylesheet' type='text/css'/>
+<script type="text/javascript" src="../_static/copybutton.js"></script>
+
+
+  </head>
+  <body>
+<div class="topbar">
+  <a class="brand" title="Documentation Home" href="../index.html"><span id="logotext1">CRIS</span><span id="logotext2">PY</span><span id="logotext3"> - IFS Simulator</span></a>
+  <ul>
+    <li><a class="homelink" title="Astropy Homepage" href="http://www.astropy.org"></a></li>
+    <li><a title="General Index" href="../genindex.html">Index</a></li>
+    <li><a title="Module Index" href="../py-modindex.html">Modules</a></li>
+    <li>
+      
+      
+<form action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      
+    </li>
+  </ul>
+</div>
+
+<div class="related">
+    <h3>Navigation</h3>
+    <ul>
+      <li>
+	<a href="../index.html">crispy 0.2.0 documentation</a>
+	 &#187;
+      </li>
+      
+       
+    </ul>
+</div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 9ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+</style>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">glob</span><span class="o">,</span><span class="nn">os</span>
+<span class="o">%</span><span class="k">pylab</span> inline --no-import-all
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s1">&#39;serif&#39;</span><span class="p">,</span> <span class="n">serif</span><span class="o">=</span><span class="s1">&#39;Times&#39;</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">usetex</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;xtick.major&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick.major&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;ytick&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;figure&#39;</span><span class="p">,</span><span class="n">titlesize</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;image.interpolation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="kn">as</span> <span class="nn">log</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.initLogger</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;/Users/mrizzo/IFS/crispy/crispy/WFIRST/&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">params</span> <span class="kn">import</span> <span class="n">Params</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">Params</span><span class="p">()</span>
+<span class="n">par</span><span class="o">.</span><span class="n">hdr</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[1]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>SIMPLE  =                    T / conforms to FITS standard
+BITPIX  =                    8 / array data type
+NAXIS   =                    0 / number of array dimensions
+EXTEND  =                    T
+COMMENT
+COMMENT ************************************************************
+COMMENT ********************** General parameters ******************
+COMMENT ************************************************************
+COMMENT
+NLENS   =                  108 / # lenslets across array
+PITCH   =             0.000174 / Lenslet pitch (meters)
+INTERLAC=                  2.0 / Interlacing
+PHILENS =    26.56505117707799 / Rotation angle of the lenslets (deg)
+PIXSIZE =              1.3E-05 / Pixel size (meters)
+LENSAMP =                  0.5 / Lenslet sampling (lam/D)
+LSAMPWAV=                660.0 / Lenslet sampling wavelength (nm)
+FWHM    =                  2.0 / FHWM of PSFLet at detector (pixels)
+FWHMLAM =                660.0 / Wavelength at which FWHM is defined (nm)
+NPIX    =                 1024 / Number of detector pixels
+BW      =                 0.18 / Bandwidth
+PIXPRLAM=                  2.0 / Pixels per resolution element
+R       =                   50 / Spectral resolution
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">lensX</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">lensY</span><span class="o">=</span><span class="mi">10</span>
+
+<span class="kn">from</span> <span class="nn">crispy.tools.locate_psflets</span> <span class="kn">import</span> <span class="n">PSFLets</span>
+<span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">get_cutout</span>
+<span class="n">polychromeR</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s1">&#39;polychromeR</span><span class="si">%d</span><span class="s1">.fits.gz&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="p">))</span>
+<span class="n">psflets</span> <span class="o">=</span> <span class="n">polychromeR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="n">psftool</span> <span class="o">=</span> <span class="n">PSFLets</span><span class="p">()</span>
+<span class="n">lamlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s2">&quot;lamsol.dat&quot;</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">allcoef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s2">&quot;lamsol.dat&quot;</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">:]</span>
+
+<span class="c1"># lam in nm</span>
+<span class="n">psftool</span><span class="o">.</span><span class="n">geninterparray</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span> <span class="n">allcoef</span><span class="p">)</span>
+
+<span class="n">xlist</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ylist</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">lamlist</span><span class="p">:</span>
+    <span class="n">_x</span><span class="p">,</span><span class="n">_y</span> <span class="o">=</span> <span class="n">psftool</span><span class="o">.</span><span class="n">return_locations</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">allcoef</span><span class="p">,</span> <span class="n">lensX</span><span class="p">,</span> <span class="n">lensY</span><span class="p">)</span>
+    <span class="n">xlist</span> <span class="o">+=</span> <span class="p">[</span><span class="n">_x</span><span class="p">]</span>
+    <span class="n">ylist</span> <span class="o">+=</span> <span class="p">[</span><span class="n">_y</span><span class="p">]</span>
+
+<span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span> <span class="o">+</span> <span class="s1">&#39;polychromeR</span><span class="si">%d</span><span class="s1">stack.fits.gz&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">R</span><span class="p">))</span>
+<span class="n">subim</span><span class="p">,</span> <span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_cutout</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="n">xlist</span><span class="p">,</span><span class="n">ylist</span><span class="p">,</span><span class="n">psflets</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">psflet_subarr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Read data from HDU 0 of ..//ReferenceFiles/wavecalR50_660/polychromeR50stack.fits.gz
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">RL</span><span class="p">,</span><span class="n">calculateWaveList</span>
+<span class="n">lamlist</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">calcSNRtotal</span><span class="p">(</span><span class="n">Nelec</span><span class="p">,</span><span class="n">subim</span><span class="p">,</span><span class="n">psflet_subarr</span><span class="p">,</span><span class="n">pixnoise</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span><span class="n">npix</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">Niter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span><span class="n">plot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">indspec</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">vect</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c1">#sumpsflets = subim*Nelec+pixnoise+1e-10</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">lstsq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">Niter</span><span class="p">))</span>
+    <span class="n">Rvect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">Niter</span><span class="p">))</span>
+    <span class="n">RLvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">Niter</span><span class="p">))</span>
+    <span class="n">optext</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">subim</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">Niter</span><span class="p">))</span>
+    <span class="n">PSFlet_tool</span> <span class="o">=</span> <span class="n">PSFLets</span><span class="p">(</span><span class="n">load</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">infiledir</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">wavecalDir</span><span class="p">)</span>
+    <span class="n">xindx</span> <span class="o">=</span> <span class="n">PSFlet_tool</span><span class="o">.</span><span class="n">xindx</span>
+    <span class="n">yindx</span> <span class="o">=</span> <span class="n">PSFlet_tool</span><span class="o">.</span><span class="n">yindx</span>
+    <span class="n">Nmax</span> <span class="o">=</span> <span class="n">PSFlet_tool</span><span class="o">.</span><span class="n">nlam_max</span>
+    <span class="n">i</span><span class="o">=</span><span class="n">lensX</span><span class="o">+</span><span class="mi">54</span>
+    <span class="n">j</span><span class="o">=</span><span class="n">lensY</span><span class="o">+</span><span class="mi">54</span>
+    <span class="n">_x</span> <span class="o">=</span> <span class="n">xindx</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:</span><span class="n">PSFlet_tool</span><span class="o">.</span><span class="n">nlam</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]]</span>
+    <span class="n">_y</span> <span class="o">=</span> <span class="n">yindx</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:</span><span class="n">PSFlet_tool</span><span class="o">.</span><span class="n">nlam</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]]</span>
+    <span class="n">_lam</span> <span class="o">=</span> <span class="n">PSFlet_tool</span><span class="o">.</span><span class="n">lam_indx</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="p">:</span><span class="n">PSFlet_tool</span><span class="o">.</span><span class="n">nlam</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]]</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">_x</span><span class="o">-</span><span class="n">y0</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">_y</span><span class="o">-</span><span class="n">x0</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">_lam</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">psflets_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">(</span><span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">psflets_flat</span><span class="o">.</span><span class="n">T</span>
+<span class="c1">#     variance = np.reshape(subim*Nelec+pixnoise+1e-10,-1)</span>
+<span class="c1">#     Ninv = np.linalg.inv(np.diag(variance))</span>
+<span class="c1">#     Cinv = np.dot(np.transpose(A),np.dot(Ninv,A))</span>
+<span class="c1">#     C = np.linalg.inv(Cinv)</span>
+<span class="c1">#     Q = sp.linalg.sqrtm(Cinv)</span>
+<span class="c1">#     s = np.sum(Q,axis=1)</span>
+<span class="c1">#     R = Q/s[np.newaxis,:]</span>
+<span class="c1">#     Ctilde_inv = np.diag(s**2)</span>
+<span class="c1">#     Ctilde = np.dot(np.dot(R,C),R.T)</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Niter</span><span class="p">):</span>
+        <span class="c1"># subtract mean of background (assumed known)</span>
+<span class="c1">#         img = np.random.poisson(subim*Nelec)+np.random.poisson(pixnoise,subim.shape)-pixnoise</span>
+<span class="c1">#         Nit = np.amax((subim*Nelec+pixnoise)/0.1).astype(int)</span>
+<span class="c1">#         img = np.zeros_like(subim)</span>
+<span class="c1">#         var = np.zeros_like(subim)</span>
+<span class="c1">#         for h in range(Nit):</span>
+<span class="c1">#             frame = np.random.poisson((subim*Nelec+pixnoise)/Nit.astype(float))</span>
+<span class="c1">#             img+= frame</span>
+<span class="c1">#             var += frame**2</span>
+<span class="c1">#         var /= Nit.astype(float)</span>
+<span class="c1">#         var -= (img/Nit.astype(float))**2</span>
+<span class="c1">#         var*=Nit</span>
+<span class="c1">#         subim_flat = np.reshape(img/np.sqrt(sumpsflets), -1)</span>
+<span class="c1">#         psflets_flat = np.reshape(psflet_subarr, (psflet_subarr.shape[0], -1))</span>
+<span class="c1">#         sumpsflets_flat = np.reshape(sumpsflets,-1)</span>
+<span class="c1">#         vals[:,i] = np.linalg.lstsq(psflets_flat.T/(np.sqrt(sumpsflets_flat[:,np.newaxis])), subim_flat)[0]</span>
+<span class="c1">#         variance = np.reshape(img+pixnoise+1,-1)</span>
+<span class="c1">#         variance = np.reshape(subim*Nelec+pixnoise+1e-10,-1)</span>
+<span class="c1">#         variance = np.reshape(var+1,-1)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">subim</span><span class="o">*</span><span class="n">Nelec</span><span class="o">+</span><span class="n">pixnoise</span><span class="p">)</span>
+<span class="c1">#         img -= pixnoise</span>
+        <span class="n">rl</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">psflets</span><span class="o">=</span><span class="n">psflet_subarr</span><span class="p">,</span><span class="n">prior</span><span class="o">=</span><span class="n">pixnoise</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">pixnoise</span><span class="c1">#np.dot(R,RL(img,psflets=psflet_subarr)[0])</span>
+        <span class="n">RLvals</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">rl</span>
+        <span class="n">img</span> <span class="o">-=</span> <span class="n">pixnoise</span>
+        <span class="n">variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="o">*</span><span class="n">rl</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">pixnoise</span>
+<span class="c1">#         variance = np.reshape(np.sum(psflet_subarr*rl[:,np.newaxis,np.newaxis],axis=0),-1)</span>
+        <span class="n">Ninv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">variance</span><span class="o">+</span><span class="mf">1e-10</span><span class="p">))</span>
+        <span class="n">Cinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ninv</span><span class="p">,</span><span class="n">A</span><span class="p">))</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">Cinv</span><span class="p">)</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">sqrtm</span><span class="p">(</span><span class="n">Cinv</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">Q</span><span class="o">/</span><span class="n">s</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="n">Ctilde_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">A</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ninv</span><span class="p">,</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="n">right</span><span class="p">)</span>
+
+<span class="c1">#         lstsq[:,j] = np.dot(C,right)#np.dot(R,f)</span>
+        <span class="n">lstsq</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">RLvals</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">RLvals</span><span class="p">[:,</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">Rvect</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">vect</span><span class="p">)</span>
+<span class="c1">#         RLvals[:,j] = np.dot(R,RL(img,psflets=psflet_subarr)[0])</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">subim</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="mf">2.</span><span class="o">/</span><span class="mf">2.35</span><span class="o">*</span><span class="n">lam</span><span class="o">/</span><span class="n">par</span><span class="o">.</span><span class="n">FWHMlam</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<span class="c1">#         for i in range(img.shape[1]):</span>
+<span class="c1">#             weights = np.exp(-(np.arange(img.shape[0])-y)**2/2./sig[i]**2)/sig[i]/np.sqrt(2.*np.pi)</span>
+<span class="c1">#             optext[i,j] = np.sum(img[:,i]*weights)/np.sum(weights**2)</span>
+
+
+    <span class="n">estSNRlstsq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">estSNRRL</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">RLvals</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">RLvals</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#     estSNROptExt = np.mean(0.5*(optext[13,:]+optext[14,:]))/np.std(0.5*(optext[13,:]+optext[14,:]))</span>
+    <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="o">+</span><span class="n">pixnoise</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">f</span><span class="p">)),</span><span class="n">subim</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">lamlist</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">calculateWaveList</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;lstsq&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">lstsq</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">RLvals</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1">#         lamlist,_ = calculateWaveList(par,method=&#39;optext&#39;)</span>
+<span class="c1">#         scale = np.mean(RLvals[:,-1])/np.mean(optext[4:-4,-1])</span>
+<span class="c1">#         plt.plot(lamlist,scale*optext[3:-3,-1])</span>
+<span class="c1">#         print np.mean(RLvals[:,-1]),np.mean(optext[4:-4,-1])</span>
+
+        <span class="n">SNR</span> <span class="o">=</span> <span class="n">Nelec</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Nelec</span><span class="o">+</span><span class="n">npix</span><span class="o">*</span><span class="n">pixnoise</span><span class="p">))</span>
+        <span class="k">print</span> <span class="s2">&quot;Expected SNR:&quot;</span><span class="p">,</span><span class="n">SNR</span>
+        <span class="k">print</span> <span class="s2">&quot;Estimated SNR lstsq:&quot;</span><span class="p">,</span><span class="n">estSNRlstsq</span><span class="p">[</span><span class="n">indspec</span><span class="p">]</span>
+        <span class="k">print</span> <span class="s2">&quot;Estimated SNR RL:&quot;</span><span class="p">,</span><span class="n">estSNRRL</span><span class="p">[</span><span class="n">indspec</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">vect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">varray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vect</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-10</span>
+            <span class="n">fchi2</span> <span class="o">=</span> <span class="n">Rvect</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">fchi2</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">lstsq</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lamlist</span><span class="p">,</span><span class="n">RLvals</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1">#             print &quot;MSE lstsq:&quot;,np.sum((estSNRlstsq-fchi2)**2)/np.sum(fchi2**2)</span>
+<span class="c1">#             print &quot;MSE RL:&quot;,np.sum((estSNRRL-fchi2)**2)/np.sum(fchi2**2)</span>
+            <span class="k">print</span> <span class="s2">&quot;MSE lstsq:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">lstsq</span><span class="o">-</span><span class="n">Rvect</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Rvect</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+            <span class="k">print</span> <span class="s2">&quot;MSE RL:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">RLvals</span><span class="o">-</span><span class="n">Rvect</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Rvect</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="c1">#             print &quot;MSRE lstsq normalized:&quot;,np.std((estSNRlstsq-varray)/varray)</span>
+<span class="c1">#             print &quot;MSRE RL normalized:&quot;,np.std((estSNRRL-varray)/varray)</span>
+
+
+<span class="c1">#         print &quot;Estimated SNR OptExt:&quot;,estSNROptExt</span>
+        <span class="k">print</span> <span class="s2">&quot;Expected mean:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Rvect</span><span class="p">[:,</span><span class="n">indspec</span><span class="p">])</span>
+        <span class="k">print</span> <span class="s2">&quot;Estimated mean lstsq:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lstsq</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">indspec</span><span class="p">]</span>
+        <span class="k">print</span> <span class="s2">&quot;Estimated mean RL:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">RLvals</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">indspec</span><span class="p">]</span>
+        <span class="k">print</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+        <span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">print</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1">#         print &quot;Estimated mean:&quot;,np.mean(0.5*(optext[13,:]+optext[14,:]))</span>
+
+    <span class="k">return</span> <span class="n">estSNRlstsq</span><span class="p">,</span><span class="n">estSNRRL</span><span class="c1">#,estSNROptExt</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 17 wavelength bins
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span> <span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+17
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+
+<span></span><span class="c1"># subim = np.sum(psflet_subarr,axis=0)</span>
+<span class="c1"># vect = np.array([1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1])</span>
+<span class="n">vect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># vect = np.array([1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0])</span>
+<span class="n">subim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="o">*</span><span class="n">vect</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Nelec</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">calcSNRtotal</span><span class="p">(</span><span class="n">Nelec</span><span class="o">=</span><span class="n">Nelec</span><span class="p">,</span>
+        <span class="n">subim</span><span class="o">=</span><span class="n">subim</span><span class="p">,</span>
+        <span class="n">psflet_subarr</span><span class="o">=</span><span class="n">psflet_subarr</span><span class="p">,</span>
+        <span class="n">pixnoise</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">npix</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span>
+        <span class="n">plot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">Niter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">indspec</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">vect</span> <span class="o">=</span> <span class="n">Nelec</span><span class="o">*</span><span class="n">vect</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+crispy - INFO - Reduced cube will have 17 wavelength bins
+Expected SNR: 10.9544511501
+Estimated SNR lstsq: 11.6886334469
+Estimated SNR RL: 16.7906006169
+MSE lstsq: 0.00765146847094
+MSE RL: 0.0665005313014
+Expected mean: 300.0
+Estimated mean lstsq: 299.655548471
+Estimated mean RL: 325.289103542
+              0         1             2         3             4         5   \
+0   7.016058e-01  0.272017  2.496640e-02  0.001827 -6.091911e-04  0.000286
+1   2.252866e-01  0.513718  2.398145e-01  0.019955  1.694814e-03 -0.000732
+2   2.016116e-02  0.233827  4.908468e-01  0.232227  2.121559e-02  0.002250
+3   1.476177e-03  0.019467  2.323483e-01  0.487847  2.365937e-01  0.021125
+4  -5.028568e-04  0.001689  2.168634e-02  0.241717  4.799513e-01  0.231625
+5   2.389993e-04 -0.000739  2.330771e-03  0.021868  2.346867e-01  0.476061
+6  -1.211733e-04  0.000377 -7.710773e-04  0.001553  2.254688e-02  0.233465
+7   6.076222e-05 -0.000178  3.383411e-04 -0.000576  1.446549e-03  0.025931
+8  -3.075625e-05  0.000088 -1.664365e-04  0.000283 -4.690634e-04  0.001859
+9   1.609948e-05 -0.000046  8.895664e-05 -0.000158  2.899090e-04 -0.000546
+10 -8.238925e-06  0.000025 -4.912429e-05  0.000089 -1.552708e-04  0.000258
+11  6.226711e-06 -0.000014  2.769083e-05 -0.000049  8.231002e-05 -0.000133
+12 -2.086627e-06  0.000010 -1.572382e-05  0.000028 -4.604338e-05  0.000076
+13  1.778345e-06 -0.000004  1.135780e-05 -0.000015  2.625790e-05 -0.000044
+14 -9.891378e-07  0.000003 -3.689084e-06  0.000011 -1.321073e-05  0.000024
+15  7.978713e-07 -0.000001  2.585030e-06 -0.000002  1.045422e-05 -0.000010
+16  1.846644e-06  0.000001 -8.902447e-07  0.000002  2.159613e-07  0.000010
+
+          6         7         8         9         10        11        12  \
+0  -0.000148  0.000074 -0.000037  0.000019 -0.000010  0.000007 -0.000002
+1   0.000380 -0.000179  0.000087 -0.000045  0.000024 -0.000014  0.000010
+2  -0.000758  0.000332 -0.000161  0.000085 -0.000047  0.000027 -0.000015
+3   0.001527 -0.000566  0.000274 -0.000151  0.000085 -0.000047  0.000026
+4   0.022656  0.001451 -0.000463  0.000282 -0.000152  0.000081 -0.000045
+5   0.237699  0.026357  0.001860 -0.000538  0.000255 -0.000133  0.000074
+6   0.478525  0.237100  0.025978  0.001604 -0.000395  0.000213 -0.000124
+7   0.237499  0.473234  0.233627  0.027335  0.001495 -0.000358  0.000235
+8   0.026437  0.237358  0.469070  0.235796  0.028531  0.001609 -0.000531
+9   0.001657  0.028189  0.239344  0.464048  0.235839  0.029401  0.002074
+10 -0.000406  0.001537  0.028863  0.235049  0.457603  0.242543  0.033116
+11  0.000216 -0.000364  0.001609  0.028973  0.239819  0.456978  0.238559
+12 -0.000128  0.000242 -0.000539  0.002074  0.033236  0.242147  0.451639
+13  0.000077 -0.000143  0.000251 -0.000326  0.001855  0.033554  0.241800
+14 -0.000041  0.000069 -0.000114  0.000196 -0.000419  0.002147  0.033489
+15  0.000019 -0.000031  0.000054 -0.000103  0.000193 -0.000254  0.001647
+16 -0.000004  0.000012 -0.000021  0.000039 -0.000060  0.000090 -0.000257
+
+          13        14            15            16
+0   0.000002 -0.000001  9.129225e-07  1.731029e-06
+1  -0.000004  0.000003 -1.310781e-06  9.126340e-07
+2   0.000011 -0.000003  2.388505e-06 -6.738917e-07
+3  -0.000014  0.000010 -2.304908e-06  1.269262e-06
+4   0.000025 -0.000013  9.873777e-06  1.671044e-07
+5  -0.000043  0.000023 -9.429968e-06  7.632667e-06
+6   0.000073 -0.000039  1.757012e-05 -2.864469e-06
+7  -0.000135  0.000066 -2.934950e-05  9.417480e-06
+8   0.000242 -0.000111  5.188773e-05 -1.668890e-05
+9  -0.000319  0.000193 -1.003782e-04  3.070260e-05
+10  0.001810 -0.000413  1.863526e-04 -4.767441e-05
+11  0.032371  0.002090 -2.426775e-04  7.037176e-05
+12  0.236783  0.033100  1.600009e-03 -2.043275e-04
+13  0.447927  0.236844  3.593331e-02  2.250809e-03
+14  0.234655  0.445920  2.440809e-01  3.999765e-02
+15  0.036232  0.248404  4.709357e-01  2.429031e-01
+16  0.002770  0.049687  2.964920e-01  6.512387e-01
+[ 0.94819014  1.04024087  1.01145501  1.00660441  0.99725184  0.99150546
+  1.00520906  1.00467251  0.99968199  0.99433546  0.99785452  1.00798915
+  1.00169584  0.99238665  1.01576137  1.04892546  0.93624026]
+[  7.01605792e-01   2.72016870e-01   2.49664037e-02   1.82705702e-03
+  -6.09191110e-04   2.85761248e-04  -1.47509308e-04   7.38442251e-05
+  -3.67905657e-05   1.89727370e-05  -9.74196940e-06   7.44629072e-06
+  -2.45835103e-06   2.05168335e-06  -1.15181680e-06   9.12922465e-07
+   1.73102876e-06] 1.0
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[35]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>(array([ 10.48751355,  12.33784348,  11.80319238,  12.04644225,
+         12.11889784,  11.70569059,  11.55916811,  11.48960752,
+         11.68863345,  11.55947014,  11.28047687,  11.4683224 ,
+         11.58073269,  11.28273223,  11.18729911,  11.19171727,  10.20629886]),
+ array([ 19.48336125,  15.13514426,  16.47342416,  16.15816381,
+         17.12858255,  16.25355986,  16.38721717,  16.10238542,
+         16.79060062,  16.54268192,  16.35816245,  16.70976778,
+         17.09393987,  16.33931067,  17.18131083,  14.79816497,  23.43333729]))
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_SNR_Extraction_Clean_4_2.png" src="../_images/notebooks_SNR_Extraction_Clean_4_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_SNR_Extraction_Clean_4_3.png" src="../_images/notebooks_SNR_Extraction_Clean_4_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_SNR_Extraction_Clean_4_4.png" src="../_images/notebooks_SNR_Extraction_Clean_4_4.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_SNR_Extraction_Clean_4_5.png" src="../_images/notebooks_SNR_Extraction_Clean_4_5.png" />
+</div>
+</div>
+<div class="section" id="Study-of-the-RL-algorithm-with-prior">
+<h1>Study of the RL algorithm with prior<a class="headerlink" href="#Study-of-the-RL-algorithm-with-prior" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [64]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">pixnoise</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">vect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># vect = np.array([1,2,1,2,1,2,1,2,1,2,1,2,2,1,2,2,1])</span>
+<span class="n">subim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="o">*</span><span class="n">vect</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Nelec</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">subim</span><span class="o">*</span><span class="n">Nelec</span><span class="o">+</span><span class="n">pixnoise</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[64]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x1c1ab52d90&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_SNR_Extraction_Clean_6_1.png" src="../_images/notebooks_SNR_Extraction_Clean_6_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [65]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">crispy.tools.reduction</span> <span class="kn">import</span> <span class="n">RL</span><span class="p">,</span><span class="n">calculateWaveList</span>
+<span class="n">val</span><span class="p">,</span><span class="n">vallist</span><span class="p">,</span><span class="n">loglist</span><span class="p">,</span><span class="n">count</span> <span class="o">=</span> <span class="n">RL</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">psflets</span><span class="o">=</span><span class="n">psflet_subarr</span><span class="p">,</span><span class="n">prior</span><span class="o">=</span><span class="n">pixnoise</span><span class="p">,</span><span class="n">guess</span><span class="o">=</span><span class="n">vect</span><span class="p">,</span><span class="n">niter</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">vallist</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(51, 17)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [66]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">vallist</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[66]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.image.AxesImage at 0x1c1abbee50&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_SNR_Extraction_Clean_8_1.png" src="../_images/notebooks_SNR_Extraction_Clean_8_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [67]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+999.740798919
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_SNR_Extraction_Clean_9_1.png" src="../_images/notebooks_SNR_Extraction_Clean_9_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [68]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">psflets_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">psflet_subarr</span><span class="p">,</span> <span class="p">(</span><span class="n">psflet_subarr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">psflets_flat</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">val</span><span class="p">),</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">-</span><span class="n">pixnoise</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[68]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;matplotlib.colorbar.Colorbar at 0x1c1adfc090&gt;
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_SNR_Extraction_Clean_10_1.png" src="../_images/notebooks_SNR_Extraction_Clean_10_1.png" />
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Page Contents</h3>
+<ul>
+<li><a class="reference internal" href="#">Study of the RL algorithm with prior</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+<footer class="footer">
+  <p class="pull-right">
+    <a href="../_sources/notebooks/SNR Extraction Clean.ipynb.txt"
+       rel="nofollow">Page Source</a> &nbsp;
+    <a href="#">Back to Top</a></p>
+  <p>
+    &copy; Copyright 2017, Maxime J. Rizzo.<br/>
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.6.3. &nbsp;
+    Last built 02 Mar 2018. <br/>
+  </p>
+</footer>
+  </body>
+</html>
