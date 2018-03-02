@@ -142,12 +142,12 @@ def haystacks_to_photons(haystacks_hdu):
     # convert to photon
     return (hc/Eph).to(u.photon/u.s/u.m**2/u.nm),lamlist
     
-def Jy_to_photons(cube_Jy, wavel):
+def Jy_to_photons(cube_Jy, wavlist):
     '''
     Parameters
     ----------
         cube_Jy: 3D datacube in Jy
-        wavel: 1D array with wavelengths in microns
+        wavlist: 1D array with wavelengths in microns
     Returns
     -------
         hc: 3D haystacks cube in photons/m2/um/s

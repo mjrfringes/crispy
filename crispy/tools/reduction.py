@@ -534,8 +534,8 @@ def fit_cutout(subim, psflets, mode='lstsq',niter=5,pixnoise=0.0):
         coef = guess
         icov = ivarlstsq
     elif mode == 'RL':
-        coef = rl
-        icov = Cinv
+        coef = RL(subim,psflets=psflets,niter=niter,prior=pixnoise)[0]
+        icov = 0
     elif mode == 'RL_conv':
         rl = RL(subim,psflets=psflets,niter=niter,prior=pixnoise)[0]
         var = np.reshape(np.sum(psflets*rl[:,np.newaxis,np.newaxis],axis=0)+pixnoise,-1)

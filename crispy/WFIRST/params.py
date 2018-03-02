@@ -89,7 +89,7 @@ class Params(object):
         
         self.BW = 0.18              # Spectral bandwidth
         self.npixperdlam = 2.0       # Number of pixels per spectral resolution element
-        self.nchanperspec_lstsq = 1.2 # Nspec per pixel for least squares 
+        self.nchanperspec_lstsq = 2.0 # Nspec per pixel for least squares 
         self.R = 50                 # Spectral resolving power (extracted cubes have twice)
         
         # carry-over old parameter names

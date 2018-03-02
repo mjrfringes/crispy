@@ -371,7 +371,7 @@ def reduceIFSMapList(par,IFSimageNameList,method='optext',parallel=True,smoothba
     log.info('Elapsed time: %fs' % (time.time()-start))
 
 
-def prepareCube(par,wavelist,incube,QE=True,adjustment=0.98898):
+def prepareCube(par,wavelist,incube,QE=True,adjustment=1.0):
 # def prepareCube(par,wavelist,incube,QE=True,adjustment=1.0):
     '''
     Processes input cubes
@@ -382,13 +382,16 @@ def prepareCube(par,wavelist,incube,QE=True,adjustment=0.98898):
 
     inputcube = Image(data=incube.data.copy(),header=incube.header)
     if QE:
-        loadQE = np.loadtxt(par.codeRoot+"/"+par.QE)
-        QEinterp = interp1d(loadQE[:,0],loadQE[:,1])
-        QEvals = QEinterp(wavelist)
+        if isinstance(par.QE,basestring):
+            loadQE = np.loadtxt(par.codeRoot+"/"+par.QE)
+            QEinterp = interp1d(loadQE[:,0],loadQE[:,1])
+            QEvals = QEinterp(wavelist)
+        else:
+            QEvals = par.QE*np.ones(len(wavelist))
 
         if not "APPLYQE" in par.hdr:
             par.hdr.append(('APPLYQE',QE,'Applied quantum efficiency?'), end=True) 
-            par.hdr.append(('QEFILE',par.QE,'QE file used'), end=True) 
+            par.hdr.append(('QEFILE',par.QE,'QE file/value used'), end=True) 
         for iwav in range(len(wavelist)):
             inputcube.data[iwav] *= QEvals[iwav]
         #print(QEvals)
