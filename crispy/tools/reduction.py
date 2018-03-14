@@ -170,7 +170,7 @@ def calculateWaveList(par, lam_list=None, Nspec=None, method='lstsq'):
                     min(lamlist)) *
                 par.R *
                 par.nchanperspec_lstsq +
-                2)
+                1)
         else:
             Nspec = int(
                 np.log(
@@ -178,7 +178,7 @@ def calculateWaveList(par, lam_list=None, Nspec=None, method='lstsq'):
                     min(lamlist)) *
                 par.R *
                 par.npixperdlam +
-                2)
+                1)
     log.info('Reduced cube will have %d wavelength bins' % (Nspec - 1))
 #     lam_endpts = np.linspace(min(lamlist), max(lamlist), Nspec)
 #     lam_midpts = (lam_endpts[1:]+lam_endpts[:-1])/2.
@@ -338,51 +338,51 @@ def lstsqExtract(par, name, ifsimage, smoothandmask=True, ivar=True, dy=2,
              'Number of extracted wavelengths'),
             end=True)
 
-    par.hdr.append(
-        ('CTYPE1',
-         'RA---TAN',
-         'first parameter RA  ,  projection TANgential'),
-        end=True)
-    par.hdr.append(
-        ('CTYPE2',
-         'DEC--TAN',
-         'second parameter DEC,  projection TANgential'),
-        end=True)
-    par.hdr.append(('CRVAL1', 0., 'Reference X pixel value'), end=True)
-    par.hdr.append(('CRVAL2', 0., 'Reference Y pixel value'), end=True)
-    par.hdr.append(('CRPIX1', par.nlens // 2, 'Reference X pixel'), end=True)
-    par.hdr.append(('CRPIX2', par.nlens // 2, 'Reference Y pixel'), end=True)
-    par.hdr.append(('EQUINOX', 2000, 'Equinox of coordinates'), end=True)
+        par.hdr.append(
+            ('CTYPE1',
+             'RA---TAN',
+             'first parameter RA  ,  projection TANgential'),
+            end=True)
+        par.hdr.append(
+            ('CTYPE2',
+             'DEC--TAN',
+             'second parameter DEC,  projection TANgential'),
+            end=True)
+        par.hdr.append(('CRVAL1', 0., 'Reference X pixel value'), end=True)
+        par.hdr.append(('CRVAL2', 0., 'Reference Y pixel value'), end=True)
+        par.hdr.append(('CRPIX1', par.nlens // 2, 'Reference X pixel'), end=True)
+        par.hdr.append(('CRPIX2', par.nlens // 2, 'Reference Y pixel'), end=True)
+        par.hdr.append(('EQUINOX', 2000, 'Equinox of coordinates'), end=True)
 
-    angle = par.philens
-    xpixscale = -0.01 / 3600.
-    ypixscale = 0.01 / 3600.
-    par.hdr.append(
-        ('CD1_1',
-         np.cos(angle) *
-         xpixscale,
-         'Rotation matrix coefficient'),
-        end=True)
-    par.hdr.append(('CD1_2', -np.sin(angle) * xpixscale,
-                    'Rotation matrix coefficient'), end=True)
-    par.hdr.append(
-        ('CD2_1',
-         np.sin(angle) *
-         ypixscale,
-         'Rotation matrix coefficient'),
-        end=True)
-    par.hdr.append(
-        ('CD2_2',
-         np.cos(angle) *
-         ypixscale,
-         'Rotation matrix coefficient'),
-        end=True)
-    par.hdr['CTYPE3'] = 'WAVE-LOG'
-    par.hdr['CUNIT3'] = 'nm'
-    par.hdr['CRVAL3'] = lam_midpts[0]
-    par.hdr['CDELT3'] = np.log(
-        lam_midpts[1] / lam_midpts[0]) * lam_midpts[len(lam_midpts) // 2]
-    par.hdr['CRPIX3'] = 1
+        angle = par.philens
+        xpixscale = -0.01 / 3600.
+        ypixscale = 0.01 / 3600.
+        par.hdr.append(
+            ('CD1_1',
+             np.cos(angle) *
+             xpixscale,
+             'Rotation matrix coefficient'),
+            end=True)
+        par.hdr.append(('CD1_2', -np.sin(angle) * xpixscale,
+                        'Rotation matrix coefficient'), end=True)
+        par.hdr.append(
+            ('CD2_1',
+             np.sin(angle) *
+             ypixscale,
+             'Rotation matrix coefficient'),
+            end=True)
+        par.hdr.append(
+            ('CD2_2',
+             np.cos(angle) *
+             ypixscale,
+             'Rotation matrix coefficient'),
+            end=True)
+        par.hdr['CTYPE3'] = 'WAVE-LOG'
+        par.hdr['CUNIT3'] = 'nm'
+        par.hdr['CRVAL3'] = lam_midpts[0]
+        par.hdr['CDELT3'] = np.log(
+            lam_midpts[1] / lam_midpts[0]) * lam_midpts[len(lam_midpts) // 2]
+        par.hdr['CRPIX3'] = 1
 
     if fitbkgnd:
         cube = cube[:-1]
@@ -1137,51 +1137,51 @@ def fitspec_intpix_np(
              'Number of extracted wavelengths'),
             end=True)
 
-    par.hdr.append(
-        ('CTYPE1',
-         'RA---TAN',
-         'first parameter RA  ,  projection TANgential'),
-        end=True)
-    par.hdr.append(
-        ('CTYPE2',
-         'DEC--TAN',
-         'second parameter DEC,  projection TANgential'),
-        end=True)
-    par.hdr.append(('CRVAL1', 0., 'Reference X pixel value'), end=True)
-    par.hdr.append(('CRVAL2', 0., 'Reference Y pixel value'), end=True)
-    par.hdr.append(('CRPIX1', par.nlens // 2, 'Reference X pixel'), end=True)
-    par.hdr.append(('CRPIX2', par.nlens // 2, 'Reference Y pixel'), end=True)
-    par.hdr.append(('EQUINOX', 2000, 'Equinox of coordinates'), end=True)
+        par.hdr.append(
+            ('CTYPE1',
+             'RA---TAN',
+             'first parameter RA  ,  projection TANgential'),
+            end=True)
+        par.hdr.append(
+            ('CTYPE2',
+             'DEC--TAN',
+             'second parameter DEC,  projection TANgential'),
+            end=True)
+        par.hdr.append(('CRVAL1', 0., 'Reference X pixel value'), end=True)
+        par.hdr.append(('CRVAL2', 0., 'Reference Y pixel value'), end=True)
+        par.hdr.append(('CRPIX1', par.nlens // 2, 'Reference X pixel'), end=True)
+        par.hdr.append(('CRPIX2', par.nlens // 2, 'Reference Y pixel'), end=True)
+        par.hdr.append(('EQUINOX', 2000, 'Equinox of coordinates'), end=True)
 
-    angle = par.philens
-    xpixscale = -0.01 / 3600.
-    ypixscale = 0.01 / 3600.
-    par.hdr.append(
-        ('CD1_1',
-         np.cos(angle) *
-         xpixscale,
-         'Rotation matrix coefficient'),
-        end=True)
-    par.hdr.append(('CD1_2', -np.sin(angle) * xpixscale,
-                    'Rotation matrix coefficient'), end=True)
-    par.hdr.append(
-        ('CD2_1',
-         np.sin(angle) *
-         ypixscale,
-         'Rotation matrix coefficient'),
-        end=True)
-    par.hdr.append(
-        ('CD2_2',
-         np.cos(angle) *
-         ypixscale,
-         'Rotation matrix coefficient'),
-        end=True)
-    par.hdr['CTYPE3'] = 'WAVE-LOG'
-    par.hdr['CUNIT3'] = 'nm'
-    par.hdr['CRVAL3'] = lamlist[0]
-    par.hdr['CDELT3'] = np.log(
-        lamlist[1] / lamlist[0]) * lamlist[len(lamlist) // 2]
-    par.hdr['CRPIX3'] = 1
+        angle = par.philens
+        xpixscale = -0.01 / 3600.
+        ypixscale = 0.01 / 3600.
+        par.hdr.append(
+            ('CD1_1',
+             np.cos(angle) *
+             xpixscale,
+             'Rotation matrix coefficient'),
+            end=True)
+        par.hdr.append(('CD1_2', -np.sin(angle) * xpixscale,
+                        'Rotation matrix coefficient'), end=True)
+        par.hdr.append(
+            ('CD2_1',
+             np.sin(angle) *
+             ypixscale,
+             'Rotation matrix coefficient'),
+            end=True)
+        par.hdr.append(
+            ('CD2_2',
+             np.cos(angle) *
+             ypixscale,
+             'Rotation matrix coefficient'),
+            end=True)
+        par.hdr['CTYPE3'] = 'WAVE-LOG'
+        par.hdr['CUNIT3'] = 'nm'
+        par.hdr['CRVAL3'] = lamlist[0]
+        par.hdr['CDELT3'] = np.log(
+            lamlist[1] / lamlist[0]) * lamlist[len(lamlist) // 2]
+        par.hdr['CRPIX3'] = 1
 
     if hasattr(par, 'lenslet_flat'):
         lenslet_flat = fits.open(par.lenslet_flat)[1].data
