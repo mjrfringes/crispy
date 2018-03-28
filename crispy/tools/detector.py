@@ -14,6 +14,7 @@ from initLogger import getLogger
 log = getLogger('crispy')
 from image import Image
 import multiprocessing
+from astropy.io import fits
 
 
 def rebinDetector(par, finalFrame, clip=False):
@@ -376,47 +377,172 @@ def calculateDark(par, filelist):
 from scipy import stats
 
 
-def photonCounting(average,
+def photonCounting(cimg,
                    EMGain=1.0,
                    RN=0.0,
+                   ndark=0,
+                   ncic=0,
                    PCbias=0.0,
                    threshold=6,
+                   xs=2144,
+                   ys=1137,
+                   ncr=0,
+                   nhpcnts=0,
+                   hpidx=None,
                    poisson=True,
                    EMStats=True,
                    PCmode=True):
+    '''
+    WFIRST EMCCD readout function for a single frame
+    
+    Parameters
+    ----------
+    cimg: 2d ndarray
+        Input map in average counts/pix
+    ndark: float
+        Number of dark current counts per active area frame
+    ncic: float
+        Number of CIC counts per frame (active area + overscan)
+    eff: float
+        Bulk adjustment in efficiency (does the same as QE)
+    EMGain: float
+        Gain of the multiplying register
+    RN: float
+        Read noise
+    PCbias: float
+        Bias that one can put to the readout register to read positive values.
+        The readout noise is a Gaussian distribution centered on PCbias and of std RN
+    ncr: float
+        Number of cosmic ray counts per active area frame
+    nhpcnts: float
+        Number of hot pixel counts per active area frame
+    hpidx: float
+        Locations of the hot pixels in the flatten active area frame
+    threshold: float
+        Used only if PCmode=True. Selects counts that are higher than 
+        PCbias + threshold*RN, and counts them at "1". Everything else is zero.
+        Watch out for coincidence losses
+    xs: int
+        Size of the readout area including overscan (long size). This needs to be larger
+        than the image
+    ys: int
+        Size of the readout area including overscan (short size). This needs to be larger
+        than the image
+    poisson: Boolean
+        If False, ignore Poisson statistics of the photon flux
+    EMStats: Boolean
+        Use the gain register statistics. If False, then a simple gain is applied with no
+        gain register noise and no read noise.
+    PCmode: Boolean
+        Uses photon-counting mode by thresholding post-gain register map
+        
+    Returns
+    -------
+    afterRN: 2D ndarray
+        Resulting digital frame in counts, including overscan area
+    '''
 
-        # calculate electron generation in the CCD frame
+
+    yi, xi = cimg.shape
+    
+    ##########################################################################################
+    # Calculate Hot Pixels contribution
+    ##########################################################################################
+    hpimg = np.zeros(xi*yi, dtype=np.float)
+    if hpidx is not None and nhpcnts>0:
+            idx1 = np.random.randint(0, len(hpidx), nhpcnts)
+            hpimg[hpidx[idx1]] += 1
+
+    hpimg = np.reshape(hpimg, (yi, xi))
+    
+    ##########################################################################################
+    # Calculate Dark current contribution
+    ##########################################################################################
+    dkimg = np.zeros((yi, xi), dtype=np.float)
+    if ndark>1:
+        x0 = np.random.randint(0, xi, ndark)
+        y0 = np.random.randint(0, yi, ndark)
+        dkimg[y0, x0] += 1
+  
+    ##########################################################################################
+    # Apply Poisson noise or not
+    ##########################################################################################
     if poisson:
-        atEMRegister = np.random.poisson(average)
-    else:
-        atEMRegister = average
+        average = np.random.poisson(cimg)
 
-    # calculate the number of electrons after the EM register
+    ##########################################################################################
+    # Add CIC if necessary
+    ##########################################################################################
+    atEMRegister = np.zeros((ys, xs), dtype=np.float)
+    if ncic > 0:
+        x0 = np.random.randint(0, xs, ncic)
+        y0 = np.random.randint(0, ys, ncic)
+        atEMRegister[y0, x0] += 1
+
+    ##########################################################################################
+    # Add in active area before EM gain register
+    ##########################################################################################
+    atEMRegister[:yi, xs-xi:xs] += average + hpimg + dkimg
+
+    ##########################################################################################
+    # Calculate the number of counts after the EM register
+    ##########################################################################################
+    afterEMRegister = np.zeros((ys, xs), dtype=np.float)
     if EMStats:
         EMmask = atEMRegister > 0
-        afterEMRegister = np.zeros(atEMRegister.shape)
         afterEMRegister[EMmask] = np.random.gamma(
-            atEMRegister[EMmask], EMGain, atEMRegister[EMmask].shape)
+            atEMRegister[EMmask], EMGain, afterEMRegister[EMmask].shape)
     else:
         afterEMRegister = EMGain * atEMRegister
 
-    # add read noise
+    ##########################################################################################
+    # Calculate cosmic ray image in entire readout
+    ##########################################################################################
+    crimg = np.zeros(xs*ys, dtype=np.float)
+    if ncr > 1:
+        toyx = np.arange(xs, dtype=np.float)
+        ncrpx = np.round(0.0323*EMGain+133.5)
+        ncrpxidx = np.where(toyx == ncrpx)[0][0]
+        # Empirical toy model
+        crtoy = 5e3*np.exp(-toyx/300.)+3e4*np.exp(-toyx/30.) + \
+            1e4*np.exp(-toyx/15.)+3e5*np.exp(-toyx/5.)
+        # Scale to photon counting threshold
+        crtoy = crtoy/crtoy[ncrpxidx]*5.*RN
+        # Saturate leading pixels
+        crtoy[0:2] = 65536
+        # This is not Pythonized yet; I'd have to think about it a bit, but it should be possible
+        for i in range(ncr.astype(int)):
+            crx = np.random.randint(0, xi)
+            crx += xs-xi
+            cry = np.random.randint(0, yi)
+            cridx = cry*xs+crx
+            if cridx > len(crimg)-1-xs:
+                cridx = len(crimg)-1-xs
+            crimg[cridx:cridx+xs] = crtoy
+
+    afterEMRegister += np.reshape(crimg, (ys, xs))
+
+    ##########################################################################################
+    # Add read noise with some arbitrary bias to yield positive values if desired
+    ##########################################################################################
     if EMStats and RN > 0:
         afterRN = afterEMRegister + \
             np.random.normal(PCbias, RN, afterEMRegister.shape)
         # clip at zero
-        afterRN[afterRN < 0] = 0
+#         afterRN[afterRN < 0] = 0
     else:
         afterRN = afterEMRegister + PCbias
 
-    # add photon counting thresholding
+    ##########################################################################################
+    # Add photon counting thresholding
+    ##########################################################################################
     if PCmode:
         PCmask = afterRN > PCbias + threshold * RN
         afterRN[PCmask] = 1.0
         afterRN[~PCmask] = 0.
     else:
         afterRN -= PCbias
-        afterRN /= EMGain
+#         afterRN /= EMGain
 
     return afterRN
 
@@ -430,14 +556,20 @@ def readoutPhotonFluxMapWFIRST(
         darkEOL=2.8e-4,
         CIC=1e-2,
         eff=1.0,
-        EMGain=2500.,
+        EMGain=5000.,
         RN=100.0,
         PCbias=1000.0,
+        crrate=0.0, # per detector per second
+        hprate=0.0,
         threshold=6.,
         lifefraction=0.0,
         dqeKnee=0.858,
         dqeFluxSlope=3.24,
         dqeKneeFlux=0.089,
+        xs=2144,
+        ys=1137,
+        pixsize=0.0013,
+        transpose=False,
         nonoise=False,
         poisson=True,
         EMStats=True,
@@ -445,27 +577,118 @@ def readoutPhotonFluxMapWFIRST(
         PCcorrect=False,
         normalize=False,
         verbose=False):
+    '''
+    WFIRST EMCCD readout function for averaging a long observation
+    
+    Parameters
+    ----------
+    fluxMap: 2d ndarray
+        Input map in photons/sec/pix; QE should already be included, although a bulk QE
+        parameter is available too
+    tottime: float
+        Total exposure time
+    inttime: float
+        Exposure time per image. If None, the program calculates the exposure time needed
+        to achieve 0.1 count on the maximum pixel of the image
+    QE: float
+        Bulk adjustment in QE
+    darkBOL: float
+        Dark current in counts/s/pix at the beginning of life of the mission
+    darkEOL: float
+        Dark current in counts/s/pix at the end of life of the mission
+    CIC: float
+        Clock-induced charge in counts/pix/frame
+    eff: float
+        Bulk adjustment in efficiency (does the same as QE)
+    EMGain: float
+        Gain of the multiplying register
+    RN: float
+        Read noise
+    PCbias: float
+        Bias that one can put to the readout register to read positive values.
+        The readout noise is a Gaussian distribution centered on PCbias and of std RN
+    crrate: float
+        Cosmic ray rate in number per cm^2 per second
+    hprate: float
+        Hot pixel rate in number per second per frame (watch out, this could vary with
+        frame size) 
+    threshold: float
+        Used only if PCmode=True. Selects counts that are higher than 
+        PCbias + threshold*RN, and counts them at "1". Everything else is zero.
+        Watch out for coincidence losses
+    lifefraction: float
+        Fraction of mission year (1.0 means 5 years)
+    dqeKnee: float
+        dQE parameter (set to 1.0 to ignore)
+    dqeFluxSlope: float
+        dQE parameter (set to 0.0 to ignore)
+    dqeKneeFlux: float
+        dQE parameter (if the two other parameters are set to 1.0 and 0.0, this one
+        is automatically ignored)
+    xs: int
+        Size of the readout area including overscan (long size). This needs to be larger
+        than the image
+    ys: int
+        Size of the readout area including overscan (short size). This needs to be larger
+        than the image
+    transpose: Boolean
+        Transpose the input map
+    nonoise: Boolean
+        Ignore all noise contributions
+    poisson: Boolean
+        If False, ignore Poisson statistics of the photon flux
+    EMStats: Boolean
+        Use the gain register statistics. If False, then a simple gain is applied with no
+        gain register noise and no read noise.
+    PCmode: Boolean
+        Uses photon-counting mode by thresholding post-gain register map
+    PCcorrect: Boolean
+        Implements the Basler et al correction to keep photometry legit after photon
+        counting
+    normalize: Boolean
+        If set to True, the program averages frames instead of adding them, and divides
+        by the exposure time
+    verbose: Boolean
+        Display text content to monitor program evolution
+        
+    Returns
+    -------
+    frame: 2D ndarray
+        Resulting integrated frame of size (ys,xs) including overscan area
+    '''
 
-    photoElectronsRate = QE * eff * fluxMap
+    if transpose: photoElectronsRate = QE * eff * fluxMap.T
+    else: photoElectronsRate = QE * eff * fluxMap
+    
+    yi, xi = photoElectronsRate.shape
 
+    ##########################################################################################
+    # Allow to turn all noises off
+    ##########################################################################################
     if nonoise:
         return photoElectronsRate * tottime
     else:
+        ######################################################################################
         # if inttime is None, determine the exposure time so that the brightest
         # pixel is only 0.1 electrons
+        ######################################################################################
         if inttime is None:
-            exptime = 0.1 / np.amax(QE * eff * fluxMap)
-            if verbose:
-                print("Individual exposure time: %.3f" % exptime)
+            exptime = 0.1 / np.amax(photoElectronsRate)
+            if verbose: print("Individual exposure time: %.3f" % exptime)
         else:
             exptime = inttime
 
         nreads = int(tottime / exptime)
-        if verbose:
-            print("Number of reads: %d" % nreads)
+        if verbose: print("Number of reads: %d" % nreads)
 
+        ######################################################################################
+        # Number of photoelectrons detected
+        ######################################################################################
         photoElectrons = photoElectronsRate * exptime
 
+        ######################################################################################
+        # QE degradation as a function of mission lifetime (due to charge traps)
+        ######################################################################################
         if lifefraction > 0.0:
             photoElectrons *= np.maximum(
                 np.zeros(
@@ -475,25 +698,66 @@ def readoutPhotonFluxMapWFIRST(
                         photoElectrons.shape) + lifefraction * (
                         dqeKnee - 1.),
                     np.ones(
-                        photoelectrons.shape) + lifefraction * (
+                        photoElectrons.shape) + lifefraction * (
                         dqeKnee - 1) + lifefraction * dqeFluxSlope * (
                         photoElectrons - dqeKneeFlux)))
 
-        dark = darkBOL + lifefraction * (darkEOL - darkBOL)
-        average = photoElectrons + dark * exptime + CIC
+        ######################################################################################
+        # Compute dark counts, cic counts at epoch and average count rate
+        ######################################################################################
+        ndark = np.round((darkBOL + lifefraction * (darkEOL - darkBOL))*exptime*xi*yi).astype(int)
+        if verbose: print('{:} dark counts per exposure'.format(ndark))
+        ncic = np.round(CIC*xs*ys).astype(int)
+        if verbose: print('{:} CIC counts per exposure'.format(ncic))
 
-        frame = np.zeros(average.shape)
+        average = photoElectrons# + dark * exptime
 
+        frame = np.zeros((ys,xs),dtype=np.float)
+        
+        ######################################################################################
+        # Hot pixel map and cosmic ray counts
+        ######################################################################################
+        ncr = np.round(crrate*exptime*(xi*pixsize)*(yi*pixsize)).astype(int)
+        if verbose: print('{:} cosmic rays per exposure'.format(ncr))
+        yrs = np.round(lifefraction*5).astype(int)
+        yi, xi = fluxMap.shape
+        if yrs>0:
+            hpmask = fits.getdata(
+                '/Users/mrizzo/IFS/mkemccd_v6_171207/emccd_hot_pixel_map_%dyr.fits' % yrs)
+            hpmask = np.reshape(hpmask[:yi, :xi], -1)
+            hpidx = np.array(np.where(hpmask > 0)[0])
+            hpidx = np.concatenate([hpidx, hpidx+1, hpidx+2, hpidx+3])
+            hpidx[hpidx > len(hpmask)] = len(hpmask)
+            nhpcnts = np.round(len(hpidx)*hprate/3600.*exptime).astype(int)
+        else:
+            hpidx = None
+            nhpcnts = 0
+        if verbose: print('{:} hot pixel counts per exposure'.format(nhpcnts))
+
+        ######################################################################################
+        # Average reads
+        ######################################################################################
         for n in range(nreads):
             newread = photonCounting(average,
                                      EMGain=EMGain,
                                      RN=RN,
+                                     ndark=ndark,
+                                     ncic=ncic,
                                      PCbias=PCbias,
+                                     ncr=ncr,
+                                     nhpcnts=nhpcnts,
+                                     hpidx=hpidx,
+                                     xs=xs,
+                                     ys=ys,
                                      threshold=threshold,
                                      poisson=poisson,
                                      EMStats=EMStats,
                                      PCmode=PCmode)
             frame += newread
+
+        ######################################################################################
+        # Compensate for PC mode and/or normalize if desired
+        ######################################################################################
         if normalize:
             frame /= float(nreads)
             if PCcorrect:
@@ -506,3 +770,166 @@ def readoutPhotonFluxMapWFIRST(
                 frame = -np.log(1. - frame)
 
         return frame
+
+def mkemccd(modeln,
+            gain=5000.,
+            dark=0.5,
+            cic=0.01,
+            readn=99,
+            crrate=5.,
+            HPrate=3.,
+            frmt=100.,
+            yrs=3,
+            xs=450,#2144,
+            ys=250,#1137,
+            transpose=False,
+            debug=False,
+            verbose=False):
+    ''' EMCCD noise generator based on Patrick's IDL code
+    
+    Parameters
+    ----------
+    modeln: string
+        Link to the input FITS file
+    gain: float
+        Gain of the multiplying register
+    dark: float
+        Dark current in counts/hour/pix
+    cic: float
+        Clock-induced charge in counts/pix/frame
+    readn: float
+        Read noise
+    crrate: float
+        Cosmic ray rate
+    HPrate: float
+        Hot pixel rate
+    frmt: float
+        Integration time
+    yrs: int
+        Number of years into the mission (0 - 5)
+    xs: int
+        Size of the readout area including overscan (long size)
+    ys: int
+        Size of the readout area including overscan (short size)
+    transpose: Boolean
+        Transpose the input map
+    debug: Boolean
+        Export intermediary maps
+    verbose: Boolean
+        Display text content to monitor program evolution
+    '''
+
+
+
+    # size of image area
+    data = fits.getdata(modeln)
+    if transpose:
+        data = data.T
+
+    yi, xi = data.shape
+
+    ##########################################################################################
+    # Dark current
+    ##########################################################################################
+    if verbose:
+        print("Dark current image")
+    dkimg = np.zeros((yi, xi), dtype=np.float)
+    ndark = np.round(dark/3600.*frmt*xi*yi).astype(int)
+    if verbose: print('{:} dark counts per exposure'.format(ndark))
+    x0 = np.random.randint(0, xi, ndark)
+    y0 = np.random.randint(0, yi, ndark)
+    dkimg[y0, x0] += 1
+
+    ##########################################################################################
+    # Clock-Induced Charge
+    ##########################################################################################
+    if verbose:
+        print("CIC image")
+    cicimg = np.zeros((ys, xs), dtype=np.float)
+    ncic = np.round(cic*xs*ys).astype(int)
+    if verbose: print('{:} CIC counts per exposure'.format(ncic))
+    x0 = np.random.randint(0, xs, ncic)
+    y0 = np.random.randint(0, ys, ncic)
+    cicimg[y0, x0] += 1
+
+    ##########################################################################################
+    # Hot pixels
+    ##########################################################################################
+    if verbose:
+        print("Hot pixels image")
+    hpimg = np.zeros(xi*yi, dtype=np.float)
+    if yrs != 0:
+        hpmask = fits.getdata(
+            '/Users/mrizzo/IFS/mkemccd_v6_171207/emccd_hot_pixel_map_%dyr.fits' % np.round(yrs))
+        hpmask = np.reshape(hpmask[:yi, :xi], -1)
+        hpidx = np.array(np.where(hpmask > 0)[0])
+        hpidx = np.concatenate([hpidx, hpidx+1, hpidx+2, hpidx+3])
+        hpidx[hpidx > len(hpmask)] = len(hpmask)
+        nhpcnts = np.round(len(hpidx)*HPrate/3600.*frmt).astype(int)
+        if verbose: print('{:} Hot pixel counts per exposure'.format(nhpcnts))
+        
+        idx1 = np.random.randint(0, len(hpidx), nhpcnts)
+        hpimg[hpidx[idx1]] += 1
+
+    hpimg = np.reshape(hpimg, (yi, xi))
+
+    ##########################################################################################
+    # Cosmic rays
+    ##########################################################################################
+    if verbose:
+        print("Cosmic ray image")
+    crimg = np.zeros(xs*ys, dtype=np.float)
+    ncr = np.round(crrate*frmt*(xi*0.0013)*(yi*0.0013))
+    if verbose: print('{:} cosmic rays per exposure'.format(ncr))
+    if ncr > 1:
+        toyx = np.arange(xs, dtype=np.float)
+        ncrpx = np.round(0.0323*gain+133.5)
+        ncrpxidx = np.where(toyx == ncrpx)[0][0]
+        # Empirical toy model
+        crtoy = 5e3*np.exp(-toyx/300.)+3e4*np.exp(-toyx/30.) + \
+            1e4*np.exp(-toyx/15.)+3e5*np.exp(-toyx/5.)
+        # Scale to photon counting threshold
+        crtoy = crtoy/crtoy[ncrpxidx]*5.*readn
+        # Saturate leading pixels
+        crtoy[0:2] = 65536
+        # This is not Pythonized yet; I'd have to think about it a bit, but it should be possible
+        for i in range(ncr.astype(int)):
+            crx = np.random.randint(0, xi)
+            crx += xs-xi
+            cry = np.random.randint(0, yi)
+            cridx = cry*xs+crx
+            if cridx > len(crimg)-1-xs:
+                cridx = len(crimg)-1-xs
+            crimg[cridx:cridx+xs] = crtoy
+
+    crimg = np.reshape(crimg, (ys, xs))
+
+    ##########################################################################################
+    # Photon counts
+    ##########################################################################################
+    if verbose:
+        print("Photon counts image")
+    phimg = np.random.poisson(data*frmt)
+
+    ##########################################################################################
+    # Add components together
+    ##########################################################################################
+    imgsum = cicimg.copy()
+    imgsum[:yi, xs-xi:xs] += dkimg+hpimg+phimg
+
+    ##########################################################################################
+    # Gain register
+    ##########################################################################################
+    if verbose:
+        print("Gain image")
+
+    gainimg = np.zeros((ys, xs), dtype=np.float)
+    EMmask = imgsum > 0
+    gainimg[EMmask] = np.random.gamma(
+        imgsum[EMmask], gain)
+
+    outimg = gainimg+crimg+np.random.normal(0.0, readn, (ys, xs))
+    if debug:
+        return outimg, gainimg, crimg, dkimg, hpimg, phimg
+    else:
+        return outimg

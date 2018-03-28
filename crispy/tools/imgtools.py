@@ -5,6 +5,7 @@ try:
     from astropy.io import fits as pyf
 except BaseException:
     import pyfits as pyf
+from scipy.special import erf
 
 
 def gen_bad_pix_mask(
@@ -79,6 +80,20 @@ def circularMask(image, radius):
     r = np.sqrt(x**2 + y**2)
     return r < radius
 
+
+def gausspsf(size=20,fwhm=2.,offx=0.0,offy=0.0):
+
+    _x = np.arange(size) - size // 2 + offx
+    _y = np.arange(size) - size // 2 + offy
+    _x, _y = np.meshgrid(_x, _y)
+    sigma = fwhm / 2.35
+    psflet = (erf((_x + 0.5) / (np.sqrt(2) * sigma)) -
+              erf((_x - 0.5) / (np.sqrt(2) * sigma))) * \
+        (erf((_y + 0.5) / (np.sqrt(2) * sigma)) -
+         erf((_y - 0.5) / (np.sqrt(2) * sigma)))
+
+    psflet /= np.sum(psflet)
+    return psflet
 
 def bowtie(
         image,
