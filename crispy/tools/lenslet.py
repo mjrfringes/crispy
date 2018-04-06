@@ -77,7 +77,7 @@ def propagateLenslets(
         nlam=10,
         npix=13,
         order=3,
-        x0=0.3):
+        x0=0.0):
     """
     Function propagateLenslets
 

@@ -264,8 +264,6 @@ def lstsqExtract(par, name, ifsimage, smoothandmask=True, ivar=True, dy=2,
     ivarcube = np.zeros((psflets.shape[0], par.nlens, par.nlens))
 
     model = np.zeros(ifsimage.data.shape)
-
-    resid = np.empty(ifsimage.data.shape)
     resid = ifsimage.data.copy()
 
     ydim, xdim = ifsimage.data.shape
@@ -274,21 +272,26 @@ def lstsqExtract(par, name, ifsimage, smoothandmask=True, ivar=True, dy=2,
             if np.prod(good[:, i, j], axis=0):
                 subim, psflet_subarr, [y0, y1, x0, x1] = get_cutout(
                     ifsimage, xindx[:, i, j], yindx[:, i, j], psflets, dy, normpsflets=normpsflets)
-                cube[:, j, i], ivarcube[:, j, i] = fit_cutout(
-                    subim.copy(), psflet_subarr.copy(), mode=mode, niter=niter, pixnoise=pixnoise)
+                try:
+                    cube[:, j, i], ivarcube[:, j, i] = fit_cutout(
+                        subim.copy(), psflet_subarr.copy(), mode=mode, niter=niter, pixnoise=pixnoise)
+                except:
+                    log.error('Fitting error at lenslet {:}'.format((i,j)))
+                    cube[:, j, i] = np.NaN
+                    ivarcube[:, j, i] = 0.
             else:
                 cube[:, j, i] = np.NaN
                 ivarcube[:, j, i] = 0.
-    for i in range(len(psflets)):
+    for k in range(len(psflets)):
         ydim, xdim = ifsimage.data.shape
-        _x = xindx[i]
-        _y = yindx[i]
+        _x = xindx[k]
+        _y = yindx[k]
         good = (_x > dy) * (_x < xdim - dy) * (_y > dy) * (_y < ydim - dy)
         psflet_indx = _tag_psflets(
             ifsimage.data.shape, _x, _y, good, dx=10, dy=10)
-        coefs_flat = np.reshape(cube[i].transpose(), -1)
-        resid -= psflets[i] * coefs_flat[psflet_indx]
-        model += psflets[i] * coefs_flat[psflet_indx]
+        coefs_flat = np.reshape(cube[k].transpose(), -1)
+        resid -= psflets[k] * coefs_flat[psflet_indx]
+        model += psflets[k] * coefs_flat[psflet_indx]
 
     if hires:
         hires_polychromeR = fits.open(
@@ -579,7 +582,7 @@ def RL(img, psflets, niter=10, guess=None, eps=1e-10, prior=0.0):
     return val, np.array(res), np.array(loglike), count
 
 
-def fit_cutout(subim, psflets, mode='lstsq', niter=5, pixnoise=0.0):
+def fit_cutout(subim, psflets, mode='lstsq', niter=3, pixnoise=0.0):
     """
     Fit a series of PSFlets to an image, recover the best-fit coefficients.
     This is currently little more than a wrapper for np.linalg.lstsq, but
@@ -1042,8 +1045,8 @@ def fitspec_intpix_np(
 
     coefs = np.zeros(
         tuple([max(Nmax, lamlist.shape[0])] + list(yindx.shape)[:-1]))
-    cube = np.zeros((len(lamlist), par.nlens, par.nlens))
-    ivarcube = np.zeros((len(lamlist), par.nlens, par.nlens))
+    cube = np.zeros((len(lamlist), par.nlens+1, par.nlens+1))
+    ivarcube = np.zeros((len(lamlist), par.nlens+1, par.nlens+1))
     xarr, yarr = np.meshgrid(np.arange(Nmax), np.arange(delt_y))
 
     #loglam = np.log(lamlist)

@@ -26,6 +26,7 @@ IFS Simulator
    notebooks/Starting_From_Scratch_Doc
    notebooks/OS5_Scenario_doc
    notebooks/RDI_sensitivity_study
+   notebooks/Analytical_Model_Spectrum_Cleaned
 
 Tools and utilities
 ===================

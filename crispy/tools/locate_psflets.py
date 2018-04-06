@@ -274,6 +274,32 @@ class PSFLets:
         interp_x, interp_y = transform(xindx, yindx, coeforder, coef)
 
         return interp_x, interp_y
+        
+#     def return_fine_locations(self, lam, xindx, yindx, xlistarr, ylistarr):
+#         '''
+#         Calculates the detector coordinates of lenslet located at `xindx`, `yindx`
+#         for desired wavelength `lam`, using the fine calibration method
+# 
+#         Parameters
+#         ----------
+#         lam: float
+#             Wavelength in nm
+#         xindx: int
+#             X index of lenslet in lenslet array
+#         yindx: int
+#             Y index of lenslet in lenslet array
+#         order: int
+#             Order of polynomial wavelength solution
+# 
+#         Returns
+#         -------
+#         interp_x: float
+#             X coordinate on the detector
+#         interp_y: float
+#             Y coordinate on the detector
+#         '''
+#         interp_x, interp_y = fine_transform(xindx, yindx, lam, xlistarr, ylistarr)
+        
 
     def genpixsol(
             self,
@@ -283,8 +309,9 @@ class PSFLets:
             order=3,
             lam1=None,
             lam2=None,
-            borderpix=4):
-        """
+            borderpix=4,
+            finexy=None):
+        '''
         Calculates the wavelength at the center of each pixel within a microspectrum
 
         Parameters
@@ -305,7 +332,7 @@ class PSFLets:
         -----
         This functions fills in most of the fields of the PSFLet class: the array
         of xindx, yindx, nlam, lam_indx and nlam_max
-        """
+        '''
 
         ###################################################################
         # Read in wavelengths of spots, coefficients of wavelength
@@ -315,9 +342,9 @@ class PSFLets:
         ###################################################################
 
         if lam1 is None:
-            lam1 = np.amin(lam) * 0.98
+            lam1 = np.amin(lam)# * 0.98
         if lam2 is None:
-            lam2 = np.amax(lam) * 1.02
+            lam2 = np.amax(lam)# * 1.02
         interporder = order
 
         if self.interp_arr is None:
@@ -337,11 +364,21 @@ class PSFLets:
         interp_y = np.zeros(interp_x.shape)
         interp_lam = np.linspace(lam1, lam2, n_spline)
 
-        for i in range(n_spline):
-            coef = np.zeros((coeforder + 1) * (coeforder + 2))
-            for k in range(interporder + 1):
-                coef += self.interp_arr[k] * np.log(interp_lam[i])**k
-            interp_x[i], interp_y[i] = transform(xindx, yindx, coeforder, coef)
+        if finexy is not None:
+            interp_x, interp_y = fine_transform(interp_lam, 
+                                                xindx,
+                                                yindx,
+                                                lam,
+                                                finexy[0],
+                                                finexy[1])
+
+        else:
+            for i in range(n_spline):
+                coef = np.zeros((coeforder + 1) * (coeforder + 2))
+                for k in range(interporder + 1):
+                    coef += self.interp_arr[k] * np.log(interp_lam[i])**k
+                interp_x[i], interp_y[i] = transform(xindx, yindx, coeforder, coef)
+        
 
         x = np.zeros(tuple(list(xindx.shape) + [1000]))
         y = np.zeros(x.shape)
@@ -349,23 +386,11 @@ class PSFLets:
         lam_out = np.zeros(y.shape)
         good = np.ones(xindx.shape)
 
-#         if hasattr(par, 'lenslet_mask'):
-#             lenslet_mask = Image(par.lenslet_mask).data
-#         else:
-#             lenslet_mask = np.ones(xindx.shape)
 
         for ix in range(xindx.shape[0]):
             for iy in range(xindx.shape[1]):
-                #                 pix_x = interp_x[:, ix, iy]
-                #                 pix_y = interp_y[:, ix, iy]
-                # flipping x and y axes because code interpolates in the y
-                # direction
                 pix_y = interp_x[:, ix, iy]
                 pix_x = interp_y[:, ix, iy]
-#                 if ix==par.nlens/2 and iy==par.nlens/2:
-#                     print pix_y,pix_x
-
-                #good[ix,iy] = lenslet_mask[iy,ix]
 
                 if np.any(
                     pix_x < borderpix) or np.any(
@@ -373,7 +398,9 @@ class PSFLets:
                     borderpix) or np.any(
                     pix_y < borderpix) or np.any(
                     pix_y > par.npix -
-                        borderpix):
+                    borderpix) or np.any(
+                    np.isnan(pix_y)) or np.any(
+                    np.isnan(pix_x)):
                     good[ix, iy] = 0
                     continue
 
@@ -385,7 +412,11 @@ class PSFLets:
                         good[ix, iy] = 0
                         raise
                 else:
-                    tck_y = interpolate.splrep(pix_y, interp_lam, k=1, s=0)
+                    try:
+                        tck_y = interpolate.splrep(pix_y, interp_lam, k=1, s=0)
+                    except:
+                        good[ix, iy] = 0
+                        log.error('Error on wavelength calibration for lenslet ({:})'.format((ix,iy)))
 
                 y1, y2 = [int(np.amin(pix_y)) + 1, int(np.amax(pix_y))]
                 tck_x = interpolate.splrep(interp_lam, pix_x, k=1, s=0)
@@ -521,6 +552,61 @@ def transform(x, y, order, coef):
 
     return [_x, _y]
 
+def fine_transform(lam, x, y, reflam, xlistarr, ylistarr):
+    """
+    Apply the coefficients given to transform the coordinates using
+    a polynomial.
+
+    Parameters
+    ----------
+    lam: float or 1D ndarray
+        Desired wavelength (or array of wavelength)
+    x:     ndarray
+        Rectilinear grid
+    y:     ndarray
+        Rectilinear grid
+    reflam: float or 1D ndarray
+        Reference wavelength array at which xlistarr and ylistarr were computed
+    xlistarr:     ndarray
+        Centroids
+    ylistarr:     ndarray
+        Centroids
+
+    Returns
+    -------
+    _x:    ndarray
+        Transformed coordinates
+    _y:    ndarray
+        Transformed coordinates
+
+    """
+
+    if hasattr(lam, "__len__"):
+        _x = np.zeros((len(lam),x.shape[0],x.shape[1]))
+        _y = np.zeros((len(lam),y.shape[0],y.shape[1]))
+
+        for i in range(x.shape[0]):
+            for j in range(x.shape[1]):
+                tck = interpolate.splrep(reflam, xlistarr[:,i,j])
+                _x[:,i,j] = interpolate.splev(lam, tck, der=0)
+                tck = interpolate.splrep(reflam, ylistarr[:,i,j])
+                _y[:,i,j] = interpolate.splev(lam, tck, der=0)
+    
+    else:
+        _x = np.zeros((x.shape[0],x.shape[1]))
+        _y = np.zeros((y.shape[0],y.shape[1]))
+
+        for i in range(x.shape[0]):
+            for j in range(x.shape[1]):
+                tck = interpolate.splrep(reflam, xlistarr[:,i,j])
+                _x[i,j] = interpolate.splev(lam, tck, der=0)
+                tck = interpolate.splrep(reflam, ylistarr[:,i,j])
+                _y[i,j] = interpolate.splev(lam, tck, der=0)
+        
+    
+    
+    return [_x, _y]
+
 
 def corrval(coef, x, y, filtered, order, trimfrac=0.1):
     """
@@ -624,13 +710,15 @@ def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
     x, y = np.meshgrid(x, x)
     gaussian = np.exp(-(x**2 + y**2) / (2 * sig**2))
 
-    if inImage.ivar is None:
-        unfiltered = signal.convolve2d(inImage.data, gaussian, mode='same')
-    else:
-        unfiltered = signal.convolve2d(
-            inImage.data * inImage.ivar, gaussian, mode='same')
-        unfiltered /= signal.convolve2d(inImage.ivar,
-                                        gaussian, mode='same') + 1e-10
+#     if mask is None:
+#         unfiltered = signal.convolve2d(inImage.data, gaussian, mode='same')
+#     else:
+#         unfiltered = signal.convolve2d(
+#             inImage.data * inImage.ivar, gaussian, mode='same')
+#         unfiltered /= signal.convolve2d(inImage.ivar,
+#                                         gaussian, mode='same') + 1e-10
+    unfiltered = signal.convolve2d(
+        inImage.data * mask, gaussian, mode='same')
 
     filtered = ndimage.interpolation.spline_filter(unfiltered)
 
@@ -641,7 +729,7 @@ def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
     #gridfrac = 10
     ydim, xdim = inImage.data.shape
     #x = np.arange(-(ydim//gridfrac), ydim//gridfrac + 1)
-    x = np.arange(-nlens // 2, nlens // 2 + 1)
+    x = np.arange(-nlens // 2, nlens // 2)
     x, y = np.meshgrid(x, x)
 
     #############################################################
@@ -662,8 +750,10 @@ def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
         _s = x.shape[0] // 3
         subfiltered = ndimage.interpolation.spline_filter(
             unfiltered[subshape:-subshape, subshape:-subshape])
+#         for ix in np.arange(0, 14, 0.5):
+#             for iy in np.arange(0, 25, 0.5):
         for ix in np.arange(0, 14, 0.5):
-            for iy in np.arange(0, 25, 0.5):
+            for iy in np.arange(0, 18, 0.5):
                 coef = initcoef(
                     polyorder,
                     x0=ix +
@@ -682,6 +772,7 @@ def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
                     bestval = newval
                     coefbest = copy.deepcopy(coef)
         coef_opt = coefbest
+        
 
         log.info(
             "Performing initial optimization of PSFlet location transformation coefficients for frame " +
@@ -692,6 +783,7 @@ def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
 
         coef_opt[0] += subshape
         coef_opt[(polyorder + 1) * (polyorder + 2) // 2] += subshape
+        log.info('Array origin: {:}'.format((coef_opt[0],coef_opt[(polyorder + 1) * (polyorder + 2) // 2])))
 
     #############################################################
     # If we have coefficients from last time, we assume that we
@@ -732,6 +824,7 @@ def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
         method='Powell')
 
     coef_opt = res.x
+    log.info('Array origin: {:}'.format((coef_opt[0],coef_opt[(polyorder + 1) * (polyorder + 2) // 2])))
 
     if not res.success:
         log.info(
