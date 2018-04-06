@@ -42,7 +42,13 @@ def polychromeIFS(par, inWavelist, inputcube,
                   dlambda=None,
                   lam_arr=None,
                   wavecalDir=None,
-                  noRot=False):
+                  noRot=False,
+                  dx=0.0,
+                  upsample=3, # need to make this part of the header in the templates
+                  npix=13,
+                  nlam=10,
+                  order=3
+                  ):
     '''
     Propagates an input cube through the Integral Field Spectrograph
 
@@ -81,6 +87,8 @@ def polychromeIFS(par, inWavelist, inputcube,
     detectorFrame : 2D array
             Return the detector frame
     '''
+    
+    
     par.makeHeader()
     par.hdr.append(('comment', ''), end=True)
     par.hdr.append(('comment', '*' * 60), end=True)
@@ -192,6 +200,7 @@ def polychromeIFS(par, inWavelist, inputcube,
             hiresarr = get_sim_hires(par, lam_arr[i])
             hires_arrs += [hiresarr]
         log.info('Creating Gaussian PSFLet templates')
+        upsample=10
     else:
         try:
             hires_list = np.sort(
@@ -217,7 +226,11 @@ def polychromeIFS(par, inWavelist, inputcube,
                                              wavelist_endpts[i + 1],
                                              hires_arrs,
                                              lam_arr,
-                                             10)
+                                             upsample,
+                                             nlam,
+                                             npix,
+                                             order,
+                                             dx)
     else:
         tasks = multiprocessing.Queue()
         results = multiprocessing.Queue()
@@ -239,7 +252,11 @@ def polychromeIFS(par, inWavelist, inputcube,
                                wavelist_endpts[i + 1],
                                hires_arrs,
                                lam_arr,
-                               10)))
+                               upsample,
+                               nlam,
+                               npix,
+                               order,
+                               dx)))
 
         for i in range(ncpus):
             tasks.put(None)
@@ -504,6 +521,18 @@ def reduceIFSMapList(
 
     log.info('Elapsed time: %fs' % (time.time() - start))
 
+def getQE(par,wavelist):
+    if isinstance(par.QE, basestring):
+        loadQE = np.loadtxt(par.codeRoot + "/" + par.QE)
+        QEinterp = interp1d(loadQE[:, 0], loadQE[:, 1])
+        QEvals = QEinterp(wavelist)
+    else:
+        if hasattr(wavelist,'__len__'):
+            QEvals = par.QE * np.ones(len(wavelist))
+        else:
+            QEvals = par.QE
+    return QEvals
+    
 
 def prepareCube(par, wavelist, incube, QE=True, adjustment=1.0):
     # def prepareCube(par,wavelist,incube,QE=True,adjustment=1.0):
@@ -524,12 +553,7 @@ def prepareCube(par, wavelist, incube, QE=True, adjustment=1.0):
 
     inputcube = Image(data=incube.data.copy(), header=incube.header)
     if QE:
-        if isinstance(par.QE, basestring):
-            loadQE = np.loadtxt(par.codeRoot + "/" + par.QE)
-            QEinterp = interp1d(loadQE[:, 0], loadQE[:, 1])
-            QEvals = QEinterp(wavelist)
-        else:
-            QEvals = par.QE * np.ones(len(wavelist))
+        QEvals = getQE(par,wavelist)
 
         if "APPLYQE" not in par.hdr:
             par.hdr.append(
@@ -544,7 +568,7 @@ def prepareCube(par, wavelist, incube, QE=True, adjustment=1.0):
     return wavelist, outcube
 
 
-def createWavecalFiles(par, lamlist, dlam=1.):
+def createWavecalFiles(par, lamlist, dlam=1., flux=None, background=0.0):
     '''
     Creates a set of monochromatic IFS images to be used in wavelength calibration step
 
@@ -553,10 +577,15 @@ def createWavecalFiles(par, lamlist, dlam=1.):
     par:   Parameter instance
             Contains all IFS parameters
     lamlist: list or array of floats
-            List of discrete wavelengths at which to create a monochromatic flat
+            List of discrete wavelengths in nm at which to create a monochromatic flat
     dlam:  float
             Width in nm of the small band for each of the monochromatic wavelengths.
             Default is 1 nm. This has no effect unless we are trying to add any noise.
+    flux: float
+            Normalizes the image and multiplies the image by this amount. If a noiseless
+            image is preferred, leave this to None
+    background: float
+            Adds Poisson-distributed background to the image. Leave to None to ignore.
 
     Notes
     -----
@@ -583,6 +612,9 @@ def createWavecalFiles(par, lamlist, dlam=1.):
             dlambda=dlam,
             parallel=False,
             lam_arr=lamlist)
+        if flux is not None:
+            detectorFrame /= getQE(par,wav)*(par.lensletsampling/inCube[0].header['PIXSIZE'])**2
+            detectorFrame = np.random.poisson(flux*detectorFrame+background)
         filename = par.wavecalDir + 'det_%3d.fits' % (wav)
         filelist.append(filename)
         Image(data=detectorFrame, header=par.hdr).write(filename)
