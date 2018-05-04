@@ -15,7 +15,7 @@ log = getLogger('crispy')
 from image import Image
 import multiprocessing
 from astropy.io import fits
-
+import pkg_resources
 
 def rebinDetector(par, finalFrame, clip=False):
     '''
@@ -726,8 +726,9 @@ def readoutPhotonFluxMapWFIRST(
         yrs = np.round(lifefraction*5).astype(int)
         yi, xi = fluxMap.shape
         if yrs>0:
-            hpmask = fits.getdata(
-                '/Users/mrizzo/IFS/mkemccd_v6_171207/emccd_hot_pixel_map_%dyr.fits' % yrs)
+            datafile = pkg_resources.resource_filename('crispy', 'Inputs') + '/EMCCD/'
+            datafile += 'emccd_hot_pixel_map_%dyr.fits' % np.round(yrs)
+            hpmask = fits.getdata(datafile)
             hpmask = np.reshape(hpmask[:yi, :xi], -1)
             hpidx = np.array(np.where(hpmask > 0)[0])
             hpidx = np.concatenate([hpidx, hpidx+1, hpidx+2, hpidx+3])
@@ -866,8 +867,11 @@ def mkemccd(modeln,
         print("Hot pixels image")
     hpimg = np.zeros(xi*yi, dtype=np.float)
     if yrs != 0:
-        hpmask = fits.getdata(
-            '/Users/mrizzo/IFS/mkemccd_v6_171207/emccd_hot_pixel_map_%dyr.fits' % np.round(yrs))
+#         hpmask = fits.getdata(
+#             '/Users/mrizzo/IFS/mkemccd_v6_171207/emccd_hot_pixel_map_%dyr.fits' % np.round(yrs))
+        datafile = pkg_resources.resource_filename('crispy', 'Inputs') + '/EMCCD/'
+        datafile += 'emccd_hot_pixel_map_%dyr.fits' % np.round(yrs)
+        hpmask = fits.getdata(datafile)
         hpmask = np.reshape(hpmask[:yi, :xi], -1)
         hpidx = np.array(np.where(hpmask > 0)[0])
         hpidx = np.concatenate([hpidx, hpidx+1, hpidx+2, hpidx+3])
