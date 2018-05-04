@@ -78,8 +78,8 @@ class Params(object):
         
         self.distortPISCES=False    # If True, use measured PISCES distortion/dispersion
         self.BW = 0.18              # Spectral bandwidth (if distortPISCES==False)
-        self.npixperdlam = 1.8        # Number of pixels per spectral resolution element
-        self.nchanperspec_lstsq = 1.8 # Nspec per pixel for least squares 
+        self.npixperdlam = 2.0        # Number of pixels per spectral resolution element
+        self.nchanperspec_lstsq = 2.0 # Nspec per pixel for least squares 
         self.R = 70                 # Spectral resolving power (extracted cubes have twice)
 
         # carry-over old parameter names

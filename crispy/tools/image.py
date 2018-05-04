@@ -58,11 +58,11 @@ class Image:
             else:
                 i_data = 1
 
-            self.data = hdulist[i_data].data
+            self.data = hdulist[i_data].data.copy()
             log.info("Read data from HDU " + str(i_data) + " of " + filename)
 
             if len(hdulist) > i_data + 1:
-                self.ivar = hdulist[i_data + 1].data
+                self.ivar = hdulist[i_data + 1].data.copy()
                 if self.ivar.shape != self.data.shape:
                     log.error("Error: data (HDU " +
                               str(i_data) +

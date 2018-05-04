@@ -39,14 +39,14 @@ def testLoadKernels(par):
 
 
 
-def testCutout(par,fname,lensX = 0,lensY = 0):
+def testCutout(par,fname,lensX = 0,lensY = 0, dy=2.5):
     '''
     Testing the cutout function
     
     '''
     
     # first load polychrome
-    polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
+    polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits.gz' % (par.R))
     psflets = polychromeR[0].data
     
     psftool = PSFLets()
@@ -67,21 +67,21 @@ def testCutout(par,fname,lensX = 0,lensY = 0):
         im = Image(filename = fname)
     else:
         im = Image(data=fname)
-    subim, psflet_subarr, [x0, x1, y0, y1] = get_cutout(im,xlist,ylist,psflets)
-    print [x0, x1, y0, y1]
-    Image(data=subim).write(par.unitTestsOutputs+'/cutout.fits')
-    out = fits.HDUList(fits.PrimaryHDU(subim.astype(np.float32)))
-    out.writeto(par.unitTestsOutputs + '/subim.fits', clobber=True)
-    return subim
+    subim, psflet_subarr, [x0, x1, y0, y1] = get_cutout(im,xlist,ylist,psflets, dy=dy)
+#     Image(data=subim).write(par.unitTestsOutputs+'/cutout.fits')
+#     out = fits.HDUList(fits.PrimaryHDU(subim.astype(np.float32)))
+#     out.writeto(par.unitTestsOutputs + '/subim.fits', clobber=True)
+    return subim, psflet_subarr, [x0, x1, y0, y1]
 
 
-def testFitCutout(par,fname,lensX, lensY, mode='lstsq',ivar=False):
+
+def testFitCutout(par,fname,lensX, lensY, mode='lstsq',ivar=False, niter=3, pixnoise=0.0, dy=2.5):
     '''
     Testing the fit_cutout function
     
     '''
     # first load polychrome
-    polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits' % (par.R))
+    polychromeR = fits.open(par.wavecalDir + 'polychromeR%d.fits.gz' % (par.R))
     psflets = polychromeR[0].data
     
     psftool = PSFLets()
@@ -105,8 +105,9 @@ def testFitCutout(par,fname,lensX, lensY, mode='lstsq',ivar=False):
     if ivar:
         im.ivar = im.data.copy()
         im.ivar = 1./im.ivar
-    subim, psflet_subarr, [x0, x1, y0, y1] = get_cutout(im,xlist,ylist,psflets)
-    return fit_cutout(subim, psflet_subarr, mode=mode)
+    subim, psflet_subarr, [x0, x1, y0, y1] = get_cutout(im,xlist,ylist,psflets, dy=dy)
+#     subim -= np.amin(np.sum(subim)
+    return fit_cutout(subim, psflet_subarr, mode=mode, niter=3, pixnoise=pixnoise)
 
 
 def testOptExt(par,im, lensX, lensY, smoothandmask=True, delt_y=5):
@@ -188,7 +189,15 @@ def testGenPixSol(par):
     psftool.savepixsol(outdir = par.exportDir)
 
 
-def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outname='flatfield.fits',useQE=True,method='optext'):
+def testCreateFlatfield(par,pixsize = 0.1,
+                        npix = 512, 
+                        pixval = 1.,
+                        Nspec=45,
+                        outname='flatfield.fits',
+                        useQE=True,
+                        method='optext',
+                        maxflux=400,
+                        bg=10):
     '''
     Creates a polychromatic flatfield
     
@@ -223,6 +232,7 @@ def testCreateFlatfield(par,pixsize = 0.1, npix = 512, pixval = 1.,Nspec=45,outn
     inCube[0].header['PIXSIZE'] = pixsize
     inCube.writeto(par.unitTestsOutputs+'/flatfield_input.fits',clobber=True)
     detectorFrame = polychromeIFS(par,lam_midpts,inCube[0],parallel=True,wavelist_endpts=lam_endpts,QE=useQE)
+    detectorFrame = np.random.poisson(detectorFrame*maxflux/np.amax(detectorFrame)+bg)-bg
     Image(data=detectorFrame,header=par.hdr).write(par.unitTestsOutputs+'/'+outname,clobber=True)
     
 

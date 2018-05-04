@@ -27,6 +27,7 @@ from photutils import DAOStarFinder
 from astropy.stats import sigma_clipped_stats
 from scipy.interpolate import griddata
 from crispy.tools.imgtools import gen_bad_pix_mask
+from photutils import centroid_com
 
 warnings.filterwarnings("ignore")
 
@@ -107,12 +108,16 @@ def make_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
         # appropriate place.
         ################################################################
 
-        if finexy is None:
-            xcen, ycen = psftool.return_locations(
-                lam, allcoef, xindx, yindx)
-        else:
-            xcen, ycen = fine_transform(
-                lam, xindx, yindx, reflam, finexy[0], finexy[1])
+#         if finexy is None:
+#             xcen, ycen = psftool.return_locations(
+#                 lam, allcoef, xindx, yindx)
+#         else:
+#             xcen, ycen = fine_transform(
+#                 lam, xindx, yindx, reflam, finexy[0], finexy[1])
+        xcen, ycen = psftool.return_locations(lam, allcoef, xindx, yindx)
+        if finexy is not None:
+            xcen += finexy[0]
+            ycen += finexy[1]
  
         xcen += padding
         ycen += padding
@@ -247,12 +252,17 @@ def make_hires_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
         # appropriate place.
         ################################################################
 
-        if finexy is None:
-            xcen, ycen = psftool.return_locations(
-                lam, allcoef, xindx, yindx)
-        else:
-            xcen, ycen = fine_transform(
-                lam, xindx, yindx, reflam, finexy[0], finexy[1])
+#         if finexy is None:
+#             xcen, ycen = psftool.return_locations(
+#                 lam, allcoef, xindx, yindx)
+#         else:
+#             xcen, ycen = fine_transform(
+#                 lam, xindx, yindx, reflam, finexy[0], finexy[1])
+        xcen, ycen = psftool.return_locations(
+            lam, allcoef, xindx, yindx)
+        if finexy is not None:
+            xcen += finexy[0]
+            ycen += finexy[1]
         xcen += padding
         ycen += padding
         xcen = np.reshape(xcen, -1)
@@ -275,8 +285,8 @@ def make_hires_polychrome(lam1, lam2, hires_arrs, lam_arr, psftool, allcoef,
             iy2 = iy1 + npix
             ix1 = int(xcen[i] * upsample) - npix // 2
             ix2 = ix1 + npix
-            yinterp = (y[iy1:iy2, ix1:ix2] - ycen[i] * upsample) + npix / 2
-            xinterp = (x[iy1:iy2, ix1:ix2] - xcen[i] * upsample) + npix / 2
+            yinterp = (y[iy1:iy2, ix1:ix2] - ycen[i] * upsample) + npix // 2
+            xinterp = (x[iy1:iy2, ix1:ix2] - xcen[i] * upsample) + npix // 2
 
             # Now find the closest high-resolution PSFs
 
@@ -590,12 +600,18 @@ def makeHires(
         log.info('Starting parallel computation')
         if not par.gaussian_hires:
             for i in range(len(lam)):
-                if finexy is None:
-                    xpos, ypos = psftool.return_locations(
-                        lam[i], allcoef, xindx, yindx)
-                else:
-                    xpos, ypos = fine_transform(
-                        lam[i], xindx, yindx, reflam, finexy[0], finexy[1])
+#                 if finexy is None:
+#                     xpos, ypos = psftool.return_locations(
+#                         lam[i], allcoef, xindx, yindx)
+#                 else:
+#                     xpos, ypos = fine_transform(
+#                         lam[i], xindx, yindx, reflam, finexy[0], finexy[1])
+#                 if finexy is None:
+                xpos, ypos = psftool.return_locations(
+                    lam[i], allcoef, xindx, yindx)
+                if finexy is not None:
+                    xpos += finexy[0]
+                    ypos += finexy[1]
                 good = np.reshape(psftool.good, -1)
                 xpos = np.reshape(xpos, -1)
                 ypos = np.reshape(ypos, -1)
@@ -660,12 +676,17 @@ def makeHires(
             if par.gaussian_hires:
                 hiresarr = get_sim_hires(par, lam[i], upsample, nsubarr)
             else:
-                if finexy is None:
-                    xpos, ypos = psftool.return_locations(
-                        lam[i], allcoef, xindx, yindx)
-                else:
-                    xpos, ypos = fine_transform(
-                        lam[i], xindx, yindx, reflam, finexy[0], finexy[1])
+#                 if finexy is None:
+#                     xpos, ypos = psftool.return_locations(
+#                         lam[i], allcoef, xindx, yindx)
+#                 else:
+#                     xpos, ypos = fine_transform(
+#                         lam[i], xindx, yindx, reflam, finexy[0], finexy[1])
+                xpos, ypos = psftool.return_locations(
+                    lam[i], allcoef, xindx, yindx)
+                if finexy is not None:
+                    xpos += finexy[0]
+                    ypos += finexy[1]
                 good = np.reshape(psftool.good, -1)
                 xpos = np.reshape(xpos, -1)
                 ypos = np.reshape(ypos, -1)
@@ -787,7 +808,11 @@ def buildcalibrations(
         threshold=0.0,
         finecal=False,
         pxthreshold=2,
-        findthreshold=5.):
+        findthreshold=5.,
+        trimfrac=0.0,
+        apdiam=3,
+        halfsize=5,
+        snrthreshold=10):
     """
     Master wavelength calibration function
 
@@ -856,6 +881,15 @@ def buildcalibrations(
             calibration, it is rejected.
     findthreshold: float
             Number of standard deviations above which we look for point sources
+    trimfrac: float
+            Fraction of the psflets to discard during wavelength calibration (default 0.0)
+    apdiam: float
+            Aperture size in pixels used for snr calculation of the wavecal
+    halfsize: float
+            Half-size in pixels of the search region around each PSFlet for fine wavelength calibration
+    snrthreshold: float
+            Threshold below which we do not accept the fine wavelength calibration result, and stick
+            to the original polynomial fit
         
 
     Notes
@@ -909,6 +943,11 @@ def buildcalibrations(
     imlist = []
     xlist = []
     ylist = []
+    dylist = []
+    dxlist = []
+    snrlist = []
+    
+    halfsize=5
 
 
     ysize, xsize = Image(filename=filelist[0]).data.shape
@@ -929,70 +968,59 @@ def buildcalibrations(
     for i, ifile in enumerate(filelist):
         im = Image(filename=ifile)
         # sets the inverse variance to be the mask
-        im.ivar = mask
-#         _, smoothed = gen_bad_pix_mask(im.data, return_smoothed_image=True)
-#         im.data = smoothed
-
-        # this is just to keep while we use noiseless images. Remove when real
-        # images are used.
-#         im.data += 1e-9
+        mean, median, std = sigma_clipped_stats(im.data, sigma=3.0, iters=5)
+#         im.data -= median
+        log.info('Mean, median, std: {:}'.format((mean, median, std)))
+        
+#         hpmask = gen_bad_pix_mask(im.data)
+#         mask *= hpmask
+#         mask *= (im.data-median>3*std)
         imlist += [im]
         if genwavelengthsol:
             ## CHARIS regular wavecal step
             x, y, good, coef = locatePSFlets(im, polyorder=order, mask=mask, sig=1., 
                                 coef=coef, phi=par.philens, 
                                 scale=par.pitch / par.pixsize, nlens=par.nlens,
-                                trimfrac=0.02)
+                                trimfrac=trimfrac)
             allcoef += [[lamlist[i]] + list(coef)]
             
             if finecal:
                 log.info('Finding individual centroids (experimental)')
                 ## crispy enhanced wavecal step
-                mean, median, std = sigma_clipped_stats(im.data, sigma=3.0, iters=5) 
-                log.info('Mean, median, std: {:}'.format((mean, median, std)))
-                daofind = DAOStarFinder(fwhm=par.FWHM, threshold=findthreshold*std)
-                sources = daofind(im.data - median)
+                dy = np.zeros_like(y)
+                dx = np.zeros_like(x)
+                snr = np.zeros_like(x)
+                mgrid = np.arange(2*halfsize)
+                xgrid,ygrid = np.meshgrid(mgrid,mgrid)
 
-                positions = (sources['xcentroid'], sources['ycentroid'])
-                pos = np.array(positions)
-        
-                # start from the previous map
-                newx = np.zeros_like(x)
-                newy = np.zeros_like(y)
-       
-                # find closest position
-                for j in range(pos.shape[-1]):
-                    polygrid = np.sqrt((x-pos[0,j])**2+(y-pos[1,j])**2)
-                    coords = np.unravel_index(np.nanargmin(polygrid), polygrid.shape)
-                    if np.amin(polygrid)<pxthreshold:
-                        newx[coords] = pos[0,j]
-                        newy[coords] = pos[1,j]
-                newx[newx==0.0] = np.nan
-                newy[newy==0.0] = np.nan
-    
-                # fill gaps if any
-                xindx = np.arange(-par.nlens / 2, par.nlens / 2)
-                xindx, yindx = np.meshgrid(xindx, xindx)
-
-                maskx = np.ma.masked_invalid(newx)
-                x1 = xindx[~maskx.mask]
-                y1 = yindx[~maskx.mask]
-                newarr = newx[~maskx.mask]
-                newx2 = griddata((x1,y1),newarr.ravel(),(xindx,yindx), method='cubic')
-
-                masky = np.ma.masked_invalid(newy)
-                x1 = xindx[~masky.mask]
-                y1 = yindx[~masky.mask]
-                newarr = newy[~masky.mask]
-                newy2 = griddata((x1,y1),newarr.ravel(),(xindx,yindx), method='cubic')
-
-                xlist.append(newx2)
-                ylist.append(newy2)
-
+                for j in range(x.shape[0]):
+                    for k in range(x.shape[1]):
+                        xl = x[j,k]
+                        yl = y[j,k]
+                        xmin = int(xl-halfsize)+1
+                        ymin = int(yl-halfsize)+1
+                        if ymin>0 and xmin>0 and xmin+2*halfsize<xsize and ymin+2*halfsize<ysize:
+                            cutout = im.data[ymin:ymin+2*halfsize,xmin:xmin+2*halfsize]-median
+                            dx[j,k],dy[j,k] = centroid_com(cutout)
+                            apmask = (xgrid-dx[j,k])**2+(ygrid-dy[j,k])**2<apdiam**2
+                            apval = np.nansum(apmask*cutout)
+#                             snr[j,k] = apval/(np.sqrt(np.nansum(apmask))*std)
+                            snr[j,k] = np.sqrt(apval)
+                            dy[j,k] -= y[j,k]-ymin
+                            dx[j,k] -= x[j,k]-xmin
+                dy[snr<snrthreshold]=0.0
+                dx[snr<snrthreshold]=0.0
+                dy[np.abs(dy)>2]=0.0
+                dx[np.abs(dx)>2]=0.0
+                
+                dylist += [dy]
+                dxlist += [dx]
+                snrlist += [snr]
+                
                 if inspect:
-                    do_inspection(par, im.data, newx2, newy2, lamlist[i])
+                    do_inspection(par, im.data, x+dx, y+dy, lamlist[i])
                 elif inspect_first and i == 0:
-                    do_inspection(par, im.data, newx2, newy2, lamlist[i])
+                    do_inspection(par, im.data, x+dx, y+dy, lamlist[i])
 
             else:
                 if inspect:
@@ -1009,28 +1037,47 @@ def buildcalibrations(
         allcoef = allcoef[:, 1:]
 
         if finecal:
-            xlistarr = np.array(xlist)
-            ylistarr = np.array(ylist)
+            log.info('Exporting fine calibration products...')
+            xlistarr = np.array(dxlist)
+            ylistarr = np.array(dylist)
+            snrlistarr = np.array(snrlist)
             out = fits.HDUList(fits.PrimaryHDU(xlistarr.astype(np.float32)))
-            out.writeto(outdir + 'xlistarr.fits',overwrite=True)
+            out.writeto(outdir + 'dxlistarr.fits',overwrite=True)
             out = fits.HDUList(fits.PrimaryHDU(ylistarr.astype(np.float32)))
-            out.writeto(outdir + 'ylistarr.fits',overwrite=True)
+            out.writeto(outdir + 'dylistarr.fits',overwrite=True)
+            out = fits.HDUList(fits.PrimaryHDU(snrlistarr.astype(np.float32)))
+            out.writeto(outdir + 'snrlistarr.fits',overwrite=True)
+            out = fits.HDUList(fits.PrimaryHDU(np.mean(ylistarr,axis=0).T.astype(np.float32)))
+            out.writeto(outdir + 'dylistarr_mean.fits',overwrite=True)
+            out = fits.HDUList(fits.PrimaryHDU(np.std(ylistarr,axis=0).T.astype(np.float32)))
+            out.writeto(outdir + 'dylistarr_std.fits',overwrite=True)
+            out = fits.HDUList(fits.PrimaryHDU(np.mean(xlistarr,axis=0).T.astype(np.float32)))
+            out.writeto(outdir + 'dxlistarr_mean.fits',overwrite=True)
+            out = fits.HDUList(fits.PrimaryHDU(np.std(xlistarr,axis=0).T.astype(np.float32)))
+            out.writeto(outdir + 'dxlistarr_std.fits',overwrite=True)
+            out = fits.HDUList(fits.PrimaryHDU(np.mean(snrlistarr,axis=0).T.astype(np.float32)))
+            out.writeto(outdir + 'snrlistarr_mean.fits',overwrite=True)
+            out = fits.HDUList(fits.PrimaryHDU(np.std(snrlistarr,axis=0).T.astype(np.float32)))
+            out.writeto(outdir + 'snrlistarr_std.fits',overwrite=True)
+            
     else:
         log.info("Loading wavelength solution from " + outdir + "lamsol.dat")
         lam = np.loadtxt(outdir + "lamsol.dat")[:, 0]
         allcoef = np.loadtxt(outdir + "lamsol.dat")[:, 1:]
         
         if finecal:
-            xlistarr = fits.getdata(outdir + 'xlistarr.fits')
-            ylistarr = fits.getdata(outdir + 'ylistarr.fits')
+            ylistarr = fits.getdata(outdir + 'dylistarr.fits')
+            xlistarr = fits.getdata(outdir + 'dxlistarr.fits')
+            snrlistarr = fits.getdata(outdir + 'snrlistarr.fits')
 
 
     if finecal:
-        finexy = [xlistarr,ylistarr]
+        finexy = [np.nanmean(xlistarr,axis=0),np.nanmean(ylistarr,axis=0),np.amin(snrlistarr,axis=0)]
     else:
         finexy = None
 
-
+    
+#     if genwavelengthsol:
     log.info("Computing wavelength values at pixel centers")
     psftool = PSFLets()
     psftool.genpixsol(
@@ -1038,15 +1085,17 @@ def buildcalibrations(
         lam,
         allcoef,
         order=order,
-        lam1=lam1,
-        lam2=lam2,
+        lam1=lam1/1.02,
+        lam2=lam2*1.02,
         finexy=finexy)
     psftool.savepixsol(outdir=outdir)
+#     else:
+#         log.info("Loading previous wavelength calibration (PSFloc.fits)")
+#         psftool = PSFLets(load=True,infiledir=outdir)
 
     xindx = np.arange(-par.nlens / 2, par.nlens / 2)
     xindx, yindx = np.meshgrid(xindx, xindx)
     
-
     if makehiresPSFlets:
 
         hires_arrs = makeHires(
@@ -1088,7 +1137,7 @@ def buildcalibrations(
             for j in range(sigarr.shape[1]):
                 for k in range(sigarr.shape[2]):
                     row = np.sum(
-                        hires_arrs[i][j, k, :, shape[3] // 2 - 1:shape[3] // 2 + 1], axis=1)
+                        hires_arrs[i][j, k, :, shape[3] // 2 - 1:shape[3] // 2 + 2], axis=1)
                     sigarr[i, j, k] = np.sum(row * _x**2)
                     sigarr[i, j, k] /= np.sum(row)
 
@@ -1146,12 +1195,21 @@ def buildcalibrations(
                                                                                      finexy=finexy,
                                                                                      reflam=lam,
                                                                                      upsample=upsample,)
+#                 if finecal:
+#                     _x, _y = fine_transform(
+#                         lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
+#                 else:
+#                     _x, _y = psftool.return_locations(
+#                         lam_midpts[index], allcoef, xindx, yindx)
+#                 if finecal:
+#                     _x, _y = fine_transform(
+#                         lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
+#                 else:
+                _x, _y = psftool.return_locations(
+                    lam_midpts[i], allcoef, xindx, yindx)
                 if finecal:
-                    _x, _y = fine_transform(
-                        lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
-                else:
-                    _x, _y = psftool.return_locations(
-                        lam_midpts[index], allcoef, xindx, yindx)
+                    _x += finexy[0]
+                    _y += finexy[1]
                 _good = (_x > borderpix) * (_x < xsize - borderpix) * \
                         (_y > borderpix) * (_y < ysize - borderpix)
                 xpos += [_x]
@@ -1189,12 +1247,16 @@ def buildcalibrations(
                 index, poly = results.get()
                 polyimage[index] = poly * \
                     (lam_endpts[index + 1] - lam_endpts[index])
+#                 if finecal:
+#                     _x, _y = fine_transform(
+#                         lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
+#                 else:
+#                     _x, _y = psftool.return_locations(
+#                         lam_midpts[index], allcoef, xindx, yindx)
+                _x, _y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
                 if finecal:
-                    _x, _y = fine_transform(
-                        lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
-                else:
-                    _x, _y = psftool.return_locations(
-                        lam_midpts[index], allcoef, xindx, yindx)
+                    _x += finexy[0]
+                    _y += finexy[1]
                 _good = (_x > borderpix) * (_x < xsize - borderpix) * \
                         (_y > borderpix) * (_y < ysize - borderpix)
                 xpos += [_x]
@@ -1224,12 +1286,17 @@ def buildcalibrations(
         good = []
 
         for i in range(len(lam_midpts)):
+#             if finecal:
+#                 _x, _y = fine_transform(
+#                     lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
+#             else:
+#                 _x, _y = psftool.return_locations(
+#                     lam_midpts[index], allcoef, xindx, yindx)
+            _x, _y = psftool.return_locations(
+                lam_midpts[i], allcoef, xindx, yindx)
             if finecal:
-                _x, _y = fine_transform(
-                    lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
-            else:
-                _x, _y = psftool.return_locations(
-                    lam_midpts[index], allcoef, xindx, yindx)
+                _x += finexy[0]
+                _y += finexy[1]
             _good = (_x > borderpix) * (_x < xsize - borderpix) * \
                     (_y > borderpix) * (_y < ysize - borderpix)
             xpos += [_x]

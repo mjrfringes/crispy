@@ -364,20 +364,14 @@ class PSFLets:
         interp_y = np.zeros(interp_x.shape)
         interp_lam = np.linspace(lam1, lam2, n_spline)
 
+        for i in range(n_spline):
+            coef = np.zeros((coeforder + 1) * (coeforder + 2))
+            for k in range(interporder + 1):
+                coef += self.interp_arr[k] * np.log(interp_lam[i])**k
+            interp_x[i], interp_y[i] = transform(xindx, yindx, coeforder, coef)
         if finexy is not None:
-            interp_x, interp_y = fine_transform(interp_lam, 
-                                                xindx,
-                                                yindx,
-                                                lam,
-                                                finexy[0],
-                                                finexy[1])
-
-        else:
-            for i in range(n_spline):
-                coef = np.zeros((coeforder + 1) * (coeforder + 2))
-                for k in range(interporder + 1):
-                    coef += self.interp_arr[k] * np.log(interp_lam[i])**k
-                interp_x[i], interp_y[i] = transform(xindx, yindx, coeforder, coef)
+            interp_x += finexy[0]
+            interp_y += finexy[1]
         
 
         x = np.zeros(tuple(list(xindx.shape) + [1000]))
@@ -385,6 +379,7 @@ class PSFLets:
         nlam = np.zeros(xindx.shape, np.int)
         lam_out = np.zeros(y.shape)
         good = np.ones(xindx.shape)
+        if finexy is not None: good *= finexy[2]>10
 
 
         for ix in range(xindx.shape[0]):
@@ -398,9 +393,7 @@ class PSFLets:
                     borderpix) or np.any(
                     pix_y < borderpix) or np.any(
                     pix_y > par.npix -
-                    borderpix) or np.any(
-                    np.isnan(pix_y)) or np.any(
-                    np.isnan(pix_x)):
+                    borderpix):
                     good[ix, iy] = 0
                     continue
 
@@ -433,8 +426,6 @@ class PSFLets:
             if np.all(y[:, :, nlam_max] == 0):
                 break
 
-#         self.xindx = x[:, :, :nlam_max]
-#         self.yindx = y[:, :, :nlam_max]
         self.xindx = y[:, :, :nlam_max]
         self.yindx = x[:, :, :nlam_max]
         self.nlam = nlam
@@ -443,7 +434,7 @@ class PSFLets:
         self.good = good
 
 
-def initcoef(order, scale=15.02, phi=np.arctan2(1.926, -1), x0=0, y0=0):
+def initcoef(order, scale, phi, x0=0, y0=0):
     """
     Create a set of coefficients including a rotation matrix plus zeros.
 
@@ -552,6 +543,24 @@ def transform(x, y, order, coef):
 
     return [_x, _y]
 
+def revealCoefs(coef,order):
+
+    i = 0
+    s = 'i and j are the integer coordinates of the lenslets in the array\n'
+    s+='X coordinates:\n'
+    for ix in range(order + 1):
+        for iy in range(order - ix + 1):
+            s += '{:} * i^{:} j^{:} + \n'.format(coef[i],ix,iy)
+            i += 1
+    s += 'Y coordinates:\n'
+    for ix in range(order + 1):
+        for iy in range(order - ix + 1):
+            s += '{:} * i^{:} j^{:} + \n'.format(coef[i],ix,iy)
+            i += 1
+    return s
+
+
+
 def fine_transform(lam, x, y, reflam, xlistarr, ylistarr):
     """
     Apply the coefficients given to transform the coordinates using
@@ -606,6 +615,48 @@ def fine_transform(lam, x, y, reflam, xlistarr, ylistarr):
     
     
     return [_x, _y]
+    
+def new_transform(x, y, order, coef):
+    """
+    Apply the coefficients given to transform the coordinates using
+    a polynomial.
+
+    Parameters
+    ----------
+    x:     ndarray
+        Rectilinear grid
+    y:     ndarray of floats
+        Rectilinear grid
+    order: int
+        Order of the polynomial fit
+    coef:  list of floats
+        List of the coefficients.  Must match the length required by
+        order = (order+1)*(order+2)
+
+    Returns
+    -------
+    _x:    ndarray
+        Transformed coordinates
+    _y:    ndarray
+        Transformed coordinates
+
+    """
+    Xlist = []
+    Ylist = []
+    i = 0
+    for ix in range(order + 1):
+        for iy in range(order - ix + 1):
+            Xlist.append(x**ix * y**iy)
+            Ylist.append(x**ix * y**iy)
+
+    Xlist = np.array(Xlist)
+    Ylist = np.array(Ylist)
+    ncoefs = (order + 1) * (order + 2) // 2
+    Xcoefs = coef[:ncoefs]
+    Ycoefs = coef[-ncoefs:]
+    X = np.dot(Xlist.T,Xcoefs)
+    Y = np.dot(Ylist.T,Ycoefs)
+    return X,Y
 
 
 def corrval(coef, x, y, filtered, order, trimfrac=0.1):
@@ -645,11 +696,39 @@ def corrval(coef, x, y, filtered, order, trimfrac=0.1):
     vals = ndimage.map_coordinates(filtered, [_y, _x], mode='constant',
                                    cval=np.nan, prefilter=False)
     vals_ok = vals[np.where(np.isfinite(vals))]
-
-    iclip = int(vals_ok.shape[0] * trimfrac / 2)
-    vals_sorted = np.sort(vals_ok)
-    score = -1 * np.sum(vals_sorted[iclip:-iclip])
+    
+    if trimfrac>0.0:
+        iclip = int(vals_ok.shape[0] * trimfrac / 2)
+        vals_sorted = np.sort(vals_ok)
+        score = -1 * np.sum(vals_sorted[iclip:-iclip])
+    else:
+        vals_sorted = np.sort(vals_ok)
+        score = -1 * np.sum(vals_sorted)
+       
     return score
+
+
+def corrvalsum(coef, x, y, filtered, order, trimfrac=0.1,gsize=2):
+    _x, _y = transform(x, y, order, coef)
+    ydim,xdim = filtered.shape
+    s = 0.0
+    ry = np.reshape(_y,-1)
+    rx = np.reshape(_x,-1)
+    for i in range(len(ry)):
+        yi = ry[i]
+        xi = rx[i]
+        xmin = int(xi)-gsize
+        xmax = xmin+2*gsize
+        ymin = int(yi)-gsize
+        ymax = ymin+2*gsize
+        if ymin>2*gsize and xmin>2*gsize and xmax<xdim-2*gsize and ymax<ydim-2*gsize:
+            dx = xi - int(xi)
+            dy = yi - int(yi)
+#             s+=np.sum(simplepsf(size=2*gsize,fwhm=fwhm,offx=dx,offy=dy)*filtered[ymin:ymax,xmin:xmax])
+#             s+=np.sum(gausspsf(size=2*gsize,fwhm=fwhm,offx=dx,offy=dy)*filtered[ymin:ymax,xmin:xmax])
+            s+=np.sum(filtered[ymin:ymax,xmin:xmax])
+    return -s
+
 
 
 def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
@@ -752,8 +831,8 @@ def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
             unfiltered[subshape:-subshape, subshape:-subshape])
 #         for ix in np.arange(0, 14, 0.5):
 #             for iy in np.arange(0, 25, 0.5):
-        for ix in np.arange(0, 14, 0.5):
-            for iy in np.arange(0, 18, 0.5):
+        for ix in np.arange(-7, 7, 0.5):
+            for iy in np.arange(-9, 9, 0.5):
                 coef = initcoef(
                     polyorder,
                     x0=ix +
@@ -796,8 +875,8 @@ def locatePSFlets(inImage, mask, polyorder=2, sig=0.7, coef=None, trimfrac=0.1,
         bestval = 0
         coefsave = list(coef[:])
 
-        for ix in np.arange(-3, 3.1, 0.2):
-            for iy in np.arange(-3, 3.1, 0.2):
+        for ix in np.arange(-1, 3.1, 0.2):
+            for iy in np.arange(-1, 3.1, 0.2):
                 coef = coefsave[:]
                 coef[0] += ix
                 coef[(polyorder + 1) * (polyorder + 2) // 2] += iy

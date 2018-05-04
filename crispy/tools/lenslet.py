@@ -173,7 +173,6 @@ def propagateLenslets(
         ################################################################
 
         ################################################################
-        # NOTE THE NEGATIVE SIGN TO PHILENS
         # here is where one could import any kind of polynomial mapping
         # and introduce distortions
         ################################################################
@@ -185,10 +184,10 @@ def propagateLenslets(
             coef = initcoef(
                 order,
                 scale=par.pitch / par.pixsize,
-                phi=-par.philens,
-                x0=par.npix // 2 + x0,
-                y0=par.npix // 2 + dispersion)
-            ycen, xcen = transform(xindx, yindx, order, coef)
+                phi=par.philens,
+                x0=par.npix // 2 + dispersion,
+                y0=par.npix // 2 + x0)
+            xcen, ycen = transform(xindx, yindx, order, coef)
 
         xcen += padding
         ycen += padding

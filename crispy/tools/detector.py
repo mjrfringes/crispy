@@ -482,7 +482,7 @@ def photonCounting(cimg,
     ##########################################################################################
     # Add in active area before EM gain register
     ##########################################################################################
-    atEMRegister[:yi, xs-xi:xs] += average + hpimg + dkimg
+    atEMRegister[:yi,-xi:] += average + hpimg + dkimg
 
     ##########################################################################################
     # Calculate the number of counts after the EM register
@@ -570,6 +570,7 @@ def readoutPhotonFluxMapWFIRST(
         ys=1137,
         pixsize=0.0013,
         transpose=False,
+        returnFullFrame=False,
         nonoise=False,
         poisson=True,
         EMStats=True,
@@ -633,6 +634,9 @@ def readoutPhotonFluxMapWFIRST(
         than the image
     transpose: Boolean
         Transpose the input map
+    returnFullFrame: Boolean
+        If True, returns the entire frame including the frame transfer area. If False,
+        only return the active area
     nonoise: Boolean
         Ignore all noise contributions
     poisson: Boolean
@@ -769,7 +773,10 @@ def readoutPhotonFluxMapWFIRST(
                 frame *= np.exp(RN * threshold / EMGain)
                 frame = -np.log(1. - frame)
 
-        return frame
+        if returnFullFrame:
+            return frame
+        else:
+            return frame[:yi, -xi:]
 
 def mkemccd(modeln,
             gain=5000.,
@@ -933,3 +940,124 @@ def mkemccd(modeln,
         return outimg, gainimg, crimg, dkimg, hpimg, phimg
     else:
         return outimg
+
+
+
+def photonCounting_old(average,
+                EMGain=1.0,
+                RN=0.0,
+                PCbias=0.0,
+                threshold=6,
+                poisson=True,
+                EMStats=True,
+                PCmode=True):
+
+
+        # calculate electron generation in the CCD frame
+        if poisson:
+            atEMRegister = np.random.poisson(average)
+        else:
+            atEMRegister = average
+        
+    
+        # calculate the number of electrons after the EM register
+        if EMStats:
+            EMmask = atEMRegister>0
+            afterEMRegister = np.zeros(atEMRegister.shape)
+            afterEMRegister[EMmask] = np.random.gamma(atEMRegister[EMmask],EMGain,atEMRegister[EMmask].shape)
+        else:
+            afterEMRegister = EMGain*atEMRegister
+        
+        # add read noise
+        if EMStats and RN>0:
+            afterRN = afterEMRegister+np.random.normal(PCbias,RN,afterEMRegister.shape)
+            # clip at zero
+            afterRN[afterRN<0]=0
+        else:
+            afterRN = afterEMRegister+PCbias
+
+        # add photon counting thresholding
+        if PCmode:
+            PCmask = afterRN>PCbias+threshold*RN
+            afterRN[PCmask]=1.0
+            afterRN[~PCmask]=0.
+        else:
+            afterRN -= PCbias
+            afterRN /= EMGain
+    
+        return afterRN
+
+
+def readoutPhotonFluxMapWFIRST_old(
+                fluxMap, 
+                tottime,
+                inttime=None,
+                QE=1.0,
+                darkBOL=1.4e-4, 
+                darkEOL=2.8e-4, 
+                CIC=1e-2,
+                eff=1.0,
+                EMGain=2500.,
+                RN=100.0,
+                PCbias=1000.0,
+                threshold=6.,
+                lifefraction=0.0,
+                dqeKnee=0.858,
+                dqeFluxSlope=3.24,
+                dqeKneeFlux=0.089,
+                nonoise=False,
+                poisson=True,
+                EMStats=True,
+                PCmode=True,
+                PCcorrect=False,
+                normalize=False,
+                verbose=False):
+   
+    photoElectronsRate = QE*eff*fluxMap
+    
+    if nonoise:
+        return photoElectronsRate*tottime
+    else:
+        # if inttime is None, determine the exposure time so that the brightest pixel is only 0.1 electrons  
+        if inttime is None:
+            exptime = 0.1/np.amax(QE*eff*fluxMap)
+            if verbose: print("Individual exposure time: %.3f" % exptime)
+        else:
+            exptime=inttime
+            
+        nreads = int(tottime/exptime)
+        if verbose: print("Number of reads: %d" % nreads)
+            
+        photoElectrons = photoElectronsRate*exptime
+        
+        if lifefraction>0.0:
+            photoElectrons *= np.maximum(np.zeros(photoElectrons.shape),np.minimum(np.ones(photoElectrons.shape)+lifefraction*(dqeKnee-1.),np.ones(photoelectrons.shape)+lifefraction*(dqeKnee-1)+lifefraction*dqeFluxSlope*(photoElectrons-dqeKneeFlux)))
+
+        dark = darkBOL+lifefraction*(darkEOL-darkBOL)
+        average = photoElectrons+dark*exptime+CIC
+    
+        frame = np.zeros(average.shape)
+        
+        for n in range(nreads):
+            newread = photonCounting_old(average,
+                                    EMGain=EMGain,
+                                    RN=RN,
+                                    PCbias=PCbias,
+                                    threshold=threshold,
+                                    poisson=poisson,
+                                    EMStats=EMStats,
+                                    PCmode=PCmode)
+            frame += newread
+        if normalize:
+            frame/=float(nreads)
+            if PCcorrect:
+                frame*=np.exp(RN*threshold/EMGain)
+                frame=-np.log(1.-frame)
+            frame/=exptime
+        else:
+            if PCcorrect:
+                frame*=np.exp(RN*threshold/EMGain)
+                frame=-np.log(1.-frame)
+
+            
+        return frame

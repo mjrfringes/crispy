@@ -28,6 +28,9 @@ from tools.wavecal import get_sim_hires
 from scipy.interpolate import interp1d
 import glob
 import astropy.units as u
+from astropy.stats import sigma_clipped_stats
+
+
 
 
 from tools.initLogger import getLogger
@@ -310,8 +313,10 @@ def reduceIFSMap(
         specialPolychrome=None,
         returnall=False,
         niter=10,
-        pixnoise=0.0,
-        normpsflets=False):
+        pixnoise=None,
+        medsub=True,
+        normpsflets=False,
+        gain=0.5):
     '''
     Main reduction function
 
@@ -358,6 +363,8 @@ def reduceIFSMap(
             ('R', par.R, 'Spectral resolution of final cube'), end=True)
         par.hdr.append(('CALDIR', par.wavecalDir.split(
             '/')[-2], 'Directory of wavelength solution'), end=True)
+            
+
 
     if isinstance(IFSimageName, basestring):
         IFSimage = Image(filename=IFSimageName)
@@ -368,6 +375,28 @@ def reduceIFSMap(
             reducedName = time.strftime("%Y%m%d-%H%M%S")
         else:
             reducedName = name
+
+    mean, median, std = sigma_clipped_stats(IFSimage.data, sigma=3.0, iters=5)
+    log.info("Mean, median, std: {:}".format((mean,median,std)))
+    par.hdr.append(
+        ('MEAN', mean, 'Mean of image'), end=True)
+    par.hdr.append(
+        ('MED', median, 'Median of image'), end=True)
+    par.hdr.append(
+        ('STD', std, 'Std of image'), end=True)
+    
+    if medsub:
+        IFSimage.data -= median
+        par.hdr.append(
+            ('MEDSUB', True, 'Subtract median from image'), end=True)
+        log.info('Subtracting median from image')
+    else:
+        par.hdr.append(
+            ('MEDSUB', False, 'Subtract median from image'), end=True)
+
+    if pixnoise is None:
+        pixnoise=std**2
+
 
     if method in ['lstsq', 'lstsq_conv', 'RL', 'RL_conv']:
         reducedName += '_red_' + method
@@ -386,7 +415,8 @@ def reduceIFSMap(
             mode=method,
             niter=niter,
             pixnoise=pixnoise,
-            normpsflets=normpsflets)
+            normpsflets=normpsflets,
+            gain=gain)
     elif method == 'optext':
         reducedName += '_red_optext'
         cube = intOptimalExtract(
@@ -396,6 +426,17 @@ def reduceIFSMap(
             reducedName,
             IFSimage,
             smoothandmask=smoothbad)
+    elif method == 'sum':
+        reducedName += '_red_sum'
+        cube = intOptimalExtract(
+            par,
+            par.exportDir +
+            '/' +
+            reducedName,
+            IFSimage,
+            smoothandmask=smoothbad,
+            sum=True)
+        
     else:
         log.info("Method not found")
 
@@ -582,7 +623,7 @@ def createWavecalFiles(par, lamlist, dlam=1., flux=None, background=0.0):
             Width in nm of the small band for each of the monochromatic wavelengths.
             Default is 1 nm. This has no effect unless we are trying to add any noise.
     flux: float
-            Normalizes the image and multiplies the image by this amount. If a noiseless
+            Number of counts per lenslet. If a noiseless
             image is preferred, leave this to None
     background: float
             Adds Poisson-distributed background to the image. Leave to None to ignore.
@@ -606,12 +647,12 @@ def createWavecalFiles(par, lamlist, dlam=1., flux=None, background=0.0):
         # note the argument lam_arr, necessary when computing things for the
         # first time
         detectorFrame = polychromeIFS(
-            par,
-            [wav],
-            inCube[0],
-            dlambda=dlam,
-            parallel=False,
-            lam_arr=lamlist)
+                                    par,
+                                    [wav],
+                                    inCube[0],
+                                    dlambda=dlam,
+                                    parallel=False,
+                                    lam_arr=lamlist)
         if flux is not None:
             detectorFrame /= getQE(par,wav)*(par.lensletsampling/inCube[0].header['PIXSIZE'])**2
             detectorFrame = np.random.poisson(flux*detectorFrame+background)
@@ -621,3 +662,59 @@ def createWavecalFiles(par, lamlist, dlam=1., flux=None, background=0.0):
     par.lamlist = lamlist
     par.filelist = filelist
     return filelist
+
+from crispy.tools.locate_psflets import transform
+from crispy.tools.imgtools import gausspsf
+
+def quickMonochromatic(par=None, 
+                        fwhm =2.0,
+                        coefs = None,
+                        Dx = 0.0,
+                        Dy = 0.0,
+                        flux = 1.0,
+                        gsize = 5,
+                        order = 3,
+                        nlens = 108,
+                        npix = 1024,
+                        returnCoords = False):
+
+    if coefs is None:
+        if par is None: 
+            raise
+        else:
+            scale = par.pitch / par.pixsize
+            cphi = np.cos(par.philens)
+            sphi = np.sin(par.philens)
+            Xcoefs = np.array([par.npix//2+Dx,cphi*scale,0.0,0.,-sphi*scale,0.0,0.0,0.0,0.0,0.0])
+            Ycoefs = np.array([par.npix//2+Dy,sphi*scale,0.0,0.,cphi*scale,0.0,0.0,0.0,0.0,0.0])
+            coefs = np.concatenate([Xcoefs,Ycoefs])
+    
+    if par is not None:
+        nlens = par.nlens
+        npix = par.npix
+    
+    xindx = np.arange(-nlens / 2, nlens / 2)
+    xindx, yindx = np.meshgrid(xindx, xindx)
+    
+    Xc, Yc = transform(xindx,yindx,order,coefs)
+    
+    lx = npix+2*gsize
+    detectorFrame = np.zeros((lx,lx))
+    ry = np.reshape(Yc,-1)
+    rx = np.reshape(Xc,-1)
+    for i in range(len(ry)):
+            yi = ry[i]+gsize
+            xi = rx[i]+gsize
+            xmin = int(xi)-gsize
+            xmax = xmin+2*gsize
+            ymin = int(yi)-gsize
+            ymax = ymin+2*gsize
+            if ymin>0 and xmin>0 and xmax<lx and ymax<lx:
+                dx = xi - np.floor(xi) + 0.5
+                dy = yi - np.floor(yi) + 0.5
+                detectorFrame[ymin:ymax,xmin:xmax]+=flux*gausspsf(size=2*gsize,fwhm=fwhm,offx=-dx,offy=-dy)
+
+    detectorFrame = detectorFrame[gsize:-gsize,gsize:-gsize]
+    if returnCoords:
+        return detectorFrame,(Xc, Yc)
+    return detectorFrame
