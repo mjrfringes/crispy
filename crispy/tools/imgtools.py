@@ -220,6 +220,25 @@ def scale2imgs(target, ref, bowtie_mask, returndiff=True, returnest=False):
     else:
         return linregress_coeff
 
+def rdi2imgs(target,ref,mask=None, returndiff=True, returnest=False):
+    
+    if mask is not None:
+        refslice = ref[mask]
+        targetslice = target[mask]
+    else:
+        refslice = ref
+        targetslice = target
+    refslice = np.reshape(refslice, -1)
+    targetslice = np.reshape(targetslice, -1)
+    b, a, _, _, _ = scipy.stats.linregress(refslice, targetslice)
+    est = a + b * ref
+    if returndiff:
+        return (a,b), target - est
+    elif returnest:
+        return (a,b), est
+    else:
+        return (a,b)
+    
 
 def subtract_mean(cube):
     '''

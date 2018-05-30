@@ -214,7 +214,7 @@ def propagateLenslets(
                     imageplane.shape[1] and Ycoord > 0 and Ycoord < imageplane.shape[0]):
                 continue
 
-            val = imageplane[Ycoord, Xcoord]
+            val = imageplane[Xcoord, Ycoord]
 
             # if the value is 0, don't waste time
             if val == 0.0:
