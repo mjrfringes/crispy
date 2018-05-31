@@ -379,51 +379,6 @@ from scipy import stats
 
 
 
-def photonCounting_old(average,
-                EMGain=1.0,
-                RN=0.0,
-                PCbias=0.0,
-                threshold=6,
-                poisson=True,
-                EMStats=True,
-                PCmode=True):
-
-
-        # calculate electron generation in the CCD frame
-        if poisson:
-            atEMRegister = np.random.poisson(average)
-        else:
-            atEMRegister = average
-        
-    
-        # calculate the number of electrons after the EM register
-        if EMStats:
-            EMmask = atEMRegister>0
-            afterEMRegister = np.zeros(atEMRegister.shape)
-            afterEMRegister[EMmask] = np.random.gamma(atEMRegister[EMmask],EMGain,atEMRegister[EMmask].shape)
-        else:
-            afterEMRegister = EMGain*atEMRegister
-        
-        # add read noise
-        if EMStats and RN>0:
-            afterRN = afterEMRegister+np.random.normal(PCbias,RN,afterEMRegister.shape)
-            # clip at zero
-            afterRN[afterRN<0]=0
-        else:
-            afterRN = afterEMRegister+PCbias
-
-        # add photon counting thresholding
-        if PCmode:
-            PCmask = afterRN>PCbias+threshold*RN
-            afterRN[PCmask]=1.0
-            afterRN[~PCmask]=0.
-        else:
-            afterRN -= PCbias
-            afterRN /= EMGain
-    
-        return afterRN
-
-
 def readoutPhotonFluxMapWFIRST_old(
                 fluxMap, 
                 tottime,
