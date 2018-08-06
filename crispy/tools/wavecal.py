@@ -1000,16 +1000,27 @@ def buildcalibrations(
                         xmin = int(xl-halfsize)+1
                         ymin = int(yl-halfsize)+1
                         if ymin>0 and xmin>0 and xmin+2*halfsize<xsize and ymin+2*halfsize<ysize:
+                            # define cutout
                             cutout = im.data[ymin:ymin+2*halfsize,xmin:xmin+2*halfsize]-median
+                            
+                            # here is the new centroiding function: we could change this to something more robust
                             dx[j,k],dy[j,k] = centroid_com(cutout)
+                            
+                            # mask used for elementary aperture photometry
                             apmask = (xgrid-dx[j,k])**2+(ygrid-dy[j,k])**2<apdiam**2
                             apval = np.nansum(apmask*cutout)
 #                             snr[j,k] = apval/(np.sqrt(np.nansum(apmask))*std)
+
+                            # estimate of SNR, only valid for very high fluxes, could do better
                             snr[j,k] = np.sqrt(apval)
                             dy[j,k] -= y[j,k]-ymin
                             dx[j,k] -= x[j,k]-xmin
+                            
+                # Thresholding
                 dy[snr<snrthreshold]=0.0
                 dx[snr<snrthreshold]=0.0
+                
+                # ignore if new centroid is too out of whack
                 dy[np.abs(dy)>2]=0.0
                 dx[np.abs(dx)>2]=0.0
                 
@@ -1195,16 +1206,6 @@ def buildcalibrations(
                                                                                      finexy=finexy,
                                                                                      reflam=lam,
                                                                                      upsample=upsample,)
-#                 if finecal:
-#                     _x, _y = fine_transform(
-#                         lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
-#                 else:
-#                     _x, _y = psftool.return_locations(
-#                         lam_midpts[index], allcoef, xindx, yindx)
-#                 if finecal:
-#                     _x, _y = fine_transform(
-#                         lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
-#                 else:
                 _x, _y = psftool.return_locations(
                     lam_midpts[i], allcoef, xindx, yindx)
                 if finecal:
@@ -1247,12 +1248,6 @@ def buildcalibrations(
                 index, poly = results.get()
                 polyimage[index] = poly * \
                     (lam_endpts[index + 1] - lam_endpts[index])
-#                 if finecal:
-#                     _x, _y = fine_transform(
-#                         lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
-#                 else:
-#                     _x, _y = psftool.return_locations(
-#                         lam_midpts[index], allcoef, xindx, yindx)
                 _x, _y = psftool.return_locations(lam_midpts[i], allcoef, xindx, yindx)
                 if finecal:
                     _x += finexy[0]
@@ -1286,12 +1281,6 @@ def buildcalibrations(
         good = []
 
         for i in range(len(lam_midpts)):
-#             if finecal:
-#                 _x, _y = fine_transform(
-#                     lam_midpts[index], xindx, yindx, lam, finexy[0], finexy[1])
-#             else:
-#                 _x, _y = psftool.return_locations(
-#                     lam_midpts[index], allcoef, xindx, yindx)
             _x, _y = psftool.return_locations(
                 lam_midpts[i], allcoef, xindx, yindx)
             if finecal:

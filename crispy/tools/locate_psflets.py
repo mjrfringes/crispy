@@ -379,6 +379,8 @@ class PSFLets:
         nlam = np.zeros(xindx.shape, np.int)
         lam_out = np.zeros(y.shape)
         good = np.ones(xindx.shape)
+        
+        # SNR threshold
         if finexy is not None: good *= finexy[2]>10
 
 
@@ -416,8 +418,9 @@ class PSFLets:
 
                 nlam[ix, iy] = y2 - y1 + 1
                 y[ix, iy, :nlam[ix, iy]] = np.arange(y1, y2 + 1)
+                # evaluate wavelengths at integer pixel values
                 lam_out[ix, iy, :nlam[ix, iy]] = interpolate.splev(
-                    y[ix, iy, :nlam[ix, iy]], tck_y)
+                    y[ix, iy, :nlam[ix, iy]], tck_y) 
                 x[ix, iy, :nlam[ix, iy]] = interpolate.splev(
                     lam_out[ix, iy, :nlam[ix, iy]], tck_x)
 
@@ -426,10 +429,10 @@ class PSFLets:
             if np.all(y[:, :, nlam_max] == 0):
                 break
 
-        self.xindx = y[:, :, :nlam_max]
-        self.yindx = x[:, :, :nlam_max]
+        self.xindx = y[:, :, :nlam_max] # array of integer pixel indices along dispersion
+        self.yindx = x[:, :, :nlam_max] # array of floats indicating the cross. disp. axis
         self.nlam = nlam
-        self.lam_indx = lam_out[:, :, :nlam_max]
+        self.lam_indx = lam_out[:, :, :nlam_max] # wavelengths at int. pixel indices
         self.nlam_max = np.amax(nlam)
         self.good = good
 

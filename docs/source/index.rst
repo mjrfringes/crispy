@@ -46,8 +46,6 @@ PISCES
    :maxdepth: 1
    
    notebooks/PISCES_wavecalWithAverages
-   notebooks/PISCES_Reduce
-   notebooks/MultiProcExample
    notebooks/SPIE_Images
 
    
