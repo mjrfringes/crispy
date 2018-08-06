@@ -2837,3 +2837,36 @@ def RDI_noise(
     pixstd /= np.array([np.nanstd(convolvedwRDI[i] * maskleft)
                         for i in range(convolvedwRDI.shape[0])])
     return pixstd
+
+
+### Functions from Neil Zimmerman
+def vectorize_image_series(image_series, data_mask_nan):
+    data_ind = np.where( ~np.isnan(data_mask_nan) )
+    nan_ind = np.where( np.isnan(data_mask_nan) )
+    N_pix = len(data_ind[0])
+    N_mask = len(nan_ind[0])
+    vec_series = image_series[:,data_ind[0],data_ind[1]]
+    
+    return vec_series, data_ind, nan_ind, N_pix, N_mask
+    
+def reconstruct_image_series(vec_series, data_ind, nan_ind, height, width):
+    N_pix = len(data_ind[0])
+    N_mask = len(nan_ind[0])
+    reconst_cube = np.zeros((vec_series.shape[0], height, width))
+    for i in range(N_pix):
+        reconst_cube[:,data_ind[0][i],data_ind[1][i]] = vec_series[:,i]
+    for i in range(N_mask):
+        reconst_cube[:,nan_ind[0][i],nan_ind[1][i]] = np.nan
+        
+    return reconst_cube    
+    
+def get_correlation_matrix(data_vec_series):
+    Nt = data_vec_series.shape[0]
+    corr_matx = np.zeros((Nt, Nt))
+    for ti in range(Nt):
+        for tj in range(ti+1):
+            corrcoef_matx = np.corrcoef(data_vec_series[ti], data_vec_series[tj])
+            corr_matx[ti, tj] = corrcoef_matx[0][1]
+            corr_matx[tj, ti] = corr_matx[ti, tj]
+
+    return corr_matx
