@@ -5,7 +5,7 @@ Simulates the WFIRST IFS
 Documentation can be found:
 https://mjrfringes.github.io/crispy/index.html
 
-Maxime Rizzo, Tim Brandt, Tyler Groff, Prabal Saxena, Mike McElwain, Avi Mandell, Neil Zimmermann
+Maxime Rizzo, Tim Brandt, Neil Zimmerman, Tyler Groff, Prabal Saxena, Mike McElwain, Avi Mandell
 
 NASA Goddard Space Flight Center
 
