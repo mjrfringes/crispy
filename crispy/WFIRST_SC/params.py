@@ -28,7 +28,7 @@ class Params(object):
 #         self.wavecalDir = self.prefix+'/HighSNRWavecal/'
 #         self.wavecalDir = self.prefix+'/wavecal/'
 #         self.wavecalDir = self.prefix+'/wavecalR50_660/'
-        self.wavecalDir = self.prefix+'/wavecalR50_SC/'
+        self.wavecalDir = self.prefix+'/wavecalR50_660_SC/'
 #         self.wavecalName = 'VARIAcalCube.fits'
 #         self.wavecalName = 'LLTFcalCube.fits'
 #         self.wavecalName = 'simCalCube.fits'
@@ -41,7 +41,7 @@ class Params(object):
 
         self.nlens = 108            # Number of lenslets across array (account for rotation)
         self.pitch = 174e-6         # Lenslet pitch (meters)
-        self.interlace = 3          # Interlacing
+        self.interlace = 2          # Interlacing
         self.philens = arcsin(1./sqrt(self.interlace**2+1)) # Rotation angle of the lenslets (radians)
         self.lensletsampling= 1./2.# lenslet size in lambda/D
         self.lensletlam = 660.     # Wavelength at which this is defined (nm)
@@ -87,9 +87,9 @@ class Params(object):
         # Spectrograph stuff
         ###################################################################### 
         
-        self.BW = 0.34              # Spectral bandwidth
+        self.BW = 0.21              # Spectral bandwidth
         self.npixperdlam = 2.       # Number of pixels per spectral resolution element
-        self.nchanperspec_lstsq = 1.2 # Nspec per pixel for least squares 
+        self.nchanperspec_lstsq = 2 # Nspec per pixel for least squares 
         self.R = 50                 # Spectral resolving power (extracted cubes have twice)
         
         # carry-over old parameter names
