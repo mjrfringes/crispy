@@ -1176,6 +1176,17 @@ def buildcalibrations(
 
         out = fits.HDUList(fits.PrimaryHDU(fullsigarr.astype(np.float32)))
         out.writeto(outdir + 'PSFwidths.fits', clobber=True)
+        
+        calib_hdus = fits.open(outdir + 'PSFloc.fits')
+        outkey = fits.HDUList(calib_hdus[0])
+        outkey.append(calib_hdus[1])
+        outkey.append(calib_hdus[2])
+        outkey.append(calib_hdus[3])
+        outkey.append(calib_hdus[4])
+        outkey.append(fullsigarr.astype(np.float32))
+        outkey.writeto(outdir+'calib.fits', overwrite=True)
+
+
 
     if makePolychrome:
         if not makehiresPSFlets:
