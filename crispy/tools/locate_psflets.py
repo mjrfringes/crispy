@@ -12,7 +12,7 @@ import glob
 import re
 import os
 
-from initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 
 
