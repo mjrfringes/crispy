@@ -9,7 +9,7 @@ except BaseException:
     import pyfits as pyf
 
 import re
-from initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 import matplotlib.pyplot as plt
 import codecs
