@@ -5,15 +5,15 @@ try:
     from astropy.io import fits as pyf
 except BaseException:
     import pyfits as pyf
-from rotate import Rotate
-from initLogger import getLogger
+from crispy.tools.rotate import Rotate
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 import matplotlib.pyplot as plt
-from detutils import frebin
+from crispy.tools.detutils import frebin
 from scipy import ndimage
 from scipy.special import erf
-from spectrograph import distort
-from locate_psflets import initcoef, transform, PSFLets
+from crispy.tools.spectrograph import distort
+from crispy.tools.locate_psflets import initcoef, transform, PSFLets
 
 
 def processImagePlane(par, imagePlane, noRot=False):

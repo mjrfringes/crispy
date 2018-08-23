@@ -1,6 +1,6 @@
 from crispy.tools.locate_psflets import locatePSFlets, PSFLets,fine_transform
 from crispy.tools.image import Image
-from par_utils import Task, Consumer
+from crispy.tools.par_utils import Task, Consumer
 import matplotlib as mpl
 import numpy as np
 from scipy import signal
@@ -9,7 +9,7 @@ try:
 except BaseException:
     import pyfits as fits
 
-from initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 import os
 import re

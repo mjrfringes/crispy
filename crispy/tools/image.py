@@ -6,7 +6,7 @@ except BaseException:
 import numpy as np
 from datetime import date
 import logging
-from initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 
 ''' most of this code is due to Tim Brandt '''

@@ -7,12 +7,12 @@ import scipy.ndimage
 import numpy as np
 import multiprocessing
 import matplotlib.pyplot as plt
-from detutils import frebin
-from par_utils import Task, Consumer
+from crispy.tools.detutils import frebin
+from crispy.tools.par_utils import Task, Consumer
 
-from initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
-from image import Image
+from crispy.tools.image import Image
 import multiprocessing
 from astropy.io import fits
 import pkg_resources
