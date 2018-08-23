@@ -10,7 +10,7 @@ import scipy as sp
 from scipy import signal
 from scipy.interpolate import interp1d
 from scipy import ndimage
-from locate_psflets import PSFLets
+from crispy.tools.locate_psflets import PSFLets
 from crispy.tools.image import Image
 from scipy import interpolate
 import warnings
