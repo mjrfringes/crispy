@@ -7,7 +7,7 @@ import numpy as np
 from astropy.table import Table,QTable
 from astropy.io import ascii
 import astropy.units as u
-from tools.initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 import os
 

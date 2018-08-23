@@ -1,19 +1,18 @@
 
 import numpy as np
-import tools
-from tools.initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 import matplotlib.pyplot as plt
-from tools.image import Image
+from crispy.tools.image import Image
 try:
     from astropy.io import fits
 except:
     import pyfits as fits
-from tools.locate_psflets import PSFLets
-from tools.reduction import get_cutout,fit_cutout,calculateWaveList
-from IFS import polychromeIFS
-from tools.spectrograph import selectKernel,loadKernels
-from tools.plotting import plotKernels
+from crispy.tools.locate_psflets import PSFLets
+from crispy.tools.reduction import get_cutout,fit_cutout,calculateWaveList
+from crispy.IFS import polychromeIFS
+from crispy.tools.spectrograph import selectKernel,loadKernels
+from crispy.tools.plotting import plotKernels
 from scipy import ndimage
 from scipy.interpolate import interp1d
 from scipy import interpolate

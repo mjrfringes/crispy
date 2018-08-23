@@ -4,7 +4,7 @@ import astropy.constants as c
 from crispy.tools.inputScene import convert_krist_cube, calc_contrast, calc_contrast_Bijan, zodi_cube, adjust_krist_header
 import glob
 from crispy.IFS import reduceIFSMap, polychromeIFS
-from initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 from crispy.tools.image import Image
 try:
