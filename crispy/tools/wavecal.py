@@ -1,5 +1,5 @@
-from locate_psflets import locatePSFlets, PSFLets,fine_transform
-from image import Image
+from crispy.tools.locate_psflets import locatePSFlets, PSFLets,fine_transform
+from crispy.tools.image import Image
 from par_utils import Task, Consumer
 import matplotlib as mpl
 import numpy as np
@@ -17,7 +17,7 @@ import time
 import multiprocessing
 from scipy import ndimage
 import matplotlib.pyplot as plt
-from reduction import calculateWaveList
+from crispy.tools.reduction import calculateWaveList
 from scipy.special import erf
 from shutil import copy2
 import glob

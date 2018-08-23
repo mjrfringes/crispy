@@ -15,16 +15,15 @@ except BaseException:
     import pyfits as pyf
 import time
 import matplotlib.pyplot as plt
-import tools
-from tools.image import Image
-from tools.lenslet import processImagePlane, propagateLenslets
-from tools.spectrograph import createAllWeightsArray, selectKernel, loadKernels
-from tools.detector import rebinDetector
-from tools.plotting import plotKernels
-from tools.reduction import testReduction, lstsqExtract, intOptimalExtract
+from crispy.tools.image import Image
+from crispy.tools.lenslet import processImagePlane, propagateLenslets
+from crispy.tools.spectrograph import createAllWeightsArray, selectKernel, loadKernels
+from crispy.tools.detector import rebinDetector
+from crispy.tools.plotting import plotKernels
+from crispy.tools.reduction import testReduction, lstsqExtract, intOptimalExtract
 import multiprocessing
-from tools.par_utils import Task, Consumer
-from tools.wavecal import get_sim_hires
+from crispy.tools.par_utils import Task, Consumer
+from crispy.tools.wavecal import get_sim_hires
 from scipy.interpolate import interp1d
 import glob
 import astropy.units as u
@@ -33,7 +32,7 @@ from astropy.stats import sigma_clipped_stats
 
 
 
-from tools.initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 
 

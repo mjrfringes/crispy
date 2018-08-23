@@ -4,14 +4,14 @@ except BaseException:
     import pyfits as fits
 
 import numpy as np
-from initLogger import getLogger
+from crispy.tools.initLogger import getLogger
 log = getLogger('crispy')
 import scipy as sp
 from scipy import signal
 from scipy.interpolate import interp1d
 from scipy import ndimage
 from locate_psflets import PSFLets
-from image import Image
+from crispy.tools.image import Image
 from scipy import interpolate
 import warnings
 warnings.filterwarnings("ignore")
