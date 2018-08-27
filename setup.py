@@ -28,5 +28,5 @@ setup(
         'Programming Language :: Python'
         ],
     include_dirs = ['crispy','crispy/tools'],
-    install_requires = ['numpy','scipy','matplotlib','astropy'],
+    install_requires = ['numpy','scipy','matplotlib','astropy','photutils'],
 )
