@@ -29,7 +29,23 @@ import glob
 import astropy.units as u
 from astropy.stats import sigma_clipped_stats
 
-
+# the following code snippet is supposed to deal with the basestring having
+# disappeared in Python 3
+import types
+try:
+    unicode = unicode
+except NameError:
+    # 'unicode' is undefined, must be Python 3
+    str = str
+    unicode = str
+    bytes = bytes
+    basestring = (str,bytes)
+else:
+    # 'unicode' exists, must be Python 2
+    str = str
+    unicode = unicode
+    bytes = str
+    basestring = basestring
 
 
 from crispy.tools.initLogger import getLogger
