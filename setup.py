@@ -12,7 +12,7 @@ except ImportError:
 
 setup(
     name='crispy',
-    version="0.3", 
+    version="0.9", 
     author='Maxime Rizzo',
     author_email = 'maxime.j.rizzo@nasa.gov',
     url = 'https://github.com/mjrfringes/crispy',
