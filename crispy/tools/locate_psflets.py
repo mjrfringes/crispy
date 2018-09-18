@@ -400,29 +400,31 @@ class PSFLets:
                     continue
 
                 if pix_y[-1] < pix_y[0]:
-                    try:
-                        tck_y = interpolate.splrep(
-                            pix_y[::-1], interp_lam[::-1], k=1, s=0)
-                    except BaseException:
-                        good[ix, iy] = 0
-                        raise
+#                     try:
+#                         print ix,iy,pix_y[-1], pix_y[0]
+#                         tck_y = interpolate.splrep(
+#                             pix_y[::-1], interp_lam[::-1], k=1, s=0)
+#                     except BaseException:
+                    good[ix, iy] = 0
+#                         raise
                 else:
                     try:
-                        tck_y = interpolate.splrep(pix_y, interp_lam, k=1, s=0)
+                        tck_y = interpolate.splrep(pix_y, interp_lam, k=3, s=0)
                     except:
                         good[ix, iy] = 0
                         log.error('Error on wavelength calibration for lenslet ({:})'.format((ix,iy)))
 
-                y1, y2 = [int(np.amin(pix_y)) + 1, int(np.amax(pix_y))]
-                tck_x = interpolate.splrep(interp_lam, pix_x, k=1, s=0)
+                if good[ix, iy]:
+                    y1, y2 = [int(np.amin(pix_y)) + 1, int(np.amax(pix_y))]
+                    tck_x = interpolate.splrep(interp_lam, pix_x, k=1, s=0)
 
-                nlam[ix, iy] = y2 - y1 + 1
-                y[ix, iy, :nlam[ix, iy]] = np.arange(y1, y2 + 1)
-                # evaluate wavelengths at integer pixel values
-                lam_out[ix, iy, :nlam[ix, iy]] = interpolate.splev(
-                    y[ix, iy, :nlam[ix, iy]], tck_y) 
-                x[ix, iy, :nlam[ix, iy]] = interpolate.splev(
-                    lam_out[ix, iy, :nlam[ix, iy]], tck_x)
+                    nlam[ix, iy] = y2 - y1 + 1
+                    y[ix, iy, :nlam[ix, iy]] = np.arange(y1, y2 + 1)
+                    # evaluate wavelengths at integer pixel values
+                    lam_out[ix, iy, :nlam[ix, iy]] = interpolate.splev(
+                        y[ix, iy, :nlam[ix, iy]], tck_y) 
+                    x[ix, iy, :nlam[ix, iy]] = interpolate.splev(
+                        lam_out[ix, iy, :nlam[ix, iy]], tck_x)
 
         for nlam_max in range(x.shape[-1]):
             #             if np.all(y[:, :, nlam_max] == 0):

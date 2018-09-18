@@ -1111,6 +1111,7 @@ def fitspec_intpix_np(
     x = np.arange(img.shape[1])
     y = np.arange(img.shape[0])
     x, y = np.meshgrid(x, y)
+    
 
     ydim, xdim = img.shape
 
@@ -1140,11 +1141,13 @@ def fitspec_intpix_np(
                 _sig = sig[i, j, :PSFlet_tool.nlam[i, j]]
                 _lam = PSFlet_tool.lam_indx[i, j, :PSFlet_tool.nlam[i, j]]
                 iy = np.nanmean(_y)
-                if ~np.isnan(iy):
+                if ~np.isnan(iy) and int(_x[-1])<img.shape[1]:
+                    
                     i1 = int(iy - delt_y / 2.)+1
-                    dy = _y[xarr[:,
-                                 :len(_lam)]] - y[i1:i1 + delt_y,
+#                     print i,j,len(_lam),int(_x[-1]) + 1-int(_x[0])
+                    dy = _y[xarr[:,:len(_lam)]] - y[i1:i1 + delt_y,
                                                   int(_x[0]):int(_x[-1]) + 1]
+                        
                     lams, _ = np.meshgrid(_lam, np.arange(delt_y))
 
                     if sum:

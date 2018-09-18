@@ -583,6 +583,7 @@ def makeHires(
         savehiresimages=True,
         upsample=5,
         nsubarr=5,
+        npix=13,
         finexy=None,
         reflam=None):
     '''
@@ -646,7 +647,8 @@ def makeHires(
                             allgood[i],
                             imlist[i],
                             upsample,
-                            nsubarr)))
+                            nsubarr,
+                            npix)))
 
         for i in range(ncpus):
             tasks.put(None)
@@ -801,6 +803,7 @@ def buildcalibrations(
         borderpix=4,
         upsample=5,
         nsubarr=3,
+        npix=13,
         parallel=True,
         inspect_first=True,
         apodize=False,
@@ -812,7 +815,8 @@ def buildcalibrations(
         trimfrac=0.0,
         apdiam=3,
         halfsize=5,
-        snrthreshold=10):
+        snrthreshold=10,
+        initcoef=None):
     """
     Master wavelength calibration function
 
@@ -890,6 +894,9 @@ def buildcalibrations(
     snrthreshold: float
             Threshold below which we do not accept the fine wavelength calibration result, and stick
             to the original polynomial fit
+    initcoef: numpy array
+            Coefficient array corresponding to an initial guess of the polynomial map. Leave to None
+            in order to start from scratch.
         
 
     Notes
@@ -926,8 +933,8 @@ def buildcalibrations(
         else:
             lamlist = par.lamlist
 
-    lam1 = min(lamlist)
-    lam2 = max(lamlist)
+    lam1 = lamlist[0]
+    lam2 = lamlist[-1]
 
     try:
         os.makedirs(outdir)
@@ -938,7 +945,7 @@ def buildcalibrations(
     log.info("Building calibration files, placing results in " + outdir)
 
     tstart = time.time()
-    coef = None
+    coef = initcoef
     allcoef = []
     imlist = []
     xlist = []
@@ -1021,8 +1028,8 @@ def buildcalibrations(
                 dx[snr<snrthreshold]=0.0
                 
                 # ignore if new centroid is too out of whack
-                dy[np.abs(dy)>2]=0.0
-                dx[np.abs(dx)>2]=0.0
+                dy[np.abs(dy)>pxthreshold]=0.0
+                dx[np.abs(dx)>pxthreshold]=0.0
                 
                 dylist += [dy]
                 dxlist += [dx]
@@ -1096,8 +1103,9 @@ def buildcalibrations(
         lam,
         allcoef,
         order=order,
-        lam1=lam1/1.02,
-        lam2=lam2*1.02,
+        lam1=lam1/1.01,
+        lam2=lam2*1.01,
+        borderpix=borderpix,
         finexy=finexy)
     psftool.savepixsol(outdir=outdir)
 #     else:
@@ -1121,6 +1129,7 @@ def buildcalibrations(
             savehiresimages,
             upsample,
             nsubarr,
+            npix,
             finexy=finexy,
             reflam=lam)
     
@@ -1183,7 +1192,7 @@ def buildcalibrations(
         outkey.append(calib_hdus[2])
         outkey.append(calib_hdus[3])
         outkey.append(calib_hdus[4])
-        outkey.append(fullsigarr.astype(np.float32))
+        outkey.append(fits.PrimaryHDU(fullsigarr.astype(np.float32)))
         outkey.writeto(outdir+'calib.fits', overwrite=True)
 
 

@@ -119,6 +119,57 @@ def convert_krist_cube(cubeshape, lamlist, star_T, star_Vmag, tel_area):
     # needs to be multipled by dlam in the IFS.
     return newcube
 
+def bpgs_to_photonrate(filename,Vmag,minlam,maxlam):
+    '''
+    Parameters
+    ----------
+    filename: string
+        Text file corresponding to the bpgs specturm in pysynphot catalog
+    Vmag: float
+        V magnitude of star
+    minlam: float
+        Minimum wavelength of the band in nm    
+    maxlam: float
+        Maximum wavelength of the band in nm    
+    
+    Returns
+    -------
+    val: Quantity
+        Photons/second/m2 coming from the star within the band
+    '''
+    wavel = np.arange(minlam,maxlam)
+    star = input_star(filename,Vmag,wavel)
+    return (np.sum(star)*u.nm).to(u.photon/u.m**2/u.s)
+    
+
+def input_star(filename,Vmag,wavel):
+    '''
+    Parameters
+    ----------
+    filename: string
+        Text file corresponding to the bpgs specturm in pysynphot catalog
+    Vmag: float
+        V magnitude of star
+    wavel: array
+        Array of desired wavelengths in microns
+        
+    Returns
+    -------
+    val: Quantity
+        Photons/second/m2/nm coming from the star for each input wavelength bin
+    '''
+    fopen = fits.open(starfile)
+    f = np.array(fopen[1].data)
+    # files are in erg s-1 cm-2 Ang-1
+    flam = u.erg/u.s/u.cm**2/u.Angstrom
+    fac = flam.to(u.W/u.m**2/u.nm)
+    dat = f['FLUX']*fac*10**(-0.4 * Vmag)
+    wav = f['WAVELENGTH']/10.
+    func = interp1d(wav,dat,bounds_error=False,fill_value=0.0)
+    flux = func(wavel*1000)*u.W/u.m**2/u.nm
+    Eph = (c.c*c.h/(wavel*u.um)/u.photon).to(u.J/u.photon)
+    return (flux/Eph).to(u.photon/u.s/u.m**2/u.nm)
+
 
 def haystacks_to_photons(haystacks_hdu):
     '''
