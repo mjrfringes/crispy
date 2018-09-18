@@ -1,2 +1,3 @@
 include crispy/Inputs/*
 include crispy/Inputs/EMCCD/*
+include crispy/Inputs/bpgs/*
