@@ -656,7 +656,11 @@ def fit_cutout(subim, psflets, mode='lstsq', niter=3, pixnoise=0.0, fitbkgnd = F
     N = psflets.shape[0]
     
     # calculate the R matrix (line spread function)
-    # we could have this as a library
+    # we could have this as a library!
+    # This bit of code deals with some issues that occurred when trying to fit
+    # a uniform background underneath each pixel. Somehow the covariance is messed up
+    # and the reconvolution is not clean. So while we try to figure out a solution,
+    # this code just removes the uniform background from the matrix diagonalization step
     if fitbkgnd:
         psflets_flat = np.reshape(psflets[:-1,:,:], (N-1, -1))
         A = psflets_flat.T
@@ -668,6 +672,7 @@ def fit_cutout(subim, psflets, mode='lstsq', niter=3, pixnoise=0.0, fitbkgnd = F
         R = np.zeros((tR.shape[0]+1,tR.shape[1]+1))
         R[:tR.shape[0],:tR.shape[1]] = tR
         R[-1,-1] = 1
+        # revert back to normal psflets for least squares
         psflets_flat = np.reshape(psflets, (N, -1))
         A = psflets_flat.T
     
@@ -682,6 +687,7 @@ def fit_cutout(subim, psflets, mode='lstsq', niter=3, pixnoise=0.0, fitbkgnd = F
         R = Q / s[np.newaxis,:]
 
 
+    # Regular weighted least squares
     if mode == 'lstsq':
         guess = np.ones(N) * np.sum(subim_flat) / float(N)
         var = np.reshape(
@@ -695,7 +701,8 @@ def fit_cutout(subim, psflets, mode='lstsq', niter=3, pixnoise=0.0, fitbkgnd = F
         icov = 1./np.diag(np.dot(R,np.dot(C,R.T)))
         model = np.sum(psflets * coef[:, np.newaxis, np.newaxis], axis=0)
         chi2 = np.sum((subim-model)**2 / (model+pixnoise)) / len(subim_flat)
-        
+    
+    # Iterative least squares with reconvolution, which is the preferred method
     elif mode == 'lstsq_conv':
         guess = np.ones(N) * np.sum(subim_flat) / float(N)
                     
@@ -716,6 +723,8 @@ def fit_cutout(subim, psflets, mode='lstsq', niter=3, pixnoise=0.0, fitbkgnd = F
         icov = ivarlstsq
         model = np.sum(psflets * coef[:, np.newaxis, np.newaxis], axis=0)
         chi2 = np.sum((subim-model)**2 / (model+pixnoise)) / np.prod(subim.shape)
+        
+    # Kept here for heritage, this was Maxime playing with the Richardson-Lucy deconvolution
     elif mode == 'RL':
         coef = RL(subim, psflets=psflets, niter=niter, prior=pixnoise)[0]
         icov = 1.
