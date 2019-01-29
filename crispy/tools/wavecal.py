@@ -29,6 +29,16 @@ from scipy.interpolate import griddata
 from crispy.tools.imgtools import gen_bad_pix_mask
 from photutils import centroid_com
 
+
+from photutils import EPSFBuilder
+from astropy.nddata import NDData
+from astropy.stats import sigma_clipped_stats
+from astropy.table import Table
+from photutils import find_peaks
+from photutils.psf import extract_stars
+
+
+
 warnings.filterwarnings("ignore")
 
 
@@ -392,6 +402,45 @@ def get_sim_hires(par, lam, upsample=10, nsubarr=1, npix=13, renorm=True):
     return hires_arr
 
 
+def epsflets(subim,
+            upsample=5,
+            npix=13):
+    """
+    Estimates the underlying high-resolution PSFlets using Photutils tools
+    
+    Parameters
+    ----------
+    subim: 2D array
+        Array representing the subsection of the focal over which to average PSFlets,
+        assuming that they are all the same
+    upsample: int
+        Fits PSFlets and interpolates on a grid which has higher sampling than the original
+        image by a factor "upsample"
+    npix: int 
+        Number of pixels for each PSFlet model
+        
+    Returns
+    -------
+    data: 2D array
+        npix x npix array with the PSFlet model
+    """
+    data = img.copy()
+    peaks_tbl = find_peaks(data, threshold=100.)
+    peaks_tbl['peak_value'].info.format = '%.8g'  # for consistent table output
+    stars_tbl = Table()
+    stars_tbl['x'] = peaks_tbl['x_peak']
+    stars_tbl['y'] = peaks_tbl['y_peak']
+    mean_val, median_val, std_val = sigma_clipped_stats(data, sigma=2.,
+                                                        iters=None)
+    data -= median_val
+    nddata = NDData(data=data)
+    stars = extract_stars(nddata, stars_tbl, size=npix)
+    epsf_builder = EPSFBuilder(oversampling=upsample, maxiters=3,
+                               progress_bar=False)
+    epsf, fitted_stars = epsf_builder(stars)
+    return epsf.data
+            
+
 def gethires(x, y, good, image, upsample=5, nsubarr=5, npix=13, renorm=True):
     """
     Build high resolution images of the undersampled PSF using the
@@ -714,6 +763,45 @@ def makeHires(
                     clobber=True)
 
     return hires_arrs
+
+
+from scipy.optimize import curve_fit
+def gauss(x, a, x0, sig,b):
+    '''
+    Simple gaussian function with usual inputs
+    '''
+    return b+a*np.exp(-(x-x0)**2/(2.*sig**2))
+    
+
+
+def fit_monochromatic_cube( cube,
+                            lamlist,
+                            returnAll = False,
+                            sigma_guess = 5):
+    '''
+    Fits an extracted data cube with a gaussian to find the wavelength peak
+    
+    Parameters
+    ----------
+    cube: 3D ndarray
+        The extracted datacube where all bad pixels are NaNs
+    lamlist: 1D array
+        List of wavelengths corresponding to the slices of the cube
+        Suggested units: nanometers (in which sigma_guess is about 5)
+    returnAll: boolean
+        If True, return the full results of the curve fit function (popt,pcov)
+        If False, return only the central wavelength (Default)
+    sigma_guess: float
+        Guess at the width of the gaussian fit in same units as lamlist (Default 5)
+    '''
+    vals = np.nansum(np.nansum(cube,axis=2),axis=1)
+    popt, pcov = curve_fit( gauss,
+                            lamlist,
+                            vals,
+                            p0=[np.amax(vals),lamlist[np.argmax(vals)],sigma_guess,0]
+                            )
+    if returnAll: return popt,pcov
+    else: return popt[1]
 
 
 def monochromatic_update(par, inImage, inLam, order=3, apodize=False):
