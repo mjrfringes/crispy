@@ -24,7 +24,9 @@ class Params(object):
         self.exportDir = self.codeRoot+'/SimResults'
         self.unitTestsOutputs = self.codeRoot+'/unitTestsOutputs'
 #         self.wavecalDir = self.prefix+'/VARIAwavecal/'
-        self.wavecalDir = self.prefix+'/Calibra_170425/'
+#         self.wavecalDir = self.prefix+'/Calibra_170425/'
+        self.wavecalDir = self.prefix+'/Calibra_20190128/'
+        
 #         self.wavecalDir = self.prefix+'/HighSNRWavecal/'
 #         self.wavecalDir = self.prefix+'/wavecal/'
 #         self.wavecalDir = self.prefix+'/wavecalR50_660/'

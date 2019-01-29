@@ -47,7 +47,7 @@ class Params(object):
         # Rotation angle of the lenslets (radians)
         self.philens = arcsin(1. / sqrt(self.interlace**2 + 1))
         self.lensletsampling = 1. / 2.  # lenslet size in lambda/D
-        self.lensletlam = 660.     # Wavelength at which this is defined (nm)
+        self.lensletlam = 770.     # Wavelength at which this is defined (nm)
 
         ######################################################################
         # Detector stuff
@@ -59,7 +59,7 @@ class Params(object):
         self.convolve = True        # whether to convolve the existing kernels with
         # gaussian kernel (simulating defocus)
         self.FWHM = 2.               # FWHM of gaussian kernel
-        self.FWHMlam = 660.         # Lam at which FWHM is defined
+        self.FWHMlam = 770.         # Lam at which FWHM is defined
         self.gaussian = True        # Use standard Gaussian kernels instead of library
         self.gaussian_hires = True  # Use Gaussians for hires PSFLet matching, instead
         # of Lucy-Richardson deconvolution
