@@ -402,44 +402,44 @@ def get_sim_hires(par, lam, upsample=10, nsubarr=1, npix=13, renorm=True):
     return hires_arr
 
 
-def epsflets(subim,
-            upsample=5,
-            npix=13):
-    """
-    Estimates the underlying high-resolution PSFlets using Photutils tools
-    
-    Parameters
-    ----------
-    subim: 2D array
-        Array representing the subsection of the focal over which to average PSFlets,
-        assuming that they are all the same
-    upsample: int
-        Fits PSFlets and interpolates on a grid which has higher sampling than the original
-        image by a factor "upsample"
-    npix: int 
-        Number of pixels for each PSFlet model
-        
-    Returns
-    -------
-    data: 2D array
-        npix x npix array with the PSFlet model
-    """
-    data = img.copy()
-    peaks_tbl = find_peaks(data, threshold=100.)
-    peaks_tbl['peak_value'].info.format = '%.8g'  # for consistent table output
-    stars_tbl = Table()
-    stars_tbl['x'] = peaks_tbl['x_peak']
-    stars_tbl['y'] = peaks_tbl['y_peak']
-    mean_val, median_val, std_val = sigma_clipped_stats(data, sigma=2.,
-                                                        iters=None)
-    data -= median_val
-    nddata = NDData(data=data)
-    stars = extract_stars(nddata, stars_tbl, size=npix)
-    epsf_builder = EPSFBuilder(oversampling=upsample, maxiters=3,
-                               progress_bar=False)
-    epsf, fitted_stars = epsf_builder(stars)
-    return epsf.data
-            
+# def epsflets(subim,
+#             upsample=5,
+#             npix=13):
+#     """
+#     Estimates the underlying high-resolution PSFlets using Photutils tools
+#     
+#     Parameters
+#     ----------
+#     subim: 2D array
+#         Array representing the subsection of the focal over which to average PSFlets,
+#         assuming that they are all the same
+#     upsample: int
+#         Fits PSFlets and interpolates on a grid which has higher sampling than the original
+#         image by a factor "upsample"
+#     npix: int 
+#         Number of pixels for each PSFlet model
+#         
+#     Returns
+#     -------
+#     data: 2D array
+#         npix x npix array with the PSFlet model
+#     """
+#     data = subim.copy()
+#     peaks_tbl = find_peaks(data, threshold=100.)
+#     peaks_tbl['peak_value'].info.format = '%.8g'  # for consistent table output
+#     stars_tbl = Table()
+#     stars_tbl['x'] = peaks_tbl['x_peak']
+#     stars_tbl['y'] = peaks_tbl['y_peak']
+#     mean_val, median_val, std_val = sigma_clipped_stats(data, sigma=2.,
+#                                                         iters=None)
+#     data -= median_val
+#     nddata = NDData(data=data)
+#     stars = extract_stars(nddata, stars_tbl, size=npix)
+#     epsf_builder = EPSFBuilder(oversampling=upsample, maxiters=3,
+#                                progress_bar=False)
+#     epsf, fitted_stars = epsf_builder(stars)
+#     return epsf.data
+#             
 
 def gethires(x, y, good, image, upsample=5, nsubarr=5, npix=13, renorm=True):
     """
@@ -618,6 +618,37 @@ def gethires(x, y, good, image, upsample=5, nsubarr=5, npix=13, renorm=True):
             hires_arr[yreg, xreg] = meanpsf
 
     return hires_arr
+
+# def gethires(x, y, good, image, upsample=5, nsubarr=5, npix=13, renorm=True):
+#     """
+#     Build high resolution images of the undersampled PSF using the
+#     monochromatic frames.
+# 
+#     Inputs:
+#     1.
+#     """
+# 
+#     data = image.data
+#     subim = data[:image.data.shape[0] // nsubarr,:data.shape[1] // nsubarr]
+#     test = epsflets(subim,upsample,npix)
+#     hires_arr = np.zeros((nsubarr, nsubarr, test.shape[0], test.shape[1]))
+# 
+#     for yreg in range(nsubarr):
+#         i1 = yreg * data.shape[0] // nsubarr
+#         i2 = i1 + data.shape[0] // nsubarr
+#         i1 = max(i1, npix)
+#         i2 = min(i2, data.shape[0] - npix)
+#         for xreg in range(nsubarr):
+#             j1 = xreg * data.shape[1] // nsubarr
+#             j2 = j1 + data.shape[1] // nsubarr
+#             j1 = max(j1, npix)
+#             j2 = min(j2, data.shape[1] - npix)
+#             subim = data[i1:i2,j1:j2]
+#             hires_arr[yreg,xreg] = epsflets(subim,upsample,npix)
+#             if renorm:
+#                 hires_arr[yreg,xreg] *= upsample**2 / np.sum(hires_arr[yreg,xreg])
+# 
+#     return hires_arr
 
 
 def makeHires(
@@ -801,7 +832,7 @@ def fit_monochromatic_cube( cube,
                             p0=[np.amax(vals),lamlist[np.argmax(vals)],sigma_guess,0]
                             )
     if returnAll: return popt,pcov
-    else: return popt[1]
+    else: return popt[1],np.sqrt(pcov)
 
 
 def monochromatic_update(par, inImage, inLam, order=3, apodize=False):
