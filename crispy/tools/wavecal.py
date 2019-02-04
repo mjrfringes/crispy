@@ -854,16 +854,16 @@ def monochromatic_update(par, inImage, inLam, order=3, apodize=False):
     ysize, xsize = inImage.data.shape
     mask = np.ones((ysize, xsize))
     if apodize:
-        x = np.arange(ysize)
-        med_n = np.median(x)
-        x -= int(med_n)
-        x, y = np.meshgrid(x, x)
+        y = np.arange(ysize)
+        x = np.arange(xsize)
+        x -= xsize // 2
+        y -= ysize // 2
+        x, y = np.meshgrid(x, y)
 
         r = np.sqrt(x**2 + y**2)
-        mask = (r < ysize // 2)
+        mask = (r < min(ysize, xsize) // 2)
 
-    x, y, good, newcoef = locatePSFlets(inImage, polyorder=order, mask=mask, sig=par.FWHM /
-                                        2.35, coef=oldcoef, phi=par.philens, scale=par.pitch / par.pixsize, nlens=par.nlens)
+    x, y, good, newcoef = locatePSFlets(inImage, polyorder=order, mask=mask, sig=1., coef=oldcoef, phi=par.philens, scale=par.pitch / par.pixsize, nlens=par.nlens)
     psftool.geninterparray(lam, allcoef, order=order)
     dcoef = newcoef - oldcoef
 
@@ -875,9 +875,9 @@ def monochromatic_update(par, inImage, inLam, order=3, apodize=False):
         allcoef,
         order=order,
         lam1=min(lam) /
-        1.05,
+        1.01,
         lam2=max(lam) *
-        1.05)
+        1.01)
     psftool.savepixsol(outdir=par.wavecalDir)
 
     #################################################################
@@ -935,7 +935,8 @@ def buildcalibrations(
         apdiam=3,
         halfsize=5,
         snrthreshold=10,
-        initcoef=None):
+        initcoef=None,
+        readImgs=True):
     """
     Master wavelength calibration function
 
@@ -1091,79 +1092,80 @@ def buildcalibrations(
     if finecal:
         log.info('Implementing experimental fine calibration method - watch out for bugs!')
 
-    for i, ifile in enumerate(filelist):
-        im = Image(filename=ifile)
-        # sets the inverse variance to be the mask
-        mean, median, std = sigma_clipped_stats(im.data, sigma=3.0, iters=5)
-#         im.data -= median
-        log.info('Mean, median, std: {:}'.format((mean, median, std)))
+    if readImgs:
+        for i, ifile in enumerate(filelist):
+            im = Image(filename=ifile)
+            # sets the inverse variance to be the mask
+            mean, median, std = sigma_clipped_stats(im.data, sigma=3.0, iters=5)
+    #         im.data -= median
+            log.info('Mean, median, std: {:}'.format((mean, median, std)))
         
-#         hpmask = gen_bad_pix_mask(im.data)
-#         mask *= hpmask
-#         mask *= (im.data-median>3*std)
-        imlist += [im]
-        if genwavelengthsol:
-            ## CHARIS regular wavecal step
-            x, y, good, coef = locatePSFlets(im, polyorder=order, mask=mask, sig=1., 
-                                coef=coef, phi=par.philens, 
-                                scale=par.pitch / par.pixsize, nlens=par.nlens,
-                                trimfrac=trimfrac)
-            allcoef += [[lamlist[i]] + list(coef)]
+    #         hpmask = gen_bad_pix_mask(im.data)
+    #         mask *= hpmask
+    #         mask *= (im.data-median>3*std)
+            imlist += [im]
+            if genwavelengthsol:
+                ## CHARIS regular wavecal step
+                x, y, good, coef = locatePSFlets(im, polyorder=order, mask=mask, sig=1., 
+                                    coef=coef, phi=par.philens, 
+                                    scale=par.pitch / par.pixsize, nlens=par.nlens,
+                                    trimfrac=trimfrac)
+                allcoef += [[lamlist[i]] + list(coef)]
             
-            if finecal:
-                log.info('Finding individual centroids (experimental)')
-                ## crispy enhanced wavecal step
-                dy = np.zeros_like(y)
-                dx = np.zeros_like(x)
-                snr = np.zeros_like(x)
-                mgrid = np.arange(2*halfsize)
-                xgrid,ygrid = np.meshgrid(mgrid,mgrid)
+                if finecal:
+                    log.info('Finding individual centroids (experimental)')
+                    ## crispy enhanced wavecal step
+                    dy = np.zeros_like(y)
+                    dx = np.zeros_like(x)
+                    snr = np.zeros_like(x)
+                    mgrid = np.arange(2*halfsize)
+                    xgrid,ygrid = np.meshgrid(mgrid,mgrid)
 
-                for j in range(x.shape[0]):
-                    for k in range(x.shape[1]):
-                        xl = x[j,k]
-                        yl = y[j,k]
-                        xmin = int(xl-halfsize)+1
-                        ymin = int(yl-halfsize)+1
-                        if ymin>0 and xmin>0 and xmin+2*halfsize<xsize and ymin+2*halfsize<ysize:
-                            # define cutout
-                            cutout = im.data[ymin:ymin+2*halfsize,xmin:xmin+2*halfsize]-median
+                    for j in range(x.shape[0]):
+                        for k in range(x.shape[1]):
+                            xl = x[j,k]
+                            yl = y[j,k]
+                            xmin = int(xl-halfsize)+1
+                            ymin = int(yl-halfsize)+1
+                            if ymin>0 and xmin>0 and xmin+2*halfsize<xsize and ymin+2*halfsize<ysize:
+                                # define cutout
+                                cutout = im.data[ymin:ymin+2*halfsize,xmin:xmin+2*halfsize]-median
                             
-                            # here is the new centroiding function: we could change this to something more robust
-                            dx[j,k],dy[j,k] = centroid_com(cutout)
+                                # here is the new centroiding function: we could change this to something more robust
+                                dx[j,k],dy[j,k] = centroid_com(cutout)
                             
-                            # mask used for elementary aperture photometry
-                            apmask = (xgrid-dx[j,k])**2+(ygrid-dy[j,k])**2<apdiam**2
-                            apval = np.nansum(apmask*cutout)
-#                             snr[j,k] = apval/(np.sqrt(np.nansum(apmask))*std)
+                                # mask used for elementary aperture photometry
+                                apmask = (xgrid-dx[j,k])**2+(ygrid-dy[j,k])**2<apdiam**2
+                                apval = np.nansum(apmask*cutout)
+    #                             snr[j,k] = apval/(np.sqrt(np.nansum(apmask))*std)
 
-                            # estimate of SNR, only valid for very high fluxes, could do better
-                            snr[j,k] = np.sqrt(apval)
-                            dy[j,k] -= y[j,k]-ymin
-                            dx[j,k] -= x[j,k]-xmin
+                                # estimate of SNR, only valid for very high fluxes, could do better
+                                snr[j,k] = np.sqrt(apval)
+                                dy[j,k] -= y[j,k]-ymin
+                                dx[j,k] -= x[j,k]-xmin
                             
-                # Thresholding
-                dy[snr<snrthreshold]=0.0
-                dx[snr<snrthreshold]=0.0
+                    # Thresholding
+                    dy[snr<snrthreshold]=0.0
+                    dx[snr<snrthreshold]=0.0
                 
-                # ignore if new centroid is too out of whack
-                dy[np.abs(dy)>pxthreshold]=0.0
-                dx[np.abs(dx)>pxthreshold]=0.0
+                    # ignore if new centroid is too out of whack
+                    dy[np.abs(dy)>pxthreshold]=0.0
+                    dx[np.abs(dx)>pxthreshold]=0.0
                 
-                dylist += [dy]
-                dxlist += [dx]
-                snrlist += [snr]
+                    dylist += [dy]
+                    dxlist += [dx]
+                    snrlist += [snr]
                 
-                if inspect:
-                    do_inspection(par, im.data, x+dx, y+dy, lamlist[i])
-                elif inspect_first and i == 0:
-                    do_inspection(par, im.data, x+dx, y+dy, lamlist[i])
+                    if inspect:
+                        do_inspection(par, im.data, x+dx, y+dy, lamlist[i])
+                    elif inspect_first and i == 0:
+                        do_inspection(par, im.data, x+dx, y+dy, lamlist[i])
 
-            else:
-                if inspect:
-                    do_inspection(par, im.data, x, y, lamlist[i])
-                elif inspect_first and i == 0:
-                    do_inspection(par, im.data, x, y, lamlist[i])
+                else:
+                    if inspect:
+                        do_inspection(par, im.data, x, y, lamlist[i])
+                    elif inspect_first and i == 0:
+                        do_inspection(par, im.data, x, y, lamlist[i])
 
 
     if genwavelengthsol:
