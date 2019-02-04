@@ -30,12 +30,12 @@ from crispy.tools.imgtools import gen_bad_pix_mask
 from photutils import centroid_com
 
 
-from photutils import EPSFBuilder
-from astropy.nddata import NDData
-from astropy.stats import sigma_clipped_stats
-from astropy.table import Table
-from photutils import find_peaks
-from photutils.psf import extract_stars
+# from photutils import EPSFBuilder
+# from astropy.nddata import NDData
+# from astropy.stats import sigma_clipped_stats
+# from astropy.table import Table
+# from photutils import find_peaks
+# from photutils.psf import extract_stars
 
 
 
