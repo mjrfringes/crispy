@@ -355,7 +355,7 @@ class PSFLets:
             raise ValueError(
                 "Number of coefficients incorrect for polynomial order.")
 
-        xindx = np.arange(-par.nlens / 2, par.nlens / 2)
+        xindx = np.arange(-par.nlens // 2, par.nlens // 2)
         xindx, yindx = np.meshgrid(xindx, xindx)
 
         n_spline = 100
