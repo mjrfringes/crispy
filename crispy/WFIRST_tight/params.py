@@ -58,7 +58,7 @@ class Params(object):
         self.pxperdetpix = 1       # Oversampling of the final detector pixels
         self.convolve = True        # whether to convolve the existing kernels with
         # gaussian kernel (simulating defocus)
-        self.FWHM = 1.4               # FWHM of gaussian kernel
+        self.FWHM = 1.0               # FWHM of gaussian kernel
         self.FWHMlam = 770.         # Lam at which FWHM is defined
         self.gaussian = True        # Use standard Gaussian kernels instead of library
         self.gaussian_hires = True  # Use Gaussians for hires PSFLet matching, instead
