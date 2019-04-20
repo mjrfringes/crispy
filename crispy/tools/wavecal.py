@@ -1233,7 +1233,7 @@ def buildcalibrations(
 #         log.info("Loading previous wavelength calibration (PSFloc.fits)")
 #         psftool = PSFLets(load=True,infiledir=outdir)
 
-    xindx = np.arange(-par.nlens / 2, par.nlens / 2)
+    xindx = np.arange(-par.nlens // 2, par.nlens // 2)
     xindx, yindx = np.meshgrid(xindx, xindx)
     
     if makehiresPSFlets:
