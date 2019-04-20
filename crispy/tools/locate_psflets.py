@@ -703,7 +703,7 @@ def corrval(coef, x, y, filtered, order, trimfrac=0.1):
     vals_ok = vals[np.where(np.isfinite(vals))]
     
     if trimfrac>0.0:
-        iclip = int(vals_ok.shape[0] * trimfrac / 2)
+        iclip = int(vals_ok.shape[0] * trimfrac // 2)
         vals_sorted = np.sort(vals_ok)
         score = -1 * np.sum(vals_sorted[iclip:-iclip])
     else:
