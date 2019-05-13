@@ -215,7 +215,7 @@ def input_star(filename,Vmag,wavel):
     Vmag: float
         V magnitude of star
     wavel: array
-        Array of desired wavelengths in microns
+        Array of desired wavelengths in nm
         
     Returns
     -------
